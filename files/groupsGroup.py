@@ -122,32 +122,22 @@ class group:
                 data[sid][prop] = np.array(data[sid][prop])
         return data
         
-    # Set coordinate transformations and regions
+    # Set coordinate transformations for every item
     def setTransf(self,**opt):
         for item in self.items():
             nopt = {}
-            if 'box' in opt:
-                nopt['box'] = opt['box'][item.index] if np.ndim(opt['box'])>1 else opt['box']
-            elif 'center' in opt:
-                nopt['center'] = opt['center'][item.index] if np.ndim(opt['center'])>1 else opt['center']
-                if 'radius' in opt:
-                    nopt['radius'] = opt['radius'][item.index] if np.ndim(opt['radius'])>1 else opt['radius']
-                elif 'size' in opt:
-                    nopt['size'] = opt['size'][item.index] if np.ndim(opt['size'])>1 else opt['size']
-            if 'origin' in opt:
-                nopt['origin'] = opt['origin'][item.index] if np.ndim(opt['origin'])>1 else opt['origin']
-            if 'angles' in opt:
-                nopt['angles'] = opt['angles'][item.index] if np.ndim(opt['angles'])>1 else opt['angles']
+            for k,v in opt.items():
+                nopt[k] = v[item.index] if np.ndim(v)>1 else v
             item.setTransf(**nopt)
             
     # Common plotting routines 
     # Add multiple objects to the canvas
 
     # Plot Arepo image
-    def setImage(self,sp, imgProperty, imgType, norm=None, normType=None, cmap=None):
+    def setImage(self, axis, prop, imgType, norm=None, normType=None, cmap=None):
         def setImage(item):
-            im,px,py = item.sim.getImage(item.snap,imgProperty,imgType)
-            if imgProperty=='density':
+            im,px,py = item.sim.getImage(item.snap,prop,imgType)
+            if prop=='density':
                 im *= item.sim.units.conv['density']
             if 'boxSize' not in item.sim.optImages:
                 apy.shell.exit("No 'boxSize' option for simulation %d (groups.py)"%item.index)
@@ -160,27 +150,32 @@ class group:
         self.setTransf('moveOrigin','translate', origin=data['center'])
         logNormsProps = ['density','rih','ndens']
         if not normType:
-            normType = 'log' if imgProperty in logNormsProps else 'lin'
-        norm = 'img_%s_%s'%(imgProperty,imgType) if norm is None else norm
+            normType = 'log' if prop in logNormsProps else 'lin'
+        norm = 'img_%s_%s'%(prop,imgType) if norm is None else norm
         extent = self.transf.convert('moveOrigin',data['extent'],[0,0,1,1])
-        sp.setImage(data=data['im'],extent=extent,norm=norm,normType=normType,cmap=cmap)
-        sp.setOption(xlim=extent[:,:2], ylim=extent[:,2:])
+        axis.setImage(data=data['im'],extent=extent,norm=norm,normType=normType,cmap=cmap)
 
     # Add projection image
-    def setProjection(self, sp, imgProperty, bins=200, rot=None,
-                      norm=None, normType=None, cmap=None):
-        def setProjection(item):
+    def setProjection(self, axis, prop, bins=200, norm=None, normType=None, cmap=None):
+        def setProjection(item,prop):
             snap = item.getSnapshot()
-            dens = snap.getProperty(0,{'name':'BoxProjection','transf':item.transf,
-                                       'w':imgProperty,'bins':bins})
+            data = snap.getProperty(0,{'name':'BoxProjection','transf':item.transf,
+                                       'w':prop,'bins':bins})
             extent = item.transf['postselect']['box'][:4] * item.sim.units.conv['length']
-            return dens,extent
-        data = self.foreach(setProjection,['dens','extent'],cache=False)
-        sp.setImage(data=data['dens'],extent=data['extent'],norm=norm,normType=normType,cmap=cmap)
-        sp.setOption(xlim=data['extent'][:,:2], ylim=data['extent'][:,2:])
+            return data,extent
+        proj = self.foreach(setProjection,['data','extent'],args=[prop],cache=False)
+        if isinstance(axis,list):
+            for i in range(len(axis)):
+                data = proj['data'][:,i]
+                n = norm[i] if isinstance(norm,list) else norm
+                nt = normType[i] if isinstance(normType,list) else normType
+                c = cmap[i] if isinstance(cmap,list) else cmap
+                axis[i].setImage(data=data, extent=proj['extent'], norm=n, normType=nt, cmap=c)
+        else:
+            axis.setImage(data=proj['data'],extent=proj['extent'], norm=norm, normType=normType, cmap=cmap)
 
     # Add times to the plot
-    def addTimes(self,sp,**opt):
+    def addTimes(self, axis, **opt):
         def addTimes(item):
             with item.getSnapshot() as sn:
                 time = item.sim.units.guess('time',sn.getHeader('Time'),utype='old')
@@ -188,48 +183,84 @@ class group:
         values = self.foreach(addTimes,1)
         nopt = {'loc':'top left'}
         nopt.update(opt)
-        sp.addText(values,**nopt)
+        axis.addText(values,**nopt)
 
     # Add redshift to the plot
-    def addRedshifts(self,sp,**opt):
+    def addRedshifts(self, axis, **opt):
         def addRedshifts(item):
             with item.getSnapshot() as sn:
                 z = 1./sn.getHeader('Time')-1.
             return 'z = %.03f'%z
-        values = self.foreach(addRedshifts,1)
+        values = self.foreach(addRedshifts)
         nopt = {'loc':'top left'}
         nopt.update(opt)
-        sp.addText(values,**nopt)
+        axis.addText(values,**nopt)
 
     # Add snapshot number to the plot
-    def addSnapNums(self,sp,loc='top right'):
+    def addSnapNums(self, axis, **opt):
         def addSnapNums(item):
             return '%03d'%item.snap
-        values = self.foreach(addSnapNums,1)      
-        sp.addText(values,loc)    
+        values = self.foreach(addSnapNums)      
+        nopt = {'loc':'top left'}
+        nopt.update(opt)
+        axis.addText(values,**nopt)    
 
     # Add particle scatter plot
-    def addParticles(self, sp, ptype, **nopt):
+    def addParticles(self, axis, ptype, **opt):
         coords = []
         for item in self.items():
             with item.getSnapshot() as sn:
-                if 'postselect' in item.transf.items:
-                    box = item.transf['preselect']['box']
-                    ids, coord = sn.getProperty(ptype,{'name':'BoxRegion',"box":box})
-                else:
-                    coord = sn.getProperty(ptype,'Coordinates')
-            coord = item.transf.convert('translate',coord)
-            if 'rotate' in item.transf.items:
-                coord = item.transf.convert('rotate',coord)
+                center = item.transf['preselect']['center']
+                radius = item.transf['preselect']['radius']
+                ids, r2 = sn.getProperty(ptype,{'name':'SphericalRegion',"center":center,'radius':radius})
+                coord = sn.getProperty(ptype,'Coordinates',ids=ids)
+            coord = item.transf.convert(['translate','align','flip','rotate','postselect'],coord)
             coords.append( coord * item.sim.units.conv['length'] )
         x = [coord[:,0] for coord in coords]
         y = [coord[:,1] for coord in coords]
-        opt = {'s':20,'marker':'+','c':'black','edgecolors':None,'linewidths':1}
-        opt.update(nopt)
-        sp.addScatter(x,y,**opt)
+        nopt = {'s':20,'marker':'+','c':'black','edgecolors':None,'linewidths':1}
+        nopt.update(opt)
+        if isinstance(axis,list):
+            for i in range(len(axis)):
+                axis[i].addScatter(x,y,**nopt)
+        else:
+            axis.addScatter(x,y,**nopt)
+
+    # Add coordinate system with axes and angles
+    def addCoordSystem(self, axis, info=False, vector=None):
+        colors = ['red','blue','gold','black']
+        def addCoordSystem(item,vector):
+            box = item.transf['postselect']['box']
+            size = np.min((box[1::2]-box[::2]) * 0.5 * item.sim.units.conv['length'])
+            coord = [[size,0,0],[0,size,0],[0,0,size]]
+            if 'align' in item.transf.items:   # show the alignment vector
+                vector = item.transf.items['align']['vector']
+                vector = vector/np.linalg.norm(vector)*size
+                coord.append(vector)
+            elif vector is not None:           # show arbitrary vector
+                vector = vector/np.linalg.norm(vector)*size
+                coord.append(vector)                
+            u,v,w = item.transf.convert(['align','flip','rotate'],np.array(coord)).T
+            return u,v
+        u,v = self.foreach(addCoordSystem,2,args=[vector])
+        for i in range(len(u[0])):
+            axis.addQuiver(0,0,u[:,i],v[:,i],color=colors[i],pivot='tail',angles='xy',scale=1,scale_units='xy')
+        
+        if info:         # print information about rotations
+            info = []
+            for item in self.items():
+                text = ''
+                if 'align' in item.transf.items:
+                    text += "%.1f,%.1f,%.1f = A\n"%tuple(item.transf['align']['angles'])
+                if 'flip' in item.transf.items:
+                    text += "%d,%d,%d = F\n"%tuple(item.transf['flip']['axes'])
+                if 'rotate' in item.transf.items:
+                    text += "%.1f,%.1f,%.1f = R\n"%tuple(item.transf['rotate']['angles'])
+                info.append( text[:-1] )
+            axis.addText(info,loc='bottom right',fontsize=6)
 
     # Create a 2D property histogram
-    def addHistogram2D(self, sp, ptype, xprop, yprop, bins, norm=None, normType='lin',
+    def addHistogram2D(self, axis, ptype, xprop, yprop, bins, norm=None, normType='lin',
                        xscale='lin', yscale='lin', cmap=None, aspect='auto'):
         if isinstance(bins,int): bins = [bins,bins]
         if isinstance(bins[0],int):
@@ -252,8 +283,7 @@ class group:
         if yscale=='log': yext = np.log10(yext)
         extent = [xext[0],xext[1], yext[0],yext[1]]
         norm = 'hist_%s_%s'%(xprop,yprop) if norm is None else norm
-        sp.setImage(data=allData,extent=extent,norm=norm,normType=normType,cmap=cmap,aspect=aspect)
-        sp.setOption(xlim=extent[:2], ylim=extent[2:])
+        axis.setImage(data=allData,extent=extent,norm=norm,normType=normType,cmap=cmap,aspect=aspect)
 
     '''
     # Interpolate snapshots according to their times

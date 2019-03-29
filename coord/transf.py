@@ -1,4 +1,5 @@
 import numpy as np
+import arepy as apy
 
 # This works in both ways:
 # 1)  tr = transf(data)
@@ -18,41 +19,97 @@ class transf:
     def __exit__(self, type, value, traceback):
         True
     
-    def __init__(self, size=None):
+    def __init__(self,**opt):
         self.items = {}   # list of added transformations    
+
+        # pre select coordinates
+        if 'box' in opt:
+            center = (opt['box'][::2]+opt['box'][1::2])*0.5
+            radius = np.linalg.norm(opt['box'][1::2]-opt['box'][::2])*0.5
+            self.addSelection('presphere', center, radius, opt['box'])
+        elif 'center' in opt:
+            if 'radius' in opt:
+                self.addSelection('preselect', opt['center'], opt['radius'])
+            elif 'size' in opt:
+                radius = opt['size']*np.sqrt(3)*0.5
+                box = apy.coord.box(opt['size'],opt['center'])
+                self.addSelection('preselect', opt['center'], radius, box)
+        # translate coordinates
+        if 'origin' in opt:
+            self.addTranslation('translate', opt['origin'])
+            if 'box' in opt:
+                opt['box'] = self.convert('translate',opt['box'],dims=[0,0,1,1,2,2])
+            if 'center' in opt:
+                opt['center'] = self.convert('translate',opt['center'],dims=[0,1,2])
+        # align z-axis to some vector
+        if 'align' in opt:
+            self.addAlignment('align', opt['align'])
+        # flip axes
+        if 'flip' in opt:
+            self.addFlip('flip', opt['flip'])
+        # rotate axis by an angle
+        if 'rotate' in opt:
+            self.addRotation('rotate', opt['rotate'])
+        # post-select
+        if 'box' in opt:
+            self.addSelection('postselect', opt['box'])
+        elif 'center' in opt:
+            if 'radius' in opt:
+                self.addSelection('postselect', opt['center'], opt['radius'])
+            elif 'size' in opt:
+                self.addSelection('postselect', apy.coord.box(opt['size'],opt['center']))
 
     def __getitem__(self, name):
         return self.items[name]
 
-    def _transf(self, name, data, dims):
+    def _rotEuler(self,coord,angles):
+        # Formalism: https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions
+        # [phi,theta,psi] are euler angles around [x,y,z] axis respectively
+        # One can use spherical coordinates [r,theta,phi] as euler angles [0,theta,phi]
+        cPhi,   sPhi   = np.cos(angles[0]), np.sin(angles[0])
+        cTheta, sTheta = np.cos(angles[1]), np.sin(angles[1])
+        cPsi,   sPsi   = np.cos(angles[2]), np.sin(angles[2])
+        x,y,z = coord.T    # set of vectors v=(x,y,z) reshaping from (N,3) to (3,N)
+        coord = np.array([ # calculating A*v = Az*Ay*Ax*v
+            x*(cTheta*cPsi) + y*(-cPhi*sPsi+sPhi*sTheta*cPsi) + z*(sPhi*sPsi+cPhi*sTheta*cPsi),  # x*a11+y*a12+z*a13
+            x*(cTheta*sPsi) + y*(cPhi*cPsi+sPhi*sTheta*sPsi) +  z*(-sPhi*cPsi+cPhi*sTheta*sPsi), # x*a21+y*a22+z*a23
+            x*(-sTheta) +     y*(sPhi*cTheta) +                 z*(cPhi*cTheta),                 # x*a31+y*a32+z*a33
+        ]).T              # returning to shape (N,3)
+        return coord
+
+    def _transf(self, name, coord, **data):
         ttype = self.items[name]['type']
         opt = self.items[name]
-        if ttype=='translation':
-            data -= opt['origin'] if dims is None else opt['origin'][dims]
-        elif ttype=='rotation':
-            theta,phi,psi = opt['angles']
-            a11,a12,a13 = np.cos(theta) , np.sin(phi)*np.sin(theta)  , np.cos(phi)*np.sin(theta)
-            a21,a22,a23 = 0             , np.cos(phi)                , -np.sin(phi)
-            a31,a32,a33 = -np.sin(theta), np.sin(phi)*np.cos(theta)  , np.cos(phi)*np.cos(theta)
-            x,y,z = data.T
-            data = np.array([ 
-                x*a11 + y*a12 + z*a13, 
-                x*a21 + y*a22 + z*a23, 
-                x*a31 + y*a32 + z*a33
-            ]).T
-        elif ttype=='sphere':
-            x,y,z = (data-opt['center']).T
-            r2 = x*x + y*y + z*z
-            ids = r2 < opt['radius']**2
-            data = data[ids]
-        elif ttype=='box':
-            x,y,z = data.T
-            ids = (opt['box'][0]<x) & (x<opt['box'][1])
-            ids &= (opt['box'][2]<y) & (y<opt['box'][3])
-            ids &= (opt['box'][4]<z) & (z<opt['box'][5])
-        return data
+        if ttype=='translation':  # translate origin
+            if 'dims' in opt:
+                coord -= opt['origin'][data['dims']]
+            else:
+                coord -= opt['origin']
+        elif ttype=='rotation':   # rotate around the origin
+            if 'order' in opt:
+                for o in opt['order']:
+                    angles = [0,0,0]
+                    angles[o] = opt['angles'][o]
+                    coord = self._rotEuler(coord,angles)
+            else:
+                coord = self._rotEuler(coord,opt['angles'])
+        elif ttype=='sphere':     # select spherical region around center
+            x,y,z = (coord-opt['center']).T
+            ids = (x*x + y*y + z*z) < opt['radius']**2
+            self.items[name]['ids'] = ids
+            coord = coord[ids]
+        elif ttype=='box':        # select a box region
+            x,y,z = coord.T
+            ids =  (opt['box'][0]<x) & (x<opt['box'][1]) &\
+                   (opt['box'][2]<y) & (y<opt['box'][3]) &\
+                   (opt['box'][4]<z) & (z<opt['box'][5])
+            self.items[name]['ids'] = ids
+            coord = coord[ids]
+        elif ttype=='flip':
+            coord = coord.T[opt['axes']].T
+        return coord
 
-    def addSelection(self, name, *opt):
+    def addSelection(self, name, *opt):       # Example: box=[0,1,0,1,0,1], center=[0.5,0.5,0.5], radius=0.5
         if len(opt)==3:
             self.items[name] = {'type':'sphere', 'center':opt[0], 'radius':opt[1], 'box':opt[2]}
         elif len(opt)==2:
@@ -60,17 +117,32 @@ class transf:
         else:
             self.items[name] = {'type':'box', 'box':opt[0]}
         
-    def addTranslation(self, name, origin):
+    def addTranslation(self, name, origin):   # Example: coordinates=[x,y,z]
         self.items[name] = {'type':'translation', 'origin':origin}
+
+    def addAlignment(self, name, vector):     # Example: vector=[x,y,z]
+        x,y,z = vector
+        theta = np.arctan2( np.sqrt(x*x+y*y), z )  
+        phi = np.arctan2( y, x )
+        self.items[name] = {'type':'rotation', 'angles':[0,-theta,-phi], 'order':[2,1], 'vector':vector}
         
-    def addRotation(self, name, angles):
+    def addRotation(self, name, angles):      # Example: angles=[phi,theta,psi] in radians
         self.items[name] = {'type':'rotation', 'angles':angles}
 
-    def convert(self, name, data, dims=None):  # convert vector
-        data = np.array(data)
-        if isinstance(name,str): # make a single transformation
-            data = self._transf(name,data,dims)
-        else:                    # make multiple transformations
-            for n in name:
-                data = self._transf(n,data,dims)
-        return data
+    def addFlip(self, name, axes):            # Example: axes=[1,0,2] 
+        self.items[name] = {'type':'flip', 'axes':axes}
+
+    def select(self, name, data):  # select additional data
+        if name not in self.items: # skipping non-existing transformations
+            return data    
+        else:
+            return data[ self.items[name]['ids'] ]
+
+    def convert(self, name, coord, **opt):  # convert vector
+        coord = np.array(coord)
+        names = [name] if isinstance(name,str) else name
+        for name in names:
+            if name not in self.items: # skipping non-existing transformations
+                continue
+            coord = self._transf(name,coord,**opt)
+        return coord

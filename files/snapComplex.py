@@ -34,6 +34,15 @@ class snapComplex:
             hist,xedges,yedges = np.histogram2d(coord[:,0], coord[:,1], bins=bins, weights=weights)
             return hist
 
+        elif name=='AngularMomentum':
+            # Example: {'name':'AngularMomentum','center':[0.5,0.5,0.5],'radius':0.5}
+            region = {'name':'SphericalRegion','center':prop['center'],'radius':prop['radius']}
+            ids, r2 = self.getPropertySimple(0,[region],ids)[0]
+            pos, mass, vel = self.getPropertySimple(0,['Coordinates','Masses','Velocities'],ids=ids)
+            m, (x,y,z), (vx,vy,vz) = mass, (pos-prop['center']).T, vel.T
+            Lx,Ly,Lz = np.sum([ m*(y*vz-z*vy), m*(z*vx-x*vz), m*(x*vy-y*vx) ],axis=1) # total angular momentum
+            return [Lx,Ly,Lz]
+
         elif name=='BoxProjection':
             # Example: {'name':'BoxProjection','transf':transf,'w':'Density','bins':200}
             transf = prop['transf']
@@ -41,24 +50,17 @@ class snapComplex:
             radius = transf['preselect']['radius']
             region = {'name':'SphericalRegion','center':center,'radius':radius}
             ids,r2 = self.getPropertySimple(0,[region],ids)[0]
-            if prop['w'] in ['Masses','Density']: # results in (g) and (g/cm^2)
-                coord,mass = self.getPropertySimple(0,['Coordinates','Masses'],ids)
-            else: # arbitrary mass weighted projected property
-                coord,mass,pp = self.getPropertySimple(0,['Coordinates','Masses',prop['w']],ids)
-
-            # perform rest of the transformations
-            coord = transf.convert('translate',coord)
-            if 'rotate' in transf.items:
-                coord = transf.convert('rotate',coord)
-            coord = transf.convert('postselect',coord)
+            coord,mass = self.getPropertySimple(0,['Coordinates','Masses'],ids)
             
+            # perform coordinate transformations
+            coord = transf.convert(['translate','align','flip','rotate','postselect'],coord)
+            mass = transf.select('postselect',mass)            
+
             # initiate a grid
             grid = apy.coord.grid( [prop['bins']]*3, transf['postselect']['box'] )
             pix = grid.getPixFromCoord(coord)
             grid.addAtPix('num',pix,1)
             grid.addAtPix('mass',pix,mass)
-            if prop['w'] not in ['Masses','Density']:
-                grid.addAtPix('pp',pix,pp*mass)
 
             # divide empty and full pixels
             pixFull = grid.data['num']>0
@@ -66,7 +68,6 @@ class snapComplex:
             coordFull = grid.grid[pixFull]
             coordEmpty = grid.grid[pixEmpty]
             massFull = grid.data['mass'][pixFull]
-            massEmpty = grid.data['mass'][pixEmpty]
 
             # for each empty pixel find the closest full pixel
             from scipy.spatial import cKDTree
@@ -77,18 +78,33 @@ class snapComplex:
             unitFullMass = massFull/numPix
             grid.data['mass'][pixFull] = unitFullMass
             grid.data['mass'][pixEmpty] = unitFullMass[ngbEmpty]
-            if prop['w'] not in ['Masses','Density']:
-                unitFullPP = grid.data['pp'][pixFull]/numPix
-                grid.data['pp'][pixFull] = unitFullPP
-                grid.data['pp'][pixEmpty] = unitFullPP[ngbEmpty]
-            
-            # do some final corrections
-            if prop['w']=='Masses':
-                projection = grid.data['mass'].sum(axis=2)
-            elif prop['w']=='Density':
-                box = transf['postselect']['box']
-                area = (box[1]-box[0])*(box[3]-box[2])
-                projection = grid.data['mass'].sum(axis=2) / area * prop['bins']**2
-            else:
-                projection = grid.data['pp'].sum(axis=2) / grid.data['mass'].sum(axis=2)
-            return projection
+
+            # prepare projected properties
+            properties = prop['w'] if isinstance(prop['w'],list) else [prop['w']]
+            load = [pp for pp in properties if pp not in ['Masses','Density']]
+            if len(load)>0:
+                pps = self.getPropertySimple(0,load,ids)
+                for p,pp in enumerate(pps):
+                    pp = transf.select('postselect',pp)
+                    ppk = 'pp%d'%p
+                    grid.addAtPix(ppk,pix,pp*mass)
+                    unitFullPP = grid.data[ppk][pixFull]/numPix
+                    grid.data[ppk][pixFull] = unitFullPP
+                    grid.data[ppk][pixEmpty] = unitFullPP[ngbEmpty]
+ 
+            # return final data
+            data,i = [],0
+            for p,pp in enumerate(properties):
+                mass = grid.data['mass'].sum(axis=2)
+                if pp=='Masses':
+                    projection = mass
+                elif pp=='Density':
+                    box = transf['postselect']['box']
+                    area = (box[1]-box[0])*(box[3]-box[2])
+                    projection = mass / area * prop['bins']**2
+                else:
+                    ppk = 'pp%d'%i
+                    projection = grid.data[ppk].sum(axis=2) / mass
+                    i += 1
+                data.append(projection)
+            return data if isinstance(prop['w'],list) else data[0]

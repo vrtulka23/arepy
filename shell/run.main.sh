@@ -23,7 +23,7 @@ FLAGS_RUN=${FLAGS_RUN:-""}                     # arepo run flags
 FLAGS_RESTART=${FLAGS_RESTART:-"1"}            # arepo restart flags
 PARAM_FILE=${PARAM_FILE:-"param.txt"}          # arepo parameter file
 CONFIG_FILE=${CONFIG_FILE:-"Config.sh"}        # arepo configuration file
-ANALYZE_DIR=${ANALYZE_DIR:-"tmp"}              # analyze script
+DIR_PROJECT=${DIR_PROJECT:-"tmp"}              # analyze script
 CLEAN_FILES=${CLEAN_FILES:-""}                 # additional files to be cleaned
 
 IMAGE_NODES=${IMAGE_NODES:-1}                    # number of nodes
@@ -299,8 +299,7 @@ analyze()
     if [ $(type -t on_analyze) ]; then
 	on_analyze "$@"
     else
-	python3 -W ignore $DIR_AREPY/scripy/main.py $ANALYZE_DIR "$@"
-	#python -W ignore -c "import scripy.${ANALYZE_DIR}.${1} as script; script()"
+	python3 -W ignore $DIR_AREPY/scripy/main.py $DIR_PROJECT "$@"
     fi
 }
 analyze_snaps()

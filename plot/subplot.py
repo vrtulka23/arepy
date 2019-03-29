@@ -72,6 +72,7 @@ class subplot:
         xextent = extent[:,:2] if np.ndim(extent)>1 else extent[:2]
         yextent = extent[:,2:] if np.ndim(extent)>1 else extent[2:]
         self.setNorm(xdata=xextent,ydata=yextent,zdata=data,zname=norm)        
+        self.setOption(xlim=xextent, ylim=yextent)
         self.canvas['image'] = {'data':data,'norm':self.znorm,'normType':normType,
                                 'extent':extent,'cmap':cmap,'aspect':aspect}
 
@@ -99,6 +100,9 @@ class subplot:
         opt.update(nopt)
         self.canvas['other'].append({'draw':'scatter','twinx':False,'x':x,'y':y,'kwargs':opt})
 
+    def addQuiver(self, *coord, **nopt):
+        self.canvas['other'].append({'draw':'quiver','twinx':False,'coord':coord,'kwargs':nopt})
+
     def addBar(self, y, x=None, color=None, label='', labelrot=None, twinx=False):
         if x is None:
             x = np.arange(1,1+len(y))
@@ -115,9 +119,11 @@ class subplot:
         self.canvas['other'].append({'draw':'circle','twinx':twinx,'center':center,
                                      'radius':radius,'linestyle':linestyle,'color':color})
         
-    def addText(self, text, loc, color='white', bgcolor='black', fontsize=8, twinx=False, padding=None ):
+    def addText(self, text, loc, bgcolor='black', twinx=False, padding=None, **nopt):
+        opt = {'color':'white', 'fontsize': 8}
+        opt.update(nopt)
         self.canvas['other'].append({'draw':'text','twinx':twinx,'loc':loc,'text':text,
-                                     'fontsize':fontsize,'color':color,'bgcolor':bgcolor,'padding':padding})
+                                     'bgcolor':bgcolor,'padding':padding,'kwargs':opt})
 
     # Read dataset and add its objects to the canvas
     def readDataset(self, sim, snaps):
@@ -148,21 +154,21 @@ class subplot:
                 canvas['axis'][opt] = self.opt[opt]
 
         # transform x and y limits
+        xnorm = self.figure.norms.getLimits(self.xnorm)
+        ynorm = self.figure.norms.getLimits(self.ynorm)
         if 'xlim' not in canvas['axis'] and xnorm is not None:    
-            xnorm = self.figure.norms.getLimits(self.xnorm)
             xnormmin = xnorm[1] if canvas['axis']['xscale']=='log' else xnorm[0]
             #canvas['axis']['xlim'] = self.transf.convert([xnormmin,xnorm[2]],0)
             canvas['axis']['xlim'] = [xnormmin,xnorm[2]]
         if 'ylim' not in canvas['axis'] and ynorm is not None:
-            ynorm = self.figure.norms.getLimits(self.ynorm)
             ynormmin = ynorm[1] if canvas['axis']['yscale']=='log' else ynorm[0]
             #canvas['axis']['ylim'] = self.transf.convert([ynormmin,ynorm[2]],1)
             canvas['axis']['ylim'] = [ynormmin,ynorm[2]]
 
         # transform t limits
         if self.twinx:
+            tnorm = self.figure.norms.getLimits(self.tnorm)
             if 'tlim' not in canvas['axis'] and tnorm is not None:
-                tnorm = self.figure.norms.getLimits(self.tnorm)
                 tnormmin = tnorm[1] if canvas['axis']['tscale']=='log' else tnorm[0]
                 #canvas['axis']['tlim'] = self.transf.convert([tnormmin,tnorm[2]],2)
                 canvas['axis']['tlim'] = [tnormmin,tnorm[2]]

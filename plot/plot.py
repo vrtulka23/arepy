@@ -61,6 +61,15 @@ def plotSubplot(ax,opt,canvas,fid=0):
             if 'label' in d['kwargs']:
                 handles.append(li)
 
+        # Draw a quiver
+        if d['draw']=='quiver':
+            coord = []
+            for c in d['coord']:
+                coord.append( c if np.isscalar(c) else c[fid] )
+            li = drawax.quiver(*coord,**d['kwargs'])
+            if 'label' in d['kwargs']:
+                handles.append(li)
+
         # Draw a bar plot
         if d['draw']=='bar':
             yvals = d['y'] if np.isscalar(d['y'][0]) else d['y'][fid]
@@ -79,11 +88,9 @@ def plotSubplot(ax,opt,canvas,fid=0):
             else:
                 apy.shell.exit('Text location or plot axis limts were not set (plot.py)')
             text = d['text'] if isinstance(d['text'],str) else d['text'][fid]
-            kwargs = {}
             if d['bgcolor'] is not None:
-                kwargs['bbox'] = dict(boxstyle='square,pad=.1', fc=d['bgcolor'], ec='none')
-            drawax.text(x, y, text, fontsize=d['fontsize'], 
-                        color=d['color'], ha=ha, va=va, **kwargs)
+                d['kwargs']['bbox'] = dict(boxstyle='square,pad=.1', fc=d['bgcolor'], ec='none')
+            drawax.text(x, y, text, ha=ha, va=va, **d['kwargs'])
 
         # Draw a circle
         if d['draw']=='circle':

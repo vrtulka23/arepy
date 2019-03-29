@@ -143,7 +143,7 @@ class snap(snapComplex,snapSimple):
         aProps = [props] if isinstance(props,(str,dict)) else props
         nProps = len(aProps)
 
-        cProps = ['RadHistogram','BoxProjection','BoxHistogram']
+        cProps = ['RadHistogram','BoxProjection','BoxHistogram','AngularMomentum']
         sProps = []
         # Convert simple property names to dictionaries
         for pid in range(nProps):
