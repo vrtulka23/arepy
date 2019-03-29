@@ -38,7 +38,7 @@ class snapSimple:
                     data[pid] = np.vstack(data[pid])
                 elif name in apy.const.dsets:
                     data[pid] = np.vstack(data[pid])
-                elif name in ['SphericalRegion','BoxRegion']:
+                elif name in ['RadialRegion','BoxRegion']:
                     prop0 = [ s[0] for s in data[pid] ]
                     prop1 = [ s[1] for s in data[pid] ]
                     data[pid] = [ prop0, np.vstack(prop1) ] # we keep ids ordered by the file
@@ -125,8 +125,8 @@ def getProperty(fnum,fileName,fmode,optChem,comoving,ptype,properties,ids=None):
                 pids = sf[pt]['ParticleIDs'][:]
             data = np.in1d(pids,prop['ids'])
 
-        elif name=='SphericalRegion':           # radius in code [cm^2]
-            # Example: {'name':'SphericalRegion','center':center,'radius':radius}
+        elif name=='RadialRegion':           # radius in code [cm^2]
+            # Example: {'name':'RadialRegion','center':center,'radius':radius}
             with hp.File(fileName,fmode) as sf:
                 coord = sf[pt]['Coordinates'][:]
             coord = coord[ids,:]-prop['center']

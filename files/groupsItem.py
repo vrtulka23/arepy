@@ -10,7 +10,6 @@ class item:
         self.sim = sim
         self.snap = snap
         self.groupName = groupName
-        self.items = None
 
     # Set coordinate transformations
     def setTransf(self, **opt):

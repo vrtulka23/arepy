@@ -46,16 +46,19 @@ class group:
         
     # This method returns an array of calculated values for each returned value from 'fn()'
     # The 'self.data' array has dimensions of (c,s) or (s) if 'fn()' returns only one value
-    def _foreach(self,fn,cols,args):
+    def _foreach(self,fn,cols,nproc,args):
         ncols = cols if isinstance(cols,int) else len(cols)
         fnName = fn.__name__
-        data = []
         pb = apy.util.pb(vmax=self.size,label=fnName+' '+self.name)
+        if nproc>1:
+            arguments = [[item]+args for item in self.items()]
+            results = apy.util.parallelPool(fn,arguments,pbar=pb,nproc=nproc)
+        data = []
         for item in self.items():
-            results = fn(item,*args)
-            if ncols==1: results = [results]
+            result = results[item.index] if nproc>1 else fn(item,*args)
+            result = [result] if ncols==1 else result
             for c in range(ncols):
-                part = np.array(results[c])
+                part = np.array(result[c])
                 if item.index==0:
                     emptydata = np.zeros( (self.size,)+part.shape, dtype=part.dtype)
                     data.append( emptydata )
@@ -69,13 +72,13 @@ class group:
         else:
             self.data[fnName] = data
         return self.data[fnName]
-    def foreach(self,fn,cols=1,cache=False,args=[]):
+    def foreach(self,fn,cols=1,cache=False,nproc=1,args=[]):
         if cache:
             apy.shell.mkdir(self.opt['dirCache'],opt='u')
             nameCache = self.opt['nameCache']+'_'+fn.__name__+'_'+self.name
-            return apy.data.cache( self._foreach, nameCache, cacheDir=self.opt['dirCache'], args=[fn,cols,args])
+            return apy.data.cache( self._foreach, nameCache, cacheDir=self.opt['dirCache'], args=[fn,cols,nproc,args])
         else:
-            return self._foreach(fn,cols,args)
+            return self._foreach(fn,cols,nproc,args)
 
     #########################
     # Common data reduction #
@@ -156,14 +159,8 @@ class group:
         axis.setImage(data=data['im'],extent=extent,norm=norm,normType=normType,cmap=cmap)
 
     # Add projection image
-    def setProjection(self, axis, prop, bins=200, norm=None, normType=None, cmap=None):
-        def setProjection(item,prop):
-            snap = item.getSnapshot()
-            data = snap.getProperty(0,{'name':'BoxProjection','transf':item.transf,
-                                       'w':prop,'bins':bins})
-            extent = item.transf['postselect']['box'][:4] * item.sim.units.conv['length']
-            return data,extent
-        proj = self.foreach(setProjection,['data','extent'],args=[prop],cache=False)
+    def setProjection(self, axis, prop, bins=200, cache=False, nproc=1, norm=None, normType=None, cmap=None):
+        proj = self.foreach(setProjection,['data','extent'],args=[prop,bins],cache=cache,nproc=nproc)
         if isinstance(axis,list):
             for i in range(len(axis)):
                 data = proj['data'][:,i]
@@ -212,7 +209,7 @@ class group:
             with item.getSnapshot() as sn:
                 center = item.transf['preselect']['center']
                 radius = item.transf['preselect']['radius']
-                ids, r2 = sn.getProperty(ptype,{'name':'SphericalRegion',"center":center,'radius':radius})
+                ids, r2 = sn.getProperty(ptype,{'name':'RadialRegion',"center":center,'radius':radius})
                 coord = sn.getProperty(ptype,'Coordinates',ids=ids)
             coord = item.transf.convert(['translate','align','flip','rotate','postselect'],coord)
             coords.append( coord * item.sim.units.conv['length'] )
@@ -307,3 +304,13 @@ class group:
             snaps[s] = np.interp(times,allTimes[s],allSnaps[s])        
         return times, np.around(snaps).astype(int)
     '''
+############################################
+# Local functions that can be parallelized #
+############################################
+
+# Get projection of a region in the snapshot
+def setProjection(item,prop,bins):
+    snap = item.getSnapshot()
+    data = snap.getProperty(0,{'name':'BoxProjection','transf':item.transf,'w':prop,'bins':bins})
+    extent = item.transf['postselect']['box'][:4] * item.sim.units.conv['length']
+    return data,extent

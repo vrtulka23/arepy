@@ -9,7 +9,7 @@ class snapComplex:
         if name=='RadHistogram':
             # Example: bins=np.linspace(1,10,1)
             #          {'name':'RadHistogram','p':'X_HP','center':[0.5,0.5,0.5],'bins':bins}
-            region = {'name':'SphericalRegion','center':prop['center'],'radius':prop['bins'][-1]}
+            region = {'name':'RadialRegion','center':prop['center'],'radius':prop['bins'][-1]}
             ids,r2 = self.getPropertySimple(0,[region],ids)[0]
             w = self.getPropertySimple(0,['Masses'],ids=ids)[0]
             p = self.getPropertySimple(0,prop['p'],ids=ids)
@@ -36,7 +36,7 @@ class snapComplex:
 
         elif name=='AngularMomentum':
             # Example: {'name':'AngularMomentum','center':[0.5,0.5,0.5],'radius':0.5}
-            region = {'name':'SphericalRegion','center':prop['center'],'radius':prop['radius']}
+            region = {'name':'RadialRegion','center':prop['center'],'radius':prop['radius']}
             ids, r2 = self.getPropertySimple(0,[region],ids)[0]
             pos, mass, vel = self.getPropertySimple(0,['Coordinates','Masses','Velocities'],ids=ids)
             m, (x,y,z), (vx,vy,vz) = mass, (pos-prop['center']).T, vel.T
@@ -48,7 +48,7 @@ class snapComplex:
             transf = prop['transf']
             center = transf['preselect']['center']
             radius = transf['preselect']['radius']
-            region = {'name':'SphericalRegion','center':center,'radius':radius}
+            region = {'name':'RadialRegion','center':center,'radius':radius}
             ids,r2 = self.getPropertySimple(0,[region],ids)[0]
             coord,mass = self.getPropertySimple(0,['Coordinates','Masses'],ids)
             

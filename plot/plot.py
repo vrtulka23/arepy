@@ -169,7 +169,7 @@ def plotSubplot(ax,opt,canvas,fid=0):
     elif 'title' in axProp:
         ax.set_title( axProp['title'],   fontsize=8 )
         
-    if 'group' in axProp and 'xlabel' in axProp['group'] and spRow<opt['nRows']-1:
+    if 'group' in axProp and 'xlabel' in axProp['group'] and spRow<opt['nrows']-1:
         ax.set_xlabel('')
         ax.set_xticklabels([])
     elif 'xlabel' in axProp:
@@ -218,15 +218,15 @@ def plotFigure(f,opt,canvas):
         # Create a figure and plot all subplots
         fig = plt.figure(figsize=opt['figSize'])
         axs = []
-        for r in range(opt['nRows']):
-            for c in range(opt['nCols']):
-                axs.append( fig.add_subplot(opt['nRows'],opt['nCols'],r*opt['nCols']+c+1) )
+        for r in range(opt['nrows']):
+            for c in range(opt['ncols']):
+                axs.append( fig.add_subplot(opt['nrows'],opt['ncols'],r*opt['ncols']+c+1) )
     else:
         # Create a figure using gridspec to get a tight layout
         fig = plt.figure(figsize=opt['figSize'])
-        gs = gridspec.GridSpec(opt['nRows'], opt['nCols'])
+        gs = gridspec.GridSpec(opt['nrows'], opt['ncols'])
         gs.update(wspace=opt['gridspec']['wspace'],hspace=opt['gridspec']['hspace'])
-        axs = [plt.subplot(gs[i]) for i in range(opt['nRows']*opt['nCols'])]
+        axs = [plt.subplot(gs[i]) for i in range(opt['nrows']*opt['ncols'])]
 
     for canv in canvas:
         spIndex, spRows, spCols = canv['subplot']

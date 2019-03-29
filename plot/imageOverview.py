@@ -19,21 +19,21 @@ def imageOverview( snapshots, outputDir='output', imageType='proj',
     print tc('Plotting snapshots %d-%d'%(min(snapshots),max(snapshots)),'green')
 
     if len(np.array(properties).shape)==2:
-        nRows = np.array(properties).shape[0]
-        nCols = np.array(properties).shape[1]
+        nrows = np.array(properties).shape[0]
+        ncols = np.array(properties).shape[1]
         properties = np.array(properties)
     else:
-        nRows = 1
-        nCols = np.array(properties).shape[0]
+        nrows = 1
+        ncols = np.array(properties).shape[0]
         properties = np.array([properties])
 
     nSnaps = len(snapshots)
 
-    prog = progressBar(maxValue=nRows*nCols*nSnaps+nRows*nCols,label="Reading data")
+    prog = progressBar(maxValue=nrows*ncols*nSnaps+nrows*ncols,label="Reading data")
 
-    image = np.zeros((nRows,nCols,nSnaps,imageSize[0],imageSize[1]))
-    for r in range(nRows):
-        for c in range(nCols):
+    image = np.zeros((nrows,ncols,nSnaps,imageSize[0],imageSize[1]))
+    for r in range(nrows):
+        for c in range(ncols):
             for s in range(nSnaps):
                 if properties[r][c][:7] == 'sxrates':
                     rate = int(properties[r][c][7])
@@ -45,26 +45,26 @@ def imageOverview( snapshots, outputDir='output', imageType='proj',
                 image[r,c,s,:] = im
                 prog.increase()
                 
-    vmin = np.zeros((nRows,nCols))
-    vmax = np.zeros((nRows,nCols))
-    for r in range(nRows):
-        for c in range(nCols):
+    vmin = np.zeros((nrows,ncols))
+    vmax = np.zeros((nrows,ncols))
+    for r in range(nrows):
+        for c in range(ncols):
             vmin[r,c] = image[r,c,:].min()
             vmax[r,c] = image[r,c,:].max()
-    prog.increase(nRows*nCols)
+    prog.increase(nrows*ncols)
 
     prog.close()
 
     if not os.path.exists(resultsDir):
         os.makedirs(resultsDir)
 
-    prog = progressBar(maxValue=nRows*nCols*nSnaps,label="Plotting")
+    prog = progressBar(maxValue=nrows*ncols*nSnaps,label="Plotting")
 
     for s, snap in enumerate(snapshots):
-        fig = plt.figure(figsize=(nCols*plotSize[0], nRows*plotSize[1]))
-        for r in range(nRows):
-            for c in range(nCols):
-                ax = fig.add_subplot( nRows, nCols, r*nCols+c+1 )
+        fig = plt.figure(figsize=(ncols*plotSize[0], nrows*plotSize[1]))
+        for r in range(nrows):
+            for c in range(ncols):
+                ax = fig.add_subplot( nrows, ncols, r*ncols+c+1 )
                 if properties[r][c] in ['density']:
                     norm = colors.LogNorm(vmin=vmin[r,c],vmax=vmax[r,c])
                 else:

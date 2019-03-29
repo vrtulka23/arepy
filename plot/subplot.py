@@ -8,7 +8,7 @@ class subplot:
         self.figure = figure                  # parent figure class
         self.row = row                        # row on the grid
         self.col = col                        # column on the grid
-        self.index = row*figure.nCols+col     # subplot index
+        self.index = row*figure.ncols+col     # subplot index
         
         # set options
         self.opt = figure.opt.copy()  
@@ -135,7 +135,7 @@ class subplot:
         # create a deep copy of the canvas
         canvas = copy.deepcopy(self.canvas)
 
-        figs = range(self.figure.nFigs)
+        figs = range(self.figure.nfigs)
 
         # add all axis options
         axOpt = ['title','xlabel','ylabel','xlim','ylim','xscale','yscale',

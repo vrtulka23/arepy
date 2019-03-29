@@ -5,12 +5,12 @@ import os
 
 class figure:
 
-    def __init__(self, nRows=1, nCols=1, nFigs=1, **opt):
+    def __init__(self, nrows=1, ncols=1, nfigs=1, **opt):
         
         # initial settings
-        self.nRows = nRows     # number of subplots in the row
-        self.nCols = nCols     # number of subplots in the column
-        self.nFigs = nFigs     # number of figures to plot
+        self.nrows = nrows     # number of subplots in the row
+        self.ncols = ncols     # number of subplots in the column
+        self.nfigs = nfigs     # number of figures to plot
         #self.timer = apy.util.timer()
         
         # set options
@@ -22,14 +22,14 @@ class figure:
             'timeStamp':  apy.util.timeStamp(),
             'sRow':       3.0, 
             'sCol':       3.5,
-            'nProc':      1,
+            'nproc':      1,
             'gridspec':   None,
             'fileFormat': 'png',
         }
         self.opt.update(opt)
 
-        if self.opt['nProc']>self.nFigs:
-            self.opt['nProc'] = self.nFigs
+        if self.opt['nproc']>self.nfigs:
+            self.opt['nproc'] = self.nfigs
 
         if self.opt['debug']:
             apy.shell.printc('Debugging mode is on!!!','r')
@@ -42,10 +42,10 @@ class figure:
 
         # setup child objects
         self.norms = apy.plot.norms()
-        self.subplot = [apy.plot.subplot(self,row,col) for row in range(nRows) for col in range(nCols)]
+        self.subplot = [apy.plot.subplot(self,row,col) for row in range(nrows) for col in range(ncols)]
         self.nSubplot = len(self.subplot)
 
-        apy.shell.printc('Reading data for %d subplots and %d figures'%(self.nSubplot,self.nFigs))
+        apy.shell.printc('Reading data for %d subplots and %d figures'%(self.nSubplot,self.nfigs))
 
     def __enter__(self):
         return self
@@ -60,11 +60,11 @@ class figure:
 
     # select subplot by row and col
     def getSubplot(self, row=0, col=0, **opt):
-        if row>=self.nRows:
-            apy.shell.exit('Cannot plot row %d out of %d'%(row+1,self.nRows))
-        if col>=self.nCols:
-            apy.shell.exit('Cannot plot column %d out of %d'%(col+1,self.nCols))
-        i = row*self.nCols+col
+        if row>=self.nrows:
+            apy.shell.exit('Cannot plot row %d out of %d'%(row+1,self.nrows))
+        if col>=self.ncols:
+            apy.shell.exit('Cannot plot column %d out of %d'%(col+1,self.ncols))
+        i = row*self.ncols+col
         if opt: self.subplot[i].setOption(**opt)
         self.subplot[i].canvas['empty'] = False
         return self.subplot[i]
@@ -72,22 +72,22 @@ class figure:
     # plot all figures and save the corresponding files
     def plot(self):
         # Plot figures
-        pb = apy.util.pb(vmax=self.nFigs,label="Plotting figures")
+        pb = apy.util.pb(vmax=self.nfigs,label="Plotting figures")
 
-        #results = apy.util.parallelPool(plotFigure,range(self.nFigs),nproc=8)
+        #results = apy.util.parallelPool(plotFigure,range(self.nfigs),nproc=8)
         canvas = [sp.getCanvas() for sp in self.subplot]
         optFig = {
-            'nRows':      self.nRows,
-            'nCols':      self.nCols,
-            'nFigs':      self.nFigs,
-            'figSize':    (self.nCols*self.opt['sCol'], self.nRows*self.opt['sRow']),
+            'nrows':      self.nrows,
+            'ncols':      self.ncols,
+            'nfigs':      self.nfigs,
+            'figSize':    (self.ncols*self.opt['sCol'], self.nrows*self.opt['sRow']),
             'fileName':   self.fileFigure+'%03d.'+self.opt['fileFormat'],
             'dirResults': self.dirResults,
             'gridspec':   self.opt['gridspec'],
         }
-        arguments = [[f,optFig,canvas] for f in range(self.nFigs)]
-        if self.opt['nProc']>1:
-            apy.util.parallelPool(plotFigure,arguments,pbar=pb,nproc=self.opt['nProc'])
+        arguments = [[f,optFig,canvas] for f in range(self.nfigs)]
+        if self.opt['nproc']>1:
+            apy.util.parallelPool(plotFigure,arguments,pbar=pb,nproc=self.opt['nproc'])
         else:
             for args in arguments:
                 plotFigure(*args)

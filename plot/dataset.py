@@ -45,7 +45,7 @@ class dataset:
         for s,snap in enumerate(self.snaps):
             time = self.sim[s].getHeader('Time',snap)
             xdata[s] = time * self.sim[s].units.conv['time']
-            ids, r = self.sim[s].getProperty(0,'SphericalRegion',snap,args={'center':center,'radius':radius[1]})            
+            ids, r = self.sim[s].getProperty(0,'RadialRegion',snap,args={'center':center,'radius':radius[1]})            
             mass = self.sim[s].getProperty(0,'Masses',snap,ids)
             abundnames=['xH2','xHP','xDP','xHD','xHEP','xHEPP','xH','xHE','xD']
             for p,prop in enumerate(props):
@@ -73,7 +73,7 @@ class dataset:
         data = np.zeros((nProps,self.nSnaps,bins))
         pb = apy.util.pb(vmax=self.nSnaps,label='Reading %d snapshots (%s)'%(self.nSnaps,','.join(props)))
         for s,snap in enumerate(self.snaps):
-            ids, r = self.sim[s].getProperty(0,'SphericalRegion',snap,args={'center':center,'radius':radius[1]})            
+            ids, r = self.sim[s].getProperty(0,'RadialRegion',snap,args={'center':center,'radius':radius[1]})            
             abundnames=['xH2','xHP','xDP','xHD','xHEP','xHEPP','xH','xHE','xD']
             for p,prop in enumerate(props):
                 if prop in abundnames:
