@@ -24,7 +24,7 @@ class plotBoxIonization(plot):
         def getBoxIonization(item):
             snap = item.getSnapshot()
             time = snap.getHeader('Time')
-            mass,mhp,mhep = snap.getProperty(0,['Masses','M_HP','M_HEP'])
+            mass,mhp,mhep = snap.getProperty(['Masses','M_HP','M_HEP'])
             nsinks = snap.getHeader('NumPart_Total')[5]
             return time, mhp.sum()/mass.sum(), mhep.sum()/mass.sum(), nsinks
 

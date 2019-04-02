@@ -59,6 +59,8 @@ class subplot:
 
     # Note: frameon=False
     def setLegend(self, handles=None, labels=None, loc='best', frameon=True, fontsize=8):
+        loc = loc.replace('bottom','lower')
+        loc = loc.replace('top','upper')
         self.canvas['legend'] = {'draw':'legend','handles':handles,'labels':labels,
                                  'loc':loc,'frameon':frameon,'fontsize':fontsize}
 
@@ -146,11 +148,6 @@ class subplot:
                 if self.opt[opt] is None: # remove if set to None
                     del self.opt[opt]
                     continue
-                #if opt=='xlim':
-                #    canvas['axis']['xlim'] = self.transf.convert(self.opt[opt],[0,0])
-                #elif opt=='ylim':
-                #    canvas['axis']['ylim'] = self.transf.convert(self.opt[opt],[1,1])
-                #else:
                 canvas['axis'][opt] = self.opt[opt]
 
         # transform x and y limits
@@ -158,11 +155,9 @@ class subplot:
         ynorm = self.figure.norms.getLimits(self.ynorm)
         if 'xlim' not in canvas['axis'] and xnorm is not None:    
             xnormmin = xnorm[1] if canvas['axis']['xscale']=='log' else xnorm[0]
-            #canvas['axis']['xlim'] = self.transf.convert([xnormmin,xnorm[2]],0)
             canvas['axis']['xlim'] = [xnormmin,xnorm[2]]
         if 'ylim' not in canvas['axis'] and ynorm is not None:
             ynormmin = ynorm[1] if canvas['axis']['yscale']=='log' else ynorm[0]
-            #canvas['axis']['ylim'] = self.transf.convert([ynormmin,ynorm[2]],1)
             canvas['axis']['ylim'] = [ynormmin,ynorm[2]]
 
         # transform t limits
@@ -170,7 +165,6 @@ class subplot:
             tnorm = self.figure.norms.getLimits(self.tnorm)
             if 'tlim' not in canvas['axis'] and tnorm is not None:
                 tnormmin = tnorm[1] if canvas['axis']['tscale']=='log' else tnorm[0]
-                #canvas['axis']['tlim'] = self.transf.convert([tnormmin,tnorm[2]],2)
                 canvas['axis']['tlim'] = [tnormmin,tnorm[2]]
 
         # flip x axis
@@ -181,18 +175,14 @@ class subplot:
         if canvas['image'] is not None:
             image = canvas['image']
             canvas['image']['norm'] = self.figure.norms.getLimits(image['norm'])
-            #canvas['image']['extent'] = self.transf.convert(image['extent'],[0,0,1,1])
             canvas['image']['extent'] = image['extent']
             
         # prepare multiple objects
         for i,d in enumerate(canvas['other']):
             if d['draw']=='text':
                 if not isinstance(d['loc'],str):
-                    #canvas['other'][i]['loc'] = self.transf.convert(d['loc'],[0,1])
                     canvas['other'][i]['loc'] = d['loc']
             if d['draw']=='scatter':
-                #canvas['other'][i]['x'] = self.transf.convert(d['x'],0)
-                #canvas['other'][i]['y'] = self.transf.convert(d['y'],1)
                 canvas['other'][i]['x'] = d['x']
                 canvas['other'][i]['y'] = d['y']
                 

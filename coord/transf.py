@@ -26,14 +26,14 @@ class transf:
         if 'box' in opt:
             center = (opt['box'][::2]+opt['box'][1::2])*0.5
             radius = np.linalg.norm(opt['box'][1::2]-opt['box'][::2])*0.5
-            self.addSelection('presphere', center, radius, opt['box'])
+            self.addSelection('select', center, radius, opt['box'])
         elif 'center' in opt:
             if 'radius' in opt:
-                self.addSelection('preselect', opt['center'], opt['radius'])
+                self.addSelection('select', opt['center'], opt['radius'])
             elif 'size' in opt:
                 radius = opt['size']*np.sqrt(3)*0.5
                 box = apy.coord.box(opt['size'],opt['center'])
-                self.addSelection('preselect', opt['center'], radius, box)
+                self.addSelection('select', opt['center'], radius, box)
         # translate coordinates
         if 'origin' in opt:
             self.addTranslation('translate', opt['origin'])
@@ -52,12 +52,12 @@ class transf:
             self.addRotation('rotate', opt['rotate'])
         # post-select
         if 'box' in opt:
-            self.addSelection('postselect', opt['box'])
+            self.addSelection('crop', opt['box'])
         elif 'center' in opt:
             if 'radius' in opt:
-                self.addSelection('postselect', opt['center'], opt['radius'])
+                self.addSelection('crop', opt['center'], opt['radius'])
             elif 'size' in opt:
-                self.addSelection('postselect', apy.coord.box(opt['size'],opt['center']))
+                self.addSelection('crop', apy.coord.box(opt['size'],opt['center']))
 
     def __getitem__(self, name):
         return self.items[name]
@@ -97,7 +97,11 @@ class transf:
             x,y,z = (coord-opt['center']).T
             ids = (x*x + y*y + z*z) < opt['radius']**2
             self.items[name]['ids'] = ids
-            coord = coord[ids]
+            if np.ndim(coord)>1:
+                coord = coord[ids]  # selector returns 2D array even though it was 1D before
+            else:
+                coord = None if ids is False else coord
+                
         elif ttype=='box':        # select a box region
             x,y,z = coord.T
             ids =  (opt['box'][0]<x) & (x<opt['box'][1]) &\

@@ -35,14 +35,16 @@ def plotSubplot(ax,opt,canvas,fid=0):
             if d['axis']=='horizontal':
                 li = drawax.axhline(d['pos'],**d['kwargs'])
             elif d['axis']=='vertical':
-                li = drawax.axvline(d['pos'],**d['kwargs'])
+                pos = d['pos'] if np.isscalar(d['pos']) else d['pos'][fid]
+                li = drawax.axvline(pos,**d['kwargs'])
             if 'label' in d['kwargs']:
                 handles.append(li)
             
         # Draw x/y line continuous function
         if d['draw']=='plot':
-            yvals = d['y'][fid] if np.array(d['y']).ndim>1 else d['y']
-            li = drawax.plot(d['x'],yvals,**d['kwargs'])
+            xvals = d['x'][fid] if np.ndim(d['x'])>1 else d['x']
+            yvals = d['y'][fid] if np.ndim(d['y'])>1 else d['y']
+            li = drawax.plot(xvals,yvals,**d['kwargs'])
             if 'label' in d['kwargs']:
                 handles.append(li[0]) # for some reason this is a list of objects
 
@@ -66,6 +68,8 @@ def plotSubplot(ax,opt,canvas,fid=0):
             coord = []
             for c in d['coord']:
                 coord.append( c if np.isscalar(c) else c[fid] )
+            if 'alpha' in d['kwargs'] and not np.isscalar(d['kwargs']['alpha']):
+                d['kwargs']['alpha'] = d['kwargs']['alpha'][fid]
             li = drawax.quiver(*coord,**d['kwargs'])
             if 'label' in d['kwargs']:
                 handles.append(li)
@@ -123,12 +127,12 @@ def plotSubplot(ax,opt,canvas,fid=0):
         image = canvas['image']
         data = image['data'][fid] if len(np.array(image['data']).shape)>2 else image['data']
         if data!=[]:
-            if image['normType']=='lin':
-                norm = colors.Normalize(vmin=image['norm'][0],vmax=image['norm'][2])
-            elif image['normType']=='log':
+            if image['normType']=='log':
                 if image['norm'][1]<=0:
                     return hideAxis("\nWarning: Skipping image plots with zero/negative logarithmic norm!")
                 norm = colors.LogNorm(vmin=image['norm'][1],vmax=image['norm'][2])
+            elif image['normType'] in ['lin',None]:
+                norm = colors.Normalize(vmin=image['norm'][0],vmax=image['norm'][2])
             im = ax.imshow( data.T, extent=image['extent'][fid], origin='lower', aspect=image['aspect'],
                             norm=norm, cmap=image['cmap'] )
 
@@ -180,9 +184,9 @@ def plotSubplot(ax,opt,canvas,fid=0):
         ax.set_yticklabels([])
     elif 'ylabel' in axProp:
         ax.set_ylabel( axProp['ylabel'], fontsize=8 )
-            
-    if 'xlim' in axProp:   ax.set_xlim( axProp['xlim'][fid] )
-    if 'ylim' in axProp:   ax.set_ylim( axProp['ylim'][fid] )
+
+    if 'xlim' in axProp:   ax.set_xlim( axProp['xlim'][fid] if np.ndim(axProp['xlim'])>1 else axProp['xlim'] )
+    if 'ylim' in axProp:   ax.set_ylim( axProp['ylim'][fid] if np.ndim(axProp['ylim'])>1 else axProp['ylim'] )
     if 'xscale' in axProp and axProp['xscale']=='log': ax.set_xscale( axProp['xscale'] )
     if 'yscale' in axProp and axProp['yscale']=='log': ax.set_yscale( axProp['yscale'] )
 

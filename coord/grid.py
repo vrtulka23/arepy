@@ -26,7 +26,7 @@ class grid:
             coord = np.vstack([ np.ravel(self.xxi[1]), np.ravel(self.xxi[0]), np.ravel(self.xxi[2]) ]).T 
         elif self.ndim==2: # ordered as: x*ny + y
             coord = np.vstack([ np.ravel(self.xxi[1]), np.ravel(self.xxi[0]) ]).T 
-        else:             # ordered as: x
+        else:              # ordered as: x
             coord = np.ravel(self.xxi[0])
         if scatter is not None:
             coord += (np.random.rand(len(coord),self.ndim)-0.5) * scatter
@@ -36,11 +36,10 @@ class grid:
             coord3d = np.full((len(coord),3),zfill)
             coord3d[:,:2] = coord
             self.coords = coord3d
+            self.grid = self.coords.reshape(tuple(self.nbins)+(3,))        
         else:
             self.coords = coord
-        
-        # grid array of coordinates
-        self.grid = self.coords.reshape(tuple(self.nbins)+(self.ndim,))
+            self.grid = self.coords.reshape(tuple(self.nbins)+(self.ndim,))        
 
         self.npix = len(self.coords)
         self.data = {}

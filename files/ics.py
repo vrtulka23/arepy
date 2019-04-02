@@ -32,7 +32,7 @@ class ics:
     # Use cell properties from a snapshot
     def useSnapshot(self,snap,density):
         apy.shell.printc('snapshot grid: '+snap.fileSnap)
-        coords, masses, dens = snap.getProperty(0,['Coordinates','Masses','Density'])
+        coords, masses, dens = snap.getProperty(['Coordinates','Masses','Density'])
         convBoxSize = self.opt['BoxSize'] / snap.getHeader('BoxSize')
         volumes = masses/dens * convBoxSize**3
         coords *= convBoxSize

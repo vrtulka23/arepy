@@ -25,9 +25,9 @@ ValueError: could not broadcast input array from shape (2,2) into shape (2)
 def cache( data, cacheName, cacheDir=None, reCache=False, args=None ):
 
     if cacheDir is None:
-        cacheFile = 'cache_%s.npy'%(cacheName)
+        cacheFile = '%s.npy'%(cacheName)
     else:
-        cacheFile = '%s/cache_%s.npy'%(cacheDir,cacheName)
+        cacheFile = '%s/%s.npy'%(cacheDir,cacheName)
     if not os.path.isfile(cacheFile) or reCache:
         data = data(*args) if callable(data) else data
         np.save(cacheFile,data)

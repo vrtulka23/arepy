@@ -45,12 +45,12 @@ class dataset:
         for s,snap in enumerate(self.snaps):
             time = self.sim[s].getHeader('Time',snap)
             xdata[s] = time * self.sim[s].units.conv['time']
-            ids, r = self.sim[s].getProperty(0,'RadialRegion',snap,args={'center':center,'radius':radius[1]})            
-            mass = self.sim[s].getProperty(0,'Masses',snap,ids)
+            ids, r = self.sim[s].getProperty('RadialRegion',snap,args={'center':center,'radius':radius[1]})            
+            mass = self.sim[s].getProperty('Masses',snap,ids)
             abundnames=['xH2','xHP','xDP','xHD','xHEP','xHEPP','xH','xHE','xD']
             for p,prop in enumerate(props):
                 if prop in abundnames:
-                    abund = self.sim[s].getProperty(0,prop,snap,ids)
+                    abund = self.sim[s].getProperty(prop,snap,ids)
                     hmassab, edges = np.histogram(a=r,bins=bins,range=radius,weights=mass*abund,density=False)
                     hmass, edges = np.histogram(a=r,bins=bins,range=radius,weights=mass,density=False)
                     hist = hmassab/hmass
@@ -73,23 +73,23 @@ class dataset:
         data = np.zeros((nProps,self.nSnaps,bins))
         pb = apy.util.pb(vmax=self.nSnaps,label='Reading %d snapshots (%s)'%(self.nSnaps,','.join(props)))
         for s,snap in enumerate(self.snaps):
-            ids, r = self.sim[s].getProperty(0,'RadialRegion',snap,args={'center':center,'radius':radius[1]})            
+            ids, r = self.sim[s].getProperty('RadialRegion',snap,args={'center':center,'radius':radius[1]})            
             abundnames=['xH2','xHP','xDP','xHD','xHEP','xHEPP','xH','xHE','xD']
             for p,prop in enumerate(props):
                 if prop in abundnames:
-                    mass, abund = self.sim[s].getProperty(0,['Masses',prop],snap,ids)
+                    mass, abund = self.sim[s].getProperty(['Masses',prop],snap,ids)
                     hmassab, edges = np.histogram(a=r,bins=bins,range=radius,weights=mass*abund,density=False)
                     hmass, edges = np.histogram(a=r,bins=bins,range=radius,weights=mass,density=False)
                     data[p,s,:] = hmassab/hmass
                     norm = self.subplot.figure.norms.setNorm(data[p,s,:],'ylim_abund')
                 elif prop=='density':
-                    mass = self.sim[s].getProperty(0,'Masses',snap,ids)
+                    mass = self.sim[s].getProperty('Masses',snap,ids)
                     hmass, edges = np.histogram(a=r,bins=bins,range=radius,weights=mass,density=False)
                     vols = 4./3.*np.pi*(edges[1:]**3-edges[:-1]**3)
                     data[p,s,:] = hmass/vols * self.sim[s].units.conv['density']
                     norm = self.subplot.figure.norms.setNorm(data[p,s,:],'ylim_density')
                 elif prop=='temp':
-                    mass, energy = self.sim[s].getProperty(0,['Masses','Temperature'],snap,ids)
+                    mass, energy = self.sim[s].getProperty(['Masses','Temperature'],snap,ids)
                     hmassen, edges = np.histogram(a=r,bins=bins,range=radius,weights=mass*energy,density=False)
                     hmass, edges = np.histogram(a=r,bins=bins,range=radius,weights=mass,density=False)                    
                     data[p,s,:] = hmassen/hmass
@@ -113,8 +113,8 @@ class dataset:
         allData = []
         pb = apy.util.pb(vmax=self.nSnaps,label='Slicing %d snapshots (%s)'%(self.nSnaps,prop))
         for snap in self.snaps:
-            ids, dist = self.sim[s].getProperty(0,'SliceRegion',snap,args={'plane':plane,'bins':bins})
-            data = self.sim[s].getProperty(0,prop,snap,ids)
+            ids, dist = self.sim[s].getProperty('SliceRegion',snap,args={'plane':plane,'bins':bins})
+            data = self.sim[s].getProperty(prop,snap,ids)
             norm = self.subplot.figure.norms.setNorm(data,norm)
             allData.append( np.reshape(data,bins) )
             pb.increase()

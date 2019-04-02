@@ -14,7 +14,6 @@ class group:
         self.data =  {}       # group data
         self.opt = {
             'dirCache':  './',                                        # direction of the cache
-            'nameCache': self.name if self.name=='' else 'group',     # name of the cache file
         }
         self.opt.update(opt)
         
@@ -75,7 +74,9 @@ class group:
     def foreach(self,fn,cols=1,cache=False,nproc=1,args=[]):
         if cache:
             apy.shell.mkdir(self.opt['dirCache'],opt='u')
-            nameCache = self.opt['nameCache']+'_'+fn.__name__+'_'+self.name
+            nameCache = fn.__name__+'_'+self.name 
+            if isinstance(cache,str): 
+                nameCache = nameCache+'_'+cache
             return apy.data.cache( self._foreach, nameCache, cacheDir=self.opt['dirCache'], args=[fn,cols,nproc,args])
         else:
             return self._foreach(fn,cols,nproc,args)
@@ -84,17 +85,17 @@ class group:
     # Common data reduction #
     ######################### 
     
-    def getPropertyRange(self, ptype, prop, scale='lin'):
+    def getPropertyRange(self, prop, scale='lin'):
         ranges = np.zeros((self.size,2))
         pb = apy.util.pb(vmax=self.size,label='Calculating range (%s)'%(prop))
         for item in self.items():
             with item.getSnapshot() as sn:
                 if scale=='lin':
-                    res = sn.getProperty(ptype,['Minimum','Maximum'],args={'p':prop})
+                    res = sn.getProperty([{'name':'Minimum','p':prop},{'name':'Maximum','p':prop}])
                     ranges[item.index,0] = res[0].min()
                     ranges[item.index,1] = res[1].max()
                 elif scale=='log':
-                    res = sn.getProperty(ptype,['MinPos','Maximum'],args={'p':prop})
+                    res = sn.getProperty([{'name':'MinPos','p':prop},{'name':'Maximum','p':prop}])
                     ranges[item.index,0] = np.log10(res[0].min())
                     ranges[item.index,1] = np.log10(res[1].max())
             pb.increase()
@@ -138,7 +139,7 @@ class group:
 
     # Plot Arepo image
     def setImage(self, axis, prop, imgType, norm=None, normType=None, cmap=None):
-        def setImage(item):
+        def setImage(item,prop,imgType):
             im,px,py = item.sim.getImage(item.snap,prop,imgType)
             if prop=='density':
                 im *= item.sim.units.conv['density']
@@ -148,19 +149,22 @@ class group:
             extent = np.array(box[:4]) * item.sim.units.conv['length']
             center = (box[::2]+box[1::2])*0.5 * item.sim.units.conv['length']
             return im,extent,center,box
-        data = self.foreach(setImage,['im','extent','center','box'])
-        self.setRegion(data['box'])
-        self.setTransf('moveOrigin','translate', origin=data['center'])
+        data = self.foreach(setImage,['im','extent','center','box'],args=[prop,imgType])
+        #self.setRegion(data['box'])
+        #self.setTransf('moveOrigin','translate', origin=data['center'])
         logNormsProps = ['density','rih','ndens']
         if not normType:
             normType = 'log' if prop in logNormsProps else 'lin'
         norm = 'img_%s_%s'%(prop,imgType) if norm is None else norm
-        extent = self.transf.convert('moveOrigin',data['extent'],[0,0,1,1])
+        #extent = self.transf.convert('moveOrigin',data['extent'],[0,0,1,1])
+        extent = data['extent']
         axis.setImage(data=data['im'],extent=extent,norm=norm,normType=normType,cmap=cmap)
 
-    # Add projection image
-    def setProjection(self, axis, prop, bins=200, cache=False, nproc=1, norm=None, normType=None, cmap=None):
-        proj = self.foreach(setProjection,['data','extent'],args=[prop,bins],cache=cache,nproc=nproc)
+    # Add rendering of the box projection/slice
+    def _renderImage(self, axis, prop, imgType, norm=None, normType=None, cmap=None, 
+                     bins=200, cache=False, nproc=1, n_jobs=1):
+        proj = self.foreach(renderImage,['data','extent'],args=[imgType,prop,bins,n_jobs],
+                            cache=cache, nproc=nproc)
         if isinstance(axis,list):
             for i in range(len(axis)):
                 data = proj['data'][:,i]
@@ -170,6 +174,10 @@ class group:
                 axis[i].setImage(data=data, extent=proj['extent'], norm=n, normType=nt, cmap=c)
         else:
             axis.setImage(data=proj['data'],extent=proj['extent'], norm=norm, normType=normType, cmap=cmap)
+    def setProjection(self, axis, prop, **opt):
+        self._renderImage(axis, prop, 'proj', **opt)
+    def setSlice(self, axis, prop, **opt):
+        self._renderImage(axis, prop, 'slice', **opt)
 
     # Add times to the plot
     def addTimes(self, axis, **opt):
@@ -207,11 +215,11 @@ class group:
         coords = []
         for item in self.items():
             with item.getSnapshot() as sn:
-                center = item.transf['preselect']['center']
-                radius = item.transf['preselect']['radius']
-                ids, r2 = sn.getProperty(ptype,{'name':'RadialRegion',"center":center,'radius':radius})
-                coord = sn.getProperty(ptype,'Coordinates',ids=ids)
-            coord = item.transf.convert(['translate','align','flip','rotate','postselect'],coord)
+                center = item.transf['select']['center']
+                radius = item.transf['select']['radius']
+                ids, r2 = sn.getProperty({'name':'RadialRegion','ptype':ptype,"center":center,'radius':radius})
+                coord = sn.getProperty({'name':'Coordinates','ptype':ptype},ids=ids)
+            coord = item.transf.convert(['translate','align','flip','rotate','crop'],coord)
             coords.append( coord * item.sim.units.conv['length'] )
         x = [coord[:,0] for coord in coords]
         y = [coord[:,1] for coord in coords]
@@ -227,7 +235,7 @@ class group:
     def addCoordSystem(self, axis, info=False, vector=None):
         colors = ['red','blue','gold','black']
         def addCoordSystem(item,vector):
-            box = item.transf['postselect']['box']
+            box = item.transf['crop']['box']
             size = np.min((box[1::2]-box[::2]) * 0.5 * item.sim.units.conv['length'])
             coord = [[size,0,0],[0,size,0],[0,0,size]]
             if 'align' in item.transf.items:   # show the alignment vector
@@ -235,13 +243,17 @@ class group:
                 vector = vector/np.linalg.norm(vector)*size
                 coord.append(vector)
             elif vector is not None:           # show arbitrary vector
+                vector = vector[item.index] if np.ndim(vector)>1 else vector
                 vector = vector/np.linalg.norm(vector)*size
                 coord.append(vector)                
             u,v,w = item.transf.convert(['align','flip','rotate'],np.array(coord)).T
-            return u,v
-        u,v = self.foreach(addCoordSystem,2,args=[vector])
+            alpha = np.where(w<0,0.5,1.0)
+            return u,v,alpha
+        u,v,alpha = self.foreach(addCoordSystem,3,args=[vector])
         for i in range(len(u[0])):
-            axis.addQuiver(0,0,u[:,i],v[:,i],color=colors[i],pivot='tail',angles='xy',scale=1,scale_units='xy')
+            print(alpha[:,i])
+            axis.addQuiver(0,0,u[:,i],v[:,i],color=colors[i],pivot='tail',angles='xy',
+                           scale=1,scale_units='xy',alpha=alpha[:,i])
         
         if info:         # print information about rotations
             info = []
@@ -257,20 +269,19 @@ class group:
             axis.addText(info,loc='bottom right',fontsize=6)
 
     # Create a 2D property histogram
-    def addHistogram2D(self, axis, ptype, xprop, yprop, bins, norm=None, normType='lin',
+    def addHistogram2D(self, axis, xprop, yprop, bins, norm=None, normType='lin',
                        xscale='lin', yscale='lin', cmap=None, aspect='auto'):
         if isinstance(bins,int): bins = [bins,bins]
         if isinstance(bins[0],int):
-            xr = self.getPropertyRange(ptype, xprop, xscale)
-            yr = self.getPropertyRange(ptype, yprop, yscale)
+            xr = self.getPropertyRange(xprop, xscale)
+            yr = self.getPropertyRange(yprop, yscale)
             bins[0] = np.linspace(xr[0],xr[1],bins[0]) if xscale=='lin' else np.logspace(xr[0],xr[1],bins[0])
             bins[1] = np.linspace(yr[0],yr[1],bins[1]) if yscale=='lin' else np.logspace(yr[0],yr[1],bins[1])
-        args = {"x":xprop,'y':yprop,'bins':bins,'xscale':xscale,'yscale':yscale}            
         allData = []
         pb = apy.util.pb(vmax=self.size,label='Calculating histogram (%s,%s)'%(xprop,yprop))
         for item in self.items(): 
             with item.getSnapshot() as sn:
-                hist = sn.getProperty(ptype,'Histogram2D',args=args)
+                hist = sn.getProperty({'name':'Histogram2D',"x":xprop,'y':yprop,'bins':bins,'xscale':xscale,'yscale':yscale})
             allData.append( hist )
             pb.increase()
         pb.close()
@@ -304,13 +315,17 @@ class group:
             snaps[s] = np.interp(times,allTimes[s],allSnaps[s])        
         return times, np.around(snaps).astype(int)
     '''
+
 ############################################
 # Local functions that can be parallelized #
 ############################################
 
-# Get projection of a region in the snapshot
-def setProjection(item,prop,bins):
+# Get projection/slice of a region in the snapshot
+def renderImage(item,rend,prop,bins,n_jobs):
     snap = item.getSnapshot()
-    data = snap.getProperty(0,{'name':'BoxProjection','transf':item.transf,'w':prop,'bins':bins})
-    extent = item.transf['postselect']['box'][:4] * item.sim.units.conv['length']
+    if rend=='proj':
+        data = snap.getProperty({'name':'BoxProjection','transf':item.transf,'w':prop,'bins':bins,'n_jobs':n_jobs})
+    elif rend=='slice':
+        data = snap.getProperty({'name':'BoxSlice','transf':item.transf,'w':prop,'bins':bins,'n_jobs':n_jobs})
+    extent = item.transf['crop']['box'][:4] * item.sim.units.conv['length']
     return data,extent

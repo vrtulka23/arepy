@@ -3,9 +3,12 @@ import arepy as apy
 import h5py as hp
 
 class snapSimple:
+    def initSimple(self):
+        #self.sProps = ['RadialRegion','BoxRegion','GridRegion','Histogram1D','Histogram2D'
+        return
 
     # This function collects and reorders (simple) properties calculated on different cores
-    def getPropertySimple(self,ptype,properties,ids=None):
+    def getPropertySimple(self,properties,ids=None):
         fmode = self.opt['fmode']
         nsub = self.opt['nsub']
         nproc = self.opt['nproc']
@@ -15,7 +18,7 @@ class snapSimple:
             if ids is None: ids = [None for s in range(nsub)]
             arguments = []
             for s in range(nsub):
-                arguments.append([s,self.sfileName[s],fmode,self.optChem,comoving,ptype,properties,ids[s]])
+                arguments.append([s,self.sfileName[s],fmode,self.optChem,comoving,properties,ids[s]])
             # Use more cores for calculations if possible
             if nproc>1:
                 allData = apy.util.parallelPool(getProperty,arguments,nproc=nproc)
@@ -38,10 +41,6 @@ class snapSimple:
                     data[pid] = np.vstack(data[pid])
                 elif name in apy.const.dsets:
                     data[pid] = np.vstack(data[pid])
-                elif name in ['RadialRegion','BoxRegion']:
-                    prop0 = [ s[0] for s in data[pid] ]
-                    prop1 = [ s[1] for s in data[pid] ]
-                    data[pid] = [ prop0, np.vstack(prop1) ] # we keep ids ordered by the file
                 elif name in ['GridRegion']:
                     prop0 = [ s[0] for s in data[pid] ]
                     prop1 = [ s[1] for s in data[pid] ]
@@ -49,14 +48,10 @@ class snapSimple:
                     apy.shell.exit("TODO: 'GridRegion' for multiple snap files needs to be finished (snapSimple.py)")
                     data[pid] = [ prop0, prop1 ]
                     # TODO: select only particles with the lowest distance
-                elif name in ['Histogram1D','Histogram2D']:
-                    data[pid] = np.sum(data[pid],axis=0)
-                elif name in ['Maximum','Minimum','Mean','MinPos','Sum']:
-                    data[pid] = np.array(data[pid]).flatten()
                 else:
                     data[pid] = np.hstack(data[pid])
         else: # Get property from a single file
-            arguments = [ 0,self.sfileName[0],fmode,self.optChem,comoving,ptype,properties,ids ]
+            arguments = [ 0,self.sfileName[0],fmode,self.optChem,comoving,properties,ids ]
             data = getProperty(*arguments)
         for pid,prop in enumerate(properties):
             if data[pid] is None:
@@ -64,24 +59,17 @@ class snapSimple:
         return data
 
 # This function calculates (simple) properties on every core separately
-def getProperty(fnum,fileName,fmode,optChem,comoving,ptype,properties,ids=None):
+def getProperty(fnum,fileName,fmode,optChem,comoving,properties,ids=None):
     # Convert simple property names to dictionaries
     for pid in range(len(properties)):
         if isinstance(properties[pid],str):
             properties[pid] = {'name':properties[pid]}
 
-    # Open the snapshot
+    # Read number of particles in each type
     with hp.File(fileName,fmode) as sf:
-        nPart = sf['Header'].attrs['NumPart_ThisFile'][ptype]
-        # If there are no particles we return an empty array
-        if nPart==0:
-            return [[]]*len(properties)
-        # If there are no selected particles we select all
-        if ids is None:
-            ids = slice(0,nPart)
+        nPart = sf['Header'].attrs['NumPart_ThisFile']
 
     # Let's calculate all snapshot properties
-    pt = 'PartType%d'%ptype
     nameStd=['ParticleIDs','Coordinates','Density',
              'InternalEnergy','ChemicalAbundances','PhotonRates','Coppied']
     nameCoord=['PosX','PosY','PosZ']
@@ -89,6 +77,20 @@ def getProperty(fnum,fileName,fmode,optChem,comoving,ptype,properties,ids=None):
     nameMath=['Plus','Minus','Multipy','Divide','Modulo']
     allData = []
     for prop in properties:
+
+        # Set the particle type (default is gas)
+        ptype = prop['ptype'] if 'ptype' in prop else 0
+        pt = 'PartType%d'%ptype
+
+        # If there are no particles we return an empty array
+        if nPart[ptype]==0:
+            allData.append( [] )
+            continue
+
+        # If there are no selected particles we select all
+        if ids is None:
+            ids = slice(0,nPart[ptype])
+
         name = prop['name']
         if name in nameStd:
             with hp.File(fileName,fmode) as sf:
@@ -160,12 +162,12 @@ def getProperty(fnum,fileName,fmode,optChem,comoving,ptype,properties,ids=None):
             # Example: bins=np.linspace(1,10,1)
             #          {'name':'Histogram1D','x':'PosX','bins':bins,'w':'Masses'}
             if 'weights' in prop:
-                x, weights = getProperty(fnum,fileName,fmode,optChem,comoving,ptype,
+                x, weights = getProperty(fnum,fileName,fmode,optChem,comoving,
                                     [prop['x'],prop['w']], ids=ids)
                 hist,edges = np.histogram(x, bins=prop['bins'], 
                                           density=False, weights=weights)
             else:
-                x = getProperty(fnum,fileName,fmode,optChem,comoving,ptype,
+                x = getProperty(fnum,fileName,fmode,optChem,comoving,
                                     [prop['x']], ids=ids)
                 hist,edges = np.histogram(x, bins=prop['bins'], density=False)
             data = hist
@@ -174,19 +176,19 @@ def getProperty(fnum,fileName,fmode,optChem,comoving,ptype,properties,ids=None):
             # Example: bins=[np.linspace(1,10,1),np.linspace(2,12,2)]
             #          {'name':'Histogram2D','x':'PosX','y':'PosY','bins':bins,'w':'Masses'}
             if 'w' in prop:
-                x, y, weights = getProperty(fnum,fileName,fmode,optChem,comoving,ptype,
+                x, y, weights = getProperty(fnum,fileName,fmode,optChem,comoving,
                                     [prop['x'],prop['y'],prop['w']], ids=ids)
                 hist,xedges,yedges = np.histogram2d(x, y, bins=prop['bins'], 
                                                     weights=weights) # density=False, 
             else:
-                x, y = getProperty(fnum,fileName,fmode,optChem,comoving,ptype,
+                x, y = getProperty(fnum,fileName,fmode,optChem,comoving,
                                     [prop['x'],prop['y']], ids=ids)
                 hist,xedges,yedges = np.histogram2d(x, y, bins=prop['bins']) #, density=False)
             data = hist
 
         elif name in nameStat:
             # Example: {'name':'Minimum','p':'PosX'}
-            values = getProperty(fnum,fileName,fmode,optChem,comoving,ptype,[prop['p']],ids=ids)[0]
+            values = getProperty(fnum,fileName,fmode,optChem,comoving,[prop['p']],ids=ids)[0]
             if name=='Minimum': data = [np.min(values)]
             elif name=='MinPos': data = [np.min(values[values>0])] if np.any(values>0) else []
             elif name=='Maximum': data = [np.max(values)]
@@ -194,7 +196,7 @@ def getProperty(fnum,fileName,fmode,optChem,comoving,ptype,properties,ids=None):
             elif name=='Sum': data = [np.sum(values)]
 
         elif name in nameMath:
-            xval,yval = getProperty(fnum,fileName,fmode,optChem,comoving,ptype,[prop['x'],prop['y']],ids=ids)
+            xval,yval = getProperty(fnum,fileName,fmode,optChem,comoving,[prop['x'],prop['y']],ids=ids)
             if name=='Plus': data = [xval+yval]
             elif name=='Minus': data = [xval-yval]
             elif name=='Multipy': data = [xval*yval]

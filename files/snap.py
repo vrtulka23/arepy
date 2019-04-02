@@ -13,6 +13,9 @@ class snap(snapComplex,snapSimple):
         return
 
     def __init__(self,fileName,**opt):
+        self.initComplex()
+        self.initSimple()
+
         default = apy.files.default['snap']
         self.fileName = fileName
 
@@ -22,10 +25,11 @@ class snap(snapComplex,snapSimple):
             'nsub':     default['nsub'],
             'initChem': 'sgchem1',
             'comoving': False
-            # other: nproc
+            # other: nproc, nproc_ckdt
         }
         self.opt.update(opt)
         if 'nproc' not in self.opt:
+            apy.shell.printc('Number of processors set to number of subfiles: %d'%self.opt['nsub'])
             self.opt['nproc'] = self.opt['nsub']
             
         # initialize chemistry
@@ -137,24 +141,23 @@ class snap(snapComplex,snapSimple):
             return f[pt].keys()
 
     # This function switches between complex and simple properties
-    # Example: sn.getProperty(0,['Masses',{'name':'Minimum','p':'PosX'}])
-    def getProperty(self,ptype,props,ids=None):
+    # Example: sn.getProperty(['Masses',{'name':'Minimum','p':'PosX'}])
+    def getProperty(self,props,ids=None):
         # Convert to array if needed
         aProps = [props] if isinstance(props,(str,dict)) else props
         nProps = len(aProps)
 
-        cProps = ['RadHistogram','BoxProjection','BoxHistogram','AngularMomentum']
         sProps = []
         # Convert simple property names to dictionaries
         for pid in range(nProps):
             if isinstance(aProps[pid],str):
                 aProps[pid] = {'name':aProps[pid]}
-            if aProps[pid]['name'] not in cProps:
+            if aProps[pid]['name'] not in self.cProps:
                 sProps.append(aProps[pid])
-        data = self.getPropertySimple(ptype,sProps,ids) if sProps else []
+        data = self.getPropertySimple(sProps,ids) if sProps else []
         for pid in range(nProps):
-            if aProps[pid]['name'] in cProps:
-                 data.insert(pid,self.getPropertyComplex(ptype,aProps[pid],ids))
+            if aProps[pid]['name'] in self.cProps:
+                 data.insert(pid,self.getPropertyComplex(aProps[pid],ids))
         
         # !! do not wrap np.array() around, because we want to return native array dtypes
         return data[0] if isinstance(props,(str,dict)) else data  

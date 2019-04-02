@@ -1,5 +1,6 @@
 from matplotlib import colors
 import numpy as np
+import arepy as apy
 
 class norms:
     def __init__(self):
@@ -11,10 +12,13 @@ class norms:
         data = np.array(data)
         if data.dtype==object:
             data = np.hstack([dat.ravel() for dat in data])
-        vmin = np.nanmin(data)
-        vmax = np.nanmax(data)
-        vminpos = np.nanmin(data[data>0]) if np.sum(data>0)>0 else np.nanmax(data)
-
+        data = data[~np.isnan(data)]
+        if np.all(data==0): # do not norm zero arrays
+            apy.shell.printc("Warning: excluding '%s' because it has only zero values (norms.py)"%normID,'r')
+            return normID
+        vmin = np.min(data)
+        vmax = np.max(data)
+        vminpos = np.min(data[data>0]) if np.sum(data>0)>0 else np.max(data)
         normID = 'NORMXYZ123_%d'%len(self.norms) if normID==None else str(normID)
 
         if normID in self.norms:

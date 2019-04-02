@@ -14,7 +14,7 @@ def getHeader(fileSnap,name):
 def getProperty(fileSnap,ptype,name,ids,comoving,optChem):
     pt = 'PartType%d'%ptype
 
-    nameStd = ['Masses','Velocities','PhotonFlux']
+    nameStd = ['Masses','Velocities','PhotonFluxTotal']
 
     def unitDensity():
         unitMass = fileSnap['Header'].attrs['UnitMass_in_g']
@@ -30,7 +30,8 @@ def getProperty(fileSnap,ptype,name,ids,comoving,optChem):
     def calcMu():
         x_h2, x_Hp, x_DP, x_HD, x_Hep, x_Hepp = fileSnap[pt]['ChemicalAbundances'][:].T
         mu = ( optChem['x0_H'] + 2.*optChem['x0_D'] + 4.*optChem['x0_He'] ) / \
-            ( optChem['x0_H'] + optChem['x0_D'] + optChem['x0_He'] + x_Hp[ids] + x_DP[ids] + x_Hep[ids] + 2.*x_Hepp[ids] )
+            ( optChem['x0_H'] + optChem['x0_D'] + optChem['x0_He'] + x_Hp[ids] + x_DP[ids] + \
+              x_Hep[ids] + 2.*x_Hepp[ids] )
         return mu
 
     def calcGamma():
