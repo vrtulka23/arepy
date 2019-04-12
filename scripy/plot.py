@@ -12,6 +12,8 @@ class plot:
         self.fileName = dirName if fileName is None else fileName  # name of the plot file
         self.dirPlot = self.dirName+'/'+self.fileName              # path to the file directory
 
+        self.nproc = 1                        # number of available processors
+
         self.fig = None
         self.tab = None
         self.grps = None
@@ -26,13 +28,18 @@ class plot:
     def init(self):
         return
 
+    # Set number of available processors
+    def setProcessors(self,nproc):
+        self.nproc = nproc
+
     # Add group
-    def setGroups(self,names,options):
-        opt = {
+    def setGroups(self,names,options,**opt):
+        nopt = {
             'dirCache': self.proj.dirResults+'/'+self.dirPlot+'/cache',
-            'nameCache': self.dirName,
+            'nproc':    self.nproc,
         }
-        self.grps = apy.files.groups(names=names,options=options,**opt)
+        nopt.update(opt)
+        self.grps = apy.files.groups(names=names,options=options,**nopt)
 
     # Add a new figure to the list of plots
     def setFigure(self,ncol,nrow,nfig,movie=False,show=False,debug=False,**opt):
@@ -42,6 +49,7 @@ class plot:
             'dirName':    self.dirPlot,
             'dirResults': self.proj.dirResults,
             'timeStamp':  self.timeStamp,
+            'nproc':      self.nproc,
         }
         nopt.update(opt)
         self.optPlot = {

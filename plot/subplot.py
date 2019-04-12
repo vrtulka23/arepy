@@ -70,7 +70,7 @@ class subplot:
         self.canvas['legendLS'] = {'draw':'legendLS','ls':linestyles,'labels':labels,
                                    'loc':loc,'color':color,'frameon':frameon,'fontsize':fontsize}
 
-    def setImage(self, data, extent=(0,1,0,1), norm=None, normType='lin', cmap=None, aspect='equal'):
+    def setImage(self, data, extent=(0,1,0,1), norm=None, normType='lin', cmap=None, aspect='equal', xnorm=True, ynorm=True):
         xextent = extent[:,:2] if np.ndim(extent)>1 else extent[:2]
         yextent = extent[:,2:] if np.ndim(extent)>1 else extent[2:]
         self.setNorm(xdata=xextent,ydata=yextent,zdata=data,zname=norm)        

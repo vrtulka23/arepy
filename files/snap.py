@@ -157,7 +157,7 @@ class snap(snapComplex,snapSimple):
         data = self.getPropertySimple(sProps,ids) if sProps else []
         for pid in range(nProps):
             if aProps[pid]['name'] in self.cProps:
-                 data.insert(pid,self.getPropertyComplex(aProps[pid],ids))
-        
+                data.insert(pid,self.getPropertyComplex(aProps[pid],ids))
+
         # !! do not wrap np.array() around, because we want to return native array dtypes
         return data[0] if isinstance(props,(str,dict)) else data  

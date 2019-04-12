@@ -84,7 +84,10 @@ def getProperty(fnum,fileName,fmode,optChem,comoving,properties,ids=None):
 
         # If there are no particles we return an empty array
         if nPart[ptype]==0:
-            allData.append( [] )
+            if prop['name'] in ['GridRegion','RadialRegion','BoxRegion']:
+                allData.append( [[],[]] )
+            else:
+                allData.append( [] )
             continue
 
         # If there are no selected particles we select all
@@ -121,6 +124,17 @@ def getProperty(fnum,fileName,fmode,optChem,comoving,properties,ids=None):
                 coord = sf[pt]['Coordinates'][:]
             coord = coord[ids,:] - prop['center']
             data = coord[:,0]**2 + coord[:,1]**2 + coord[:,2]**2
+
+        elif name=='VelocityRadial':            # size of the velocity tangent component
+            with hp.File(fileName,fmode) as sf:
+                coord = sf[pt]['Coordinates'][:]
+                vel = sf[pt]['Velocities'][:]
+            rad = coord[ids,:]-prop['center']                   # translated origin
+            norm = np.linalg.norm(rad,axis=1)[:,None]
+            nhat = np.where(norm>0,rad/norm,np.zeros_like(rad)) # unit radial vector
+            # taken from https://en.wikipedia.org/wiki/Tangential_and_normal_components
+            tangent = np.multiply(vel[ids,:],nhat).sum(1)       # element-wise dot product (v.n_hat)
+            data = tangent
 
         elif name=='SelectIDs':
             with hp.File(fileName,fmode) as sf:

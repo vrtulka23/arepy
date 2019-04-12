@@ -19,7 +19,7 @@ class transf:
     def __exit__(self, type, value, traceback):
         True
     
-    def __init__(self,**opt):
+    def __init__(self,show=False,**opt):
         self.items = {}   # list of added transformations    
 
         # pre select coordinates
@@ -55,9 +55,17 @@ class transf:
             self.addSelection('crop', opt['box'])
         elif 'center' in opt:
             if 'radius' in opt:
-                self.addSelection('crop', opt['center'], opt['radius'])
+                box = apy.coord.box(opt['radius']*2/np.sqrt(3),opt['center'])                
+                self.addSelection('crop', opt['center'], opt['radius'], box)
             elif 'size' in opt:
                 self.addSelection('crop', apy.coord.box(opt['size'],opt['center']))
+                
+        # print out the settings for debugging
+        if show:
+            for key,val in self.items.items():
+                print(key)
+                for k,v in val.items():
+                    print('   ',k,v)
 
     def __getitem__(self, name):
         return self.items[name]

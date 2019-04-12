@@ -18,21 +18,21 @@ class snapComplex:
             region = {'name':'RadialRegion','center':prop['center'],'radius':prop['bins'][-1]}
             ids,r2 = self.getPropertyComplex(region,ids=ids)
             w = self.getPropertySimple(['Masses'],ids=ids)[0]
-            wHist, edges = np.histogram(r2,bins=prop['bins']**2,weights=w)
+            wHist, edges = np.histogram(r2,bins=prop['bins']**2,weights=w,density=False)
             if isinstance(prop['p'],(str,dict)):
                 p = self.getPropertySimple([prop['p']],ids=ids)[0]
-                pHist, edges = np.histogram(r2,bins=prop['bins']**2,weights=w*p)
+                pHist, edges = np.histogram(r2,bins=prop['bins']**2,weights=w*p,density=False)
                 results = pHist/wHist
             else:
                 p = self.getPropertySimple(prop['p'],ids=ids)
                 results = []
                 for i in range(len(prop['p'])):
-                    pHist, edges = np.histogram(r2,bins=prop['bins']**2,weights=w*p[i])
+                    pHist, edges = np.histogram(r2,bins=prop['bins']**2,weights=w*p[i],density=False)
                     results.append( pHist/wHist )
             return results
 
         elif name=='MassCenter':
-            # Example: {'name':'MassCenter','transf':transf}
+            # Example: {'name':'MassCenter','transf':transf,'ptype':[0,1]}
             if 'ptype' in prop:
                 pts = [prop['ptype']] if np.isscalar(prop['ptype']) else prop['ptype']
             else:
@@ -40,7 +40,7 @@ class snapComplex:
             npart = self.getHeader('NumPart_Total')
             npartsum = np.sum(npart[pts])
             data = apy.data.collector()
-            for pt in pts:
+            for i,pt in enumerate(pts):
                 if npart[pt]==0: continue
                 if 'transf' in prop and 'select' in prop['transf'].items:
                     rids,r2 = self.getPropertyComplex({'name':'RadialRegion','ptype':pt,'transf':prop['transf']},ids=ids)
@@ -50,17 +50,20 @@ class snapComplex:
                     {'name':'Masses','ptype':pt},
                     {'name':'Coordinates','ptype':pt}
                 ],ids=rids)
-                data.add(pt,npartsum,len(mass),{
+                data.add(i,npartsum,len(mass),{
                     'xweight': coord[:,0] * mass,
                     'yweight': coord[:,1] * mass,
                     'zweight': coord[:,2] * mass,
                     'mass':    mass,
                 })
-            center = np.array([ np.sum(data['xweight']), np.sum(data['yweight']), np.sum(data['zweight']) ]) 
-            center /= np.sum(data['mass'])
-            if 'transf' in prop:
-                center = prop['transf'].convert(['translate','align','flip','rotate','crop'],center)
-            return center
+            if len(data)>0:
+                center = np.array([ np.sum(data['xweight']), np.sum(data['yweight']), np.sum(data['zweight']) ]) 
+                center /= np.sum(data['mass'])
+                if 'transf' in prop:
+                    center = prop['transf'].convert(['translate','align','flip','rotate','crop'],center)
+                return center
+            else:
+                return [np.nan]*3
 
         elif name=='AngularMomentum':
             # Example: {'name':'AngularMomentum','center':[0.5,0.5,0.5],'radius':0.5}
@@ -114,19 +117,25 @@ class snapComplex:
 
         elif name=='BoxProjection':
             # Example: {'name':'BoxProjection','transf':transf,'w':'Density','bins':200,'n_jobs':1}
-            transf = prop['transf']
-            center = transf['select']['center']
-            radius = transf['select']['radius']
-            region = {'name':'RadialRegion','center':center,'radius':radius}
-            ids,r2 = self.getPropertyComplex(region,ids=ids)
-            coord,mass = self.getPropertySimple(['Coordinates','Masses'],ids=ids)
+            if prop['transf'] is None:
+                coord,mass = self.getPropertySimple(['Coordinates','Masses'])
+            else:
+                transf = prop['transf']
+                center = transf['select']['center']
+                radius = transf['select']['radius']
+                region = {'name':'RadialRegion','center':center,'radius':radius}
+                ids,r2 = self.getPropertyComplex(region,ids=ids)
+                coord,mass = self.getPropertySimple(['Coordinates','Masses'],ids=ids)
             
-            # perform coordinate transformations
-            coord = transf.convert(['translate','align','flip','rotate','crop'],coord)
-            mass = transf.select('crop',mass)            
+                # perform coordinate transformations
+                coord = transf.convert(['translate','align','flip','rotate','crop'],coord)
+                mass = transf.select('crop',mass)            
 
             # initiate a grid
-            grid = apy.coord.grid( [prop['bins']]*3, transf['crop']['box'] )
+            if prop['transf'] is None:
+                grid = apy.coord.grid( [prop['bins']]*3, transf['crop']['box'] )
+            else:
+                grid = apy.coord.grid( [prop['bins']]*3, transf['crop']['box'] )
             pix = grid.getPixFromCoord(coord)
             grid.addAtPix('num',pix,1)
             grid.addAtPix('mass',pix,mass)

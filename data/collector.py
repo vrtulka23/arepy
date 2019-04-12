@@ -5,6 +5,8 @@ class collector():
         self.offset = {}
         self.data = {}
         self.length = {}
+    def __len__(self,key=None):
+        return len(self.data) if key is None else len(self.data[key])
     def __getitem__(self, key):
         return self.data[key]
     def __setitem__(self, key, value):

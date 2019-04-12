@@ -11,7 +11,7 @@ class norms:
         #DEBUG: we have to do it like this, in case that the second dimensions are not the same
         data = np.array(data)
         if data.dtype==object:
-            data = np.hstack([dat.ravel() for dat in data])
+            data = np.hstack([np.ravel(dat) for dat in data])
         data = data[~np.isnan(data)]
         if np.all(data==0): # do not norm zero arrays
             apy.shell.printc("Warning: excluding '%s' because it has only zero values (norms.py)"%normID,'r')
