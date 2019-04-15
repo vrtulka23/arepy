@@ -52,7 +52,7 @@ class group:
         # Get snapshot data
         # DEBUG: Don't use `while` clause for progress bar because it will freeze the parallel processes
         #        Probably the object instance is being closed before parallel pool actually use it
-        pb = apy.util.pb(vmax=self.size,label=fnName+' '+self.name) 
+        pb = apy.shell.pb(vmax=self.size,label=fnName+' '+self.name) 
         if nproc>1:
             arguments = [[item]+args for item in self.items()]
             results = apy.util.parallelPool(fn,arguments,pbar=pb,nproc=nproc)
@@ -104,7 +104,7 @@ class group:
     
     def getPropertyRange(self, prop, scale='lin'):
         ranges = np.zeros((self.size,2))
-        pb = apy.util.pb(vmax=self.size,label='Calculating range (%s)'%(prop))
+        pb = apy.shell.pb(vmax=self.size,label='Calculating range (%s)'%(prop))
         for item in self.items():
             with item.getSnapshot() as sn:
                 if scale=='lin':
@@ -137,7 +137,7 @@ class group:
             
         '''
         data = {}
-        pb = apy.util.pb(vmax=self.size,label='Reading sink properties')
+        pb = apy.shell.pb(vmax=self.size,label='Reading sink properties')
         for item in self.items():
             with item.getSink(**opt) as sn:
                 sids = sn.getValues('ID')
@@ -275,7 +275,7 @@ class group:
             bins[0] = np.linspace(xr[0],xr[1],bins[0]) if xscale=='lin' else np.logspace(xr[0],xr[1],bins[0])
             bins[1] = np.linspace(yr[0],yr[1],bins[1]) if yscale=='lin' else np.logspace(yr[0],yr[1],bins[1])
         allData = []
-        pb = apy.util.pb(vmax=self.size,label='Calculating histogram (%s,%s)'%(xprop,yprop))
+        pb = apy.shell.pb(vmax=self.size,label='Calculating histogram (%s,%s)'%(xprop,yprop))
         for item in self.items(): 
             with item.getSnapshot() as sn:
                 hist = sn.getProperty({'name':'Histogram2D',"x":xprop,'y':yprop,'bins':bins,'xscale':xscale,'yscale':yscale})

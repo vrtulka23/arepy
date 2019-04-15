@@ -396,6 +396,7 @@ while [ "$1" != "" ]; do
     case $1 in
         -a | --analyze )           shift; analyze "$@"; break;;
 	--plot )                   shift; analyze plot "$@"; break;;
+	--movie )                  shift; analyze movie "$@"; break;;
 	--show )                   shift; analyze show "$@"; break;;
 	--setup )                  shift; analyze setup "$@"; break;;
 	--script )                 shift; analyze script "$@"; break;;

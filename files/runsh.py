@@ -88,7 +88,7 @@ class runsh():
     def write(self,fileName,rmGroups=[],rmParams=[],cmGroups=[],cmParams=[]):
         output = "#!/bin/bash \n\n"
         output += self.parse(rmGroups=rmGroups,rmParams=rmParams,cmGroups=cmGroups,cmParams=cmParams)
-        output += "\nsource $bits/arepo/run.main.sh"
+        output += "\nsource ~/.arepy/run.sh"
         with open(fileName,'w') as f:
             f.write(output)
             call(['chmod','+x',fileName])

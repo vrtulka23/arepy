@@ -6,13 +6,13 @@ args = sys.argv[3:]
 
 sys.path.insert(0, settings['scripy'])
 
-fns = ['setup','plot','show','script','init-setup','init-plot','init-script']
+fns = ['setup','plot','show','movie','script','init-setup','init-plot','init-script']
 if fn in fns:
     exec("from %s import *"%(proj))
     proj = project(proj)
     if fn=='setup':
         proj.setup(*args)
-    elif fn in ['plot','show']:
+    elif fn in ['plot','show','movie']:
         proj.plot(fn,*args)
     elif fn=='script':
         proj.script(*args)

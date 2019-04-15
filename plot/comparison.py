@@ -18,7 +18,7 @@ class comparison:
 
         # create subplots
         self.nSubplot = grid[0]*grid[1]
-        self.pb = apy.util.pb(maxValue=self.nSubplot, label='Reading values')
+        self.pb = apy.shell.pb(maxValue=self.nSubplot, label='Reading values')
         self.subplot = [apy.plot.subplot(self,a) for a in range(self.nSubplot)]
 
     def plot(self,movie=False,fileNameMovie="figOverview.mp4"):
@@ -30,7 +30,7 @@ class comparison:
 
         # plot new figures
         nFigures = np.min([sp.nSnap for sp in self.subplot])
-        with apy.util.pb(maxValue=nFigures*self.nSubplot, label="Plotting figures") as pb: 
+        with apy.shell.pb(maxValue=nFigures*self.nSubplot, label="Plotting figures") as pb: 
             for f in range(nFigures):
                 fig = plt.figure(figsize=(self.grid[1]*self.subPlotSize[1], self.grid[0]*self.subPlotSize[0]))
                 for a in range(self.nSubplot): 
@@ -44,7 +44,7 @@ class comparison:
         
         if movie:
             fileNameMovie = self.dirResults+'/'+fileNameMovie
-            apy.util.makeMovie(fileNameMovie,fileNameFigures)
+            apy.shell.makeMovie(fileNameMovie,fileNameFigures)
 
     def show(self):
         fileName = self.dirResults+'/'+self.fileNameFigure%'*'

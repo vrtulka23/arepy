@@ -72,7 +72,7 @@ class figure:
     # plot all figures and save the corresponding files
     def plot(self):
         # Plot figures
-        pb = apy.util.pb(vmax=self.nfigs,label="Plotting figures")
+        pb = apy.shell.pb(vmax=self.nfigs,label="Plotting figures")
 
         #results = apy.util.parallelPool(plotFigure,range(self.nfigs),nproc=8)
         canvas = [sp.getCanvas() for sp in self.subplot]
@@ -98,7 +98,7 @@ class figure:
         #self.timer.show()
 
     def movie(self):
-        apy.util.makeMovie(self.fileFigure+'.mp4',self.fileFigure+'*.'+self.opt['fileFormat'])
+        apy.shell.makeMovie(self.fileFigure+'.mp4',self.fileFigure+'*.'+self.opt['fileFormat'])
         apy.shell.printc('Movie saved as: %s.mp4'%self.fileFigure)
 
     # display all figures

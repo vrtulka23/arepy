@@ -170,7 +170,7 @@ class cut():
         nPart = f['Header'].attrs['NumPart_Total']
         nPartCut = np.zeros_like(nPart)
         
-        pb = apy.util.pb(maxValue=7, label="Cutting the box")
+        pb = apy.shell.pb(maxValue=7, label="Cutting the box")
     
         for p in range(6):
             pb.increase()

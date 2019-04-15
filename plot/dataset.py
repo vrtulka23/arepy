@@ -41,7 +41,7 @@ class dataset:
         nProps = len(props)
         xdata = np.zeros((self.nSnaps))
         ydata = np.zeros((nProps,self.nSnaps))
-        pb = apy.util.pb(vmax=len(self.snaps),label='Reading %d snapshots'%self.nSnaps)
+        pb = apy.shell.pb(vmax=len(self.snaps),label='Reading %d snapshots'%self.nSnaps)
         for s,snap in enumerate(self.snaps):
             time = self.sim[s].getHeader('Time',snap)
             xdata[s] = time * self.sim[s].units.conv['time']
@@ -71,7 +71,7 @@ class dataset:
             props, label = [props], [label]
         nProps = len(props)
         data = np.zeros((nProps,self.nSnaps,bins))
-        pb = apy.util.pb(vmax=self.nSnaps,label='Reading %d snapshots (%s)'%(self.nSnaps,','.join(props)))
+        pb = apy.shell.pb(vmax=self.nSnaps,label='Reading %d snapshots (%s)'%(self.nSnaps,','.join(props)))
         for s,snap in enumerate(self.snaps):
             ids, r = self.sim[s].getProperty('RadialRegion',snap,args={'center':center,'radius':radius[1]})            
             abundnames=['xH2','xHP','xDP','xHD','xHEP','xHEPP','xH','xHE','xD']
@@ -111,7 +111,7 @@ class dataset:
             bins = self.sim[s].getParameter(['PicXpixels','PicYpixels'])
 
         allData = []
-        pb = apy.util.pb(vmax=self.nSnaps,label='Slicing %d snapshots (%s)'%(self.nSnaps,prop))
+        pb = apy.shell.pb(vmax=self.nSnaps,label='Slicing %d snapshots (%s)'%(self.nSnaps,prop))
         for snap in self.snaps:
             ids, dist = self.sim[s].getProperty('SliceRegion',snap,args={'plane':plane,'bins':bins})
             data = self.sim[s].getProperty(prop,snap,ids)
@@ -135,7 +135,7 @@ class dataset:
     
     def setImage(self, imgProperty, imgType, extent=None, norm=None, normType=None, cmap=None):
         allData = []
-        pb = apy.util.pb(vmax=self.nSnaps,label='Reading images (%s_%s)'%(imgProperty,imgType))
+        pb = apy.shell.pb(vmax=self.nSnaps,label='Reading images (%s_%s)'%(imgProperty,imgType))
         for s,snap in enumerate(self.snaps):
             data,px,py = self.sim[s].getImage(snap,imgProperty,imgType)
             if imgProperty=='density':
@@ -162,7 +162,7 @@ class dataset:
 
     def addParticles(self, ptype, **nkwargs):
         xData,yData = [], []
-        pb = apy.util.pb(vmax=self.nSnaps,label='Reading particles (%d)'%(ptype))
+        pb = apy.shell.pb(vmax=self.nSnaps,label='Reading particles (%d)'%(ptype))
         for s,snap in enumerate(self.snaps):
             with self.sim[s].getSnapshot(snap) as sn:
                 if self.region is not None:
@@ -179,7 +179,7 @@ class dataset:
 
     def getPropertyRange(self, ptype, prop, scale='lin'):
         ranges = np.zeros((self.nSnaps,2))
-        pb = apy.util.pb(vmax=self.nSnaps,label='Calculating range (%s)'%(prop))
+        pb = apy.shell.pb(vmax=self.nSnaps,label='Calculating range (%s)'%(prop))
         for s,snap in enumerate(self.snaps):
             with self.sim[s].getSnapshot(snap) as sn:
                 if scale=='lin':
@@ -204,7 +204,7 @@ class dataset:
             bins[1] = np.linspace(yr[0],yr[1],bins[1]) if yscale=='lin' else np.logspace(yr[0],yr[1],bins[1])
         args = {"x":xprop,'y':yprop,'bins':bins,'xscale':xscale,'yscale':yscale}            
         allData = []
-        pb = apy.util.pb(vmax=self.nSnaps,label='Calculating histogram (%s,%s)'%(xprop,yprop))
+        pb = apy.shell.pb(vmax=self.nSnaps,label='Calculating histogram (%s,%s)'%(xprop,yprop))
         for s,snap in enumerate(self.snaps):
             with self.sim[s].getSnapshot(snap) as sn:
                 hist = sn.getProperty(ptype,'Histogram2D',args=args)
@@ -222,7 +222,7 @@ class dataset:
         
     def addTimes(self,loc='top left'):
         times = []
-        pb = apy.util.pb(vmax=self.nSnaps,label='Reading times')
+        pb = apy.shell.pb(vmax=self.nSnaps,label='Reading times')
         for s,snap in enumerate(self.snaps):
             with self.sim[s].getSnapshot(snap) as sn:
                 time = self.sim[s].units.guess('time',sn.getHeader('Time'),utype='old')
@@ -233,7 +233,7 @@ class dataset:
 
     def addRedshifts(self,loc='top left'):
         redshifts = []
-        pb = apy.util.pb(vmax=self.nSnaps,label='Reading redshifts')
+        pb = apy.shell.pb(vmax=self.nSnaps,label='Reading redshifts')
         for s,snap in enumerate(self.snaps):
             with self.sim[s].getSnapshot(snap) as sn:
                 a = sn.getHeader('Time')
@@ -253,7 +253,7 @@ class dataset:
         grid, xi = apy.coord.grid(bins,box)
 
         allData = []
-        pb = apy.util.pb(vmax=self.nSnaps,label='Computing %d grid regions (%s)'%(self.nSnaps,prop))
+        pb = apy.shell.pb(vmax=self.nSnaps,label='Computing %d grid regions (%s)'%(self.nSnaps,prop))
         for s,snap in enumerate(self.snaps):
             with self.sim[s].getSnapshot(snap) as sn:
                 ids, dist = sn.getProperty(ptype,'GridRegion',args={"grid":grid})

@@ -22,7 +22,7 @@ class group:
 
         # read times for all snapshots
         trange = np.zeros((self.nSims,4))
-        with apy.util.pb(vmax=self.nSims,label='Reading times...') as pb:
+        with apy.shell.pb(vmax=self.nSims,label='Reading times...') as pb:
             for s,sim in enumerate(self.sims):
                 snaps = sim.getSnapNums()
                 times = np.array([sim.getSnapshot(snap).getHeader('Time') for snap in snaps])

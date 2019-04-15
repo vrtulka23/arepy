@@ -57,7 +57,7 @@ class overview:
 
         nImages = len(self.images)
 
-        prog = apy.util.pb(vmax=nImages*self.nSnapshots,label="Plotting figures")
+        prog = apy.shell.pb(vmax=nImages*self.nSnapshots,label="Plotting figures")
 
         if grid==None:
             sqrt = np.sqrt(nImages)
@@ -114,7 +114,7 @@ class overview:
         prog.close()
 
     def plotMovie(self,fileName="movie.mp4",imgFiles="figOverview_*.png"):
-        apy.util.makeMovie(self.resultsDir+'/'+fileName,
+        apy.shell.makeMovie(self.resultsDir+'/'+fileName,
                        self.resultsDir+'/'+imgFiles)
 
     def show(self, figPrefix="figOverview_", ):
@@ -122,7 +122,7 @@ class overview:
 
     def addImages(self, axis, imgProperty, imgType, norm=None, title=None):
 
-        prog = apy.util.pb(vmax=self.nSnapshots,label="Reading %s"%(imgProperty))
+        prog = apy.shell.pb(vmax=self.nSnapshots,label="Reading %s"%(imgProperty))
 
         image = {"axis": axis, "property":imgProperty,"type":imgType, 'norm':norm,
                  'data':np.zeros((self.nSnapshots,self.imageDim[0],self.imageDim[1]))}
@@ -151,7 +151,7 @@ class overview:
 
     def addParticles(self, axis, partType, marker="x", color="black" ):
 
-        prog = apy.util.pb(vmax=self.nSnapshots,label="Reading particle type %d"%(partType))
+        prog = apy.shell.pb(vmax=self.nSnapshots,label="Reading particle type %d"%(partType))
 
         particle = {"axis": axis, "type": partType, "marker": marker, "color": color, "coords":[]}
 

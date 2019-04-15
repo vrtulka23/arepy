@@ -24,6 +24,8 @@ class plot:
             self._plot()
         elif action=='show':
             self._show()
+        elif action=='movie':
+            self._movie()
             
     def init(self):
         return
@@ -110,3 +112,13 @@ class plot:
             with open(self.tab.fileName, 'r') as f:
                 contents = f.read()
                 print(contents)
+
+    # movie
+    def _movie(self):
+        if self.optPlot is None:
+            apy.shell.exit("Plot '%s' was not set (plot.py)"%(self.dirPlot))
+        if self.optPlot['type']=='figure':
+            self.fig = apy.plot.figure(self.optPlot['ncol'],self.optPlot['nrow'],self.optPlot['nfig'],**self.optPlot['opt'])
+            self.fig.movie()
+        elif self.optPlot['type']=='table':
+            apy.shell.exit('Cannot plot movie from a table (plot.py)')
