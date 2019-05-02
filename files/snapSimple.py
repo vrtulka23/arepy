@@ -36,7 +36,7 @@ class snapSimple:
                 data.append( subData )
             # Arrange data to appropriate shapes
             for pid,prop in enumerate(properties):
-                name = prop['name']
+                name = prop['name'] if isinstance(prop,dict) else prop
                 if name in getattr(apy.files,self.optChem['type']).const.dsets:
                     data[pid] = np.vstack(data[pid])
                 elif name in apy.const.dsets:
@@ -48,7 +48,7 @@ class snapSimple:
                     apy.shell.exit("TODO: 'GridRegion' for multiple snap files needs to be finished (snapSimple.py)")
                     data[pid] = [ prop0, prop1 ]
                     # TODO: select only particles with the lowest distance
-                else:
+                elif name not in self.cProps: # stack only for simple properties, return raw for complex properties
                     data[pid] = np.hstack(data[pid])
         else: # Get property from a single file
             arguments = [ 0,self.sfileName[0],fmode,self.optChem,comoving,properties,ids ]
@@ -85,9 +85,13 @@ def getProperty(fnum,fileName,fmode,optChem,comoving,properties,ids=None):
         # If there are no particles we return an empty array
         if nPart[ptype]==0:
             if prop['name'] in ['GridRegion','RadialRegion','BoxRegion']:
-                allData.append( [[],[]] )
-            else:
-                allData.append( [] )
+                if 'p' in prop:
+                    if isinstance(prop['p'],(str,dict)):
+                        allData.append( [[]]*(1+len(prop['p'])) )
+                    else:
+                        allData.append( [[],[]] )
+                    continue
+            allData.append( [] )
             continue
 
         # If there are no selected particles we select all
@@ -141,25 +145,46 @@ def getProperty(fnum,fileName,fmode,optChem,comoving,properties,ids=None):
                 pids = sf[pt]['ParticleIDs'][:]
             data = np.in1d(pids,prop['ids'])
 
-        elif name=='RadialRegion':           # radius in code [cm^2]
-            # Example: {'name':'RadialRegion','center':center,'radius':radius}
+        elif name=='IDsRegion':
+            with hp.File(fileName,fmode) as sf:
+                pids = sf[pt]['ParticleIDs'][:]
+            ids = np.in1d(pids[ids],prop['id']) # DEBUG: tends to be super slow for large arrays !!!
+            if 'p' in prop: # return additional particle properties from the region
+                retprop = [prop['p']] if isinstance(prop['p'],(str,dict)) else prop['p']
+                retdata = getProperty(fnum,fileName,fmode,optChem,comoving,retprop,ids=ids)
+                data = [ids] + retdata
+            else:
+                data = ids            
+
+        elif name=='RadialRegion': 
+            # Example: {'name':'RadialRegion','center':center,'radius':radius,'p':'Mass'}
             with hp.File(fileName,fmode) as sf:
                 coord = sf[pt]['Coordinates'][:]
             coord = coord[ids,:]-prop['center']
             r2 = coord[:,0]**2 + coord[:,1]**2 + coord[:,2]**2
             ids = r2 < prop['radius']**2
-            data = [ ids, r2[ids] ]
+            if 'p' in prop: # return additional particle properties from the region
+                retprop = [prop['p']] if isinstance(prop['p'],(str,dict)) else prop['p']
+                retdata = getProperty(fnum,fileName,fmode,optChem,comoving,retprop,ids=ids)
+                data = [ids] + retdata
+            else:
+                data = ids
 
-        elif name=='BoxRegion':                 # coordinates in code [cm]
-            # Example: {'name':'BoxRegion','box':box}
+        elif name=='BoxRegion':    
+            # Example: {'name':'BoxRegion','box':box,'p':'Mass'}
             with hp.File(fileName,fmode) as sf:
                 coord = sf[pt]['Coordinates'][:]
             coord = np.array(coord[ids,:])
             box = np.array(prop['box'])
             ids = (box[0]<coord[:,0]) & (coord[:,0]<box[1]) & \
-                (box[2]<coord[:,1]) & (coord[:,1]<box[3]) & \
-                (box[4]<coord[:,2]) & (coord[:,2]<box[5])
-            data = [ ids, coord[ids] ]
+                   (box[2]<coord[:,1]) & (coord[:,1]<box[3]) & \
+                   (box[4]<coord[:,2]) & (coord[:,2]<box[5])
+            if 'p' in prop: # return additional particle properties from the region
+                retprop = [prop['p']] if isinstance(prop['p'],(str,dict)) else prop['p']
+                retdata = getProperty(fnum,fileName,fmode,optChem,comoving,retprop,ids=ids)
+                data = [ids] + retdata
+            else:
+                data = ids
 
         elif name=='GridRegion':                # distances in code [cm]
             # Example: {'name':'GridRegion','grid':grid}

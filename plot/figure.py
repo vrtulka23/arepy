@@ -11,7 +11,6 @@ class figure:
         self.nrows = nrows     # number of subplots in the row
         self.ncols = ncols     # number of subplots in the column
         self.nfigs = nfigs     # number of figures to plot
-        #self.timer = apy.util.timer()
         
         # set options
         self.opt = {
@@ -24,7 +23,7 @@ class figure:
             'sCol':       3.5,
             'nproc':      1,
             'gridspec':   None,
-            'fileFormat': 'png',
+            'fileFormat': 'png',                 # file format of the final figure (png,pdf,jpeg,...)
         }
         self.opt.update(opt)
 
@@ -61,9 +60,9 @@ class figure:
     # select subplot by row and col
     def getSubplot(self, row=0, col=0, **opt):
         if row>=self.nrows:
-            apy.shell.exit('Cannot plot row %d out of %d'%(row+1,self.nrows))
+            apy.shell.exit('Cannot plot row %d out of %d (figure.py)'%(row+1,self.nrows))
         if col>=self.ncols:
-            apy.shell.exit('Cannot plot column %d out of %d'%(col+1,self.ncols))
+            apy.shell.exit('Cannot plot column %d out of %d (figure.py)'%(col+1,self.ncols))
         i = row*self.ncols+col
         if opt: self.subplot[i].setOption(**opt)
         self.subplot[i].canvas['empty'] = False
@@ -74,7 +73,6 @@ class figure:
         # Plot figures
         pb = apy.shell.pb(vmax=self.nfigs,label="Plotting figures")
 
-        #results = apy.util.parallelPool(plotFigure,range(self.nfigs),nproc=8)
         canvas = [sp.getCanvas() for sp in self.subplot]
         optFig = {
             'nrows':      self.nrows,
@@ -95,7 +93,6 @@ class figure:
             
         pb.close()
         apy.shell.printc('Figures saved as: %s'%(self.fileFigure+'*.'+self.opt['fileFormat']))
-        #self.timer.show()
 
     def movie(self):
         apy.shell.makeMovie(self.fileFigure+'.mp4',self.fileFigure+'*.'+self.opt['fileFormat'])

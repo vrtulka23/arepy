@@ -24,7 +24,7 @@ class ics:
     # Use cell properties from a carthesian grid
     def useGrid(self,res,density):
         apy.shell.printc('regular grid: %d**3'%res)
-        grid,xi = apy.coord.grid([res]*3,points='centers',scatter=0.3/res)
+        grid,xi = apy.coord.grid('cube',[res]*3,points='centers',scatter=0.3/res)
         coords = np.array(grid,dtype=np.float64)*self.opt['BoxSize']
         volumes = np.full(len(coords),(self.opt['BoxSize']/res)**3,dtype=np.float64)
         self.setCells(coords,volumes,density)

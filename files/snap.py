@@ -8,10 +8,8 @@ from arepy.files.snapSimple import *
 class snap(snapComplex,snapSimple):
     def __enter__(self):
         return self
-
     def __exit__(self, type, value, tb):
         return
-
     def __init__(self,fileName,**opt):
         self.initComplex()
         self.initSimple()
@@ -154,10 +152,16 @@ class snap(snapComplex,snapSimple):
                 aProps[pid] = {'name':aProps[pid]}
             if aProps[pid]['name'] not in self.cProps:
                 sProps.append(aProps[pid])
-        data = self.getPropertySimple(sProps,ids) if sProps else []
+        data = self.getPropertySimple(sProps, ids) if sProps else []
         for pid in range(nProps):
             if aProps[pid]['name'] in self.cProps:
-                data.insert(pid,self.getPropertyComplex(aProps[pid],ids))
+                data.insert(pid, self.getPropertyComplex(aProps[pid],ids))
 
         # !! do not wrap np.array() around, because we want to return native array dtypes
         return data[0] if isinstance(props,(str,dict)) else data  
+        '''
+        if isinstance(props,(str,dict)):
+            return data[0]
+        else:
+            return {aProps[p]['name']: data[p] for p in range(nProps)}
+        '''

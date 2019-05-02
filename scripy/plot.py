@@ -1,4 +1,5 @@
 import arepy as apy
+import numpy as np
 
 class plot:
     def __init__(self,action,proj,dirName,fileName=None,*args):
@@ -8,11 +9,21 @@ class plot:
         self.opt = {}                         # global plot options
         self.optPlot = None                   # plot options
 
+        if action=='debug':                   # set debugging mode
+            self.debug = True
+            action = 'plot'
+        else:
+            self.debug = False
+
         self.dirName = dirName                                     # name of the plot directory
         self.fileName = dirName if fileName is None else fileName  # name of the plot file
         self.dirPlot = self.dirName+'/'+self.fileName              # path to the file directory
 
-        self.nproc = 1                        # number of available processors
+        self.nproc = {
+            'fig': 1,                         # number of processors to use for figures
+            'kdt': 1,                         # number of processors to use for KDTree
+            'snap': 1,                        # number of processors to use for snapshot
+        }
 
         self.fig = None
         self.tab = None
@@ -30,28 +41,41 @@ class plot:
     def init(self):
         return
 
+    def getSimulation(self,sim,**opt):
+        if 'initSnap' in opt:
+            if isinstance(opt['initSnap'],dict) and 'nproc' not in opt['initSnap']:
+                opt['initSnap']['nproc'] = self.nproc['snap']
+            else:
+                opt['initSnap'] = {'nproc': self.nproc['snap']}
+        return self.proj.getSimulation(sim,**opt)
+
     # Set number of available processors
-    def setProcessors(self,nproc):
-        self.nproc = nproc
+    def setProcessors(self,fig=1,kdt=1,snap=1):
+        self.nproc = {
+            'fig':  fig,
+            'kdt':  kdt,
+            'snap': snap
+        }
 
     # Add group
     def setGroups(self,names,options,**opt):
         nopt = {
             'dirCache': self.proj.dirResults+'/'+self.dirPlot+'/cache',
-            'nproc':    self.nproc,
+            'nproc':    self.nproc['fig'],
+            'n_jobs':   self.nproc['kdt']
         }
         nopt.update(opt)
-        self.grps = apy.files.groups(names=names,options=options,**nopt)
+        self.grps = apy.files.collection(names=names,options=options,**nopt)
 
     # Add a new figure to the list of plots
     def setFigure(self,ncol,nrow,nfig,movie=False,show=False,debug=False,**opt):
         nopt = {
-            'debug':      debug,
+            'debug':      np.any([debug,self.debug]),
             'fileName':   self.fileName,
             'dirName':    self.dirPlot,
             'dirResults': self.proj.dirResults,
             'timeStamp':  self.timeStamp,
-            'nproc':      self.nproc,
+            'nproc':      self.nproc['fig'],
         }
         nopt.update(opt)
         self.optPlot = {
@@ -67,7 +91,7 @@ class plot:
     # Add new table to the list of plots
     def setTable(self,show=False,debug=False,**opt):
         nopt = {
-            'debug':      debug,
+            'debug':      np.any([debug,self.debug]),
             'fileName':   self.fileName,
             'dirName':    self.dirPlot,
             'dirResults': self.proj.dirResults,

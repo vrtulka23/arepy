@@ -19,6 +19,11 @@ CLEAN_FILES="${JOB_NAME}.e* ${JOB_NAME}.o*"
 AREPO_DIR=$arepodir
 WORK_DIR=$workdir
 
+on_inter_run()
+{
+    INTER_CMD="msub -I -V -X -l nodes=${nodes}:ppn=${ppn}:${type},walltime=${walltime}"
+}
+
 on_submit_avail()
 {
     echo -e "\033[0;33mStandard\033[0m";

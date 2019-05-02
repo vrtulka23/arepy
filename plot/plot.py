@@ -133,7 +133,8 @@ def plotSubplot(ax,opt,canvas,fid=0):
                 norm = colors.LogNorm(vmin=image['norm'][1],vmax=image['norm'][2])
             elif image['normType'] in ['lin',None]:
                 norm = colors.Normalize(vmin=image['norm'][0],vmax=image['norm'][2])
-            im = ax.imshow( data.T, extent=image['extent'][fid], origin='lower', aspect=image['aspect'],
+            extent = image['extent'][fid] if np.ndim(image['extent'])>1 else image['extent']
+            im = ax.imshow( data.T, extent=extent, origin='lower', aspect=image['aspect'],
                             norm=norm, cmap=image['cmap'] )
 
     if canvas['colorbar'] is not None:

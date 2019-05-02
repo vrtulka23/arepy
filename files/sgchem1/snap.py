@@ -106,9 +106,14 @@ def getProperty(fileSnap,ptype,name,ids,comoving,optChem):
         numdens = density / ((1. + 4. * optChem['x0_He']) * apy.const.m_p); # nucleon number density [1/cm^3]
         return calcAlphaB() * numdens    # [rec/s]
 
-    elif name=='PhotonFluxTotal':
+    elif name=='PhotonFluxTotal':            # Total photon flux
         flux = fileSnap[pt]['PhotonFlux'][:]
         return np.sum(flux[ids],axis=1)
+
+    elif name in const.orderPhotonFlux:      # Photon Fluxes in bins
+        i = const.orderPhotonFlux.index(name)
+        flux = fileSnap[pt]['PhotonFlux'][:]
+        return flux[ids,i]
         
     elif name in const.orderAbund:           # Abundances
         i = const.orderAbund.index(name)

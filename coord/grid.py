@@ -1,14 +1,19 @@
 import numpy as np
 
 '''
+
+Shapes:
+line, square, cube, cylinder, sphere
+
 Example:
 
-grid = apy.coord.grid([200,200],[0.4, 1.3, 4.3, 8.3])
+grid = apy.coord.grid("square",[200,200],[0.4, 1.3, 4.3, 8.3])
 
 '''
 
 class grid:
-    def __init__(self,bins,extent=None,points='centers',scatter=None,zfill=None):
+    def __init__(self,shape,bins,extent=None,points='centers',scatter=None,zfill=None):
+        self.shape = shape
         self.bins = [bins] if np.isscalar(bins) else bins
         self.nbins = [(b if np.isscalar(b) else len(b)) for b in self.bins]
         self.ndim = len(self.bins)
@@ -45,9 +50,13 @@ class grid:
         self.data = {}
 
     def getPixFromCoord(self,coord):
-        pixSize = (self.extent[:,1]-self.extent[:,0]) / self.nbins  # calculate pixel direction in each dimension
-        coord = coord-self.extent[:,0]                              # shift coordinates to origin
-        pix = np.floor( coord / pixSize ).astype(int)               # calculate pixel indexes        
+        if shape in ['line','square','cube']:
+            pixSize = (self.extent[:,1]-self.extent[:,0]) / self.nbins     # calculate pixel direction in each dimension
+            coord = coord-self.extent[:,0]                                 # shift coordinates to origin
+            pix = np.floor( coord / pixSize ).astype(int)                  # calculate pixel indexes        
+        elif snape in ['cylinder']:
+            pixSizeZ = (self.extent[2,1]-self.extent[2,0]) / self.nbins[2]
+            pixSizeR = (self.extent[0,1]-self.extent[0,0]) / self.nbins[0]
         return pix
 
     def addAtCoord(self,prop,coord,value):

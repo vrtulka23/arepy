@@ -17,8 +17,8 @@ def textc(text,color='y'):
 def printc(text,color='y'):
     print( textc(text,color) )
 
-def prints(data,show=None):
-    print( apy.data.stats(data,show) )
+def prints(name,data,show=None):
+    print( apy.data.stats(name,data,show) )
 
 def exit(msg=None):
     if msg:

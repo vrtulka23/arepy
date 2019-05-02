@@ -5,9 +5,10 @@ class timer:
     def __init__(self):
         self.times = [time.time()]
 
-    def leap(self,show=True):
+    def leap(self,show=True,msg=None):
         if show: 
-            self.show(-1,'Leap %d in: '%len(self.times))
+            msg = 'Leap %s in: '%msg if msg is not None else 'Leap %d in: '%len(self.times)
+            self.show(-1,msg)
         self.times.append( time.time() )
 
     def get(self,leap=0):

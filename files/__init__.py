@@ -12,6 +12,7 @@ from arepy.files.param import *         # Arepo parameter file
 from arepy.files.snap import *          # Arepo snapshot file
 from arepy.files.image import *         # Arepo image file
 from arepy.files.olist import *         # Arepo output list file
+from arepy.files.subfind import *       # Arepo/Gadget subfind files
 
 # Special Arepo files
 from arepy.files.sources import *       # SPRAI test sources file

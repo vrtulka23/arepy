@@ -1,5 +1,6 @@
 import arepy as apy
 import numpy as np
+import h5py as hp
 import os
 
 # Cache data into a numpy file or load from already existing numpy file
@@ -31,9 +32,59 @@ def cache( data, cacheName, cacheDir=None, reCache=False, args=None ):
     if not os.path.isfile(cacheFile) or reCache:
         data = data(*args) if callable(data) else data
         np.save(cacheFile,data)
-        print( apy.shell.textc('Caching data as "%s"'%cacheFile,'yellow') )
+        apy.shell.printc('Caching data as "%s"'%cacheFile)
     else:
-        print( apy.shell.textc('Reading cached data from "%s"'%cacheFile,'yellow') )
+        apy.shell.printc('Reading cached data from "%s"'%cacheFile)
 
     data = np.load(cacheFile)
     return data.item() if data.size==1 else data
+
+class cacheH5:
+    def __enter__(self):
+        return self
+    def __exit__(self, type, value, tb):
+        return
+    def __init__(self,name,verbose=False):
+        self.f = hp.File(name,'a')
+        self.verbose = verbose
+        if self.verbose: apy.shell.printc('Caching file: '+name)
+
+    def _checkGroups(self,dirname):
+        # create path node list
+        groups = []
+        while dirname!="":
+            path = dirname
+            dirname,basename = os.path.split(dirname)
+            groups.append( (path,dirname,basename) )
+        groups.reverse()
+        # create groups if not existing
+        for path,dirname,basename in groups:
+            if dirname=="" and basename not in self.f:   # check first node
+                self.f.create_group(path)
+            elif dirname!="" and basename not in self.f[dirname]:        # check other nodes
+                self.f.create_group(path)
+
+    def cache(self,path,data,args=[],update=False):
+        dirname,basename = os.path.split(path)
+        # check if all group exist
+        self._checkGroups( dirname )
+        # cache data if not existing
+        if update and path in self.f:   
+            if self.verbose: apy.shell.printc('Removing "%s"'%path)
+            del self.f[path]
+        if path not in self.f:
+            if self.verbose: apy.shell.printc('Caching "%s"'%path)
+            data = data(*args) if callable(data) else data
+            self.f.create_dataset(path,data=data)
+        else:
+            if self.verbose: apy.shell.printc('Reading "%s"'%path)
+        # return cached data
+        return self.f[path][:]
+
+    def read(self,path):
+        if path not in self.f:
+            apy.shell.exit("Path '%s' does not exists"%path)
+        return self.f[path][:]
+
+    def close(self):
+        self.f.close()

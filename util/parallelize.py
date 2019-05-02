@@ -26,11 +26,11 @@ def parallelProcess(fn,tasks,pBar=False):
 
 '''
 Example:
-def myFunction(i,args):
+def myFunction(*args):
     ...producing results...
-    return [i, results]
+    return results
 args = [['a',23],['b',22],['c',21],['d',343]]
-print parallelize(myFunction,args)
+print parallelPool(myFunction,args)
 '''
 def parallelPool(fn,args,pbar=False,nproc=16):
     nTasks = len(args)
@@ -47,9 +47,3 @@ def parallelPool(fn,args,pbar=False,nproc=16):
 def _parallelPool(i,fn,args):
     return [i, fn(*args)]
     
-'''
-def parallelPool(fn,args,pBar=False):
-    nTasks = len(args)
-    pool = Pool(processes=8)
-    return pool.map(fn,args)
-'''

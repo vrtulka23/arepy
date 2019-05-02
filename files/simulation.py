@@ -129,7 +129,7 @@ class simulation:
 
     # Initialize snapshot file settings
     def initSnap(self,cf,pf,opt):
-        if opt is True:
+        if opt is not False:
             names = ['NumFilesPerSnapshot','ComovingIntegrationOn']
             values = pf.getValue(names)
             self.optSnap = {
@@ -138,6 +138,8 @@ class simulation:
                 'initChem':self.optChem,
                 'comoving':True if values[1] else False,
             }
+            if isinstance(opt,dict):
+                self.optSnap.update(opt)
         else:
             dopt = {'nsub':1, 'nproc':1, 'initChem':self.optChem, 'comoving':False}
             self.optSnap = dopt.update(opt) if isinstance(opt,dict) else dopt

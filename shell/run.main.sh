@@ -275,7 +275,14 @@ submit_queue()
 # Run an interactive session
 inter_run()
 {
-    eval "${INTER_CMD}"
+    echo -e "\033[0;33mNumber of nodes:\033[0m"; read nodes
+    echo -e "\033[0;33mCores per node:\033[0m"; read ppn
+    echo -e "\033[0;33mQueue type:\033[0m"; read type
+    echo -e "\033[0;33mWalltime:\033[0m"; read walltime
+    on_inter_run
+    eval="${INTER_CMD}"
+    echo -e "${YEL}$eval${NC}"
+    eval "$eval"
 }
 
 # Function that initialize the simulation directory
@@ -304,8 +311,8 @@ analyze()
 }
 analyze_snaps()
 {
-    for d in */ ; do
-	find $d -name snap_* | sort| tail -1
+    for d in $(find -name output -type d | sort) ; do
+	find $d -name snap_* -type f | sort | tail -1
     done
 }
 clean_arepo()
@@ -396,6 +403,7 @@ while [ "$1" != "" ]; do
     case $1 in
         -a | --analyze )           shift; analyze "$@"; break;;
 	--plot )                   shift; analyze plot "$@"; break;;
+	--debug )                  shift; analyze debug "$@"; break;;
 	--movie )                  shift; analyze movie "$@"; break;;
 	--show )                   shift; analyze show "$@"; break;;
 	--setup )                  shift; analyze setup "$@"; break;;

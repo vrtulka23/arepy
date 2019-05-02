@@ -5,3 +5,4 @@ from arepy.data.interp import *
 from arepy.data.stats import *
 from arepy.data.tabulate import *
 from arepy.data.table import *
+from arepy.data.groups import *
