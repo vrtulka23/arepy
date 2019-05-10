@@ -255,7 +255,7 @@ class config():
              'params':['SGCHEM_RT','SINK_SIMPLEX','SIMPLEX','SX_CHEMISTRY','SX_NDIR','SX_SOURCES','SX_NUM_ROT','SX_HYDROGEN_ONLY',
                        'SX_DISPLAY_STATS','SX_DISPLAY_TIMERS','SX_DISPLAY_TIMERS_SITE','SX_DISPLAY_MEMORY','SX_OUTPUT_IMAGE',
                        'SX_OUTPUT_IMAGE_ALL','SX_OUTPUT_FLUX','SX_RECOMBINE','SX_RADIATION_PRESSURE','SX_FLOAT_PRECISION',
-                       'SX_PP_ZERO_SNAPSHOT']},
+                       'SX_PP_ZERO_SNAPSHOT','SX_SKIP_RADIUS']},
             {'id':65, 'name':"Healthtest of the machine partition at startup",
              'params':['MAX_VARIATION_TOLERANCE']},
             {'id':66, 'name':"Other", 'params':[]},
@@ -938,6 +938,7 @@ class config():
             'SX_RADIATION_PRESSURE': {'value':False,'dtype':'e'},
             'SX_FLOAT_PRECISION': {'value':False,'dtype':'e'},
             'SX_PP_ZERO_SNAPSHOT': {'value':False,'dtype':'e'},
+            'SX_SKIP_RADIUS': {'value':False,'dtype':'f','default':0,'format':'%.3e'},
             'MAX_VARIATION_TOLERANCE': {'value':False,'dtype':'i','default':100,'format':'%d'}
         }
 
@@ -1018,7 +1019,7 @@ class config():
             self.params[param]["value"] = value
         else:
             if value is None or value is True: value = ''
-            apy.shell.printc("Unknown parameter '%s' in file: \n%s"%(param,self.fileName),'r')
+            apy.shell.printc("Unknown parameter '%s' (config.py)\nIn file: %s"%(param,self.fileName),'r')
             self.params[param] = {'dtype':'s','default':'','format':'%s','value':str(value)}
             self.groups[-1]['params'].append(param)
         if note is not None and note!='':

@@ -22,8 +22,9 @@ def plotSubplot(ax,opt,canvas,fid=0):
     
     axProp = canvas['axis']
     spIndex, spRow, spCol = canvas['subplot']
-    
-    twinx = None
+
+    fontsize = 8   # default font size
+    twinx = None   # twin axis flag
     handles = []   # collector of plot handles
     for d in canvas['other']:
         if d['twinx'] and twinx==None:
@@ -105,9 +106,9 @@ def plotSubplot(ax,opt,canvas,fid=0):
     if canvas['legend'] is not None:
         legend = canvas['legend']
         if (legend['handles'] is not None and legend['labels'] is not None):
-            ax.legend(legend['handles'],legend['labels'],loc=legend['loc'],fontsize=8)
+            ax.legend(legend['handles'],legend['labels'],loc=legend['loc'],fontsize=fontsize)
         elif legend['labels'] is not None:
-            ax.legend(legend['labels'],loc=legend['loc'],fontsize=8)
+            ax.legend(legend['labels'],loc=legend['loc'],fontsize=fontsize)
         else:
             labels = [h.get_label() for h in handles]
             ax.legend(handles,labels,loc=legend['loc'],
@@ -146,9 +147,9 @@ def plotSubplot(ax,opt,canvas,fid=0):
         if not im:
             apy.shell.exit('Colorbar cannot find any image')
         cbar = fig.colorbar(im, cax=cax, orientation=orientation)
-        cbar.ax.tick_params(labelsize=8)
+        cbar.ax.tick_params(labelsize=fontsize)
         if colorbar['label'] is not None:
-            cbar.set_label(colorbar['label'])
+            cbar.set_label(colorbar['label'],fontsize=fontsize)
         if colorbar['location']=='top':
             cbar.ax.xaxis.set_label_position('top') 
             cbar.ax.xaxis.set_ticks_position('top') 
@@ -161,7 +162,7 @@ def plotSubplot(ax,opt,canvas,fid=0):
         if not im:
             apy.shell.exit('Colorbar cannot find any image')
         cbar = fig.colorbar(im, cax=cbar_ax, orientation=orientation)
-        cbar.ax.tick_params(labelsize=8)
+        cbar.ax.tick_params(labelsize=fontsize)
         if colorbar['label'] is not None:
             cbar.set_label(colorbar['label'])
         if colorbar['location']=='top':
@@ -172,36 +173,40 @@ def plotSubplot(ax,opt,canvas,fid=0):
     if 'group' in axProp and 'title' in axProp['group'] and spRow>0:
         ax.set_title('')
     elif 'title' in axProp:
-        ax.set_title( axProp['title'],   fontsize=8 )
+        ax.set_title( axProp['title'],   fontsize=fontsize )
         
     if 'group' in axProp and 'xlabel' in axProp['group'] and spRow<opt['nrows']-1:
         ax.set_xlabel('')
         ax.set_xticklabels([])
     elif 'xlabel' in axProp:
-        ax.set_xlabel( axProp['xlabel'], fontsize=8 )
+        ax.set_xlabel( axProp['xlabel'], fontsize=fontsize )
             
     if 'group' in axProp and 'ylabel' in axProp['group'] and spCol>0:
         ax.set_ylabel('')
         ax.set_yticklabels([])
     elif 'ylabel' in axProp:
-        ax.set_ylabel( axProp['ylabel'], fontsize=8 )
+        ax.set_ylabel( axProp['ylabel'], fontsize=fontsize )
 
     if 'xlim' in axProp:   ax.set_xlim( axProp['xlim'][fid] if np.ndim(axProp['xlim'])>1 else axProp['xlim'] )
     if 'ylim' in axProp:   ax.set_ylim( axProp['ylim'][fid] if np.ndim(axProp['ylim'])>1 else axProp['ylim'] )
-    if 'xscale' in axProp and axProp['xscale']=='log': ax.set_xscale( axProp['xscale'] )
-    if 'yscale' in axProp and axProp['yscale']=='log': ax.set_yscale( axProp['yscale'] )
+    if 'xscale' in axProp and axProp['xscale'] in ['log','symlog']: ax.set_xscale( axProp['xscale'] )
+    if 'yscale' in axProp and axProp['yscale'] in ['log','symlog']: ax.set_yscale( axProp['yscale'] )
 
     if 'xticklabels' in axProp and axProp['xticklabels'] is False: ax.set_xticklabels([])
     if 'yticklabels' in axProp and axProp['yticklabels'] is False: ax.set_yticklabels([])
 
+    if 'yright' in axProp and axProp['yright'] is True: 
+        ax.yaxis.tick_right()
+        ax.yaxis.set_label_position("right")
+
     # set twin axis properties
     if twinx is not None:
-        if 'tlabel' in axProp: twinx.set_ylabel( axProp['tlabel'], fontsize=8 )
+        if 'tlabel' in axProp: twinx.set_ylabel( axProp['tlabel'], fontsize=fontsize )
         if 'tlim'   in axProp: twinx.set_ylim( axProp['tlim'] )
-        if 'tscale' in axProp and axProp['tscale']=='log': twinx.set_yscale( axProp['tscale'] )
+        if 'tscale' in axProp and axProp['tscale'] in ['log','symlog']: twinx.set_yscale( axProp['tscale'] )
 
-    ax.xaxis.set_tick_params(labelsize=8)
-    ax.yaxis.set_tick_params(labelsize=8)
+    ax.xaxis.set_tick_params(labelsize=fontsize)
+    ax.yaxis.set_tick_params(labelsize=fontsize)
 
     # set same x and y ticks
     if 'xysame' in axProp:

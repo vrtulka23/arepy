@@ -13,14 +13,14 @@ class runsh():
     def __init__(self,fileName=None,show=False,notes=False):
         self.groups = [
             {'name':"Other options",
-             'params':['ANALYZE_DIR']},
+             'params':['DIR_PROJECT']},
             {'name':"Cluster options",
              'params':['NUM_NODES','NUM_PROC','JOB_WALL_TIME','JOB_TYPE','FLAGS_RUN','FLAGS_RESTART']},
             {'name':"Arepo Images",
              'params':['IMAGE_NODES','IMAGE_PROC','IMAGE_WALLTIME','IMAGE_TYPE','IMAGE_FLAGS']},
         ]
         self.params = {
-            'ANALYZE_DIR':    {'dtype':'s','default':"default",         'format':'%s'},
+            'DIR_PROJECT':    {'dtype':'s','default':"default",         'format':'%s'},
             'NUM_NODES':      {'dtype':'i','default':1,                 'format':'%d'},
             'NUM_PROC':       {'dtype':'i','default':16,                'format':'%d'},
             'JOB_WALL_TIME':  {'dtype':'s','default':"8:00:00",         'format':'%s'},

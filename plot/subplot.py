@@ -141,7 +141,7 @@ class subplot:
 
         # add all axis options
         axOpt = ['title','xlabel','ylabel','xlim','ylim','xscale','yscale',
-                 'tlabel','tlim','tscale','group','xflip',
+                 'tlabel','tlim','tscale','group','xflip','yright',
                  'xticklabels','yticklabels','xtickparam','ytickparam','tickparam','xysame']
         for opt in axOpt:
             if opt in self.opt:

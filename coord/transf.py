@@ -26,14 +26,14 @@ class transf:
         if 'box' in opt:
             center = (opt['box'][::2]+opt['box'][1::2])*0.5
             radius = np.linalg.norm(opt['box'][1::2]-opt['box'][::2])*0.5
-            self.addSelection('select', center, radius, opt['box'])
+            self.addSelection('select','sphere', center=center, radius=radius, box=opt['box'])
         elif 'center' in opt:
             if 'radius' in opt:
-                self.addSelection('select', opt['center'], opt['radius'])
+                self.addSelection('select','sphere', center=opt['center'], radius=opt['radius'])
             elif 'size' in opt:
                 radius = opt['size']*np.sqrt(3)*0.5
                 box = apy.coord.box(opt['size'],opt['center'])
-                self.addSelection('select', opt['center'], radius, box)
+                self.addSelection('select','sphere', center=opt['center'], radius=radius, box=box)
         # translate coordinates
         if 'origin' in opt:
             self.addTranslation('translate', opt['origin'])
@@ -52,13 +52,13 @@ class transf:
             self.addRotation('rotate', opt['rotate'])
         # post-select
         if 'box' in opt:
-            self.addSelection('crop', opt['box'])
+            self.addSelection('crop','box', box=opt['box'])
         elif 'center' in opt:
             if 'radius' in opt:
                 box = apy.coord.box(opt['radius']*2/np.sqrt(3),opt['center'])                
-                self.addSelection('crop', opt['center'], opt['radius'], box)
+                self.addSelection('crop','sphere', center=opt['center'], radius=opt['radius'], box=box)
             elif 'size' in opt:
-                self.addSelection('crop', apy.coord.box(opt['size'],opt['center']))
+                self.addSelection('crop','box', box=apy.coord.box(opt['size'],opt['center']))
                 
         # print out the settings for debugging
         if show:
@@ -85,6 +85,12 @@ class transf:
         ]).T              # returning to shape (N,3)
         return coord
 
+    def _gridSelect(self, coord, grid):
+        from scipy.spatial import cKDTree
+        kdt = cKDTree(coord)
+        dist,ids = kdt.query(grid)            
+        return ids
+
     def _transf(self, name, coord, **data):
         ttype = self.items[name]['type']
         opt = self.items[name]
@@ -109,7 +115,6 @@ class transf:
                 coord = coord[ids]  # selector returns 2D array even though it was 1D before
             else:
                 coord = None if ids is False else coord
-                
         elif ttype=='box':        # select a box region
             x,y,z = coord.T
             ids =  (opt['box'][0]<x) & (x<opt['box'][1]) &\
@@ -121,13 +126,17 @@ class transf:
             coord = coord.T[opt['axes']].T
         return coord
 
-    def addSelection(self, name, *opt):       # Example: box=[0,1,0,1,0,1], center=[0.5,0.5,0.5], radius=0.5
+    def addSelection(self, name, stype, **opt):       # Example: box=[0,1,0,1,0,1], center=[0.5,0.5,0.5], radius=0.5
+        opt['type'] = stype
+        self.items[name] = opt
+        '''
         if len(opt)==3:
             self.items[name] = {'type':'sphere', 'center':opt[0], 'radius':opt[1], 'box':opt[2]}
         elif len(opt)==2:
             self.items[name] = {'type':'sphere', 'center':opt[0], 'radius':opt[1]}
         else:
             self.items[name] = {'type':'box', 'box':opt[0]}
+        '''
         
     def addTranslation(self, name, origin):   # Example: coordinates=[x,y,z]
         self.items[name] = {'type':'translation', 'origin':origin}

@@ -142,26 +142,27 @@ class snap(snapComplex,snapSimple):
     # Example: sn.getProperty(['Masses',{'name':'Minimum','p':'PosX'}])
     def getProperty(self,props,ids=None):
         # Convert to array if needed
-        aProps = [props] if isinstance(props,(str,dict)) else props
-        nProps = len(aProps)
+        aProps = [props] if isinstance(props,(str,dict)) else props  # all properties
+        nProps = len(aProps)                                         # number of properties
+        sProps,kProps = [],[]                                        # simple properties and list of keys
 
-        sProps = []
         # Convert simple property names to dictionaries
         for pid in range(nProps):
-            if isinstance(aProps[pid],str):
-                aProps[pid] = {'name':aProps[pid]}
-            if aProps[pid]['name'] not in self.cProps:
-                sProps.append(aProps[pid])
+            prop = aProps[pid]
+            if isinstance(prop,str):
+                prop = {'name':prop}
+            kProps.append( prop['key'] if 'key' in prop else prop['name'] )
+            if prop['name'] not in self.cProps:
+                sProps.append(prop)
         data = self.getPropertySimple(sProps, ids) if sProps else []
         for pid in range(nProps):
-            if aProps[pid]['name'] in self.cProps:
-                data.insert(pid, self.getPropertyComplex(aProps[pid],ids))
+            prop = prop
+            if prop['name'] in self.cProps:
+                data.insert(pid, self.getPropertyComplex(prop,ids))
 
         # !! do not wrap np.array() around, because we want to return native array dtypes
-        return data[0] if isinstance(props,(str,dict)) else data  
-        '''
+        #return data[0] if isinstance(props,(str,dict)) else data  
         if isinstance(props,(str,dict)):
             return data[0]
         else:
-            return {aProps[p]['name']: data[p] for p in range(nProps)}
-        '''
+            return {kProps[p]: data[p] for p in range(nProps)}

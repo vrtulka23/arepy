@@ -71,13 +71,16 @@ class project:
             self._showOptions(self.dirPlots)
         else: 
             apy.shell.printc("Plot '%s' for project '%s'"%(str(name),self.name))
-            exec("from scripy.%s.plots.%s import *"%(self.name,str(name)),globals())
+            #exec("from scripy.%s.plots.%s import *"%(self.name,str(name)),globals())
             self.timer = apy.util.timer()
+            name = str(name)
             if args:
-                fn = 'plot' + args[0][0].capitalize() + args[0][1:]
+                exec("from scripy.%s.plots.%s.%s import *"%(self.name,name,args[0]),globals())
+                fn = str(args[0])
                 globals()[fn](action,self,name,args[0],*args[1:])
             else:
-                plot(action,self,name,name,*args)
+                exec("from scripy.%s.plots.%s import *"%(self.name,name),globals())
+                globals()[name](action,self,name,name,*args)
             self.timer.end()
 
     # Run a script

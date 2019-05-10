@@ -10,21 +10,29 @@ def getHeader(fileSnap,name):
         return fileSnap['Header'].attrs['Time']
     elif name=='Redshift':
         return 1./fileSnap['Header'].attrs['Time']-1.
+    elif name=='UnitPhotons_per_s':
+        return fileSnap['Parameters'].attrs['UnitPhotons_per_s']
     
 def getProperty(fileSnap,ptype,name,ids,comoving,optChem):
     pt = 'PartType%d'%ptype
 
     nameStd = ['Masses','Velocities','PhotonFluxTotal']
 
+    uMass =    fileSnap['Header'].attrs['UnitMass_in_g']
+    uLength =  fileSnap['Header'].attrs['UnitLength_in_cm']
+    uVolume  = fileSnap['Header'].attrs['UnitLength_in_cm']**3
+    uDensity = fileSnap['Header'].attrs['UnitMass_in_g']/uVolume
+    uEnergy  = fileSnap['Header'].attrs['UnitVelocity_in_cm_per_s']**2 * fileSnap['Header'].attrs['UnitMass_in_g']
+    if 'UnitPhotons_per_s' in fileSnap['Parameters'].attrs:
+        uFlux =    fileSnap['Parameters'].attrs['UnitPhotons_per_s']
+
     def unitDensity():
-        unitMass = fileSnap['Header'].attrs['UnitMass_in_g']
-        unitLength = fileSnap['Header'].attrs['UnitLength_in_cm']
         if comoving:
             h = fileSnap['Header'].attrs['HubbleParam']
             a = fileSnap['Header'].attrs['Time']
-            density2cgs = ( unitMass * h**2 ) / (a * unitLength )**3
+            density2cgs = ( uMass * h**2 ) / (a * uLength )**3
         else:
-            density2cgs = unitMass / unitLength**3
+            density2cgs = uMass / uLength**3
         return density2cgs
 
     def calcMu():
@@ -49,20 +57,16 @@ def getProperty(fileSnap,ptype,name,ids,comoving,optChem):
     
         # The following calculation was taken from voronoi_makeimage.c line 2240 
         # and gives the same temperatures as are shown on the Arepo images
-        uvolume  = fileSnap['Header'].attrs['UnitLength_in_cm']**3
-        udensity = fileSnap['Header'].attrs['UnitMass_in_g']/uvolume
-        uenergy  = fileSnap['Header'].attrs['UnitVelocity_in_cm_per_s']**2 * fileSnap['Header'].attrs['UnitMass_in_g']
         dens     = fileSnap[pt]['Density'][:]
         energy   = fileSnap[pt]['InternalEnergy'][:]
         x_h2, x_Hp, x_DP, x_HD, x_Hep, x_Hepp = fileSnap[pt]['ChemicalAbundances'][:].T
-        yn = dens[ids] * udensity / ((1.0 + 4.0 * optChem['x0_He']) * apy.const.m_p)
-        en = energy[ids] * dens[ids] * uenergy / uvolume
+        yn = dens[ids] * uDensity / ((1.0 + 4.0 * optChem['x0_He']) * apy.const.m_p)
+        en = energy[ids] * dens[ids] * uEnergy / uVolume
         yntot = (1.0 + optChem['x0_He'] - x_h2[ids] + x_Hp[ids] + x_Hep[ids] + x_Hepp[ids]) * yn
         temp_in_K = (calcGamma() - 1.0) * en / (yntot * apy.const.k_B)
         return temp_in_K
 
-    def calcAlphaB():
-        # case B recombination rate coefficients from SGChem/coolinmo.F
+    def calcAlphaB():  # case B recombination rate coefficients from SGChem/coolinmo.F
         tinv = 1.0 / calcTemp();
         return 2.753e-14 * (315614 * tinv)**1.5 / ( 1. + (115188 * tinv)**0.407 )**2.242;  # [rec*cm^3/s]        
 
@@ -84,7 +88,11 @@ def getProperty(fileSnap,ptype,name,ids,comoving,optChem):
             x_HD = fileSnap[pt]['ChemicalAbundances'][:,3]
             return optChem['x0_D'] - x_DP[ids] - x_HD[ids]
 
-    if name=='Mu':  # mean molecular weight
+    def calcNumDens():    # returns particle number density in code [1/cm^3]
+        dens = fileSnap[pt]['Density'][:]
+        return dens[ids] * unitDensity() / ( apy.const.m_p * calcMu() )        
+
+    if name=='Mu':                           # mean molecular weight
         return calcMu()
 
     elif name=='Temperature':
@@ -95,10 +103,14 @@ def getProperty(fileSnap,ptype,name,ids,comoving,optChem):
 
     elif name=='AlphaB':
         return calcAlphaB()
+        
+    elif name=='NumberDensity':
+        return calcNumDens()
 
-    elif name=='NumberDensity':             # returns particle number density in code [1/cm^3]
-        dens = fileSnap[pt]['Density'][:]
-        return dens[ids] * unitDensity() / ( apy.const.m_p * calcMu() )
+    elif name=='Pressure':
+        rho = fileSnap[pt]['Density'][:]
+        u   = fileSnap[pt]['InternalEnergy'][:]
+        return (calcGamma()-1.)*rho[ids]*u[ids]  # [cu]
 
     elif name=='RecombH':
         dens = fileSnap[pt]['Density'][:]
@@ -106,14 +118,27 @@ def getProperty(fileSnap,ptype,name,ids,comoving,optChem):
         numdens = density / ((1. + 4. * optChem['x0_He']) * apy.const.m_p); # nucleon number density [1/cm^3]
         return calcAlphaB() * numdens    # [rec/s]
 
+    elif name=='StromgrenRadius':            # Stromgren radius
+        flux = fileSnap[pt]['PhotonFlux'][:]
+        test = apy.phys.IonizationFrontTest(
+            calcAlphaB(), calcNumDens(),
+            np.sum(flux[ids,2:],axis=1) * uFlux, # total flux from 13.6+ eV
+            calcTemp(), calcGamma(), calcMu()
+        )
+        return test.r_st / uLength # [cu]
+
+    elif name=='PhotonFlux':                 # Photon flux in bins
+        flux = fileSnap[pt]['PhotonFlux'][:]
+        return flux[ids,:] * uFlux
+
     elif name=='PhotonFluxTotal':            # Total photon flux
         flux = fileSnap[pt]['PhotonFlux'][:]
-        return np.sum(flux[ids],axis=1)
-
-    elif name in const.orderPhotonFlux:      # Photon Fluxes in bins
+        return np.sum(flux[ids],axis=1) * uFlux
+        
+    elif name in const.orderPhotonFlux:      # Photon Flux in a particular bin
         i = const.orderPhotonFlux.index(name)
         flux = fileSnap[pt]['PhotonFlux'][:]
-        return flux[ids,i]
+        return flux[ids,i] * uFlux
         
     elif name in const.orderAbund:           # Abundances
         i = const.orderAbund.index(name)

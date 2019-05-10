@@ -81,6 +81,7 @@ class simulation:
             fIcs, dOutput, fSnapBase, fSources, isOlist, fOlist = f.getValue(params)
             if 'dirOutput' in self.opt:
                 self.dirOutput = self.opt['dirOutput']
+                self.dirOutputIni = self.opt['dirOutput']+'_ini'
                 self.linkOutput = self.dirSim +'/output'
             elif dOutput[0]=='/':
                 self.dirOutput = dOutput
@@ -168,12 +169,12 @@ class simulation:
     #####################################
 
     # Compose a snapshot directory name
-    def dirSnap(self,snap):
+    def dirSnap(self,snap,init=False):
+        dirName = self.dirOutputIni if init else self.dirOutput
         if self.opt['nsub']>1: 
             snapNum = '%03d'%snap if isinstance(snap,(int,float)) else snap
-            return self.dirOutput+'/'+self.dirNameSnap%snapNum      
-        else:
-            return self.dirOutput
+            dirName = dirName+'/'+self.dirNameSnap%snapNum      
+        return dirName
 
     # Compose a sink file name
     def fileSink(self,snap=None):
@@ -185,13 +186,13 @@ class simulation:
         return self.dirSnap(snap) +'/'+ fileSink        
 
     # Compose a snapshot file name
-    def fileSnap(self,snap=None):
+    def fileSnap(self,snap=None,init=False):
         if snap is None:
             fileSnap = self.dirSnap('*') if self.opt['nsub']>1 else self.fileNameSnap%'*'
         else:
             snapNum = '%03d'%snap
             fileSnap = self.fileNameSnap%(snapNum+'.%d') if self.opt['nsub']>1 else self.fileNameSnap%snapNum
-        return self.dirSnap(snap) +'/'+ fileSnap
+        return self.dirSnap(snap,init) +'/'+ fileSnap
 
     ######################
     # Get simulation files

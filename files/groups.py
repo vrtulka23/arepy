@@ -114,7 +114,7 @@ class group(dataGroups.group):
         norm = 'img_%s_%s'%(prop,imgType) if norm is None else norm
         axis.setImage(data=data['im'],extent=data['extent'],norm=norm,normType=normType,cmap=cmap)
 
-    # Add rendering of the box projection/slice
+    # Add rendering of the box projection/slice projection
     def _renderImage(self, axis, prop, imgType, norm=None, normType=None, cmap=None, 
                      bins=200, cache=False, nproc=None, n_jobs=None, xnorm=True, ynorm=True):
         n_jobs = self.opt['n_jobs'] if n_jobs is None else n_jobs
@@ -122,7 +122,7 @@ class group(dataGroups.group):
                             cache=cache, nproc=nproc)
         if isinstance(axis,list):
             for i in range(len(axis)):
-                data = proj['data'][:,i]
+                data = proj[prop[i]]
                 n = norm[i] if isinstance(norm,list) else norm
                 nt = normType[i] if isinstance(normType,list) else normType
                 c = cmap[i] if isinstance(cmap,list) else cmap
@@ -134,9 +134,9 @@ class group(dataGroups.group):
                           norm=norm, normType=normType, cmap=cmap, 
                           xnorm=xnorm, ynorm=ynorm)
     def setProjection(self, axis, prop, **opt):
-        self._renderImage(axis, prop, 'proj', **opt)
+        self._renderImage(axis, prop, 'BoxProjCube', **opt)
     def setSlice(self, axis, prop, **opt):
-        self._renderImage(axis, prop, 'slice', **opt)
+        self._renderImage(axis, prop, 'BoxSliceSquare', **opt)
 
     # Add times to the plot
     def addTimes(self, axis, **opt):
@@ -249,16 +249,16 @@ class group(dataGroups.group):
 # Get transformation properties from the most massive sink particle
 def getTransf_MainSink(item,lrad):
     snap = item.getSnapshot()
-    pos, mass = snap.getProperty([
+    data = snap.getProperty([
         {'name':'Coordinates','ptype':5},
         {'name':'Masses','ptype':5}
     ])
-    ids = np.argmax(mass)
-    center = pos[ids]         # select the most massive sink
+    ids = np.argmax(data['Masses'])
+    center = data['Coordinates'][ids]         # select the most massive sink
     L = snap.getProperty({'name':'AngularMomentum','center':center,'radius':lrad})
     return {
         'center':center,
-        'mass':mass[ids],
+        'mass':data['Masses'][ids],
         'L':L,
     }
 
@@ -335,16 +335,17 @@ def setImage(item,prop,imgType):
     }
     
 # Get projection/slice of a region in the snapshot
-def renderImage(item,rend,prop,bins,n_jobs):
+def renderImage(item,imgType,prop,bins,n_jobs):
     snap = item.getSnapshot()
-    if rend=='proj':
-        data = snap.getProperty({'name':'BoxProjection','transf':item.transf,'w':prop,'bins':bins,'n_jobs':n_jobs})
-    elif rend=='slice':
-        data = snap.getProperty({'name':'BoxSlice','transf':item.transf,'w':prop,'bins':bins,'n_jobs':n_jobs})
-    return {
-        'data':   data,
+    propDict = {'name':imgType,'transf':item.transf,'w':prop,'bins':bins,'n_jobs':n_jobs}
+    data = {
         'extent': item.transf['crop']['box'][:4] * item.sim.units.conv['length']
     }
+    if isinstance(prop,list):
+        data.update( snap.getProperty(propDict) )
+    else:
+        data['data'] = snap.getProperty(propDict)
+    return data
 
 #######################
 # Overload item class #

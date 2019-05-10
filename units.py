@@ -5,11 +5,12 @@ import os
 # Create unit conversion constants
 class units():
     def __init__(self,old=None,new=None):
-        
-        self.names = ['mass','length','velocity','density','volume','energy','time','a','h','numdens','flux']
+
+        self.names = ['mass','length','velocity','density','volume','energy','time','numdens','flux','pressure']
+        self.namesAll = self.names+['a','h']
 
         self.conv = {}
-        for name in self.names:
+        for name in self.namesAll:
             self.conv[name] = 1.
         
         if old is not None:
@@ -51,6 +52,8 @@ class units():
             self.old['flux'] = 1.
         if 'numdens' not in self.old:
             self.old['numdens']    = 1./self.old['length']**3
+        if 'pressure' not in self.old:
+            self.old['pressure']   = 10*self.old['mass']/(self.old['length']*self.old['time']**2) # P=(gamma-1)*rho*u (Ba)
 
         # Setup cosmological units
         if 'h' not in self.old:
@@ -88,6 +91,8 @@ class units():
             self.new['numdens']    = 1.    # we want this to stay in cm^-3
         if 'flux' not in self.new:
             self.new['flux']       = 1.    # we want to have always units of ph/s
+        if 'pressure' not in self.new:
+            self.new['pressure']   = 1e-1  # conversion of Ba -> Pa
 
         if 'h' not in self.new:
             self.new['h']     = self.old['h']
@@ -104,23 +109,23 @@ class units():
             'time':     1.0,
             'numdens':  (self.new['a']/self.new['h'])**3 / (self.old['a']/self.old['h'])**3,
             'flux':     1.0,
+            'pressure': (1.0/self.old['a']) / (1.0/self.new['a']),
             }
 
         self.conv = {}
-        convUnits = ['length','mass','velocity','density','volume','energy','time','numdens','flux']
-        for unit in convUnits:
+        for unit in self.names:
             self.conv[unit] = self.old[unit] / self.new[unit] * cosmoConv[unit]
         self.conv['a'] = self.old['a'] / self.new['a']
         self.conv['h'] = self.old['h'] / self.new['h']
 
     def show(self):
         tbl = apy.data.table()
-        tbl.column('unit name',self.names)
-        tbl.column('old value',[self.old[name] for name in self.names])
-        tbl.column('new value',[self.new[name] for name in self.names])
-        tbl.column('conv',[self.conv[name] for name in self.names])
-        tbl.column('old unit',[self.guess(name,'old') for name in self.names])
-        tbl.column('new unit',[self.guess(name,'new') for name in self.names])
+        tbl.column('unit name',self.namesAll)
+        tbl.column('old value',[self.old[name] for name in self.namesAll])
+        tbl.column('new value',[self.new[name] for name in self.namesAll])
+        tbl.column('conv',[self.conv[name] for name in self.namesAll])
+        tbl.column('old unit',[self.guess(name,'old') for name in self.namesAll])
+        tbl.column('new unit',[self.guess(name,'new') for name in self.namesAll])
         tbl.show()
 
     def guess(self,name,value=1.,utype='old',umin=None,umax=None,nformat='%.1f'):

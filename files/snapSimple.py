@@ -129,6 +129,18 @@ def getProperty(fnum,fileName,fmode,optChem,comoving,properties,ids=None):
             coord = coord[ids,:] - prop['center']
             data = coord[:,0]**2 + coord[:,1]**2 + coord[:,2]**2
 
+        elif name=='CellVolume':
+            with hp.File(fileName,fmode) as sf:
+                dens = sf[pt]['Density'][:]
+                mass = sf[pt]['Masses'][:]
+            data = mass[ids]/dens[ids]
+
+        elif name=='CellRadius':
+            with hp.File(fileName,fmode) as sf:
+                dens = sf[pt]['Density'][:]
+                mass = sf[pt]['Masses'][:]
+            data = ((mass[ids]*3)/(dens[ids]*4*np.pi))**(1./3.)
+
         elif name=='VelocityRadial':            # size of the velocity tangent component
             with hp.File(fileName,fmode) as sf:
                 coord = sf[pt]['Coordinates'][:]
@@ -195,7 +207,11 @@ def getProperty(fnum,fileName,fmode,optChem,comoving,properties,ids=None):
             from scipy.spatial import cKDTree
             kdt = cKDTree(coord)
             dist,ids = kdt.query(grid)
-            data = [ ids, dist ]
+            data = [ dist, ids ]
+            if 'p' in prop: # return additional particle properties from the region
+                retprop = [prop['p']] if isinstance(prop['p'],(str,dict)) else prop['p']
+                retdata = getProperty(fnum,fileName,fmode,optChem,comoving,retprop,ids=ids)
+                data = data + retdata
 
         elif name=='Histogram1D':               # create histogram from a property
             # Example: bins=np.linspace(1,10,1)

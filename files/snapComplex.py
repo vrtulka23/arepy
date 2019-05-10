@@ -5,8 +5,12 @@ from scipy.spatial import cKDTree
 # This part calculates complex properties from simple properties
 class snapComplex:
     def initComplex(self):
-        self.cProps = ['RadHistogram','BoxProjection','BoxHistogram','BoxSlice','AngularMomentum','MassCenter',
-                       'RadialRegion','BoxRegion','IDsRegion','Histogram1D','Histogram2D',
+        self.cProps = ['RadHistogram','BoxHistogram',
+                       'BoxSliceLine','BoxSlicePoints','BoxSliceSquare',
+                       'BoxProjCube','BoxProjCylinder',
+                       'AngularMomentum','MassCenter',
+                       'RadialRegion','BoxRegion','IDsRegion',
+                       'Histogram1D','Histogram2D',
                        'Maximum','Minimum','Mean','MinPos','Sum']
 
     def getPropertyComplex(self,prop,ids=None):
@@ -15,6 +19,7 @@ class snapComplex:
         nsub = self.opt['nsub']     # number of sub files for each snapshot
         if 'ptype' not in prop:
             prop['ptype'] = 0
+
         if name=='RadHistogram':
             # Example: bins=np.linspace(1,10,1)
             #          {'name':'RadHistogram','p':'X_HP','center':[0.5,0.5,0.5],'bins':bins}
@@ -47,7 +52,11 @@ class snapComplex:
             for i,pt in enumerate(pts):
                 if npart[pt]==0: continue
                 if 'transf' in prop and 'select' in prop['transf'].items:
-                    rids = self.getPropertyComplex({'name':'RadialRegion','ptype':pt,'transf':prop['transf']},ids=ids)
+                    center = prop['transf']['select']['center']
+                    radius = prop['transf']['select']['radius']
+                    rids = self.getPropertyComplex({
+                        'name':'RadialRegion','ptype':pt,'center':center,'radius':radius
+                    },ids=ids)
                 else: 
                     rids = ids
                 mass,coord = self.getPropertySimple([
@@ -90,39 +99,64 @@ class snapComplex:
             hist,xedges,yedges = np.histogram2d(coord[:,0], coord[:,1], bins=bins, weights=weights)
             return hist
 
-        elif name=='BoxSlice':
-            # Example: {'name':'BoxSlice','transf':transf,'w':'Density','bins':200,'n_jobs':1}
+        elif name in ['BoxSlicePoints','BoxSliceLine','BoxSliceSquare']:
+            # Example: {'name':'BoxSliceSquare','transf':transf,'w':'Density','bins':200,'n_jobs':1}
             transf = prop['transf']
             center = transf['select']['center']
             radius = transf['select']['radius']
             ids,coord = self.getPropertyComplex({
-                'name':'RadialRegion','center':center,'radius':radius,'p':'Coordinates'
+                'name':'RadialRegion','center':center,'radius':radius,
+                'p':'Coordinates'
             },ids=ids)
 
             # perform coordinate transformations
             coord = transf.convert(['translate','align','flip','rotate','crop'],coord)
 
-            # initiate a grid
+            # initiate a grid points
             box = transf['crop']['box']
-            grid = apy.coord.grid('square', [prop['bins']]*2, box[:4], zfill=np.mean(box[4:]))
+            if name=='BoxSlicePoints':     # uses arbitrary grid points within the whole volume
+                points = transf.convert(['translate','align','flip','rotate','crop'],prop['points'])
+            elif name=='BoxSliceLine':     # creates line grid points on the x axis
+                grid = apy.coord.grid('line', prop['bins'], box[:2], yfill=np.mean(box[2:4]), zfill=np.mean(box[4:]))
+                points = grid.coords
+            elif name=='BoxSliceSquare':   # creates surface grid points on the x/y plane
+                grid = apy.coord.grid('square', [prop['bins']]*2, box[:4], zfill=np.mean(box[4:]))
+                points = grid.coords
 
             # find s nearest neighbors to each grid point
             n_jobs = prop['n_jobs'] if 'n_jobs' in prop else 1
             kdt = cKDTree(coord)
-            dist,pix = kdt.query(grid.coords,n_jobs=n_jobs)
+            dist,pix = kdt.query(points,n_jobs=n_jobs)
 
             # select property
             properties = prop['w'] if isinstance(prop['w'],list) else [prop['w']]
-            pps = self.getPropertySimple(properties,ids=ids)
+            if 'Coordinates' in prop['w']:
+                load = [pp for pp in properties if pp not in ['Coordinates']]
+                pps = self.getPropertySimple(load,ids=ids)
+            else:
+                pps = self.getPropertySimple(properties,ids=ids)
             data = []
             for p,pp in enumerate(pps):
                 pp = transf.select('crop',pp)
-                data.append(pp[pix].reshape([prop['bins']]*2))
+                if name=='BoxSliceLine':
+                    data.append(pp[pix])
+                elif name=='BoxSliceSquare':
+                    data.append(pp[pix].reshape([prop['bins']]*2))
+            if 'Coordinates' in prop['w']:
+                data.insert(properties.index('Coordinates'),points)
 
-            return data if isinstance(prop['w'],list) else data[0]
+            #return data if isinstance(prop['w'],list) else data[0]
+            if isinstance(prop['w'],list):
+                ret = {}
+                for p,pp in enumerate(prop['w']):
+                    name = pp if isinstance(pp,str) else pp['name']
+                    ret[name] = data[p]
+                return ret
+            else:
+                return data[0]
 
-        elif name=='BoxProjection':
-            # Example: {'name':'BoxProjection','transf':transf,'w':'Density','bins':200,'n_jobs':1}
+        elif name=='BoxProjCube':
+            # Example: {'name':'BoxProjCube','transf':transf,'w':'Density','bins':200,'n_jobs':1}
             if prop['transf'] is None:
                 coord,mass = self.getPropertySimple(['Coordinates','Masses'])
             else:
@@ -138,8 +172,15 @@ class snapComplex:
                 coord = transf.convert(['translate','align','flip','rotate','crop'],coord)
                 mass = transf.select('crop',mass)            
 
+            # load and crop projected properties
+            properties = prop['w'] if isinstance(prop['w'],list) else [prop['w']]
+            load = [pp for pp in properties if pp not in ['Masses','Density']]
+            if len(load)>0:
+                pps = self.getPropertySimple(load,ids=ids)
+                pps = [transf.select('crop',pp) for pp in pps]
+
             # initiate a grid
-            if prop['transf'] is None:
+            if prop['transf'] is None:  # TODO: this case need to be edited
                 grid = apy.coord.grid('cube', [prop['bins']]*3, transf['crop']['box'] )
             else:
                 grid = apy.coord.grid('cube', [prop['bins']]*3, transf['crop']['box'] )
@@ -168,12 +209,8 @@ class snapComplex:
             grid.data['mass'][pixEmpty] = unitFullMass[ngbEmpty]
 
             # prepare projected properties
-            properties = prop['w'] if isinstance(prop['w'],list) else [prop['w']]
-            load = [pp for pp in properties if pp not in ['Masses','Density']]
             if len(load)>0:
-                pps = self.getPropertySimple(load,ids=ids)
                 for p,pp in enumerate(pps):
-                    pp = transf.select('crop',pp)
                     ppk = 'pp%d'%p
                     grid.addAtPix(ppk,pix,pp*mass)
                     unitFullPP = grid.data[ppk][pixFull]/numPix
@@ -198,16 +235,17 @@ class snapComplex:
 
             return data if isinstance(prop['w'],list) else data[0]
 
+        elif name=='GridRegion':
+            # Example: {'name':'GridRegion','grid':grid}
+            data = self.getPropertySimple([prop],ids=ids)[0]
+            if nsub>1:
+                apy.shell.exit('This feature neetds to be implemented (snapComplex.py)')
+            else:
+                return [data[i] for i in range(1,len(data))] # remove dist parameter
+            
         elif name in ['RadialRegion','BoxRegion','IDsRegion']:
-            # Example: {'name':RadialRegion,'center':[0.5,0.5,0.5],'radius':0.5}
-            # Example: {'name':BoxRegion,'box':[0,1,0,1,0,1]}
-            if 'transf' in prop:
-                select = prop['transf']['select']
-                if name=='RadialRegion':
-                    prop['center'] = select['center']
-                    prop['radius'] = select['radius']
-                elif name=='BoxRegion':
-                    prop['box'] = select['box']
+            # Example: {'name':'RadialRegion','center':[0.5,0.5,0.5],'radius':0.5}
+            # Example: {'name':'BoxRegion','box':[0,1,0,1,0,1]}
             data = self.getPropertySimple([prop],ids=ids)[0]
             if nsub>1 and 'p' in prop:
                 rdata = [ [ s[0] for s in data ] ]
