@@ -22,8 +22,9 @@ class figure:
             'sRow':       3.0, 
             'sCol':       3.5,
             'nproc':      1,
-            'gridspec':   None,
+            'gridspec':   None,                  # use GridSpec axes
             'fileFormat': 'png',                 # file format of the final figure (png,pdf,jpeg,...)
+            'projection': None,                  # default value of projection for each subplot
         }
         self.opt.update(opt)
 

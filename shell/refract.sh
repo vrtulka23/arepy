@@ -3,14 +3,23 @@
 YEL='\033[0;33m'
 NC='\033[0m'
 
-if [[ -z "${3}" ]]; then
+# go to the correct folder
+dirReplace=$(sed "s/${1}=//g" <<< $(grep "${1}" ~/.arepy/settings))
+cd $dirReplace
+
+strFrom="${2}"
+strTo="${3}"
+
+# look in the particular files
+if [[ -z "${4}" ]]; then
     format="*.py"
 else
-    format="${3}"
+    format="${4}"
 fi
 
-echo -e "${YEL}Changing '${1}' to '${2}'${NC}"
-found=$(grep -r --include="$format" "${1}" ./)
+# replace everything
+echo -e "${YEL}Changing '${strFrom}' to '${strTo}'${NC}"
+found=$(grep -r --include="$format" "${strFrom}" ./)
 if [[ ! -z $found ]]; then
     echo -e "${YEL}The following strings will be replaced:${NC}"
     echo "$found"
@@ -18,7 +27,7 @@ if [[ ! -z $found ]]; then
     echo
     if [[ $REPLY =~ ^[Yy]?$ ]]; then
 	echo -e "${YEL}processing...${NC}"
-	sedstring="s/$1/$2/g"
+	sedstring="s/${strFrom}/${strTo}/g"
 	find ./ -iname "$format" -exec sed -i -e "$sedstring" {} \;
 	echo -e "${YEL}done${NC}"
     fi

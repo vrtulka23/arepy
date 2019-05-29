@@ -94,8 +94,7 @@ class group(dataGroups.group):
 
     # Get transformation parameters from a particle
     def getTransf(self,name,*args,**opt):
-        if name=='MainSink':
-            return self.foreach(getTransf_MainSink,args=list(args),**opt)
+        return self.foreach(getTransf,args=[name]+list(args),**opt)
 
     ######################################
     # Common plotting routines           #
@@ -118,11 +117,12 @@ class group(dataGroups.group):
     def _renderImage(self, axis, prop, imgType, norm=None, normType=None, cmap=None, 
                      bins=200, cache=False, nproc=None, n_jobs=None, xnorm=True, ynorm=True):
         n_jobs = self.opt['n_jobs'] if n_jobs is None else n_jobs
+        prop = apy.files.snapProperties(prop)
         proj = self.foreach(renderImage,args=[imgType,prop,bins,n_jobs],
                             cache=cache, nproc=nproc)
         if isinstance(axis,list):
             for i in range(len(axis)):
-                data = proj[prop[i]]
+                data = proj[prop[i]['name']]
                 n = norm[i] if isinstance(norm,list) else norm
                 nt = normType[i] if isinstance(normType,list) else normType
                 c = cmap[i] if isinstance(cmap,list) else cmap
@@ -136,7 +136,7 @@ class group(dataGroups.group):
     def setProjection(self, axis, prop, **opt):
         self._renderImage(axis, prop, 'BoxProjCube', **opt)
     def setSlice(self, axis, prop, **opt):
-        self._renderImage(axis, prop, 'BoxSliceSquare', **opt)
+        self._renderImage(axis, prop, 'BoxSquareXY', **opt)
 
     # Add times to the plot
     def addTimes(self, axis, **opt):
@@ -247,20 +247,38 @@ class group(dataGroups.group):
 ############################################
 
 # Get transformation properties from the most massive sink particle
-def getTransf_MainSink(item,lrad):
+def getTransf(item,name,lrad):
     snap = item.getSnapshot()
-    data = snap.getProperty([
-        {'name':'Coordinates','ptype':5},
-        {'name':'Masses','ptype':5}
-    ])
-    ids = np.argmax(data['Masses'])
-    center = data['Coordinates'][ids]         # select the most massive sink
-    L = snap.getProperty({'name':'AngularMomentum','center':center,'radius':lrad})
-    return {
-        'center':center,
-        'mass':data['Masses'][ids],
-        'L':L,
-    }
+    if name=='MainSink':
+        data = snap.getProperty([
+            {'name':'Coordinates','ptype':5},
+            {'name':'Masses','ptype':5}
+        ])
+        if len(data['Masses'])>0:
+            ids = np.argmax(data['Masses'])
+            center = data['Coordinates'][ids]         # select the most massive sink
+            L = snap.getProperty({'name':'AngularMomentum','center':center,'radius':lrad})
+            return {
+                'center':center,
+                'align':L,
+            }
+        else:
+            return {
+                'center': [np.nan]*3,
+                'align':  [np.nan]*3,
+            }
+    elif name=='BoxSize':
+        size = snap.getHeader('BoxSize')
+        return {
+            'center': [size/2]*3,
+            'size':   size,
+            'box':    [0,BoxSize,0,BoxSize,0,BoxSize],
+        }
+    elif name=='ArepoImage':
+        param = item.getParam()
+        return {
+            'box': param.getProperty(['PicXmin','PicXmax','PicYmin','PicYmax','PicZmin','PicZmax'])
+        }
 
 # Get sink properties
 def getSinkProps(item,props,select):
@@ -337,14 +355,12 @@ def setImage(item,prop,imgType):
 # Get projection/slice of a region in the snapshot
 def renderImage(item,imgType,prop,bins,n_jobs):
     snap = item.getSnapshot()
-    propDict = {'name':imgType,'transf':item.transf,'w':prop,'bins':bins,'n_jobs':n_jobs}
-    data = {
-        'extent': item.transf['crop']['box'][:4] * item.sim.units.conv['length']
-    }
-    if isinstance(prop,list):
-        data.update( snap.getProperty(propDict) )
-    else:
-        data['data'] = snap.getProperty(propDict)
+    if item.transf is None:
+        apy.shell.exit('Picture rendering needs a transformation (groups.py)')
+    data = snap.getProperty({'name':imgType,'transf':item.transf,'w':prop,'bins':bins,'n_jobs':n_jobs})
+    if len(prop)==1:
+        data = {'data': data}
+    data['extent'] = item.transf['crop']['box'][:4] * item.sim.units.conv['length']
     return data
 
 #######################
@@ -355,6 +371,7 @@ class item(dataGroups.item):
         super().__init__(index,groupName,opt)
         self.sim = sim
         self.snap = snap
+        self.transf = None
 
     # Set coordinate transformations
     def setTransf(self, **opt):

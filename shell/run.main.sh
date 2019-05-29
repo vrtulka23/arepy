@@ -188,7 +188,8 @@ submit_cancel()
 submit_log()
 {
     echo_green "Submit logs:"	
-    tail -16 $SIM_LOG
+    log=$(tail -16 $SIM_LOG)
+    echo "$log"
 }
 print_submit_stats()
 {    

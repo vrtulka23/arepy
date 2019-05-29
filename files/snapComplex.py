@@ -6,7 +6,8 @@ from scipy.spatial import cKDTree
 class snapComplex:
     def initComplex(self):
         self.cProps = ['RadHistogram','BoxHistogram',
-                       'BoxSliceLine','BoxSlicePoints','BoxSliceSquare',
+                       'BoxPoints','BoxSquareXY',
+                       'BoxLine','BoxLineRZ','BoxLineXYZ',
                        'BoxProjCube','BoxProjCylinder',
                        'AngularMomentum','MassCenter',
                        'RadialRegion','BoxRegion','IDsRegion',
@@ -99,8 +100,8 @@ class snapComplex:
             hist,xedges,yedges = np.histogram2d(coord[:,0], coord[:,1], bins=bins, weights=weights)
             return hist
 
-        elif name in ['BoxSlicePoints','BoxSliceLine','BoxSliceSquare']:
-            # Example: {'name':'BoxSliceSquare','transf':transf,'w':'Density','bins':200,'n_jobs':1}
+        elif name in ['BoxPoints','BoxLine','BoxSquareXY','BoxLineRZ','BoxLineXYZ']:
+            # Example: {'name':'BoxSquareXY','transf':transf,'w':'Density','bins':200,'n_jobs':1}
             transf = prop['transf']
             center = transf['select']['center']
             radius = transf['select']['radius']
@@ -114,14 +115,19 @@ class snapComplex:
 
             # initiate a grid points
             box = transf['crop']['box']
-            if name=='BoxSlicePoints':     # uses arbitrary grid points within the whole volume
+            if name=='BoxPoints':     # uses arbitrary grid points within the whole volume
                 points = transf.convert(['translate','align','flip','rotate','crop'],prop['points'])
-            elif name=='BoxSliceLine':     # creates line grid points on the x axis
-                grid = apy.coord.grid('line', prop['bins'], box[:2], yfill=np.mean(box[2:4]), zfill=np.mean(box[4:]))
-                points = grid.coords
-            elif name=='BoxSliceSquare':   # creates surface grid points on the x/y plane
-                grid = apy.coord.grid('square', [prop['bins']]*2, box[:4], zfill=np.mean(box[4:]))
-                points = grid.coords
+            elif name=='BoxLine':     # creates line grid points on the x axis
+                grid = apy.coord.gridLine(prop['bins'], box[:2], yfill=np.mean(box[2:4]), zfill=np.mean(box[4:]))
+            elif name=='BoxSquareXY':   # creates surface grid points on the x/y plane
+                grid = apy.coord.gridSquareXY([prop['bins']]*2, box[:4], zfill=np.mean(box[4:]))
+            elif name=='BoxLineRZ':   # calculate R/Z line profiles
+                extent = [np.mean(box[0:2]), box[1], box[4], box[5]]
+                grid = apy.coord.gridLineRZ([prop['bins'],prop['bins']*2], extent, xfill=np.mean(box[:2]), yfill=np.mean(box[2:4]))
+            elif name=='BoxLineXYZ':   # calculate X/Y/Z line profiles
+                grid = apy.coord.gridLineXYZ([prop['bins']]*3, box, xfill=np.mean(box[:2]),
+                                            yfill=np.mean(box[2:4]), zfill=np.mean(box[4:]))
+            points = grid.coords
 
             # find s nearest neighbors to each grid point
             n_jobs = prop['n_jobs'] if 'n_jobs' in prop else 1
@@ -129,31 +135,20 @@ class snapComplex:
             dist,pix = kdt.query(points,n_jobs=n_jobs)
 
             # select property
-            properties = prop['w'] if isinstance(prop['w'],list) else [prop['w']]
-            if 'Coordinates' in prop['w']:
-                load = [pp for pp in properties if pp not in ['Coordinates']]
-                pps = self.getPropertySimple(load,ids=ids)
-            else:
-                pps = self.getPropertySimple(properties,ids=ids)
+            properties = apy.files.snapProperties(prop['w'])
+            load = properties.without('name',['Coordinates','Bins'])
+            pps = self.getPropertySimple(load,ids=ids)
             data = []
             for p,pp in enumerate(pps):
                 pp = transf.select('crop',pp)
-                if name=='BoxSliceLine':
-                    data.append(pp[pix])
-                elif name=='BoxSliceSquare':
-                    data.append(pp[pix].reshape([prop['bins']]*2))
-            if 'Coordinates' in prop['w']:
-                data.insert(properties.index('Coordinates'),points)
+                data.append( grid.reshapeData(pp[pix]) )
+            for p,pp in enumerate(properties):
+                if pp['name']=='Coordinates':
+                    data.insert(p, grid.reshapeData(points) )
+                elif pp['name']=='Bins':
+                    data.insert(p, grid.xi )
 
-            #return data if isinstance(prop['w'],list) else data[0]
-            if isinstance(prop['w'],list):
-                ret = {}
-                for p,pp in enumerate(prop['w']):
-                    name = pp if isinstance(pp,str) else pp['name']
-                    ret[name] = data[p]
-                return ret
-            else:
-                return data[0]
+            return properties.results(data)
 
         elif name=='BoxProjCube':
             # Example: {'name':'BoxProjCube','transf':transf,'w':'Density','bins':200,'n_jobs':1}
@@ -173,17 +168,17 @@ class snapComplex:
                 mass = transf.select('crop',mass)            
 
             # load and crop projected properties
-            properties = prop['w'] if isinstance(prop['w'],list) else [prop['w']]
-            load = [pp for pp in properties if pp not in ['Masses','Density']]
+            properties = apy.files.snapProperties(prop['w'])
+            load = properties.without('name',['Masses','Density'])
             if len(load)>0:
                 pps = self.getPropertySimple(load,ids=ids)
                 pps = [transf.select('crop',pp) for pp in pps]
 
             # initiate a grid
             if prop['transf'] is None:  # TODO: this case need to be edited
-                grid = apy.coord.grid('cube', [prop['bins']]*3, transf['crop']['box'] )
+                grid = apy.coord.gridCube([prop['bins']]*3, transf['crop']['box'] )
             else:
-                grid = apy.coord.grid('cube', [prop['bins']]*3, transf['crop']['box'] )
+                grid = apy.coord.gridCube([prop['bins']]*3, transf['crop']['box'] )
 
             pix = grid.getPixFromCoord(coord)
             grid.addAtPix('num',pix,1)
@@ -192,8 +187,8 @@ class snapComplex:
             # locate empty and full pixels
             pixFull = grid.data['num']>0
             pixEmpty = grid.data['num']==0            
-            coordFull = grid.grid[pixFull]
-            coordEmpty = grid.grid[pixEmpty]
+            coordFull = grid[pixFull]
+            coordEmpty = grid[pixEmpty]
             massFull = grid.data['mass'][pixFull]
 
             # for each empty pixel find the closest full pixel
@@ -221,9 +216,9 @@ class snapComplex:
             data,i = [],0
             for p,pp in enumerate(properties):
                 mass = grid.data['mass'].sum(axis=2)
-                if pp=='Masses':
+                if pp['name']=='Masses':
                     projection = mass
-                elif pp=='Density':
+                elif pp['name']=='Density':
                     box = transf['crop']['box']
                     area = (box[1]-box[0])*(box[3]-box[2])
                     projection = mass / area * prop['bins']**2
@@ -233,7 +228,7 @@ class snapComplex:
                     i += 1
                 data.append(projection)
 
-            return data if isinstance(prop['w'],list) else data[0]
+            return properties.results(data)
 
         elif name=='GridRegion':
             # Example: {'name':'GridRegion','grid':grid}

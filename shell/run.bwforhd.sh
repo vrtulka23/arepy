@@ -32,10 +32,12 @@ on_submit_avail()
     printf "$(showbf -f best)\n"
     echo -e "\033[0;33mFat\033[0m";
     printf "$(showbf -f fat)\n"
-    echo -e "\033[0;33mMic\033[0m";
-    printf "$(showbf -f mic)\n"
     echo -e "\033[0;33mFat-ivy\033[0m";
     printf "$(showbf -f fat-ivy)\n"
+    echo -e "\033[0;33mMic\033[0m";
+    printf "$(showbf -f mic)\n"
+    echo -e "\033[0;33mGPU\033[0m";
+    printf "$(showbf -f gpu)\n"
 }
 
 on_submit_queue()

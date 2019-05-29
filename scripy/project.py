@@ -28,10 +28,10 @@ class project:
 
     def initPlot(self,name):
         if not apy.shell.isdir( self.dirPlots ):
-            apy.shell.mkdir( self.dirPlots )
+            apy.shell.mkdir( self.dirPlots+'/%s'%name )
             apy.shell.touch( self.dirPlots+'/__init__.py' )
         with apy.util.template( self.dirTemplates+'/plot.py' ) as f:
-            f.write( self.dirPlots+'/%s.py'%name )
+            f.write( self.dirPlots+'/%s/__init__.py'%name )
 
     def initScript(self,name):
         if not apy.shell.isdir( self.dirScripts ):

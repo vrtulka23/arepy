@@ -1,10 +1,13 @@
 import matplotlib as mpl
 mpl.use('agg')
 import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
 from matplotlib import colors
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-import matplotlib.gridspec as gridspec
+from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.lines import Line2D
+from matplotlib.ticker import FormatStrFormatter
+import matplotlib.patches as patches
 import arepy as apy
 import numpy as np
 
@@ -60,8 +63,12 @@ def plotSubplot(ax,opt,canvas,fid=0):
         if d['draw']=='scatter':
             xvals = d['x'] if np.isscalar(d['x'][0]) else d['x'][fid]
             yvals = d['y'] if np.isscalar(d['y'][0]) else d['y'][fid]
-            li = drawax.scatter(xvals,yvals,**d['kwargs'])
-            if 'label' in d['kwargs']:
+            if d['z'] is None:
+                li = drawax.scatter(xvals,yvals,**d['opt'])
+            else:
+                zvals = d['z'] if np.isscalar(d['z'][0]) else d['z'][fid]
+                li = drawax.scatter(xvals,yvals,zvals,**d['opt'])
+            if 'label' in d['opt']:
                 handles.append(li)
 
         # Draw a quiver
@@ -99,29 +106,36 @@ def plotSubplot(ax,opt,canvas,fid=0):
 
         # Draw a circle
         if d['draw']=='circle':
-            shape = plt.Circle( d['center'], d['radius'], linestyle=d['linestyle'],color=d['color'], fill=False)
+            shape = plt.Circle( d['center'], d['radius'], fill=False, **d['kwargs'])
             drawax.add_artist(shape)
+
+        # Draw a rectangle
+        if d['draw']=='rectangle':
+            rect = patches.Rectangle(d['origin'],d['width'],d['height'],**d['kwargs'])
+            drawax.add_patch(rect)
         
     # Draw a standard legend
     if canvas['legend'] is not None:
         legend = canvas['legend']
+        if 'fontsize' not in legend['nopt']:
+            legend['nopt']['fontsize'] = fontsize
         if (legend['handles'] is not None and legend['labels'] is not None):
-            ax.legend(legend['handles'],legend['labels'],loc=legend['loc'],fontsize=fontsize)
+            ax.legend(legend['handles'],legend['labels'],**legend['nopt'])
         elif legend['labels'] is not None:
-            ax.legend(legend['labels'],loc=legend['loc'],fontsize=fontsize)
+            ax.legend(legend['labels'],**legend['nopt'])
         else:
             labels = [h.get_label() for h in handles]
-            ax.legend(handles,labels,loc=legend['loc'],
-                      fontsize=legend['fontsize'],frameon=legend['frameon'])
+            ax.legend(handles,labels,**legend['nopt'])
 
     # Draw a linestyle legend
     if canvas['legendLS'] is not None:
         legend = canvas['legendLS']
+        if 'fontsize' not in legend['nopt']:
+            legend['nopt']['fontsize'] = fontsize
         elements = []
         for i in range(len(legend['ls'])):
             elements.append( Line2D([0], [0], color=legend['color'], ls=legend['ls'][i], lw=1 ) )
-        leg = mpl.legend.Legend(ax, elements, legend['labels'], loc=legend['loc'], 
-                                fontsize=legend['fontsize'],frameon=legend['frameon'])        
+        leg = mpl.legend.Legend(ax, elements, legend['labels'], **legend['nopt'])
         ax.add_artist(leg);
 
     if canvas['image'] is not None:
@@ -195,6 +209,10 @@ def plotSubplot(ax,opt,canvas,fid=0):
     if 'xticklabels' in axProp and axProp['xticklabels'] is False: ax.set_xticklabels([])
     if 'yticklabels' in axProp and axProp['yticklabels'] is False: ax.set_yticklabels([])
 
+    if 'xtickformat' in axProp: 
+        ax.xaxis.set_major_formatter(FormatStrFormatter(axProp['xtickformat']))
+        ax.xaxis.set_minor_formatter(FormatStrFormatter(axProp['xtickformat']))
+
     if 'yright' in axProp and axProp['yright'] is True: 
         ax.yaxis.tick_right()
         ax.yaxis.set_label_position("right")
@@ -204,9 +222,6 @@ def plotSubplot(ax,opt,canvas,fid=0):
         if 'tlabel' in axProp: twinx.set_ylabel( axProp['tlabel'], fontsize=fontsize )
         if 'tlim'   in axProp: twinx.set_ylim( axProp['tlim'] )
         if 'tscale' in axProp and axProp['tscale'] in ['log','symlog']: twinx.set_yscale( axProp['tscale'] )
-
-    ax.xaxis.set_tick_params(labelsize=fontsize)
-    ax.yaxis.set_tick_params(labelsize=fontsize)
 
     # set same x and y ticks
     if 'xysame' in axProp:
@@ -220,6 +235,9 @@ def plotSubplot(ax,opt,canvas,fid=0):
         ax.set_yticks( xticks )
 
     # set additional tick parameters
+    #ax.xaxis.set_tick_params(labelsize=fontsize)
+    #ax.yaxis.set_tick_params(labelsize=fontsize)
+    ax.tick_params(which='both', labelsize=fontsize)
     if 'tickparam' in axProp: ax.tick_params(**axProp['tickparam'])
 
 def plotFigure(f,opt,canvas):
@@ -230,13 +248,22 @@ def plotFigure(f,opt,canvas):
         axs = []
         for r in range(opt['nrows']):
             for c in range(opt['ncols']):
-                axs.append( fig.add_subplot(opt['nrows'],opt['ncols'],r*opt['ncols']+c+1) )
+                index = r*opt['ncols']+c
+                projection = canvas[index]['axis']['projection']
+                axs.append( fig.add_subplot(opt['nrows'],opt['ncols'],index+1, projection=projection) )
     else:
         # Create a figure using gridspec to get a tight layout
         fig = plt.figure(figsize=opt['figSize'])
         gs = gridspec.GridSpec(opt['nrows'], opt['ncols'])
         gs.update(wspace=opt['gridspec']['wspace'],hspace=opt['gridspec']['hspace'])
-        axs = [plt.subplot(gs[i]) for i in range(opt['nrows']*opt['ncols'])]
+        axs = []
+        for r in range(opt['nrows']):
+            for c in range(opt['ncols']):
+                index = r*opt['ncols']+c
+                axs.append( plt.subplot(gs[index]) )
+                axis = canvas[index]['axis']
+                if 'projection' in axis and axis['projection'] is not None:
+                    apy.shell.exit('Projection needs to be implemented for the gridspec (plot.py)')
 
     for canv in canvas:
         spIndex, spRows, spCols = canv['subplot']
@@ -251,3 +278,5 @@ def plotFigure(f,opt,canvas):
 
     # Close figure
     plt.close(fig)
+
+    

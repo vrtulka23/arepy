@@ -10,7 +10,7 @@ class subplot:
         self.col = col                        # column on the grid
         self.index = row*figure.ncols+col     # subplot index
         
-        # set options
+        # set options and canvas
         self.opt = figure.opt.copy()  
         self.opt.update(opt)
 
@@ -27,6 +27,7 @@ class subplot:
                 'xscale': 'lin',        # x axis scale
                 'yscale': 'lin',        # y axis scale
                 'tscale': 'lin',        # twin y axis scale
+                'projection': None,     # 3d projection
             },
         }
         self.xnorm = 'xnorm_%d'%self.index  # x-axis norm
@@ -58,17 +59,17 @@ class subplot:
     # Add unique objects to the canvas
 
     # Note: frameon=False
-    def setLegend(self, handles=None, labels=None, loc='best', frameon=True, fontsize=8):
-        loc = loc.replace('bottom','lower')
-        loc = loc.replace('top','upper')
-        self.canvas['legend'] = {'draw':'legend','handles':handles,'labels':labels,
-                                 'loc':loc,'frameon':frameon,'fontsize':fontsize}
+    def setLegend(self, handles=None, labels=None, **nopt):
+        if 'loc' in nopt:
+            nopt['loc'] = nopt['loc'].replace('bottom','lower').replace('top','upper')
+        self.canvas['legend'] = {'draw':'legend','handles':handles,'labels':labels,'nopt':nopt}
 
     # Example: sp.setLegendLS([':','--'],['foo','bar'])
     # Note: frameon=False
-    def setLegendLS(self, linestyles, labels, loc='best', color='black', frameon=True, fontsize=8):
-        self.canvas['legendLS'] = {'draw':'legendLS','ls':linestyles,'labels':labels,
-                                   'loc':loc,'color':color,'frameon':frameon,'fontsize':fontsize}
+    def setLegendLS(self, linestyles, labels, color='black', **nopt):
+        if 'loc' in nopt:
+            nopt['loc'] = nopt['loc'].replace('bottom','lower').replace('top','upper')
+        self.canvas['legendLS'] = {'draw':'legendLS','ls':linestyles,'labels':labels,'color':color,'nopt':nopt}
 
     def setImage(self, data, extent=(0,1,0,1), norm=None, normType='lin', cmap=None, aspect='equal', xnorm=True, ynorm=True):
         xextent = extent[:,:2] if np.ndim(extent)>1 else extent[:2]
@@ -96,12 +97,13 @@ class subplot:
         self.canvas['other'].append({'draw':'step','twinx':twinx,'x':x,'y':y,'label':label,
                                      'color':color,'linestyle':ls})
 
-    def addScatter(self, x, y, xnorm=None, ynorm=None,**nopt):
-        self.setNorm(xdata=x,ydata=y,xname=xnorm,yname=ynorm)
+    def addScatter(self, *coord, xnorm=None, ynorm=None,**nopt):
         opt = {'c': 'black'}
         opt.update(nopt)
-        self.canvas['other'].append({'draw':'scatter','twinx':False,'x':x,'y':y,'kwargs':opt})
-
+        self.setNorm(xdata=coord[0],ydata=coord[1],xname=xnorm,yname=ynorm)
+        x,y,z = coord if self.opt['projection']=='3d' else (coord[0],coord[1],None)
+        self.canvas['other'].append({'draw':'scatter','twinx':False,'x':x,'y':y,'z':z,'opt':opt})
+        
     def addQuiver(self, *coord, **nopt):
         self.canvas['other'].append({'draw':'quiver','twinx':False,'coord':coord,'kwargs':nopt})
 
@@ -117,15 +119,23 @@ class subplot:
         opt.update(nopt)
         self.canvas['other'].append({'draw':'line','twinx':twinx,'pos':pos,'axis':axis,'kwargs':opt})
         
-    def addCircle(self, center, radius, linestyle='-', color="white", twinx=False):        
+    def addCircle(self, center, radius, twinx=False, **nopt):        
+        opt = {'color':'black'}
+        opt.update(nopt)
         self.canvas['other'].append({'draw':'circle','twinx':twinx,'center':center,
-                                     'radius':radius,'linestyle':linestyle,'color':color})
+                                     'radius':radius,'kwargs':opt})
         
     def addText(self, text, loc, bgcolor='black', twinx=False, padding=None, **nopt):
         opt = {'color':'white', 'fontsize': 8}
         opt.update(nopt)
         self.canvas['other'].append({'draw':'text','twinx':twinx,'loc':loc,'text':text,
                                      'bgcolor':bgcolor,'padding':padding,'kwargs':opt})
+
+    def addRectangle(self, origin, width, height, **nopt):
+        opt = {'color':'grey'}
+        opt.update(nopt)
+        self.canvas['other'].append({'draw':'rectangle','twinx':False,'origin':origin,
+                                     'width':width,'height':height,'kwargs':opt})
 
     # Read dataset and add its objects to the canvas
     def readDataset(self, sim, snaps):
@@ -141,8 +151,9 @@ class subplot:
 
         # add all axis options
         axOpt = ['title','xlabel','ylabel','xlim','ylim','xscale','yscale',
-                 'tlabel','tlim','tscale','group','xflip','yright',
-                 'xticklabels','yticklabels','xtickparam','ytickparam','tickparam','xysame']
+                 'tlabel','tlim','tscale','group','xflip','yright','projection',
+                 'xticklabels','yticklabels','xtickparam','ytickparam','tickparam','xysame',
+                 'xtickformat']
         for opt in axOpt:
             if opt in self.opt:
                 if self.opt[opt] is None: # remove if set to None

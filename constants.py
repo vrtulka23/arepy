@@ -27,5 +27,8 @@ eV = 1.60217733e-12  # electron-volt [erg]
 keV = 1.60217733e-15 # kilo electron-volt [erg]
 MeV = 1.60217733e-18 # mega electron-volt [erg]
 
+# Simple conversions
+eV2Hz = eV/h         # wave energy to wave frequency: electron-volt to Hertz  
+
 # Common settings for all file types 
 dsets = {'Coordinates':3,'Velocities':3}
