@@ -1,22 +1,40 @@
 #!/bin/bash
+ 
+DIR_RUN=$(pwd)
 
-# Other options
-ANALYZE_DIR="none"
+# Check if in the project directory
+DIR_PROJECT="none"
+while IFS='=' read -r pname pdir
+do 
+    if [[ $DIR_RUN == "$pdir"* ]]; then
+	DIR_PROJECT="$pname"
+    fi
+done < ~/.arepy/projects
 
-# Cluster option
-NUM_NODES=0                # number of nodes
-NUM_PROC=0                 # number of processors per node
-JOB_WALL_TIME="0"          # wall time of the run
-JOB_TYPE="no-queue"        # type of nodes
-FLAGS_RUN=""               # Arepo run flags
-FLAGS_RESTART="1"          # Arepo restart flags
+# Loads global settings
+DIR_AREPY=$(grep "arepy=" ~/.arepy/settings | sed 's/arepy=//')
+DIR_SCRIPY=$(grep "scripy=" ~/.arepy/settings | sed 's/scripy=//')
+DIR_RESULTS=$(grep "results=" ~/.arepy/settings | sed 's/results=//')
+if [ -f ~/.arepy/settings ]; then
+    MACHINE=$(grep "runsh=" ~/.arepy/settings | sed 's/runsh=//')
+    scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+    source "${DIR_AREPY}/shell/run.${MACHINE}.sh"
+else
+    MACHINE="no-machine"
+    echo -e "${RED}Could not find settings for this machine! Check if the machine name in ~/.runsh is set correctly.${NC}"
+fi
 
-# Arepo Images
-IMAGE_NODES=0
-IMAGE_PROC=0
-IMAGE_WALLTIME="0"
-IMAGE_TYPE="no-queue"
-IMAGE_FLAGS=(0 100 0.149850 0.150150 0.149850 0.150150 0.149850 0.150150)
+# Load local settings
+while [ "$DIR_RUN" != "/" ]
+do
+    if [ -e "$DIR_RUN/run.sh" ] # load settings from the current dir
+    then
+	source $DIR_RUN/run.sh
+	break
+    else                            # look in a parent directory
+	DIR_RUN=$(dirname $DIR_RUN)
+    fi
+done
 
-source ~/.arepy/run.sh
-
+# Call scripts
+source $DIR_AREPY/shell/run.main.sh

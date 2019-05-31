@@ -41,7 +41,7 @@ class grid:
         return data
 
 ###########################
-# Grid Cube
+# Grid Volumes
 ###########################
 class gridCube(grid):
     def _setCoordinates(self):
@@ -80,7 +80,7 @@ class gridCube(grid):
             
 
 ###########################
-# Grid Square
+# Grid Surfaces
 ###########################
 class gridSquareXY(grid):
     def _setCoordinates(self,zfill=None):
@@ -97,12 +97,18 @@ class gridSquareXY(grid):
     def reshapeData(self,data):
         return data.reshape(self.nbins)
 
-###########################
-# Grid Disc
-# Different parts of the disk can be located using offsets in 'self.parts'
-###########################
-# plain disc
+class gridHealpix(grid):
+    def _setCoordinates(self,zfill=None):
+        import healpy as hp
+        nside = self.bins[0]
+        npix = hp.nside2npix(nside)
+        coord = np.zeros((npix,3))
+        for i in range(npix):
+            coord[i,:] = hp.pix2vec(nside,i)
+        #self._setScatter(coord)
+
 class gridDisc(grid):
+    # Different parts of the disk can be located using offsets in 'self.parts'
     def __init__(self,bins,extent=None,points='edges',scatter=None,**opt):
         super().__init__(bins,extent,points,scatter,**opt)
 
@@ -127,7 +133,7 @@ class gridDisc(grid):
         return np.split(data, self.split)
 
 ###########################
-# Grid Line
+# Grid Lines
 ###########################
 class gridLine(grid):
     def _setCoordinates(self,yfill=None,zfill=None):

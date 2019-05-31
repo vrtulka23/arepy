@@ -6,7 +6,7 @@ from scipy.spatial import cKDTree
 class snapComplex:
     def initComplex(self):
         self.cProps = ['RadHistogram','BoxHistogram',
-                       'BoxPoints','BoxSquareXY',
+                       'BoxPoints','BoxSquareXY','BoxHealpix'
                        'BoxLine','BoxLineRZ','BoxLineXYZ',
                        'BoxProjCube','BoxProjCylinder',
                        'AngularMomentum','MassCenter',
@@ -100,7 +100,7 @@ class snapComplex:
             hist,xedges,yedges = np.histogram2d(coord[:,0], coord[:,1], bins=bins, weights=weights)
             return hist
 
-        elif name in ['BoxPoints','BoxLine','BoxSquareXY','BoxLineRZ','BoxLineXYZ']:
+        elif name in ['BoxPoints','BoxLine','BoxSquareXY','BoxLineRZ','BoxLineXYZ','BoxHealpix']:
             # Example: {'name':'BoxSquareXY','transf':transf,'w':'Density','bins':200,'n_jobs':1}
             transf = prop['transf']
             center = transf['select']['center']
@@ -119,14 +119,16 @@ class snapComplex:
                 points = transf.convert(['translate','align','flip','rotate','crop'],prop['points'])
             elif name=='BoxLine':     # creates line grid points on the x axis
                 grid = apy.coord.gridLine(prop['bins'], box[:2], yfill=np.mean(box[2:4]), zfill=np.mean(box[4:]))
-            elif name=='BoxSquareXY':   # creates surface grid points on the x/y plane
+            elif name=='BoxSquareXY': # creates surface grid points on the x/y plane
                 grid = apy.coord.gridSquareXY([prop['bins']]*2, box[:4], zfill=np.mean(box[4:]))
             elif name=='BoxLineRZ':   # calculate R/Z line profiles
                 extent = [np.mean(box[0:2]), box[1], box[4], box[5]]
                 grid = apy.coord.gridLineRZ([prop['bins'],prop['bins']*2], extent, xfill=np.mean(box[:2]), yfill=np.mean(box[2:4]))
-            elif name=='BoxLineXYZ':   # calculate X/Y/Z line profiles
+            elif name=='BoxLineXYZ':  # calculate X/Y/Z line profiles
                 grid = apy.coord.gridLineXYZ([prop['bins']]*3, box, xfill=np.mean(box[:2]),
                                             yfill=np.mean(box[2:4]), zfill=np.mean(box[4:]))
+            elif name=='BoxHealpix':  # calculate Healpix surface
+                grid = apy.coord.gridHealpix(prop['bins'], box)
             points = grid.coords
 
             # find s nearest neighbors to each grid point

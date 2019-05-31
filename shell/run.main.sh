@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e  # exit always if there is some error
+#set -e  # exit always if there is some error
 
 # Variables that can be overwritten in 'run.sh'
 NUM_NODES=${NUM_NODES:-1}                      # number of nodes
@@ -307,7 +307,12 @@ analyze()
     if [ $(type -t on_analyze) ]; then
 	on_analyze "$@"
     else
-	python3 -W ignore $DIR_AREPY/scripy/main.py $DIR_PROJECT "$@"
+	if [ $DIR_PROJECT == "none" ]
+	then
+	    echo -e "${RED}Cannot analyze a non-scripy directory!${NC}"
+	else
+	    python3 -W ignore $DIR_AREPY/scripy/main.py $DIR_PROJECT "$@"
+	fi
     fi
 }
 analyze_snaps()
