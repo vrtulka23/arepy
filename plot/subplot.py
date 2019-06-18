@@ -19,21 +19,24 @@ class subplot:
             'empty': True,      # is canvas empty
             'image': None,      # main image on the figure
             'colorbar': None,   # colorbar of the image
-            'colorbarG': None,  # group colorbar
+            'colorbarNA': None, # colorbar on a new axis
             'legend': None,     # standard plot legend
             'legendLS': None,   # plot linestyle legend
             'other': [],        # other canvas objects
             'axis': {           # axis properties
+                'xpos':   'bottom',     # x axis position
+                'ypos':   'left',       # y axis position
                 'xscale': 'lin',        # x axis scale
                 'yscale': 'lin',        # y axis scale
                 'tscale': 'lin',        # twin y axis scale
                 'projection': None,     # 3d projection
             },
         }
-        self.xnorm = 'xnorm_%d'%self.index  # x-axis norm
-        self.ynorm = 'ynorm_%d'%self.index  # y-axis norm
-        self.znorm = 'znorm_%d'%self.index  # z-axis or image norm
-        self.tnorm = 'tnorm_%d'%self.index  # twin y-axis norm
+        rc = '%d%d'%(self.row,self.col)
+        self.xnorm = 'xnorm_'+rc  # x-axis norm
+        self.ynorm = 'ynorm_'+rc  # y-axis norm
+        self.znorm = 'znorm_'+rc  # z-axis or image norm
+        self.tnorm = 'tnorm_'+rc  # twin y-axis norm
         
         self.twinx = False
 
@@ -71,10 +74,11 @@ class subplot:
             nopt['loc'] = nopt['loc'].replace('bottom','lower').replace('top','upper')
         self.canvas['legendLS'] = {'draw':'legendLS','ls':linestyles,'labels':labels,'color':color,'nopt':nopt}
 
-    def setImage(self, data, extent=(0,1,0,1), norm=None, normType='lin', cmap=None, aspect='equal', xnorm=True, ynorm=True):
+    def setImage(self, data, extent=(0,1,0,1), norm=None, normType='lin', cmap=None, aspect='equal', xnorm=None, ynorm=None):
         xextent = extent[:,:2] if np.ndim(extent)>1 else extent[:2]
         yextent = extent[:,2:] if np.ndim(extent)>1 else extent[2:]
-        self.setNorm(xdata=xextent,ydata=yextent,zdata=data,zname=norm)        
+        self.setNorm(xdata=xextent,ydata=yextent,zdata=data,
+                     xname=xnorm,yname=ynorm,zname=norm)        
         self.setOption(xlim=xextent, ylim=yextent)
         self.canvas['image'] = {'data':data,'norm':self.znorm,'normType':normType,
                                 'extent':extent,'cmap':cmap,'aspect':aspect}
@@ -82,8 +86,11 @@ class subplot:
     def setColorbar(self, location='right', label=None):
         self.canvas['colorbar'] = {'location':location,'label':label}
 
-    def setColorbarG(self, location='right', label=None):
-        self.canvas['colorbarG'] = {'location':location,'label':label}
+    # colorbar on new axis
+    def setColorbarNA(self, pos, **nopt):
+        opt = {'location':'right'}
+        opt.update(nopt)
+        self.canvas['colorbarNA'] = {'pos':pos,**opt}
         
     def addPlot(self, x, y, twinx=False, xnorm=None, ynorm=None, **nopt):
         self.setNorm(xdata=x,ydata=y,xname=xnorm,yname=ynorm,twinx=twinx)
@@ -125,8 +132,8 @@ class subplot:
         self.canvas['other'].append({'draw':'circle','twinx':twinx,'center':center,
                                      'radius':radius,'kwargs':opt})
         
-    def addText(self, text, loc, bgcolor='black', twinx=False, padding=None, **nopt):
-        opt = {'color':'white', 'fontsize': 8}
+    def addText(self, text, loc, bgcolor=None, twinx=False, padding=None, **nopt):
+        opt = {'color':'black', 'fontsize': 8}
         opt.update(nopt)
         self.canvas['other'].append({'draw':'text','twinx':twinx,'loc':loc,'text':text,
                                      'bgcolor':bgcolor,'padding':padding,'kwargs':opt})
@@ -151,7 +158,7 @@ class subplot:
 
         # add all axis options
         axOpt = ['title','xlabel','ylabel','xlim','ylim','xscale','yscale',
-                 'tlabel','tlim','tscale','group','xflip','yright','projection',
+                 'tlabel','tlim','tscale','group','xflip','xpos','ypos','projection',
                  'xticklabels','yticklabels','xtickparam','ytickparam','tickparam','xysame',
                  'xtickformat']
         for opt in axOpt:

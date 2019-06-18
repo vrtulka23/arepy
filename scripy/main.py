@@ -1,16 +1,15 @@
-from arepy import settings
-import arepy.shell as shell
+import arepy as apy
 import sys,os
 proj = sys.argv[1]
 fn = sys.argv[2]
 args = sys.argv[3:]
 
-sys.path.insert(0, settings['scripy'])
+sys.path.insert(0, apy.settings['scripy'])
 
 fns = ['setup','plot','debug','show','movie','script','init-setup','init-plot','init-script']
 if fn in fns:
     if proj=='tmp':
-        shell.exit('Script "run.sh" was not found in this directory (main.py)')
+        apy.shell.exit('Script "run.sh" was not found in this directory (main.py)')
     exec("from %s import *"%(proj))
     proj = project(proj)
     if fn=='setup':

@@ -23,6 +23,7 @@ class figure:
             'sCol':       3.5,
             'nproc':      1,
             'gridspec':   None,                  # use GridSpec axes
+            'axesgrid':   None,                  # use AxesGrid
             'fileFormat': 'png',                 # file format of the final figure (png,pdf,jpeg,...)
             'projection': None,                  # default value of projection for each subplot
         }
@@ -59,13 +60,18 @@ class figure:
             self.norms.norms[normID][k] = v
 
     # select subplot by row and col
-    def getSubplot(self, row=0, col=0, **opt):
+    def getIndex(self, row=0, col=0):
         if row>=self.nrows:
             apy.shell.exit('Cannot plot row %d out of %d (figure.py)'%(row+1,self.nrows))
         if col>=self.ncols:
             apy.shell.exit('Cannot plot column %d out of %d (figure.py)'%(col+1,self.ncols))
-        i = row*self.ncols+col
-        if opt: self.subplot[i].setOption(**opt)
+        return row*self.ncols+col
+    def setSubplot(self, row=0, col=0, **opt):
+        i = self.getIndex(row,col)
+        self.subplot[i].setOption(**opt)        
+    def getSubplot(self, row=0, col=0, **opt):
+        i = self.getIndex(row,col)
+        if opt: self.setSubplot(row,col,**opt)
         self.subplot[i].canvas['empty'] = False
         return self.subplot[i]
         
@@ -83,6 +89,7 @@ class figure:
             'fileName':   self.fileFigure+'%03d.'+self.opt['fileFormat'],
             'dirResults': self.dirResults,
             'gridspec':   self.opt['gridspec'],
+            'axesgrid':   self.opt['axesgrid'],
         }
         arguments = [[f,optFig,canvas] for f in range(self.nfigs)]
         if self.opt['nproc']>1:

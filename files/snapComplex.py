@@ -1,12 +1,11 @@
 import numpy as np
 import arepy as apy
-from scipy.spatial import cKDTree
 
 # This part calculates complex properties from simple properties
 class snapComplex:
     def initComplex(self):
         self.cProps = ['RadHistogram','BoxHistogram',
-                       'BoxPoints','BoxSquareXY','BoxHealpix'
+                       'BoxPoints','BoxSquareXY','BoxFieldXY','BoxHealpix',
                        'BoxLine','BoxLineRZ','BoxLineXYZ',
                        'BoxProjCube','BoxProjCylinder',
                        'AngularMomentum','MassCenter',
@@ -15,6 +14,8 @@ class snapComplex:
                        'Maximum','Minimum','Mean','MinPos','Sum']
 
     def getPropertyComplex(self,prop,ids=None):
+        import scipy.spatial as spatial
+
         name = prop['name']         # name of the property
         nproc = self.opt['nproc']   # number of processors that read a single snapshot
         nsub = self.opt['nsub']     # number of sub files for each snapshot
@@ -100,7 +101,7 @@ class snapComplex:
             hist,xedges,yedges = np.histogram2d(coord[:,0], coord[:,1], bins=bins, weights=weights)
             return hist
 
-        elif name in ['BoxPoints','BoxLine','BoxSquareXY','BoxLineRZ','BoxLineXYZ','BoxHealpix']:
+        elif name in ['BoxPoints','BoxLine','BoxSquareXY','BoxFieldXY','BoxLineRZ','BoxLineXYZ','BoxHealpix']:
             # Example: {'name':'BoxSquareXY','transf':transf,'w':'Density','bins':200,'n_jobs':1}
             transf = prop['transf']
             center = transf['select']['center']
@@ -108,7 +109,7 @@ class snapComplex:
             ids,coord = self.getPropertyComplex({
                 'name':'RadialRegion','center':center,'radius':radius,
                 'p':'Coordinates'
-            },ids=ids)
+           },ids=ids)
 
             # perform coordinate transformations
             coord = transf.convert(['translate','align','flip','rotate','crop'],coord)
@@ -121,6 +122,8 @@ class snapComplex:
                 grid = apy.coord.gridLine(prop['bins'], box[:2], yfill=np.mean(box[2:4]), zfill=np.mean(box[4:]))
             elif name=='BoxSquareXY': # creates surface grid points on the x/y plane
                 grid = apy.coord.gridSquareXY([prop['bins']]*2, box[:4], zfill=np.mean(box[4:]))
+            elif name=='BoxFieldXY':  # get field vectors on the x/y plane
+                grid = apy.coord.gridFieldXY([prop['bins']]*2, box[:4], zfill=np.mean(box[4:]))
             elif name=='BoxLineRZ':   # calculate R/Z line profiles
                 extent = [np.mean(box[0:2]), box[1], box[4], box[5]]
                 grid = apy.coord.gridLineRZ([prop['bins'],prop['bins']*2], extent, xfill=np.mean(box[:2]), yfill=np.mean(box[2:4]))
@@ -130,25 +133,32 @@ class snapComplex:
             elif name=='BoxHealpix':  # calculate Healpix surface
                 grid = apy.coord.gridHealpix(prop['bins'], box)
             points = grid.coords
-
+            
             # find s nearest neighbors to each grid point
-            n_jobs = prop['n_jobs'] if 'n_jobs' in prop else 1
-            kdt = cKDTree(coord)
-            dist,pix = kdt.query(points,n_jobs=n_jobs)
+            if len(coord)>0:
+                kdt = spatial.cKDTree(coord)
+                n_jobs = prop['n_jobs'] if 'n_jobs' in prop else 1
+                dist,pix = kdt.query(points,n_jobs=n_jobs)
 
-            # select property
-            properties = apy.files.snapProperties(prop['w'])
-            load = properties.without('name',['Coordinates','Bins'])
-            pps = self.getPropertySimple(load,ids=ids)
-            data = []
-            for p,pp in enumerate(pps):
-                pp = transf.select('crop',pp)
-                data.append( grid.reshapeData(pp[pix]) )
-            for p,pp in enumerate(properties):
-                if pp['name']=='Coordinates':
-                    data.insert(p, grid.reshapeData(points) )
-                elif pp['name']=='Bins':
-                    data.insert(p, grid.xi )
+                # select property
+                properties = apy.files.snapProperties(prop['w'])
+                load = properties.without('name',['Coordinates','Bins'])
+                pps = self.getPropertySimple(load,ids=ids)
+                data = []
+                for p,pp in enumerate(pps):
+                    pp = transf.select('crop',pp)
+                    reshaped = grid.reshapeData(pp[pix])
+                    if load[p]['name'] in ['Velocities']:  # flip field components if necessary
+                        reshaped = transf.convert(['align','flip','rotate'],reshaped)
+                    data.append( reshaped )
+                for p,pp in enumerate(properties):
+                    if pp['name']=='Coordinates':
+                        data.insert(p, grid.reshapeData(points) )
+                    elif pp['name']=='Bins':
+                        data.insert(p, grid.xi )
+            else:
+                properties = apy.files.snapProperties(prop['w'])
+                data = [None for p in properties]
 
             return properties.results(data)
 
@@ -194,7 +204,7 @@ class snapComplex:
             massFull = grid.data['mass'][pixFull]
 
             # for each empty pixel find the closest full pixel
-            kdt = cKDTree(coordFull)
+            kdt = spatial.cKDTree(coordFull)
 
             n_jobs = prop['n_jobs'] if 'n_jobs' in prop else 1
             dist,ngbEmpty = kdt.query(coordEmpty,n_jobs=n_jobs)

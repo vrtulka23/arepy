@@ -118,42 +118,42 @@ def getProperty(fileSnap,ptype,name,ids,comoving,optChem):
         numdens = density / ((1. + 4. * optChem['x0_He']) * apy.const.m_p); # nucleon number density [1/cm^3]
         return calcAlphaB() * numdens    # [rec/s]
 
-    elif name=='StromgrenRadius':            # Stromgren radius
+    elif name=='StromgrenRadius':                # Stromgren radius
         flux = fileSnap[pt]['PhotonFlux'][:]
         test = apy.phys.IonizationFrontTest(
-            calcAlphaB(), calcNumDens(),
-            np.sum(flux[ids,2:],axis=1) * uFlux, # total flux from 13.6+ eV
-            calcTemp(), calcGamma(), calcMu()
+            a=calcAlphaB(), n=calcNumDens(),
+            Q=np.sum(flux[ids,2:],axis=1) * uFlux,    # total flux from 13.6+ eV
+            T_avg=calcTemp(), gamma=calcGamma(), mu=calcMu()
         )
         return test.r_st / uLength # [cu]
 
-    elif name=='PhotonFlux':                 # Photon flux in bins
+    elif name=='PhotonFlux':                     # Photon flux in bins
         flux = fileSnap[pt]['PhotonFlux'][:]
         return flux[ids,:] * uFlux
 
-    elif name=='PhotonFluxTotal':            # Total photon flux
+    elif name=='PhotonFluxTotal':                # Total photon flux
         flux = fileSnap[pt]['PhotonFlux'][:]
         return np.sum(flux[ids],axis=1) * uFlux
         
-    elif name in const.orderPhotonFlux:      # Photon Flux in a particular bin
+    elif name in const.orderPhotonFlux:          # Photon Flux in a particular bin
         i = const.orderPhotonFlux.index(name)
         flux = fileSnap[pt]['PhotonFlux'][:]
         return flux[ids,i] * uFlux
         
-    elif name in const.orderAbund:           # Abundances
+    elif name in const.orderAbund:               # Abundances
         i = const.orderAbund.index(name)
         return abund(i,ids)
 
-    elif name in const.orderMassFract:       # Mass fractions
+    elif name in const.orderMassFract:           # Mass fractions
         i = const.orderMassFract.index(name)
         return optChem['X_H'] * abund(i,ids) * const.orderAtomicWeight[i]
 
-    elif name in const.orderMassTotal:       # Total masses
+    elif name in const.orderMassTotal:           # Total masses
         masses = fileSnap[pt]['Masses'][:]
         i = const.orderMassTotal.index(name)
         return optChem['X_H'] * abund(i,ids) * const.orderAtomicWeight[i] * masses[ids]
 
-    elif name in const.orderRates:           # Ionization rates
+    elif name in const.orderRates:               # Ionization rates
         i = const.orderRates.index(name)
         rates = fileSnap[pt]['PhotonRates'][:,i]
         return rates[ids]

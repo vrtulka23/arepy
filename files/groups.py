@@ -1,11 +1,10 @@
 import numpy as np
 import arepy as apy
-import arepy.data.groups as dataGroups
 
 #############################
 # Overload collection class #
 #############################
-class collection(dataGroups.collection):
+class collection(apy.data.groups.collection):
     def __init__(self,names=None,options=None,**opt):
         super().__init__(names=names,options=options,**opt)
 
@@ -15,7 +14,7 @@ class collection(dataGroups.collection):
 ########################
 # Overload group class #
 ########################
-class group(dataGroups.group):
+class group(apy.data.groups.group):
     def __init__(self,sim=None,snaps=None,**opt):
         super().__init__(**opt)
 
@@ -113,9 +112,9 @@ class group(dataGroups.group):
         norm = 'img_%s_%s'%(prop,imgType) if norm is None else norm
         axis.setImage(data=data['im'],extent=data['extent'],norm=norm,normType=normType,cmap=cmap)
 
-    # Add rendering of the box projection/slice projection
+    # Add rendering of the box projection/slice
     def _renderImage(self, axis, prop, imgType, norm=None, normType=None, cmap=None, 
-                     bins=200, cache=False, nproc=None, n_jobs=None, xnorm=True, ynorm=True):
+                     bins=200, cache=False, nproc=None, n_jobs=None, xnorm=None, ynorm=None):
         n_jobs = self.opt['n_jobs'] if n_jobs is None else n_jobs
         prop = apy.files.snapProperties(prop)
         proj = self.foreach(renderImage,args=[imgType,prop,bins,n_jobs],
@@ -137,6 +136,29 @@ class group(dataGroups.group):
         self._renderImage(axis, prop, 'BoxProjCube', **opt)
     def setSlice(self, axis, prop, **opt):
         self._renderImage(axis, prop, 'BoxSquareXY', **opt)
+
+    # Add rendering of the box slice field
+    def _renderField(self, axis, prop, bins=200, cache=False, nproc=None, n_jobs=None, xnorm=None, ynorm=None):
+        n_jobs = self.opt['n_jobs'] if n_jobs is None else n_jobs
+        prop = apy.files.snapProperties(prop)
+        prop.add('Coordinates')
+        proj = self.foreach(renderImage,args=['BoxFieldXY',prop,bins,n_jobs],
+                            cache=cache, nproc=nproc)
+        field = proj[prop[0]['name']]
+        coord = proj['Coordinates']
+        axis.addQuiver(coord[:,:,0], coord[:,:,1], field[:,:,0], field[:,:,1])
+        '''
+        if isinstance(axis,list):
+            for i in range(len(axis)):
+                data = proj[prop[i]['name']]
+                axis[i].addQuiver(data=data, extent=proj['extent'], 
+                                  xnorm=xnorm, ynorm=ynorm)
+        else:
+            axis.addQuiver(data=proj['data'],extent=proj['extent'], 
+                          xnorm=xnorm, ynorm=ynorm)
+        '''
+    def setField(self, axis, prop, **opt):
+        self._renderField(axis, prop, **opt)
 
     # Add times to the plot
     def addTimes(self, axis, **opt):
@@ -360,13 +382,15 @@ def renderImage(item,imgType,prop,bins,n_jobs):
     data = snap.getProperty({'name':imgType,'transf':item.transf,'w':prop,'bins':bins,'n_jobs':n_jobs})
     if len(prop)==1:
         data = {'data': data}
+    if 'Coordinates' in data:
+        data['Coordinates'] = np.array(data['Coordinates']) * item.sim.units.conv['length']
     data['extent'] = item.transf['crop']['box'][:4] * item.sim.units.conv['length']
     return data
 
 #######################
 # Overload item class #
 #######################
-class item(dataGroups.item):
+class item(apy.data.groups.item):
     def __init__(self,index,groupName,opt,sim,snap):
         super().__init__(index,groupName,opt)
         self.sim = sim
@@ -394,3 +418,6 @@ class item(dataGroups.item):
         if snap is None:
             snap = self.snap
         return self.sim.getImage(snap,imProp,imType,**opt)
+
+    def getParameters(self):
+        return self.sim.getParameters()

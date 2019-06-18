@@ -6,3 +6,5 @@ from arepy.data.stats import *
 from arepy.data.tabulate import *
 from arepy.data.table import *
 from arepy.data.groups import *
+from arepy.data.dictTab import *
+from arepy.data.correlate import *

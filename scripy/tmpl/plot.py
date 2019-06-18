@@ -20,7 +20,7 @@ class plotBoxIonization(plot):
             ( '105', 105, range(0,90) ),
             ( '106', 106, range(0,50) ),
         ])
-        self.setFigure(2,self.grps.size,1,debug=True,show=True)
+        self.setFigure(2,self.grps.size,1,show=True)
 
     def plot(self):
         for grp in self.grps:

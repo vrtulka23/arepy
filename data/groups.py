@@ -150,7 +150,7 @@ class group:
             values = list(result.values()) if isinstance(result,dict) else [result]
             ncols = len(values)
             for c in range(ncols):
-                if append:
+                if append or isinstance(values[c],str):
                     if item.index==0:
                         data.append([])
                     data[c].append(values[c])

@@ -1,6 +1,6 @@
 import arepy as apy
 import numpy as np
-import matplotlib.pyplot as plt
+import matplotlib as mpl
 import os
 
 class table:
@@ -78,8 +78,8 @@ class table:
         if ylabel==None:
             ylabel = yheaders[0]
 
-        fig = plt.figure(figsize=(4,3))
-        ax = plt.subplot(111)
+        fig = mpl.pyplot.figure(figsize=(4,3))
+        ax = mpl.pyplot.subplot(111)
         
         for yheader in yheaders:
             x = self.headers.index(xheader)
@@ -96,11 +96,11 @@ class table:
         
         ax.set_xlabel(xlabel)
         ax.set_ylabel(ylabel)
-        if grid: plt.grid(True)
+        if grid: mpl.pyplot.grid(True)
 
-        plt.tight_layout()
-        if show: plt.show()
+        mpl.pyplot.tight_layout()
+        if show: mpl.pyplot.show()
         if savefig: 
-            plt.savefig(savefig)
+            mpl.pyplot.savefig(savefig)
             if display:
                 apy.util.displayImage(savefig)

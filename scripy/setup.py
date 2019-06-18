@@ -62,7 +62,6 @@ class setup:
             })
         if self.simPart in [None,'run']:
             self.setupRun(self.sim.fileRunsh,{
-                "DIR_PROJECT":   self.proj.name,
                 "NUM_NODES":     self.job['nodes'] if 'nodes'       in self.job else 1,
                 "NUM_PROC":      self.job['proc']  if 'proc'        in self.job else 40,
                 "JOB_WALL_TIME": self.job['time']  if 'time'        in self.job else "1:00:00",

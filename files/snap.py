@@ -46,8 +46,11 @@ class snap(snapComplex,snapSimple):
 
         for f in self.sfileName:
             if not os.path.isfile(f):
-                apy.shell.prompt('File \"%s\"\ndoes not exits. Do you want to create new?'%f)
-                hp.File(f,'w')
+                if self.opt['fmode']=='w':
+                    apy.shell.prompt('File \"%s\"\ndoes not exits. Do you want to create new? (snap.py)'%f)
+                    hp.File(f,'w')
+                else:
+                    apy.shell.warn('File \"%s\"\ndoes not exits! (snap.py)'%f)
 
     def initChem(self,opt):
         if isinstance(opt,dict):

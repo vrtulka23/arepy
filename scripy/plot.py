@@ -68,7 +68,7 @@ class plot:
         self.grps = apy.files.collection(names=names,options=options,**nopt)
 
     # Add a new figure to the list of plots
-    def setFigure(self,ncol,nrow,nfig,movie=False,show=False,debug=False,**opt):
+    def setFigure(self,ncol,nrow,nfig,movie=False,show=False,debug=False,plot=True,**opt):
         nopt = {
             'debug':      np.any([debug,self.debug]),
             'fileName':   self.fileName,
@@ -85,6 +85,7 @@ class plot:
             'nfig':nfig,
             'movie':movie,
             'show':show,
+            'plot':plot,
             'opt':nopt,
         }
 
@@ -112,7 +113,8 @@ class plot:
         if self.optPlot['type']=='figure':
             self.fig = apy.plot.figure(self.optPlot['ncol'],self.optPlot['nrow'],self.optPlot['nfig'],**self.optPlot['opt'])
             self.plot()
-            self.fig.plot()
+            if self.optPlot['plot']:
+                self.fig.plot()
             if self.optPlot['show']:
                 self.fig.show()
             if self.optPlot['movie']:

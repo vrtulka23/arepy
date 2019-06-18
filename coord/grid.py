@@ -1,3 +1,4 @@
+import arepy as apy
 import numpy as np
 
 '''
@@ -87,7 +88,6 @@ class gridSquareXY(grid):
         self.xxi = np.meshgrid(*self.xi)
         # ordered as: x*ny + y
         coord = np.vstack([ np.ravel(self.xxi[1]), np.ravel(self.xxi[0]) ]).T 
-        self._setScatter(coord)
 
         # flat list of coordinates
         if zfill is not None:
@@ -97,15 +97,26 @@ class gridSquareXY(grid):
     def reshapeData(self,data):
         return data.reshape(self.nbins)
 
+class gridFieldXY(gridSquareXY):
+    def reshapeData(self,data):
+        return data
+
 class gridHealpix(grid):
-    def _setCoordinates(self,zfill=None):
-        import healpy as hp
+    def _setCoordinates(self,zfill=None): 
+        import healpix as hp
         nside = self.bins[0]
         npix = hp.nside2npix(nside)
         coord = np.zeros((npix,3))
         for i in range(npix):
             coord[i,:] = hp.pix2vec(nside,i)
-        #self._setScatter(coord)
+        coord *= self.extent[0][1]
+        return coord, [npix]
+
+    def reshapeData(self,data):
+        import healpix as hp
+        # we rotate the mollview by 90 degrees around z-axis to properly match the x and y axes
+        data = hp.visufunc.mollview(data,return_projected_map=True) #,rot=(135,0,0))
+        return np.where(data==-np.inf,np.nan,data)
 
 class gridDisc(grid):
     # Different parts of the disk can be located using offsets in 'self.parts'

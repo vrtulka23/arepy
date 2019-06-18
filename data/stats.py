@@ -1,4 +1,5 @@
 import numpy as np
+import arepy as apy
 
 # return statistics of the data
 def stats(name, data, show=None):
@@ -7,6 +8,7 @@ def stats(name, data, show=None):
     stats = "%-18s"%name
     for s in show:
         # statistical data
+        stat = None
         if s=='min':
             stat = " min=%.03e "%np.min(data)
         elif s=='median':
@@ -46,6 +48,8 @@ def stats(name, data, show=None):
             stat = " pos=%d "%np.sum(data>0)
         elif s=='neg':
             stat = " neg=%d "%np.sum(data<0)
+        if stat is None:
+            apy.shell.exit('Invalid statistical opperation "%s" (stats.py)'%s)
         if s==show[-1]:
             stats += stat
         else:

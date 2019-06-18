@@ -23,9 +23,10 @@ def prints(name,data,show=None):
 def exit(msg=None):
     if msg:
         printc('\nError: %s'%str(msg),'r')
-        sys.exit()
-    else:
-        sys.exit()
+    sys.exit()
+
+def warn(msg):
+    printc('\nWarning: %s'%str(msg),'r')
 
 def isfile(fileName):
     return os.path.isfile(fileName)

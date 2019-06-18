@@ -1,13 +1,6 @@
-import matplotlib as mpl
-mpl.use('agg')
+import matplotlib as mpl; mpl.use('agg')
 import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
-from matplotlib import colors
-from mpl_toolkits.axes_grid1 import make_axes_locatable
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib.lines import Line2D
-from matplotlib.ticker import FormatStrFormatter
-import matplotlib.patches as patches
+import mpl_toolkits.axes_grid1 as axesgrid
 import arepy as apy
 import numpy as np
 
@@ -24,6 +17,9 @@ def plotSubplot(ax,opt,canvas,fid=0):
         return hideAxis()
     
     axProp = canvas['axis']
+    if 'xlim' in axProp: xlim = axProp['xlim'][fid] if np.ndim(axProp['xlim'])>1 else axProp['xlim']
+    if 'ylim' in axProp: ylim = axProp['ylim'][fid] if np.ndim(axProp['ylim'])>1 else axProp['ylim']
+
     spIndex, spRow, spCol = canvas['subplot']
 
     fontsize = 8   # default font size
@@ -36,10 +32,10 @@ def plotSubplot(ax,opt,canvas,fid=0):
 
         # Draw a straight line
         if d['draw']=='line':
+            pos = d['pos'] if np.isscalar(d['pos']) else d['pos'][fid]
             if d['axis']=='horizontal':
-                li = drawax.axhline(d['pos'],**d['kwargs'])
+                li = drawax.axhline(pos,**d['kwargs'])
             elif d['axis']=='vertical':
-                pos = d['pos'] if np.isscalar(d['pos']) else d['pos'][fid]
                 li = drawax.axvline(pos,**d['kwargs'])
             if 'label' in d['kwargs']:
                 handles.append(li)
@@ -96,7 +92,7 @@ def plotSubplot(ax,opt,canvas,fid=0):
             if not isinstance(d['loc'],str):
                 x,y = d['loc']
             elif ('xlim' in axProp) and ('ylim' in axProp):
-                x,y,ha,va = apy.util.calculateLoc(d['loc'],axProp['xlim'][fid],axProp['ylim'][fid],d['padding'])
+                x,y,ha,va = apy.util.calculateLoc(d['loc'],xlim,ylim,d['padding'])
             else:
                 apy.shell.exit('Text location or plot axis limts were not set (plot.py)')
             text = d['text'] if isinstance(d['text'],str) else d['text'][fid]
@@ -111,7 +107,7 @@ def plotSubplot(ax,opt,canvas,fid=0):
 
         # Draw a rectangle
         if d['draw']=='rectangle':
-            rect = patches.Rectangle(d['origin'],d['width'],d['height'],**d['kwargs'])
+            rect = mpl.patches.Rectangle(d['origin'],d['width'],d['height'],**d['kwargs'])
             drawax.add_patch(rect)
         
     # Draw a standard legend
@@ -134,7 +130,7 @@ def plotSubplot(ax,opt,canvas,fid=0):
             legend['nopt']['fontsize'] = fontsize
         elements = []
         for i in range(len(legend['ls'])):
-            elements.append( Line2D([0], [0], color=legend['color'], ls=legend['ls'][i], lw=1 ) )
+            elements.append( mpl.lines.Line2D([0], [0], color=legend['color'], ls=legend['ls'][i], lw=1 ) )
         leg = mpl.legend.Legend(ax, elements, legend['labels'], **legend['nopt'])
         ax.add_artist(leg);
 
@@ -145,9 +141,9 @@ def plotSubplot(ax,opt,canvas,fid=0):
             if image['normType']=='log':
                 if image['norm'][1]<=0:
                     return hideAxis("\nWarning: Skipping image plots with zero/negative logarithmic norm!")
-                norm = colors.LogNorm(vmin=image['norm'][1],vmax=image['norm'][2])
+                norm = mpl.colors.LogNorm(vmin=image['norm'][1],vmax=image['norm'][2])
             elif image['normType'] in ['lin',None]:
-                norm = colors.Normalize(vmin=image['norm'][0],vmax=image['norm'][2])
+                norm = mpl.colors.Normalize(vmin=image['norm'][0],vmax=image['norm'][2])
             extent = image['extent'][fid] if np.ndim(image['extent'])>1 else image['extent']
             im = ax.imshow( data.T, extent=extent, origin='lower', aspect=image['aspect'],
                             norm=norm, cmap=image['cmap'] )
@@ -156,7 +152,7 @@ def plotSubplot(ax,opt,canvas,fid=0):
         #ax = mappable.axes
         colorbar = canvas['colorbar']
         orientation = 'horizontal' if colorbar['location']=='top' else 'vertical'
-        divider = make_axes_locatable(ax)
+        divider = axesgrid.make_axes_locatable(ax)
         cax = divider.append_axes(colorbar['location'], size="5%", pad=0.05)
         if not im:
             apy.shell.exit('Colorbar cannot find any image')
@@ -168,11 +164,10 @@ def plotSubplot(ax,opt,canvas,fid=0):
             cbar.ax.xaxis.set_label_position('top') 
             cbar.ax.xaxis.set_ticks_position('top') 
 
-    if canvas['colorbarG'] is not None:
-        colorbar = canvas['colorbarG']
+    if canvas['colorbarNA'] is not None:
+        colorbar = canvas['colorbarNA']
         orientation = 'horizontal' if colorbar['location']=='top' else 'vertical'
-        fig.subplots_adjust(right=0.9)
-        cbar_ax = fig.add_axes([0.91, 0.15, 0.01, 0.7])
+        cbar_ax = fig.add_axes(colorbar['pos'])
         if not im:
             apy.shell.exit('Colorbar cannot find any image')
         cbar = fig.colorbar(im, cax=cbar_ax, orientation=orientation)
@@ -183,39 +178,48 @@ def plotSubplot(ax,opt,canvas,fid=0):
             cbar.ax.xaxis.set_label_position('top') 
             cbar.ax.xaxis.set_ticks_position('top') 
 
-    # set main axis properties
-    if 'group' in axProp and 'title' in axProp['group'] and spRow>0:
-        ax.set_title('')
-    elif 'title' in axProp:
+    if axProp['xpos']=='top': 
+        ax.xaxis.tick_top()
+        ax.xaxis.set_label_position("top")
+
+    if axProp['ypos']=='right':
+        ax.yaxis.tick_right()
+        ax.yaxis.set_label_position("right")
+
+    # set labels
+    if 'title' in axProp:
         ax.set_title( axProp['title'],   fontsize=fontsize )
-        
-    if 'group' in axProp and 'xlabel' in axProp['group'] and spRow<opt['nrows']-1:
-        ax.set_xlabel('')
-        ax.set_xticklabels([])
-    elif 'xlabel' in axProp:
+    if 'xlabel' in axProp:
         ax.set_xlabel( axProp['xlabel'], fontsize=fontsize )
-            
-    if 'group' in axProp and 'ylabel' in axProp['group'] and spCol>0:
-        ax.set_ylabel('')
-        ax.set_yticklabels([])
-    elif 'ylabel' in axProp:
+    if 'ylabel' in axProp:
         ax.set_ylabel( axProp['ylabel'], fontsize=fontsize )
 
-    if 'xlim' in axProp:   ax.set_xlim( axProp['xlim'][fid] if np.ndim(axProp['xlim'])>1 else axProp['xlim'] )
-    if 'ylim' in axProp:   ax.set_ylim( axProp['ylim'][fid] if np.ndim(axProp['ylim'])>1 else axProp['ylim'] )
+    # group axis labels
+    if 'group' in axProp:
+        if 'title' in axProp['group'] and spRow>0:
+            ax.set_title('')
+        if 'xlabel' in axProp['group']:
+            if (axProp['xpos']=='bottom' and spRow<opt['nrows']-1) or (axProp['xpos']=='top' and spRow>0):
+                ax.set_xlabel('')
+                #ax.set_xticklabels([])  # this does not work with gridspec
+                plt.setp( ax.get_xticklabels(), visible=False)  # this works also with gridspec
+        if 'ylabel' in axProp['group']:
+            if (axProp['ypos']=='left' and spCol>0) or (axProp['ypos']=='right' and spCol<opt['ncols']-1):
+                ax.set_ylabel('')
+                #ax.set_yticklabels([])  # this does not work with gridspec
+                plt.setp( ax.get_yticklabels(), visible=False)  # this works also with gridspec
+                
+    if 'xlim' in axProp:   ax.set_xlim( xlim )
+    if 'ylim' in axProp:   ax.set_ylim( ylim )
     if 'xscale' in axProp and axProp['xscale'] in ['log','symlog']: ax.set_xscale( axProp['xscale'] )
     if 'yscale' in axProp and axProp['yscale'] in ['log','symlog']: ax.set_yscale( axProp['yscale'] )
 
     if 'xticklabels' in axProp and axProp['xticklabels'] is False: ax.set_xticklabels([])
     if 'yticklabels' in axProp and axProp['yticklabels'] is False: ax.set_yticklabels([])
 
-    if 'xtickformat' in axProp: 
-        ax.xaxis.set_major_formatter(FormatStrFormatter(axProp['xtickformat']))
-        ax.xaxis.set_minor_formatter(FormatStrFormatter(axProp['xtickformat']))
-
-    if 'yright' in axProp and axProp['yright'] is True: 
-        ax.yaxis.tick_right()
-        ax.yaxis.set_label_position("right")
+    if 'xtickformat' in axProp:
+        ax.xaxis.set_major_formatter(mpl.ticker.FormatStrFormatter(axProp['xtickformat']))
+        ax.xaxis.set_minor_formatter(mpl.ticker.FormatStrFormatter(axProp['xtickformat']))
 
     # set twin axis properties
     if twinx is not None:
@@ -242,20 +246,23 @@ def plotSubplot(ax,opt,canvas,fid=0):
 
 def plotFigure(f,opt,canvas):
 
-    if opt['gridspec'] is None:
-        # Create a figure and plot all subplots
+    if opt['axesgrid'] is not None:
         fig = plt.figure(figsize=opt['figSize'])
+        grid = axesgrid.AxesGrid(fig, 111, **opt['axesgrid'])
         axs = []
         for r in range(opt['nrows']):
             for c in range(opt['ncols']):
                 index = r*opt['ncols']+c
-                projection = canvas[index]['axis']['projection']
-                axs.append( fig.add_subplot(opt['nrows'],opt['ncols'],index+1, projection=projection) )
-    else:
+                axs.append( grid[index] )
+                axis = canvas[index]['axis']
+                if 'projection' in axis and axis['projection'] is not None:
+                    apy.shell.exit('Projection needs to be implemented for the axesgrid (plot.py)')
+    elif opt['gridspec'] is not None:
         # Create a figure using gridspec to get a tight layout
         fig = plt.figure(figsize=opt['figSize'])
-        gs = gridspec.GridSpec(opt['nrows'], opt['ncols'])
-        gs.update(wspace=opt['gridspec']['wspace'],hspace=opt['gridspec']['hspace'])
+        gs = mpl.gridspec.GridSpec(opt['nrows'], opt['ncols'], **opt['gridspec'])
+        #if isinstance(opt['gridspec'],dict):
+        #    gs.update(**opt['gridspec'])
         axs = []
         for r in range(opt['nrows']):
             for c in range(opt['ncols']):
@@ -264,12 +271,21 @@ def plotFigure(f,opt,canvas):
                 axis = canvas[index]['axis']
                 if 'projection' in axis and axis['projection'] is not None:
                     apy.shell.exit('Projection needs to be implemented for the gridspec (plot.py)')
+    else:
+        # Create a figure and plot all subplots
+        fig = plt.figure(figsize=opt['figSize'])
+        axs = []
+        for r in range(opt['nrows']):
+            for c in range(opt['ncols']):
+                index = r*opt['ncols']+c
+                projection = canvas[index]['axis']['projection']
+                axs.append( fig.add_subplot(opt['nrows'],opt['ncols'],index+1, projection=projection) )
 
     for canv in canvas:
         spIndex, spRows, spCols = canv['subplot']
         plotSubplot(axs[spIndex],opt,canv,f)
         
-    if opt['gridspec'] is None:
+    if opt['gridspec'] is None and opt['axesgrid'] is None:
         plt.tight_layout()
 
     # Create a new directory and save the figure

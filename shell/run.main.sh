@@ -191,6 +191,20 @@ submit_log()
     log=$(tail -16 $SIM_LOG)
     echo "$log"
 }
+submit_running()
+{
+    queue=$(submit_queue)
+    while read p; do
+	IFS='-' read -ra ADDR <<< "$p"
+	queueID="${ADDR[1]//[[:blank:]]/}"
+	if [ -n "$queueID" ]; then
+	    if [[ $queue == *$queueID* ]]; then
+		echo $(echo "$queue" | grep "$queueID") " | ${ADDR[2]}"
+	    fi
+	fi
+    done <$SIM_LOG
+    
+}
 print_submit_stats()
 {    
     tSubmit=$(submit_log_get "Time-Submit" $1)
@@ -389,6 +403,7 @@ show_help()
     echo "-sq | --submit-queue        show queue information on the cluster"
     echo "-si | --submit-image        submit a job that creates arepo images"
     echo "-sl | --submit-log          show simulation history log"
+    echo "-slr | --submit-log-running show running simulation"
     echo "-ss | --submit-stats        show simulation stats"
     echo "-sr | --submit-restart      submit a restarted job"
     echo "-sc | --submit-cancel       cancel submited job"
@@ -428,6 +443,7 @@ while [ "$1" != "" ]; do
 	-sq | --submit-queue )     submit_queue ;;
 	-si | --submit-image )     submit_image ;;
 	-sl | --submit-log )       submit_log ;;
+	-slr | --submit-running)   submit_running ;;
 	-ss | --submit-stats )     submit_stats ;;
 	-sr | --submit-restart )   submit_restart ;;
 	-sc | --submit-cancel )    submit_cancel ;;
