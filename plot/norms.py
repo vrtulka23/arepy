@@ -12,6 +12,8 @@ class norms:
         data = np.array(data)
         if data.dtype==object:
             data = np.hstack([np.ravel(dat) for dat in data])
+        if None in data: # change None to NaN
+            data = [np.nan if v is None else v for v in data]
         data = data[~np.isnan(data)]
         if np.all(data==0): # do not norm zero arrays
             apy.shell.printc("Warning: excluding '%s' because it has only zero values (norms.py)"%normID,'r')

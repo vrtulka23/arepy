@@ -4,14 +4,17 @@ import arepy as apy
 # This part calculates complex properties from simple properties
 class snapComplex:
     def initComplex(self):
-        self.cProps = ['RadHistogram','BoxHistogram',
-                       'BoxPoints','BoxSquareXY','BoxFieldXY','BoxHealpix',
-                       'BoxLine','BoxLineRZ','BoxLineXYZ',
-                       'BoxProjCube','BoxProjCylinder',
-                       'AngularMomentum','MassCenter',
-                       'RadialRegion','BoxRegion','IDsRegion',
-                       'Histogram1D','Histogram2D',
-                       'Maximum','Minimum','Mean','MinPos','Sum']
+        self.cProps = [
+            'RadHistogram','BoxHistogram',
+            'BoxPoints','BoxSquareXY','BoxFieldXY','BoxHealpix',
+            'BoxLine','BoxLineRZ','BoxLineXYZ',
+            'BoxProjCube','BoxProjCylinder',
+            'AngularMomentum','MassCenter',
+            'RadialRegion','BoxRegion','IDsRegion',
+            'Histogram1D','Histogram2D',
+            'Maximum','Minimum','Mean','MinPos','Sum',
+            'VolumeFraction'
+        ]
 
     def getPropertyComplex(self,prop,ids=None):
         import scipy.spatial as spatial
@@ -25,20 +28,20 @@ class snapComplex:
         if name=='RadHistogram':
             # Example: bins=np.linspace(1,10,1)
             #          {'name':'RadHistogram','p':'X_HP','center':[0.5,0.5,0.5],'bins':bins}
-            ids,w,r2 = self.getPropertyComplex({
+            region = self.getPropertyComplex({
                 'name':'RadialRegion','center':prop['center'],'radius':prop['bins'][-1],'ptype':prop['ptype'],
                 'p':[{'name':'Masses','ptype':prop['ptype']},{'name':'Radius2','center':prop['center']}]
             },ids=ids)
-            wHist, edges = np.histogram(r2,bins=prop['bins']**2,weights=w,density=False)
+            wHist, edges = np.histogram(region['Radius2'],bins=prop['bins']**2,weights=region['Masses'],density=False)
             if isinstance(prop['p'],(str,dict)):
-                p = self.getPropertySimple([prop['p']],ids=ids)[0]
-                pHist, edges = np.histogram(r2,bins=prop['bins']**2,weights=w*p,density=False)
+                p = self.getPropertySimple([prop['p']],ids=region['Indexes'])[0]
+                pHist, edges = np.histogram(region['Radius2'],bins=prop['bins']**2,weights=region['Masses']*p,density=False)
                 results = pHist/wHist
             else:
-                p = self.getPropertySimple(prop['p'],ids=ids)
+                p = self.getPropertySimple(prop['p'],ids=region['Indexes'])
                 results = []
                 for i in range(len(prop['p'])):
-                    pHist, edges = np.histogram(r2,bins=prop['bins']**2,weights=w*p[i],density=False)
+                    pHist, edges = np.histogram(region['Radius2'],bins=prop['bins']**2,weights=region['Masses']*p[i],density=False)
                     results.append( pHist/wHist )
             return results
 
@@ -82,11 +85,11 @@ class snapComplex:
 
         elif name=='AngularMomentum':
             # Example: {'name':'AngularMomentum','center':[0.5,0.5,0.5],'radius':0.5}
-            ids, pos, mass, vel = self.getPropertyComplex({
+            region = self.getPropertyComplex({
                 'name':'RadialRegion','center':prop['center'],'radius':prop['radius'],
                 'p': ['Coordinates','Masses','Velocities']
             },ids=ids)
-            m, (x,y,z), (vx,vy,vz) = mass, (pos-prop['center']).T, vel.T
+            m, (x,y,z), (vx,vy,vz) = region['Masses'], (region['Coordinates']-prop['center']).T, region['Velocities'].T
             Lx,Ly,Lz = np.sum([ m*(y*vz-z*vy), m*(z*vx-x*vz), m*(x*vy-y*vx) ],axis=1) # total angular momentum
             return [Lx,Ly,Lz]
 
@@ -94,11 +97,12 @@ class snapComplex:
             # Example: {'name':'BoxHistogram','center':[0.5,0.5,0.5],'size':1,'w':'Masses','bins':200}
             box = apy.coord.box(prop['size'],prop['center'])
             bins = [ np.linspace(box[0],box[1],prop['bins']), np.linspace(box[0],box[1],prop['bins']) ]         
-            ids,coord,weights = self.getPropertyComplex({
+            data = self.getPropertyComplex({
                 'name':'BoxRegion','box':box,
                 'p':['Coordinates',prop['w']]
             },ids=ids)
-            hist,xedges,yedges = np.histogram2d(coord[:,0], coord[:,1], bins=bins, weights=weights)
+            weights = data[prop['w']] # actually here we shold select name of the prop['w'], but we are lazy!!!
+            hist,xedges,yedges = np.histogram2d(data['Coordinates'][:,0], data['Coordinates'][:,1], bins=bins, weights=weights)
             return hist
 
         elif name in ['BoxPoints','BoxLine','BoxSquareXY','BoxFieldXY','BoxLineRZ','BoxLineXYZ','BoxHealpix']:
@@ -106,13 +110,13 @@ class snapComplex:
             transf = prop['transf']
             center = transf['select']['center']
             radius = transf['select']['radius']
-            ids,coord = self.getPropertyComplex({
+            region = self.getPropertyComplex({
                 'name':'RadialRegion','center':center,'radius':radius,
                 'p':'Coordinates'
-           },ids=ids)
+            },ids=ids)
 
             # perform coordinate transformations
-            coord = transf.convert(['translate','align','flip','rotate','crop'],coord)
+            coord = transf.convert(['translate','align','flip','rotate','crop'],region['Coordinates'])
 
             # initiate a grid points
             box = transf['crop']['box']
@@ -143,7 +147,7 @@ class snapComplex:
                 # select property
                 properties = apy.files.snapProperties(prop['w'])
                 load = properties.without('name',['Coordinates','Bins'])
-                pps = self.getPropertySimple(load,ids=ids)
+                pps = self.getPropertySimple(load,ids=region['Indexes'])
                 data = []
                 for p,pp in enumerate(pps):
                     pp = transf.select('crop',pp)
@@ -170,14 +174,15 @@ class snapComplex:
                 transf = prop['transf']
                 center = transf['select']['center']
                 radius = transf['select']['radius']
-                ids,coord,mass = self.getPropertyComplex({
+                region = self.getPropertyComplex({
                     'name':'RadialRegion','center':center,'radius':radius,
                     'p':['Coordinates','Masses']
                 },ids=ids)
 
                 # perform coordinate transformations
-                coord = transf.convert(['translate','align','flip','rotate','crop'],coord)
-                mass = transf.select('crop',mass)            
+                coord = transf.convert(['translate','align','flip','rotate','crop'],region['Coordinates'])
+                mass = transf.select('crop',region['Masses'])            
+                ids = region['Indexes']
 
             # load and crop projected properties
             properties = apy.files.snapProperties(prop['w'])
@@ -254,15 +259,19 @@ class snapComplex:
             # Example: {'name':'RadialRegion','center':[0.5,0.5,0.5],'radius':0.5}
             # Example: {'name':'BoxRegion','box':[0,1,0,1,0,1]}
             data = self.getPropertySimple([prop],ids=ids)[0]
-            if nsub>1 and 'p' in prop:
-                rdata = [ [ s[0] for s in data ] ]
-                for p in range(1,len(data[0])):
-                    if np.ndim(data[0][p])>1:  # in case of coordinates, rates,...
-                        d = np.vstack([ s[p] for s in data ])
-                    else:                      # in case of masses, ids,...
-                        d = np.hstack([ s[p] for s in data ])
-                    rdata.append( d )
-                return rdata
+            properties = apy.files.snapProperties('Indexes')
+            if 'p' in prop:
+                properties.add(prop['p'])
+                if nsub>1:
+                    rdata = [ [ s[0] for s in data ] ]
+                    for p in range(1,len(data[0])):
+                        if np.ndim(data[0][p])>1:  # in case of coordinates, rates,...
+                            d = np.vstack([ s[p] for s in data ])
+                        else:                      # in case of masses, ids,...
+                            d = np.hstack([ s[p] for s in data ])
+                        rdata.append( d )
+                    data = rdata
+                return properties.results(data)
             else:
                 return data
 
@@ -273,3 +282,18 @@ class snapComplex:
         elif name in ['Maximum','Minimum','Mean','MinPos','Sum']:
             data = self.getPropertySimple([prop],ids=ids)[0]         
             return np.array(data).flatten() if nsub>1 else data
+
+        # Volume fraction of the cells with some properties, relative to the selected region (ids)
+        # Example: {'name':'VolumeFraction','p':'Mass','lt':1}
+        elif name=='VolumeFraction':
+            volume = self.getPropertySimple(['CellVolume'],ids=ids)[0]         
+            properties = apy.files.snapProperties(prop['p'])
+            data = self.getProperty(properties,ids=ids)
+            volTot = np.sum(volume)
+            ids = [True]*len(volume)
+            if 'lt' in prop: # larger than
+                ids = ids & (data>prop['lt'])
+            if 'st' in prop: # smaller than
+                ids = ids & (data<prop['st'])
+            return np.sum(volume[ids])/volTot
+            

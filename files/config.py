@@ -1034,7 +1034,10 @@ class config():
     def _getValue(self,param):
         return self.params[param]['value']
     def getValue(self,param):
-        return apy.data.foreach(self._getValue,param)
+        if isinstance(param,(str,int,float)):
+            return self._getValue(param)
+        else:
+            return [ self._getValue(value) for value in param ]
 
     def getDtype(self,param):
         return self.params[param]['dtype']

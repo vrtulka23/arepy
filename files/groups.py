@@ -21,7 +21,8 @@ class group(apy.data.groups.group):
         if sim is not None:
             self.addSnapshot(sim,snaps)
 
-    def _addItem(self,opt,sim,snap): 
+    def _addItem(self,opt,sim,snap):
+
         return item(self.size,self.name,opt,sim,snap)
 
     def addSnapshot(self,sim,snaps,opt=None):
@@ -159,6 +160,11 @@ class group(apy.data.groups.group):
         '''
     def setField(self, axis, prop, **opt):
         self._renderField(axis, prop, **opt)
+
+    # Show simulation id stamp
+    def setSnapStamp(self, axis, *args, **kwargs):
+        text = self.foreach(setSnapStamp)
+        axis.addText(text,*args,**kwargs)
 
     # Add times to the plot
     def addTimes(self, axis, **opt):
@@ -360,6 +366,10 @@ def addParticles(item,ptype):
             return coord * item.sim.units.conv['length']
         else:
             return None
+
+# Create snapshot stamps
+def setSnapStamp(item):
+    return '%s/%03d'%(item.sim.name,item.snap)
         
 # Get arepo image
 def setImage(item,prop,imgType):

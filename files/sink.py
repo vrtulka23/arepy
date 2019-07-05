@@ -150,7 +150,10 @@ class sink():
                 return np.full(self.nSinks,self.snapTime)
             else:
                 return self.props[prop]['data'][ids] if prop in self.props else None
-        return apy.data.foreach(fn,props)
+        if isinstance(props,(str,int,float)):
+            return fn(props)
+        else:
+            return [ fn(value) for value in props ]
 
     def getEmpty(self,prop):
         return np.zeros(self.props[prop]['dim'],dtype=self.props[prop]['dtype'])

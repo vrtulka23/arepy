@@ -3,6 +3,12 @@ import arepy as apy
 import os, glob, re
 from subprocess import call
 
+#
+# Example:
+# sim = apy.files.simulation("./")
+# snap = sim.getSnapshot(236)
+# data = snap.getProperty("Masses")
+#
 class simulation:
     def __enter__(self):
         return self
@@ -107,7 +113,10 @@ class simulation:
         elif isinstance(opt,str):
             self.optChem = {'type':opt}
         else:
-            apy.shell.exit('Chemistry has to be initialized (simulation.py)')
+            if cf.getValue('SGCHEM') and cf.getValue('CHEMISTRYNETWORK')==1:
+                self.optChem = {'type':'sgchem1'}
+            else:
+                apy.shell.exit('Chemistry has to be initialized (simulation.py)')
         if self.optChem['type']=='sgchem1':
             if 'abund' not in self.optChem:
                 if cf and cf.getValue('SX_HYDROGEN_ONLY'):
@@ -237,6 +246,9 @@ class simulation:
     def getParameters(self):
         return apy.files.param(self.fileParam)
 
+    def getConfig(self):
+        return apy.files.config(self.fileConfig)
+
     #############################################
     # Get additional information about simulation
     #############################################
@@ -250,6 +262,15 @@ class simulation:
             m = re.match(pattern, snap)
             snapNums[s] = m.group(1)
         return np.sort(snapNums)
+
+    # find snapshot number at given times
+    def findSnapsAtTimes(self,times,**opt):
+        snaps = self.getSnapNums()
+        snapTimes = np.zeros(len(snaps))
+        for s,snap in enumerate(snaps):
+            with self.getSnapshot(snap,**opt) as sf:
+                snapTimes[s] = sf.getHeader('Time')
+        return np.floor(np.interp(times,snapTimes,snaps)).astype(int)
 
     def hasSnapshot(self,snap):
         return apy.shell.isfile(self.fileSnap(snap))

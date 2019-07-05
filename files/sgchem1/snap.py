@@ -16,7 +16,7 @@ def getHeader(fileSnap,name):
 def getProperty(fileSnap,ptype,name,ids,comoving,optChem):
     pt = 'PartType%d'%ptype
 
-    nameStd = ['Masses','Velocities','PhotonFluxTotal']
+    nameStd = ['Masses','Velocities','FTOT']
 
     uMass =    fileSnap['Header'].attrs['UnitMass_in_g']
     uLength =  fileSnap['Header'].attrs['UnitLength_in_cm']
@@ -78,15 +78,15 @@ def getProperty(fileSnap,ptype,name,ids,comoving,optChem):
             x_H2 = fileSnap[pt]['ChemicalAbundances'][:,0]
             x_HP = fileSnap[pt]['ChemicalAbundances'][:,1]
             x_HD = fileSnap[pt]['ChemicalAbundances'][:,3]
-            return optChem['x0_H'] - 2*x_H2[ids] - x_HP[ids]- x_HD[ids]
+            return optChem['x0_H']  - 2*x_H2[ids] - x_HP[ids]- x_HD[ids]
         elif i==7: # x_He
             x_HEP = fileSnap[pt]['ChemicalAbundances'][:,4]
             x_HEPP = fileSnap[pt]['ChemicalAbundances'][:,5]
-            return optChem['x0_He'] - x_HEP[ids] - x_HEPP[ids]
+            return optChem['x0_He'] - x_HEP[ids]  - x_HEPP[ids]
         elif i==8: # x_D
             x_DP = fileSnap[pt]['ChemicalAbundances'][:,2]
             x_HD = fileSnap[pt]['ChemicalAbundances'][:,3]
-            return optChem['x0_D'] - x_DP[ids] - x_HD[ids]
+            return optChem['x0_D']  - x_DP[ids]   - x_HD[ids]
 
     def calcNumDens():    # returns particle number density in code [1/cm^3]
         dens = fileSnap[pt]['Density'][:]
@@ -131,7 +131,7 @@ def getProperty(fileSnap,ptype,name,ids,comoving,optChem):
         flux = fileSnap[pt]['PhotonFlux'][:]
         return flux[ids,:] * uFlux
 
-    elif name=='PhotonFluxTotal':                # Total photon flux
+    elif name=='FTOT':                # Total photon flux
         flux = fileSnap[pt]['PhotonFlux'][:]
         return np.sum(flux[ids],axis=1) * uFlux
         

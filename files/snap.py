@@ -155,7 +155,7 @@ class snap(snapComplex,snapSimple):
 
         # Load and insert complex properties
         for p,prop in enumerate(aProps):
-            if prop['key'] in self.cProps:
+            if prop['name'] in self.cProps: # here we have to test against 'name' and not 'key'!!
                 data.insert(p, self.getPropertyComplex(prop,ids))
 
         # !! do not wrap np.array() around, because we want to return native array dtypes

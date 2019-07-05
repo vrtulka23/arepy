@@ -13,33 +13,6 @@ class dictTab:
         if items is not None:
             self.addItems(items)
 
-    # add new items
-    def addItems(self, items):
-        if isinstance(items,dict):
-            if self.items is None: self.items = {}
-            for name,item in items.items():
-                self.items[name] = {key:item[k] for k,key in enumerate(self.keys)}
-                self.size += 1
-        else:
-            if self.items is None: self.items = []
-            items = [items] if isinstance(items,tuple) else items
-            for item in items:
-                self.items.append({key:item[k] for k,key in enumerate(self.keys)})
-                self.size += 1            
-    
-    # return a correlation array
-    def correlate(self):
-        return apy.data.correlate(self.items)
-
-    # return keys and values of the items
-    def getKeys(self):
-        return list(self.items.keys())
-    def getValues(self):
-        if isinstance(self.items,dict):
-            return list(self.items.values())
-        else:
-            return self.items
-
     # length operator
     def __len__(self):
         return self.size
@@ -58,3 +31,34 @@ class dictTab:
             return self.items[self.current-1]
         else:
             raise StopIteration
+
+    # add new items
+    def addItems(self, items):
+        if isinstance(items,dict):
+            if self.items is None: self.items = {}
+            for name,item in items.items():
+                self.items[name] = {key:item[k] for k,key in enumerate(self.keys)}
+                self.size += 1
+        else:
+            if self.items is None: self.items = []
+            items = [items] if isinstance(items,tuple) else items
+            for item in items:
+                self.items.append({key:item[k] for k,key in enumerate(self.keys)})
+                self.size += 1            
+
+    # return keys and values of the items
+    def getKeys(self):
+        return list(self.items.keys())
+    def getValues(self):
+        if isinstance(self.items,dict):
+            return list(self.items.values())
+        else:
+            return self.items
+
+    # return value of a column
+    def getColumn(self,col):
+        return [item[col] for item in self.items]
+    
+    # return a correlation array
+    def correlate(self):
+        return apy.data.correlate(self.items)

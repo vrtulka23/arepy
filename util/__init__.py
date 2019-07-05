@@ -10,3 +10,4 @@ from arepy.util.newFileName import newFileName as nfn
 from arepy.util.palette import *
 from arepy.util.imgDim import *
 from arepy.util.timeStamp import *
+from arepy.util.strDec import *

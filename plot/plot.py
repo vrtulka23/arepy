@@ -42,8 +42,10 @@ def plotSubplot(ax,opt,canvas,fid=0):
             
         # Draw x/y line continuous function
         if d['draw']=='plot':
-            xvals = d['x'][fid] if np.ndim(d['x'])>1 else d['x']
-            yvals = d['y'][fid] if np.ndim(d['y'])>1 else d['y']
+            #xvals = d['x'][fid] if np.ndim(d['x'])>1 else d['x']
+            #yvals = d['y'][fid] if np.ndim(d['y'])>1 else d['y']
+            xvals = d['x'] if np.isscalar(d['x'][0]) else d['x'][fid]
+            yvals = d['y'] if np.isscalar(d['y'][0]) else d['y'][fid]
             li = drawax.plot(xvals,yvals,**d['kwargs'])
             if 'label' in d['kwargs']:
                 handles.append(li[0]) # for some reason this is a list of objects
@@ -102,26 +104,32 @@ def plotSubplot(ax,opt,canvas,fid=0):
 
         # Draw a circle
         if d['draw']=='circle':
-            shape = plt.Circle( d['center'], d['radius'], fill=False, **d['kwargs'])
+            shape = plt.Circle( d['center'], d['radius'], **d['kwargs'])
             drawax.add_artist(shape)
 
         # Draw a rectangle
         if d['draw']=='rectangle':
-            rect = mpl.patches.Rectangle(d['origin'],d['width'],d['height'],**d['kwargs'])
-            drawax.add_patch(rect)
+            shape = mpl.patches.Rectangle(d['origin'],d['width'],d['height'],**d['kwargs'])
+            drawax.add_patch(shape)
         
     # Draw a standard legend
     if canvas['legend'] is not None:
         legend = canvas['legend']
         if 'fontsize' not in legend['nopt']:
             legend['nopt']['fontsize'] = fontsize
+        zorder = None
+        if 'zorder' in legend['nopt']:
+            zorder = legend['nopt']['zorder']
+            del legend['nopt']['zorder']
         if (legend['handles'] is not None and legend['labels'] is not None):
-            ax.legend(legend['handles'],legend['labels'],**legend['nopt'])
+            leg = ax.legend(legend['handles'],legend['labels'],**legend['nopt'])
         elif legend['labels'] is not None:
-            ax.legend(legend['labels'],**legend['nopt'])
+            leg = ax.legend(legend['labels'],**legend['nopt'])
         else:
             labels = [h.get_label() for h in handles]
-            ax.legend(handles,labels,**legend['nopt'])
+            leg = ax.legend(handles,labels,**legend['nopt'])
+        if zorder:
+            leg.set_zorder(zorder)
 
     # Draw a linestyle legend
     if canvas['legendLS'] is not None:

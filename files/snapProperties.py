@@ -61,4 +61,5 @@ class snapProperties:
             values = [values]
         props = [item for i,item in enumerate(self.items) if item[key] not in values]
         return snapProperties(props)
-        
+
+    # return a new object of self with some new properties

@@ -70,6 +70,24 @@ class collection:
                 self._setOptions(key,values)
         else:
             self._setOptions(opt,values)
+
+    def foreach(self,fn,args=[],cache=None,nproc=None,append=False):
+        print(self.opt)
+        apy.shell.exit('This needs to be implemented')
+        '''
+        nproc = self.opt['nproc'] if nproc is None else nproc
+        cache = self.opt['cache'] if cache is None else cache
+        arguments = [[item]+args for item in self.items]
+        if cache:
+            dirCache = self.opt['dirCache']
+            label = cache
+        else:
+            dirCache = None
+            label = self.name
+        self.data[fn.__name__] = apy.data.foreach(fn,arguments,nproc=nproc,label=label,append=append,
+                                                  dirCache=dirCache)
+        return self.data[fn.__name__]        
+        '''
         
 ###############
 # Group class #
@@ -125,58 +143,15 @@ class group:
         else:
             self._setOptions(opt,values)
         
-    # This method returns an array of calculated values for each returned value from 'fn()'
-    # The 'self.data' array depends of returned values and consist of dictionaries (keys,values) or lists (values),
-    def _foreach(self,fn,nproc,args,append):
-        fnName = fn.__name__
-        # Get item data
-        # DEBUG: Don't use `while` clause for progress bar because it will freeze the parallel processes
-        #        Probably the object instance is being closed before parallel pool actually use it
-        pb = apy.shell.pb(vmax=self.size,label=fnName+' '+self.name) 
-        if nproc>1:
-            arguments = [[item]+args for item in self.items]
-            results = apy.util.parallelPool(fn,arguments,pbar=pb,nproc=nproc)
-        else:
-            results = []
-            for item in self.items:
-                results.append( fn(item,*args) )
-                pb.increase()
-        pb.close()
-        # Rearrange data to columns
-        data = []
-        for item in self.items:
-            result = results[item.index]
-            keys   = list(result.keys())   if isinstance(result,dict) else 1
-            values = list(result.values()) if isinstance(result,dict) else [result]
-            ncols = len(values)
-            for c in range(ncols):
-                if append or isinstance(values[c],str):
-                    if item.index==0:
-                        data.append([])
-                    data[c].append(values[c])
-                else:
-                    part = np.array(values[c])
-                    if item.index==0:
-                        emptydata = np.zeros( (self.size,)+part.shape, dtype=part.dtype)
-                        data.append( emptydata )
-                    data[c][item.index] = part
-        # Return corresponding format
-        if ncols==1:
-            self.data[fnName] = data[0]
-        else:
-            self.data[fnName] = {keys[i]:data[i] for i in range(ncols)} 
-        return self.data[fnName]
     def foreach(self,fn,args=[],cache=None,nproc=None,append=False):
         nproc = self.opt['nproc'] if nproc is None else nproc
         cache = self.opt['cache'] if cache is None else cache
-        if cache:
-            apy.shell.mkdir(self.opt['dirCache'],opt='u')
-            nameCache = fn.__name__+'_'+self.name 
-            if isinstance(cache,str): 
-                nameCache = nameCache+'_'+cache
-            return apy.data.cache( self._foreach, nameCache, cacheDir=self.opt['dirCache'], args=[fn,nproc,args,append])
-        else:
-            return self._foreach(fn,nproc,args,append)
+        arguments = [[item]+args for item in self.items]
+        dirCache = self.opt['dirCache'] if cache else None
+        label = cache if cache else self.name
+        self.data[fn.__name__] = apy.data.foreach(fn,arguments,nproc=nproc,label=label,append=append,
+                                                  dirCache=dirCache)
+        return self.data[fn.__name__]        
 
 ##############
 # Item class #

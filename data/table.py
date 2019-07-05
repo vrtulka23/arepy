@@ -17,6 +17,7 @@ class table:
             'dirName':None,
             'fileName':'figOverview', 
             'timeStamp': apy.util.timeStamp(),
+            'fileFormat': 'tabulate',
         }
         self.opt.update(opt)
 
@@ -26,7 +27,8 @@ class table:
 
         self.dirName = self.opt['fileName'] if self.opt['dirName'] is None else self.opt['dirName']
         self.dirResults = self.opt['dirResults']+'/'+self.dirName+'/'+self.opt['timeStamp'] 
-        self.fileName = self.dirResults+'/'+self.opt['fileName']+'.txt'
+        extension = {'tabulate':'.txt','csv':'.csv'}
+        self.fileName = self.dirResults+'/'+self.opt['fileName']+extension[self.opt['fileFormat']]
 
     def column(self,header,data):
         self.columns.append( data )
@@ -61,12 +63,20 @@ class table:
     def save(self):
         apy.shell.mkdir(self.dirResults,'u')
         data = np.array(self.columns).T if len(self.columns)>0 else self.rows
-        text = apy.data.tabulate( data, headers=self.headers )        
-        with open(self.fileName, "w") as f:
-            for note in self.notes:
-                f.write('%-20s %s \n'%(note['name'],note['value']))
-            f.write(text)
-            f.close()
+        if self.opt['fileFormat']=='tabulate':
+            text = apy.data.tabulate( data, headers=self.headers )        
+            with open(self.fileName, "w") as f:
+                for note in self.notes:
+                    f.write('%-20s %s \n'%(note['name'],note['value']))
+                f.write(text)
+                f.close()
+        elif self.opt['fileFormat']=='csv':
+            import csv
+            with open(self.fileName, mode='w') as f:
+                writer = csv.writer(f, delimiter=' ')
+                writer.writerow(self.headers)
+                for dat in data:
+                    writer.writerow(dat)
         apy.shell.printc('Table saved as: %s'%(self.fileName))
 
     def plot(self,xheader,yheaders,xlabel=None,ylabel=None,xlog=False,ylog=False,marker='|',

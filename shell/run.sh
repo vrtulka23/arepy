@@ -11,6 +11,18 @@ do
     fi
 done < ~/.arepy/projects
 
+# Load local settings
+while [ "$DIR_RUN" != "/" ]
+do
+    if [ -e "$DIR_RUN/run.sh" ] # load settings from the current dir
+    then
+	source $DIR_RUN/run.sh
+	break
+    else                            # look in a parent directory
+	DIR_RUN=$(dirname $DIR_RUN)
+    fi
+done
+
 # Loads global settings
 DIR_AREPY=$(grep "arepy=" ~/.arepy/settings | sed 's/arepy=//')
 DIR_SCRIPY=$(grep "scripy=" ~/.arepy/settings | sed 's/scripy=//')
@@ -23,18 +35,6 @@ else
     MACHINE="no-machine"
     echo -e "${RED}Could not find settings for this machine! Check if the machine name in ~/.runsh is set correctly.${NC}"
 fi
-
-# Load local settings
-while [ "$DIR_RUN" != "/" ]
-do
-    if [ -e "$DIR_RUN/run.sh" ] # load settings from the current dir
-    then
-	source $DIR_RUN/run.sh
-	break
-    else                            # look in a parent directory
-	DIR_RUN=$(dirname $DIR_RUN)
-    fi
-done
 
 # Call scripts
 source $DIR_AREPY/shell/run.main.sh

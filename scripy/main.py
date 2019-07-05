@@ -1,3 +1,4 @@
+print("Loading scripy")
 import arepy as apy
 import sys,os
 proj = sys.argv[1]

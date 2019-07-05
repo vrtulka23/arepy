@@ -63,9 +63,10 @@ submit_log_get()
 }
 output_num()
 {
-    ls -1 output/output* > /dev/null 2>&1
+    nameOutput="output/output${1}*"
+    ls -1 $nameOutput > /dev/null 2>&1
     if [ "$?" = "0" ]; then
-	num=$(find output/output* | grep -Eo '[0-9]+' | sort -nr | head -n1)
+	num=$(find $nameOutput | grep -Eo '[0-9]+' | sort -nr | head -n1)
 	echo $(($num+1))
     else
 	echo 0
@@ -75,7 +76,7 @@ output_num()
 # Functions to run a job in the terminal
 terminal()
 {
-    eval="${RUN_CMD_TERMINAL} ./Arepo ${PARAM_FILE} ${2} | tee output/output${1}.log"
+    eval="${RUN_CMD_TERMINAL} ./Arepo ${PARAM_FILE} ${2} | tee output/output_tr${1}.log"
     echo -e "${YEL}$eval${NC}"
     eval "$eval"
 }
@@ -93,7 +94,7 @@ terminal_restart()
     if [ $(type -t on_terminal_restart) ]; then
 	on_terminal_restart
     fi
-    terminal $(output_num) "${FLAGS_RESTART}"
+    terminal $(output_num "_tr") "${FLAGS_RESTART}"
 }
 terminal_image()
 {
@@ -153,7 +154,7 @@ submit_restart()
     if [ $(type -t on_submit_restart) ]; then
 	on_submit_restart
     fi
-    outputNum=$(output_num)
+    outputNum=$(output_num "")
     submit $outputNum "${RUN_CMD_SUBMIT} ./Arepo ${PARAM_FILE} ${FLAGS_RESTART} > output/output${outputNum}.log"
 }
 submit_image()
