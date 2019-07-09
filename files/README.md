@@ -52,5 +52,5 @@ sinkProps = snap.getProperty([
   {'name':'Masses','ptype':5},                       # use name as key
   {'name':'Coordinates','ptype':5,'key':'newName'},  # set a new key
 ])
-print(sinkProps['Masses'], sinkProps['nameName'])
+print(sinkProps['Masses'], sinkProps['newName'])
 ```
