@@ -39,11 +39,18 @@ sim.units.conv['time']        # conversion from code units to new units
 ### snap.py
 ```python
 snap = apy.files.snap('./path/to/snapshot001.hdf5')
+# select only one property
 time = snap.getHeader('Time')
-gasProps = snap.getProperty(['Masses','Coordinates'])
-sinkProps = snap.getProperty([
-  {'name':'Masses','ptype':5},
-  {'name':'Coordinates','ptype':5},
+print(time)
+# select multiple properties
+gasProps = snap.getProperty([
+  'Masses',                          # short version for gas
+  {'name':'Coordinates','ptype':0},  # long version
 ])
-print(time, gasProps['Masses'], sinkProps['Masses'])
+print(gasProps['Masses'], gasProps['Coordinates'])
+sinkProps = snap.getProperty([
+  {'name':'Masses','ptype':5},                       # use name as key
+  {'name':'Coordinates','ptype':5,'key':'newName'},  # set a new key
+])
+print(sinkProps['Masses'], sinkProps['nameName'])
 ```
