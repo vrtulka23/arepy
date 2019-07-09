@@ -27,10 +27,14 @@
 
 ```python
 sim = apy.files.simulation('./path/to/the/simulation/directory/')
+
+# simulation files
 snap = sim.getSnapshot(123)   # reads snapshot no. 123
 sink = sim.getSink(123)       # reads sink snapshot no. 123
 param = sim.getParameters()   # reads simulation parameter file
 config = sim.getConfig()      # reads simulation configuration file
+
+# simulation units
 sim.units['time']             # conversion from code units to cgs
 sim.units.conv['time']        # conversion from code units to new units
 ...
