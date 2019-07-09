@@ -42,18 +42,16 @@ snap = apy.files.snap('./path/to/snapshot001.hdf5')
 
 # select only one property/header
 time = snap.getHeader('Time')
-print(time)
+masses = snap.getProperty('Masses')
+print(time,masses)
 
 # select multiple properties
-gasProps = snap.getProperty([
-  'Masses',                          # short version for gas
-  {'name':'Coordinates','ptype':0},  # long version for any ptype
+header = snap.getHeader(['Time','NumPart_Total'])
+props = snap.getProperty([
+  'Masses',                                        # short version for gas
+  {'name':'Coordinates','ptype':0},                # long version for any ptype
+  {'name':'Masses','ptype':5,'key':'sinkMasses'},  # set an alternative key
 ])
-print(gasProps['Masses'], gasProps['Coordinates'])
-
-sinkProps = snap.getProperty([
-  {'name':'Masses','ptype':5},                       # use name as a key
-  {'name':'Coordinates','ptype':5,'key':'newName'},  # set an arbitrary key
-])
-print(sinkProps['Masses'], sinkProps['newName'])
+print(header['Time'],header['NumPart_Total'][5])
+print(props['Masses'], props['Coordinates'], props['sinkMasses'])
 ```
