@@ -45,5 +45,5 @@ sinkProps = snap.getProperty([
   {'name':'Masses','ptype':5},
   {'name':'Coordinates','ptype':5},
 ])
-print(gasProps['Masses'], sinkProps['Masses'])
+print(time, gasProps['Masses'], sinkProps['Masses'])
 ```
