@@ -31,5 +31,19 @@ snap = sim.getSnapshot(123)   # reads snapshot no. 123
 sink = sim.getSink(123)       # reads sink snapshot no. 123
 param = sim.getParameters()   # reads simulation parameter file
 config = sim.getConfig()      # reads simulation configuration file
+sim.units['time']             # conversion from code units to cgs
+sim.units.conv['time']        # conversion from code units to new units
 ...
+```
+
+### snap.py
+```python
+snap = apy.files.snap('./path/to/snapshot001.hdf5')
+time = snap.getHeader('Time')
+gasProps = snap.getProperty(['Masses','Coordinates'])
+sinkProps = snap.getProperty([
+  {'name':'Masses','ptype':5},
+  {'name':'Coordinates','ptype':5},
+])
+print(gasProps['Masses'], sinkProps['Masses'])
 ```
