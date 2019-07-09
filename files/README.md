@@ -1,4 +1,6 @@
-# Class description:
+# File classes:
+
+## Overview
 
 |file|class/function|description|
 |---|---|---|
@@ -18,3 +20,16 @@
 |snapComplex.py | snapComplex | class that returns complex properties (composed from simple properties) of an Arepo snapshot |
 |sources | sources | reading and editing of a SPRAI source file |
 |subfind | subfind | reading of SUBFIND/FOF files |
+
+## Examples
+
+### simulation.py
+
+```python
+sim = apy.files.simulation('./path/to/the/simulation/directory/')
+snap = sim.getSnapshot(123)   # reads snapshot no. 123
+sink = sim.getSink(123)       # reads sink snapshot no. 123
+param = sim.getParameters()   # reads simulation parameter file
+config = sim.getConfig()      # reads simulation configuration file
+...
+```
