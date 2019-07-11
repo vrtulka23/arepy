@@ -59,3 +59,14 @@ props = snap.getProperty([
 print(header['Time'],header['NumPart_Total'][5])
 print(props['Masses'], props['Coordinates'], props['sinkMasses'])
 ```
+### sources.py
+```python
+src = apy.files.sources('./path/to/sources.dat')
+coord = [0.5,0.5,0.5]                     # coordinates (code units)
+sed = [0,0,1e49,0,0]                      # spectral emission (photons per second)
+src.addSource(coord,sed)                  # add coordinates and SED of the sources
+src.addCrossSections([1e-21,2e-19,...])   # add gas cross-sections (cm^2)
+src.addEnergies([1e18,2e19,...])          # add photon energies (erg)
+src.show()                                # show a tabulated overview of all sources
+
+```
