@@ -22,22 +22,29 @@ ValueError: could not broadcast input array from shape (2,2) into shape (2)
 [ 0.,  0.]])], dtype=object)
 '''
 
-
-def cache( data, cacheName, cacheDir=None, reCache=False, args=None ):
+def _cacheLoad(cacheFile):
+    data = np.load(cacheFile)
+    return data.item() if data.size==1 else data
+def cache( data, cacheName, cacheDir=None, reCache=False, args=None, update=False ):
 
     if cacheDir is None:
         cacheFile = '%s.npy'%(cacheName)
     else:
         cacheFile = '%s/%s.npy'%(cacheDir,cacheName)
     if not os.path.isfile(cacheFile) or reCache:
-        data = data(*args) if callable(data) else data
+        if callable(data):
+            data = data(*args,None) if update else data(*args)
         np.save(cacheFile,data)
         apy.shell.printc('Caching data as "%s"'%cacheFile)
     else:
-        apy.shell.printc('Reading cached data from "%s"'%cacheFile)
+        if update: # update is only for incrementin
+            data = data(*args,_cacheLoad(cacheFile)) if callable(data) else data
+            np.save(cacheFile,data)
+            apy.shell.printc('Updating cached data in "%s"'%cacheFile)
+        else:
+            apy.shell.printc('Reading cached data from "%s"'%cacheFile)
 
-    data = np.load(cacheFile)
-    return data.item() if data.size==1 else data
+    return _cacheLoad(cacheFile)
 
 class cacheH5:
     def __enter__(self):

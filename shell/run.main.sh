@@ -336,6 +336,14 @@ analyze_snaps()
 	find $d -name snap_* -type f | sort | tail -1
     done
 }
+archive_outputs()
+{
+    name=$(date +%M%H_%d%m%y)
+    name="arch_$name"
+    mkdir $name
+    mv submit* $name
+    mv output/output* $name
+}
 clean_arepo()
 {
     echo_green "Cleaning Arepo build..."
@@ -399,6 +407,7 @@ show_help()
     echo "-i  | --initialize          creates output/results/scripts directories"
     echo "-d  | --clean-dir           delete all Arepo runtime files"
     echo "-as | --analyze-snaps       finds the last created snapshots in all subfolders"
+    echo "-ao | --archive-output      puts output and submit files to an archive directory"
     echo "-a  | --analyze <script> [<args>...] run the scripts/analyze.py script"
     echo "-sa | --submit-avail        show available resources on the cluster"
     echo "-sq | --submit-queue        show queue information on the cluster"
@@ -439,6 +448,7 @@ while [ "$1" != "" ]; do
 	-d | --clean-dir )         clean_directory ;;
 
 	-as | --analyze-snaps )    analyze_snaps ;;
+	-ao | --archive-outputs )  archive_outputs ;;
 	
 	-sa | --submit-avali )     submit_avail ;;
 	-sq | --submit-queue )     submit_queue ;;

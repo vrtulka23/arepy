@@ -143,14 +143,14 @@ class group:
         else:
             self._setOptions(opt,values)
         
-    def foreach(self,fn,args=[],cache=None,nproc=None,append=False):
+    def foreach(self,fn,args=[],cache=None,update=False,nproc=None,append=False):
         nproc = self.opt['nproc'] if nproc is None else nproc
         cache = self.opt['cache'] if cache is None else cache
         arguments = [[item]+args for item in self.items]
         dirCache = self.opt['dirCache'] if cache else None
         label = cache if cache else self.name
         self.data[fn.__name__] = apy.data.foreach(fn,arguments,nproc=nproc,label=label,append=append,
-                                                  dirCache=dirCache)
+                                                  dirCache=dirCache,update=update)
         return self.data[fn.__name__]        
 
 ##############

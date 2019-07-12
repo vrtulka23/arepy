@@ -10,7 +10,13 @@ append   - force list appending instead of numpy preformated arrays
 dirCache - if set, cache will be produced in this directory
 '''
 
-def _foreach(fn,args,nproc,label,append):
+def _foreach(fn,args,nproc,label,append,udata=None):
+    if udata: # read new data only
+        nudata = len(list(udata.values())[0]) if isinstance(udata,dict) else len(udata)
+        args = args[nudata:]
+        if len(args)==0: # return if there are no new items
+            return udata
+
     nargs = len(args)  # number of arguments
     append = append    # force to use appending into the list instead of formating numpy arrays
 
@@ -33,8 +39,7 @@ def _foreach(fn,args,nproc,label,append):
         keys   = list(result.keys())   if isinstance(result,dict) else ['data']
         values = list(result.values()) if isinstance(result,dict) else [result]
         ncols = len(values)
-        for c in range(ncols):
-            key = keys[c]
+        for c,key in enumerate(keys):
             if append or isinstance(values[c],str):
                 if index==0:
                     data[key] = []
@@ -46,13 +51,23 @@ def _foreach(fn,args,nproc,label,append):
                     data[key] = emptydata
                 data[key][index] = part
 
+    if udata: # combine cached and new data
+        keys   = list(udata.keys())   if isinstance(udata,dict) else ['data']
+        values = list(udata.values()) if isinstance(udata,dict) else [udata]
+        ncols = len(values)
+        for c,key in enumerate(keys):
+            if append or isinstance(values[c],str):
+                data[key] = udata[key] + data[key]
+            else:
+                data[key] = np.concatenate((udata[key],data[key]),axis=0)
+
     # return appropriate format
     return data if ncols>1 else list(data.values())[0] 
-def foreach(fn,args,nproc=1,label='',append=False,dirCache=None):
+def foreach(fn,args,nproc=1,label='',append=False,dirCache=None,update=False):
     # cache data if dirCache is set
     if dirCache:
         apy.shell.mkdir(dirCache,opt='u')
         nameCache = fn.__name__+'_'+label if label else fn.__name__
-        return apy.data.cache( _foreach, nameCache, cacheDir=dirCache, args=[fn,args,nproc,label,append])
+        return apy.data.cache( _foreach, nameCache, cacheDir=dirCache, args=[fn,args,nproc,label,append], update=update)
     else:
         return _foreach(fn,args,nproc,label,append)

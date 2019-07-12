@@ -32,14 +32,17 @@ class figure:
         if self.opt['nproc']>self.nfigs:
             self.opt['nproc'] = self.nfigs
 
-        if self.opt['debug']:
-            apy.shell.printc('Debugging mode is on!!!','r')
+        if self.opt['debug']: # use debug time stamp
+            apy.shell.printc('Debugging mode is on!!!','r')            
             self.opt['timeStamp'] = 'debug'
 
         dirName = self.opt['fileName'] if self.opt['dirName'] is None else self.opt['dirName']
-        self.dirAll = self.opt['dirResults']+'/'+dirName
-        self.dirResults = self.dirAll+'/'+self.opt['timeStamp']
-        self.fileFigure = self.dirResults+'/'+self.opt['fileName']
+        self.dirAll = self.opt['dirResults']+'/'+dirName            # group directory
+        self.dirResults = self.dirAll+'/'+self.opt['timeStamp']     # plot directory
+        self.fileFigure = self.dirResults+'/'+self.opt['fileName']  # complete figure path
+
+        #if self.opt['debug']: # clean the debug directory
+        #    apy.shell.rm(self.dirResults+'/*')
 
         # setup child objects
         self.norms = apy.plot.norms()
