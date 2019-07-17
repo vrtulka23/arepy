@@ -55,8 +55,11 @@ class transf:
             self.addSelection('crop','box', box=opt['box'])
         elif 'center' in opt:
             if 'radius' in opt:
-                box = apy.coord.box(opt['radius']*2/np.sqrt(3),opt['center'])                
-                self.addSelection('crop','sphere', center=opt['center'], radius=opt['radius'], box=box)
+                if 'theta' in opt:
+                    self.addSelection('crop','cone', center=opt['center'], radius=opt['radius'], theta=opt['theta'])
+                else:
+                    box = apy.coord.box(opt['radius']*2/np.sqrt(3),opt['center'])                
+                    self.addSelection('crop','sphere', center=opt['center'], radius=opt['radius'], box=box)
             elif 'size' in opt:
                 self.addSelection('crop','box', box=apy.coord.box(opt['size'],opt['center']))
                 
@@ -110,6 +113,18 @@ class transf:
         elif ttype=='sphere':     # select spherical region around center
             x,y,z = (coord-opt['center']).T
             ids = (x*x + y*y + z*z) < opt['radius']**2
+            self.items[name]['ids'] = ids
+            if np.ndim(coord)>1:
+                coord = coord[ids]  # selector returns 2D array even though it was 1D before
+            else:
+                coord = None if ids is False else coord
+        elif ttype=='cone':       # select conical region around the center
+            x,y,z = (coord-opt['center']).T
+            theta = np.arccos( z / np.sqrt(x*x + y*y + z*z) )   # inclination 
+            if (opt['theta']>0):  # around z-axis
+                ids = (theta < opt['theta'])  | ( (np.pi-opt['theta']) < theta ) 
+            else:                 # around x/y-plane
+                ids = (-opt['theta'] < theta) | (theta < (opt['theta']+np.pi) )
             self.items[name]['ids'] = ids
             if np.ndim(coord)>1:
                 coord = coord[ids]  # selector returns 2D array even though it was 1D before

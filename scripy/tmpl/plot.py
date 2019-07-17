@@ -1,7 +1,7 @@
 import arepy as apy 
 import numpy as np
 
-class plot(apy.scripy.plot):
+class {{namePlot}}(apy.scripy.plot):
     def init(self):
         self.opt['simOpt'] = {
             'initUnitsNew': {'length':apy.const.au},
@@ -10,9 +10,15 @@ class plot(apy.scripy.plot):
             'initSnap': True,
         }
 
-class plotBoxIonization(plot):
-    def init(self):        
-        super().init()
+#import arepy as apy
+#import numpy as np
+#from scripy.{{nameProject}}.plots.{{namePlot}} import {{namePlot}}
+#
+#class boxIonization({{namePlot}}):
+#    def init(self):        
+#        super().init()
+#
+
         self.setProcessors( fig=38, kdt=1, snap=1 )
         self.setGroups(['names','sim','snaps'],[
             ( '103', 103, range(63,184) ),
@@ -29,7 +35,7 @@ class plotBoxIonization(plot):
 
             timeBegin = grp[0].getSnapshot().getHeader('Time')
 
-            sdata = grp.foreach(getBoxIonization,cache=True)
+            sdata = grp.foreach(getBoxIonization,cache=grp.name)
 
             sp = self.fig.getSubplot(0,grp.index,title='Box ionization',yscale='log',
                                 xlabel='t (kyr)', ylabel='X_H+')

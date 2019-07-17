@@ -63,7 +63,7 @@ class StarbenchTests:
         return self.r_rg(tau) * self.r_fii # radius (cm)
 
     def line(self,which=None,fileName='output.dat'):
-        data = np.loadtxt(apy.settings['arepy']+'/phys/starbench/'+fileName,skiprows=1).T
+        data = np.loadtxt(apy.settings['arepy']+'/private/starbench/'+fileName,skiprows=1).T
         header = ['step','time','Spitzer','Hosokawa-Inutsuka','Raga-I','Raga-II','StarBench']
         lines = {'time':1,'r_sp':2,'r_hi':3,'r_rgi':4,'r_rgii':5,'r_sb':6}
         if isinstance(which,str):

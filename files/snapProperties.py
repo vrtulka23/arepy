@@ -5,8 +5,21 @@ import numpy as np
 class snapProperties:
     def __init__(self,props=None):
         self.items = []         # list of items
+        self.data = {}          # dictionary for data collecting
         self.size = 0           # number of items
         self.current = 0        # iterator pointer
+
+        self.propsComplex = [
+            'RadHistogram','BoxHistogram',
+            'BoxPoints','BoxSquareXY','BoxFieldXY','BoxHealpix',
+            'BoxLine','BoxLineRZ','BoxLineXYZ',
+            'BoxProjCube','BoxProjCylinder',
+            'AngularMomentum','MassCenter',
+            'ConeRegion','RadialRegion','BoxRegion','IDsRegion',
+            'Histogram1D','Histogram2D',
+            'Maximum','Minimum','Mean','MinPos','Sum',
+            'VolumeFraction'
+        ]
 
         if props is not None:
             if isinstance(props,snapProperties):  # simpy copy the item list
@@ -25,6 +38,10 @@ class snapProperties:
                 item['key'] = item['name']
             if 'ptype' not in item:           # add particle type if missing
                 item['ptype'] = 0
+
+            # decide whether the property is simple or complex
+            item['complex'] = True if item['name'] in self.propsComplex else False
+
             self.items.append(item)
             self.size += 1
 
@@ -47,19 +64,37 @@ class snapProperties:
     def __len__(self):
         return self.size
 
+    # set/get data
+    def setData(self, key, data):
+        self.data[key] = data
+    def getData(self, dictionary=False):
+        if len(self.data)>1 or dictionary:
+            return self.data
+        else:
+            return list(self.data.values())[0]        
 
     # return data in a correct shape
-    def results(self,data):
-        if self.size>1:
+    def results(self, data, dictionary=False):
+        if self.size>1 or dictionary:
             return {item['key']:data[i] for i,item in enumerate(self.items)}
         else:
             return data[0]
 
     # return a new object of self without some properties
-    def without(self,key,values):
+    def getWithout(self,key,values):
         if not isinstance(values,list):
             values = [values]
         props = [item for i,item in enumerate(self.items) if item[key] not in values]
+        return snapProperties(props)
+
+    # return a new object only with complex properties
+    def getComplex(self):
+        props = [item for item in self.items if item['complex']]
+        return snapProperties(props)
+
+    # return a new object only with simple properties
+    def getSimple(self):
+        props = [item for item in self.items if not item['complex']]
         return snapProperties(props)
 
     # return a new object of self with some new properties

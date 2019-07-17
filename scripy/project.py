@@ -31,6 +31,8 @@ class project:
             apy.shell.mkdir( self.dirPlots+'/%s'%name )
             apy.shell.touch( self.dirPlots+'/__init__.py' )
         with apy.util.template( self.dirTemplates+'/plot.py' ) as f:
+            f.replace('nameProject',self.name)
+            f.replace('namePlot',name)
             f.write( self.dirPlots+'/%s/__init__.py'%name )
 
     def initScript(self,name):

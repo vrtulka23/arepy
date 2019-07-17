@@ -113,8 +113,9 @@ class simulation:
         elif isinstance(opt,str):
             self.optChem = {'type':opt}
         else:
-            if cf.getValue('SGCHEM') and cf.getValue('CHEMISTRYNETWORK')==1:
-                self.optChem = {'type':'sgchem1'}
+            if cf.getValue('SGCHEM'):
+                if cf.getValue('CHEMISTRYNETWORK')==1:
+                    self.optChem = {'type':'sgchem1'}
             else:
                 apy.shell.exit('Chemistry has to be initialized (simulation.py)')
         if self.optChem['type']=='sgchem1':

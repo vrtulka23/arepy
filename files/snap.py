@@ -13,9 +13,6 @@ class snap(snapComplex,snapSimple):
     def __exit__(self, type, value, tb):
         return
     def __init__(self,fileName,**opt):
-        self.initComplex()
-        self.initSimple()
-
         default = apy.files.default['snap']
         self.fileName = fileName
 
@@ -145,18 +142,19 @@ class snap(snapComplex,snapSimple):
 
     # This function switches between complex and simple properties
     # Example: sn.getProperty(['Masses',{'name':'Minimum','p':'PosX'}])
-    def getProperty(self,props,ids=None):
+    def getProperty(self,props,ids=None,dictionary=False):
         # Convert to array if needed
         aProps = snapProperties(props)
 
         # Select and load simple properties
-        sProps = aProps.without('name',self.cProps)
+        sProps = aProps.getSimple()
         data = self.getPropertySimple(sProps, ids) if sProps.size>0 else []
 
         # Load and insert complex properties
         for p,prop in enumerate(aProps):
-            if prop['name'] in self.cProps: # here we have to test against 'name' and not 'key'!!
-                data.insert(p, self.getPropertyComplex(prop,ids))
+            if prop['complex']:
+                results = getattr(self, 'propComplex_'+prop['name'])(prop,ids)
+                data.insert(p, results)
 
         # !! do not wrap np.array() around, because we want to return native array dtypes
-        return aProps.results(data)
+        return aProps.results(data,dictionary=dictionary)
