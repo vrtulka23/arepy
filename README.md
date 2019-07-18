@@ -6,6 +6,8 @@
 
 It is primarily written in Python (v3.7+), but some parts are written in BASH.
 
+This module requires `numpy`, `scipy` and `h5py` python modules.
+
 ## Installation
 
 Installation of the `arepy` is very simple.
