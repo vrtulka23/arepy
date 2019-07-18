@@ -24,8 +24,8 @@ One can even update recently cached data
 >>>         return dataCache+[i*seed for i in range(5)]
 >>>     else:
 >>>         return [i*seed for i in range(5)]
->>> dataCache = cache( fnOutput, 'cacheName', args=[3])
->>> dataCache = cache( fnOutput, 'cacheName', args=[4], update=True)
+>>> for i in [3,4,5]:
+>>>     dataCache = cache( fnOutput, 'cacheName', args=[i], update=True)
 >>> print(dataCache)
-[0,3,6,9,12,0,4,8,12,16]
+[0,3,6,9,12,0,4,8,12,16,0,5,10,15,20]
 ```
