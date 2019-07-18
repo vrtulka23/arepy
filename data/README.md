@@ -23,7 +23,7 @@ print(dataCache)
 
 One can even update recently cached data
 ```python
-def fnOutput(dataCache,seed):
+def fnOutput(seed,dataCache):
     if dataCache:
         return dataCache+[i*seed for i in range(5)]
     else:
@@ -32,4 +32,9 @@ for i in [3,4,5]:
     dataCache = cache( fnOutput, 'cacheName', args=[i], update=True)
 print(dataCache)
 # [0,3,6,9,12,0,4,8,12,16,0,5,10,15,20]
+```
+
+It is also possible to set a custom caching directory
+```python
+dataCache = cache( fnOutput, 'cacheName', args=[3], cacheDir='/my/directory')
 ```
