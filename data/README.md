@@ -10,13 +10,13 @@ This routine is used for caching of the analized data.
 It can be used to store any valid python data or data returned by a function.
 ```python
 dataOutput = (0.3,'foo',3)
-dataCache = cache( dataOutput, 'cacheName')
+dataCache = apy.data.cache( dataOutput, 'cacheName')
 print(dataCache)
 # (0.3,'foo',3)
 
 def fnOutput(seed):
     return [i*seed for i in range(5)]
-dataCache = cache( fnOutput, 'cacheName', args=[3])
+dataCache = apy.data.cache( fnOutput, 'cacheName', args=[3])
 print(dataCache)
 # [0,3,6,9,12]
 ```
@@ -29,12 +29,12 @@ def fnOutput(seed,dataCache):
     else:
         return [i*seed for i in range(5)]
 for i in [3,4,5]:
-    dataCache = cache( fnOutput, 'cacheName', args=[i], update=True)
+    dataCache = apy.data.cache( fnOutput, 'cacheName', args=[i], update=True)
 print(dataCache)
 # [0,3,6,9,12,0,4,8,12,16,0,5,10,15,20]
 ```
 
 It is also possible to set a custom caching directory
 ```python
-dataCache = cache( fnOutput, 'cacheName', args=[3], cacheDir='/my/directory')
+dataCache = apy.data.cache( fnOutput, 'cacheName', args=[3], cacheDir='/my/directory')
 ```
