@@ -338,7 +338,7 @@ analyze_snaps()
 }
 archive_outputs()
 {
-    name=$(date +%M%H_%d%m%y)
+    name=$(date +%y%m%d_%H%M)
     name="arch_$name"
     mkdir $name
     mv submit* $name

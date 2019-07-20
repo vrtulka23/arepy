@@ -79,7 +79,7 @@ class snapComplex:
         #          {'name':'RadHistogram','p':'X_HP','center':[0.5,0.5,0.5],'bins':bins}
         region = self.getProperty({
             'name':'RadialRegion','center':prop['center'],'radius':prop['bins'][-1],'ptype':prop['ptype'],
-            'p':[{'name':'Masses','ptype':prop['ptype']},{'name':'Radius2','center':prop['center']}]
+            'p':['Indexes',{'name':'Masses','ptype':prop['ptype']},{'name':'Radius2','center':prop['center']}]
         },ids=ids)
         wHist, edges = np.histogram(region['Radius2'],bins=prop['bins']**2,weights=region['Masses'],density=False)
         if isinstance(prop['p'],(str,dict)):
@@ -126,7 +126,7 @@ class snapComplex:
         center = transf['select']['center']
         radius = transf['select']['radius']
         region = self.getProperty({'name':'RadialRegion', 'center':center, 
-                                   'radius':radius, 'p':'Coordinates'},ids=ids)
+                                   'radius':radius, 'p':['Indexes','Coordinates']},ids=ids)
         
         # perform coordinate transformations
         coord = transf.convert(['translate','align','flip','rotate','crop'],region['Coordinates'])
@@ -211,7 +211,7 @@ class snapComplex:
             radius = transf['select']['radius']
             region = self.getProperty({
                 'name':'RadialRegion','center':center,'radius':radius,
-                'p':['Coordinates','Masses']
+                'p':['Indexes','Coordinates','Masses']
             },ids=ids)
             
             # perform coordinate transformations
@@ -299,8 +299,6 @@ class snapComplex:
         # Example: {'name':'BoxRegion','box':[0,1,0,1,0,1]}
         data = self.getPropertySimple([prop],ids=ids)[0]
         if 'p' in prop:
-            properties = apy.files.snapProperties('Indexes')
-            properties.add(prop['p'])
             if self.opt['nsub']>1:
                 rdata = [ [ s[0] for s in data ] ]
                 for p in range(1,len(data[0])):
@@ -310,7 +308,10 @@ class snapComplex:
                         d = np.hstack([ s[p] for s in data ])
                     rdata.append( d )
                 data = rdata
-            return properties.results(data)
+            properties = apy.files.snapProperties(prop['p'])
+            for p,pp in enumerate(properties):
+                properties.setData( pp['key'], data[pp['key']] if properties.size>1 else data )
+            return properties.getData()
         else:
             return data # otherwise return only indexes
     def propComplex_RadialRegion(self,prop,ids=None):
@@ -324,7 +325,8 @@ class snapComplex:
         transf = prop['transf']
         center = transf['select']['center']
         radius = transf['select']['radius']
-        region = self.getProperty({'name':'RadialRegion','center':center,'radius':radius,'p':'Coordinates'},ids=ids)
+        region = self.getProperty({'name':'RadialRegion','center':center,'radius':radius,
+                                   'p':['Indexes','Coordinates']},ids=ids)
 
         # transform coordinates and indexes
         region['Coordinates'] = transf.convert(['translate','align','flip','rotate','crop'],region['Coordinates'])

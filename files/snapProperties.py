@@ -68,17 +68,10 @@ class snapProperties:
     def setData(self, key, data):
         self.data[key] = data
     def getData(self, dictionary=False):
-        if len(self.data)>1 or dictionary:
+        if len(self.data.values())>1 or dictionary:
             return self.data
         else:
             return list(self.data.values())[0]        
-
-    # return data in a correct shape
-    def results(self, data, dictionary=False):
-        if self.size>1 or dictionary:
-            return {item['key']:data[i] for i,item in enumerate(self.items)}
-        else:
-            return data[0]
 
     # return a new object of self without some properties
     def getWithout(self,key,values):

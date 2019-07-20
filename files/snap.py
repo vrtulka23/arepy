@@ -149,12 +149,14 @@ class snap(snapComplex,snapSimple):
         # Select and load simple properties
         sProps = aProps.getSimple()
         data = self.getPropertySimple(sProps, ids) if sProps.size>0 else []
-
+        i=0
         # Load and insert complex properties
-        for p,prop in enumerate(aProps):
+        for prop in aProps:
             if prop['complex']:
                 results = getattr(self, 'propComplex_'+prop['name'])(prop,ids)
-                data.insert(p, results)
+                aProps.setData(prop['key'], results)
+            else:
+                aProps.setData(prop['key'], data[i]); i+=1
 
         # !! do not wrap np.array() around, because we want to return native array dtypes
-        return aProps.results(data,dictionary=dictionary)
+        return aProps.getData(dictionary=dictionary)
