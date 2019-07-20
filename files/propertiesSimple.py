@@ -2,12 +2,25 @@ import numpy as np
 import arepy as apy
 import h5py as hp
 
-class snapPropertiesSimple:
-    def __init__(self,fileName,fmode,fnum):
+class propertiesSimple:
+    def __init__(self,fileName,fmode,fnum,optChem,comoving):
         self.sf = hp.File(fileName,fmode)
         self.fileName = fileName
         self.fmode = fmode
         self.fnum = fnum
+
+        self.comoving = comoving
+        self.chem = optChem
+        self.units = {
+            'mass':    self.sf['Header'].attrs['UnitMass_in_g'],
+            'length':  self.sf['Header'].attrs['UnitLength_in_cm'],
+            'volume':  self.sf['Header'].attrs['UnitLength_in_cm']**3,
+            'density': self.sf['Header'].attrs['UnitMass_in_g']/self.sf['Header'].attrs['UnitLength_in_cm']**3,
+            'energy':  self.sf['Header'].attrs['UnitVelocity_in_cm_per_s']**2 * self.sf['Header'].attrs['UnitMass_in_g'],
+        }
+        if 'UnitPhotons_per_s' in self.sf['Parameters'].attrs:
+            self.units['flux'] = self.sf['Parameters'].attrs['UnitPhotons_per_s']
+
     def __enter__(self):
         return self
     def __exit__(self, exc_type, exc_value, traceback):
@@ -16,11 +29,11 @@ class snapPropertiesSimple:
     def hasProperty(self,prop):
         return hasattr(self,'property_'+prop['name'])
 
-    def getProperty(self,prop,ids,dictionary=False):
-        properties = apy.files.snapProperties(prop)
+    def getProperty(self,prop,ids=None,dictionary=False):
+        properties = apy.files.properties(prop)
         for pp in properties:
             if ids is None:
-                npart = self.sf['Header'].attrs['NumPart_ThisFile'][prop['ptype']]
+                npart = self.sf['Header'].attrs['NumPart_ThisFile'][pp['ptype']]
                 indexes = slice(0,npart)
             else:
                 indexes = ids
@@ -180,14 +193,14 @@ class snapPropertiesSimple:
     ############################
 
     def property_StatMinimum(self,prop,ids):
-        properties = apy.files.snapProperties(prop['p'])
+        properties = apy.files.properties(prop['p'])
         data = self.getProperty(properties,ids,dictionary=True)
         for pp in properties:
             properties.setData( pp['key'], np.min(data[pp['key']]) )
         return properties.getData()
 
     def property_StatMinPos(self,prop,ids):
-        properties = apy.files.snapProperties(prop['p'])
+        properties = apy.files.properties(prop['p'])
         data = self.getProperty(properties,ids,dictionary=True)
         for pp in properties:
             ppdata = data[pp['key']]
@@ -196,21 +209,21 @@ class snapPropertiesSimple:
         return properties.getData()
 
     def property_StatMaximum(self,prop,ids):
-        properties = apy.files.snapProperties(prop['p'])
+        properties = apy.files.properties(prop['p'])
         data = self.getProperty(properties,ids,dictionary=True)
         for pp in properties:
             properties.setData( pp['key'], np.max(data[pp['key']]) )
         return properties.getData()
         
     def property_StatMean(self,prop,ids):
-        properties = apy.files.snapProperties(prop['p'])
+        properties = apy.files.properties(prop['p'])
         data = self.getProperty(properties,ids,dictionary=True)
         for pp in properties:
             properties.setData( pp['key'], np.mean(data[pp['key']]) )
         return properties.getData()
 
     def property_StatSum(self,prop,ids):
-        properties = apy.files.snapProperties(prop['p'])
+        properties = apy.files.properties(prop['p'])
         data = self.getProperty(properties,ids,dictionary=True)
         for pp in properties:
             properties.setData( pp['key'], np.sum(data[pp['key']]) )
@@ -221,27 +234,27 @@ class snapPropertiesSimple:
     ############################
 
     def property_MathPlus(self,prop,ids):
-        properties = apy.files.snapProperties([prop['x'],prop['y']])
+        properties = apy.files.properties([prop['x'],prop['y']])
         data = self.getProperty(properties,ids)
         return data[properties[0]['key']] + data[properties[1]['key']]        
 
     def property_MathMinus(self,prop,ids):
-        properties = apy.files.snapProperties([prop['x'],prop['y']])
+        properties = apy.files.properties([prop['x'],prop['y']])
         data = self.getProperty(properties,ids)
         return data[properties[0]['key']] - data[properties[1]['key']]        
 
     def property_MathMultiply(self,prop,ids):
-        properties = apy.files.snapProperties([prop['x'],prop['y']])
+        properties = apy.files.properties([prop['x'],prop['y']])
         data = self.getProperty(properties,ids)
         return data[properties[0]['key']] * data[properties[1]['key']]        
 
     def property_MathDivide(self,prop,ids):
-        properties = apy.files.snapProperties([prop['x'],prop['y']])
+        properties = apy.files.properties([prop['x'],prop['y']])
         data = self.getProperty(properties,ids)
         return data[properties[0]['key']] / data[properties[1]['key']]        
 
     def property_MathModulo(self,prop,ids):
-        properties = apy.files.snapProperties([prop['x'],prop['y']])
+        properties = apy.files.properties([prop['x'],prop['y']])
         data = self.getProperty(properties,ids)
         return data[properties[0]['key']] % data[properties[1]['key']]        
 
@@ -252,7 +265,7 @@ class snapPropertiesSimple:
     # create histogram from a property
     # Example: {'name':'Histogram1D','bins':np.linspace(1,10,1),'x':'PosX','w':'Masses'}
     def property_Histogram1D(self,prop,ids):
-        properties = apy.files.snapProperties(prop['x'])
+        properties = apy.files.properties(prop['x'])
         print('hello')
         if 'w' in prop:
             properties.add(prop['w'])
@@ -266,7 +279,7 @@ class snapPropertiesSimple:
     # Example: bins=[np.linspace(1,10,1),np.linspace(2,12,2)]
     #          {'name':'Histogram2D','x':'PosX','y':'PosY','bins':bins,'w':'Masses'}
     def property_Histogram2D(self,prop,ids):
-        properties = apy.files.snapProperties([prop['x'],prop['y']])
+        properties = apy.files.properties([prop['x'],prop['y']])
         if 'w' in prop:
             properties.add(prop['w'])
         data = self.getProperty(properties,ids,dictionary=True)

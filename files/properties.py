@@ -2,7 +2,7 @@ import arepy as apy
 import numpy as np
 
 # Initialize a property list with a correct format
-class snapProperties:
+class properties:
     def __init__(self,props=None):
         self.items = []         # list of items
         self.data = {}          # dictionary for data collecting
@@ -22,7 +22,7 @@ class snapProperties:
         ]
 
         if props is not None:
-            if isinstance(props,snapProperties):  # simpy copy the item list
+            if isinstance(props,properties):  # simpy copy the item list
                 self.items = props.items
                 self.size = props.size
             else:                                 # set new properties
@@ -78,16 +78,16 @@ class snapProperties:
         if not isinstance(values,list):
             values = [values]
         props = [item for i,item in enumerate(self.items) if item[key] not in values]
-        return snapProperties(props)
+        return properties(props)
 
     # return a new object only with complex properties
     def getComplex(self):
         props = [item for item in self.items if item['complex']]
-        return snapProperties(props)
+        return properties(props)
 
     # return a new object only with simple properties
     def getSimple(self):
         props = [item for item in self.items if not item['complex']]
-        return snapProperties(props)
+        return properties(props)
 
     # return a new object of self with some new properties
