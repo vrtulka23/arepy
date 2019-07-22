@@ -220,7 +220,7 @@ def getProperty(fnum,fileName,fmode,optChem,comoving,properties,ids=None):
 
     # Construct property class according to the chemistry type
     if optChem['type']=='sgchem1':
-        propClass = type("propClass", (propertiesSimple, propertiesSgchem1), {})
+        propClass = type("propClass", (propertiesSgchem1, propertiesSimple), {})
     sp = propClass(fileName,fmode,fnum,optChem,comoving)
     #print(sp.getProperty('Temperature'))    
     #sp = apy.files.propertiesSimple(fileName,fmode,fnum)

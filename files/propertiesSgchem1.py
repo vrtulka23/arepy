@@ -56,11 +56,110 @@ class propertiesSgchem1:
         return 2.753e-14 * (315614 * tinv)**1.5 / ( 1. + (115188 * tinv)**0.407 )**2.242;  # [rec*cm^3/s]        
 
     ###############################
-    # Direct properties
+    # Chemical abundances
     ###############################
-    
 
-    
+    '''
+    def _calcAbund(self,prop,ids,select):
+        if select<6:
+            abund = self.sf['PartType%d/ChemicalAbundances'%prop['ptype']][:,select]
+            return abund[ids]
+        elif select==6: # x_H
+            x_H2 = self.sf['PartType%d/ChemicalAbundances'%prop['ptype']][:,0]
+            x_HP = self.sf['PartType%d/ChemicalAbundances'%prop['ptype']][:,1]
+            x_HD = self.sf['PartType%d/ChemicalAbundances'%prop['ptype']][:,3]
+            return self.chem['x0_H']  - 2*x_H2[ids] - x_HP[ids]- x_HD[ids]
+        elif select==7: # x_He
+            x_HEP = self.sf['PartType%d/ChemicalAbundances'%prop['ptype']][:,4]
+            x_HEPP = self.sf['PartType%d/ChemicalAbundances'%prop['ptype']][:,5]
+            return self.chem['x0_He'] - x_HEP[ids]  - x_HEPP[ids]
+        elif select==8: # x_D
+            x_DP = self.sf['PartType%d/ChemicalAbundances'%prop['ptype']][:,2]
+            x_HD = self.sf['PartType%d/ChemicalAbundances'%prop['ptype']][:,3]
+            return self.chem['x0_D']  - x_DP[ids]   - x_HD[ids]
+    '''
+
+    #orderAbund =       ['x_H2','x_HP','x_DP','x_HD','x_HEP','x_HEPP','x_H','x_HE','x_D']  # abundances
+    #orderPhotonFlux =  ['F056','F112','F136','F152','F246']                               # photon flux in bins
+    #orderRates=        ['RIH','HRIH','RIH2','HRIH2','RDH2','HRD','RIHE','HRIHE']
+
+    # Chemical abundances
+    def property_ChemicalAbundances(self,prop,ids):
+        return self._propDirect(prop,ids)
+    def property_x_H2(self,prop,ids):
+        return self._propDirect(prop,ids,'ChemicalAbundances',0)
+    def property_x_HP(self,prop,ids):
+        return self._propDirect(prop,ids,'ChemicalAbundances',1)
+    def property_x_DP(self,prop,ids):
+        return self._propDirect(prop,ids,'ChemicalAbundances',2)
+    def property_x_HD(self,prop,ids):
+        return self._propDirect(prop,ids,'ChemicalAbundances',3)
+    def property_x_HEP(self,prop,ids):
+        return self._propDirect(prop,ids,'ChemicalAbundances',4)
+    def property_x_HEPP(self,prop,ids):
+        return self._propDirect(prop,ids,'ChemicalAbundances',5)
+    def property_x_H(self,prop,ids):
+        return self.chem['x0_H']  - 2*self.property_x_H2(prop,ids) - self.property_x_HP(prop,ids) - self.property_x_HD(prop,ids)
+    def property_x_HE(self,prop,ids):
+        return self.chem['x0_He'] - self.property_x_HEP(prop,ids)  - self.property_x_HEPP(prop,ids)
+    def property_x_D(self,prop,ids):
+        return self.chem['x0_D']  - self.property_x_DP(prop,ids)   - self.property_x_HD(prop,ids)
+
+    '''
+    elif name in const.orderMassFract:           # Mass fractions
+        i = const.orderMassFract.index(name)
+        return optChem['X_H'] * abund(i,ids) * const.orderAtomicWeight[i]
+
+    elif name in const.orderMassTotal:           # Total masses
+        masses = fileSnap[pt]['Masses'][:]
+        i = const.orderMassTotal.index(name)
+        return optChem['X_H'] * abund(i,ids) * const.orderAtomicWeight[i] * masses[ids]
+    '''
+
+    #orderMassFract =   ['X_H2','X_HP','X_DP','X_HD','X_HEP','X_HEPP','X_H','X_HE','X_D']  # mass fractions
+    #orderMassTotal =   ['M_H2','M_HP','M_DP','M_HD','M_HEP','M_HEPP','M_H','M_HE','M_D']  # total masses
+    #orderAtomicWeight= [2,     1,     2,     3,     4,      4,       1,    4,     2]      # atomic weight
+
+    # Mass fractions of the chemical species in the cell
+    def property_X_H2(self,prop,ids):
+        return self.chem['X_H'] * self.property_x_H2(prop,ids) * 2
+    def property_X_HP(self,prop,ids):
+        return self.chem['X_H'] * self.property_x_HP(prop,ids) * 1
+    def property_X_DP(self,prop,ids):
+        return self.chem['X_H'] * self.property_x_DP(prop,ids) * 2
+    def property_X_HD(self,prop,ids):
+        return self.chem['X_H'] * self.property_x_HD(prop,ids) * 3
+    def property_X_HEP(self,prop,ids):
+        return self.chem['X_H'] * self.property_x_HEP(prop,ids) * 4
+    def property_X_HEPP(self,prop,ids):
+        return self.chem['X_H'] * self.property_x_HEPP(prop,ids) * 4
+    def property_X_H(self,prop,ids):
+        return self.chem['X_H'] * self.property_x_H(prop,ids) * 1
+    def property_X_HE(self,prop,ids):
+        return self.chem['X_H'] * self.property_x_HE(prop,ids) * 4
+    def property_X_D(self,prop,ids):
+        return self.chem['X_H'] * self.property_x_D(prop,ids) * 2
+
+    # Total masses of chemical species
+    def property_M_H2(self,prop,ids):
+        return self.property_X_H2(prop,ids) *   self._propDirect(prop,ids,'Masses')
+    def property_M_HP(self,prop,ids):
+        return self.property_X_HP(prop,ids) *   self._propDirect(prop,ids,'Masses')
+    def property_M_DP(self,prop,ids):
+        return self.property_X_DP(prop,ids) *   self._propDirect(prop,ids,'Masses')
+    def property_M_HD(self,prop,ids):
+        return self.property_X_HD(prop,ids) *   self._propDirect(prop,ids,'Masses')
+    def property_M_HEP(self,prop,ids):
+        return self.property_X_HEP(prop,ids) *  self._propDirect(prop,ids,'Masses')
+    def property_M_HEPP(self,prop,ids):
+        return self.property_X_HEPP(prop,ids) * self._propDirect(prop,ids,'Masses')
+    def property_M_H(self,prop,ids):
+        return self.property_X_H(prop,ids) *    self._propDirect(prop,ids,'Masses')
+    def property_M_HE(self,prop,ids):
+        return self.property_X_HE(prop,ids) *   self._propDirect(prop,ids,'Masses')
+    def property_M_D(self,prop,ids):
+        return self.property_X_D(prop,ids) *    self._propDirect(prop,ids,'Masses')
+
     ###############################
     # Derived properties
     ###############################

@@ -44,29 +44,30 @@ class propertiesSimple:
     # Direct properties
     ########################
 
-    def _propDirect(self,prop,ids,name,select=None):
+    def _propDirect(self,prop,ids,name=None,select=None):
+        if name is None: name = prop['name']
         dset = self.sf['PartType%d/%s'%(prop['ptype'],name)]
         data = dset[:,select] if select is not None else dset[:]
         return data[ids]
 
     def property_ParticleIDs(self,prop,ids):
-        return self._propDirect(prop,ids,prop['name'])
+        return self._propDirect(prop,ids)
     def property_Coordinates(self,prop,ids):
-        return self._propDirect(prop,ids,prop['name'])
+        return self._propDirect(prop,ids)
     def property_Masses(self,prop,ids):
-        return self._propDirect(prop,ids,prop['name'])
+        return self._propDirect(prop,ids)
     def property_Density(self,prop,ids):
-        return self._propDirect(prop,ids,prop['name'])
+        return self._propDirect(prop,ids)
     def property_Velocities(self,prop,ids):
-        return self._propDirect(prop,ids,prop['name'])
+        return self._propDirect(prop,ids)
     def property_InternalEnergy(self,prop,ids):
-        return self._propDirect(prop,ids,prop['name'])
+        return self._propDirect(prop,ids)
     def property_ChemicalAbundances(self,prop,ids):
-        return self._propDirect(prop,ids,prop['name'])
+        return self._propDirect(prop,ids)
     def property_PhotonRates(self,prop,ids):
-        return self._propDirect(prop,ids,prop['name'])
+        return self._propDirect(prop,ids)
     def property_Coppied(self,prop,ids):
-        return self._propDirect(prop,ids,prop['name'])
+        return self._propDirect(prop,ids)
 
     # position vector components
     def property_PosX(self,prop,ids):
