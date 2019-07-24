@@ -117,7 +117,7 @@ class group(apy.data.groups.group):
     def _renderImage(self, axis, prop, imgType, norm=None, normType=None, cmap=None, 
                      bins=200, cache=False, nproc=None, n_jobs=None, xnorm=None, ynorm=None):
         n_jobs = self.opt['n_jobs'] if n_jobs is None else n_jobs
-        prop = apy.files.snapProperties(prop)
+        prop = apy.files.properties(prop)
         proj = self.foreach(renderImage,args=[imgType,prop,bins,n_jobs],
                             cache=cache, nproc=nproc)
         if isinstance(axis,list):
@@ -141,7 +141,7 @@ class group(apy.data.groups.group):
     # Add rendering of the box slice field
     def _renderField(self, axis, prop, bins=200, cache=False, nproc=None, n_jobs=None, xnorm=None, ynorm=None):
         n_jobs = self.opt['n_jobs'] if n_jobs is None else n_jobs
-        prop = apy.files.snapProperties(prop)
+        prop = apy.files.properties(prop)
         prop.add('Coordinates')
         proj = self.foreach(renderImage,args=['BoxFieldXY',prop,bins,n_jobs],
                             cache=cache, nproc=nproc)
@@ -359,7 +359,7 @@ def addParticles(item,ptype):
     with item.getSnapshot() as sn:
         center = item.transf['select']['center']
         radius = item.transf['select']['radius']
-        ids = sn.getProperty({'name':'RadialRegion','ptype':ptype,"center":center,'radius':radius})
+        ids = sn.getProperty({'name':'RegionSphere','ptype':ptype,"center":center,'radius':radius})
         if len(ids)>0:
             coord = sn.getProperty({'name':'Coordinates','ptype':ptype},ids=ids)
             coord = item.transf.convert(['translate','align','flip','rotate','crop'],coord)

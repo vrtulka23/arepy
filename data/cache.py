@@ -25,7 +25,7 @@ ValueError: could not broadcast input array from shape (2,2) into shape (2)
 def _cacheLoad(cacheFile):
     data = np.load(cacheFile)
     return data.item() if data.size==1 else data
-def cache( data, cacheName, cacheDir=None, reCache=False, args=None, update=False ):
+def cache( data, cacheName, cacheDir=None, reCache=False, args=[], update=False ):
 
     if cacheDir is None:
         cacheFile = '%s.npy'%(cacheName)

@@ -15,9 +15,7 @@ class properties:
             'BoxLine','BoxLineRZ','BoxLineXYZ',
             'BoxProjCube','BoxProjCylinder',
             'AngularMomentum','MassCenter',
-            'ConeRegion','RadialRegion','BoxRegion','IDsRegion',
-            'Histogram1D','Histogram2D',
-            'Maximum','Minimum','Mean','MinPos','Sum',
+            'RegionCone','RegionSphere','RegionBox','RegionIds',
             'VolumeFraction'
         ]
 
@@ -81,13 +79,15 @@ class properties:
         return properties(props)
 
     # return a new object only with complex properties
-    def getComplex(self):
-        props = [item for item in self.items if item['complex']]
-        return properties(props)
+    def getComplex(self,add=None):
+        props = properties([item for item in self.items if item['complex']])
+        if add: props.add(add)
+        return props
 
     # return a new object only with simple properties
-    def getSimple(self):
-        props = [item for item in self.items if not item['complex']]
-        return properties(props)
+    def getSimple(self,add=None):
+        props = properties([item for item in self.items if not item['complex']])
+        if add: props.add(add)
+        return props
 
     # return a new object of self with some new properties

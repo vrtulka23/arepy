@@ -3,14 +3,21 @@ import h5py as hp
 import arepy as apy
 import os
 
+# Property list
+from arepy.files.properties import *    # Property list class
+
 # Snapshot properties
-from arepy.files.properties import * 
-from arepy.files.propertiesComplex import *
-from arepy.files.propertiesSimple import *
-from arepy.files.propertiesSgchem1 import *
+from arepy.files.propClass import *     # Parent class for simple properties
+from arepy.files.propDefault import *   # Default properties
+from arepy.files.propSgchem1 import *   # SGChem specific properties
+from arepy.files.propComplex import *   # Complex properties
+
+# Property glues
+from arepy.files.glueClass import *     # Parent class for property glues
+from arepy.files.glueDefault import *   # Default property glues
 
 # Snapshot class
-class snap(propertiesComplex):
+class snap(propComplex):
     def __enter__(self):
         return self
     def __exit__(self, type, value, tb):
@@ -143,6 +150,10 @@ class snap(propertiesComplex):
             pt = 'PartType%d'%ptype
             return f[pt].keys()
 
+    #########################
+    # Properties
+    #########################
+
     # This function switches between complex and simple properties
     # Example: sn.getProperty(['Masses',{'name':'Minimum','p':'PosX'}])
     def getProperty(self,props,ids=None,dictionary=False):
@@ -151,22 +162,44 @@ class snap(propertiesComplex):
 
         # Select and load simple properties
         sProps = aProps.getSimple()
-        data = self.getPropertySimple(sProps, ids) if sProps.size>0 else []
-        i=0
+        if sProps.size>0:
+            if self.opt['nsub']>1: 
+                # Gluing of properties from multiple sub-files
+                apy.shell.exit('Property gluing is not implemented')
+            else: 
+                # Get property from a single file
+                arguments = [ 0,self.sfileName[0],self.opt['fmode'],self.optChem,self.opt['comoving'],sProps,ids ]
+                data = getProperty(*arguments)
+        else:
+            data = {}
+        
         # Load and insert complex properties
         for prop in aProps:
-            if prop['complex']:
-                results = getattr(self, 'property_'+prop['name'])(prop,ids)
-                aProps.setData(prop['key'], results)
+            if prop['key'] in data:
+                aProps.setData(prop['key'], data[prop['key']])
             else:
-                aProps.setData(prop['key'], data[i]); i+=1
+                results = getattr(self, 'prop_'+prop['name'])(prop,ids)
+                aProps.setData(prop['key'], results)
 
         # !! do not wrap np.array() around, because we want to return native array dtypes
         return aProps.getData(dictionary=dictionary)
 
+
+# This function calculates (simple) properties
+# It needs to be a global function if we want to use it on multiple cores
+def getProperty(fnum,fileName,fmode,optChem,comoving,properties,ids=None):
+
+    # Construct a property class according to the chemistry type
+    if optChem['type']=='sgchem1':
+        propList = type("propClass", (propSgchem1, propDefault, propClass), {})
+    
+    # Calculate properties and return values
+    with propList(fileName,fmode,fnum,optChem,comoving) as sp:
+        return sp.getProperty(properties,ids,dictionary=True)
+
+'''
     # This function collects and reorders (simple) properties calculated on different cores
-    def getPropertySimple(self,properties,ids=None):
-        
+    def getPropertySimple(self,properties,ids=None,dictionary=False):
         if self.opt['nsub']>1: # Get property from multiple files
             # Prepare arguments
             if ids is None: ids = [None for s in range(self.opt['nsub'])]
@@ -195,11 +228,11 @@ class snap(propertiesComplex):
                     data[pid] = np.vstack(data[pid])
                 elif prop['name'] in apy.const.dsets:
                     data[pid] = np.vstack(data[pid])
-                elif prop['name'] in ['GridRegion']:
+                elif prop['name'] in ['RegionPoints']:
                     prop0 = [ s[0] for s in data[pid] ]
                     prop1 = [ s[1] for s in data[pid] ]
                     minids = np.argmin(prop1,axis=0) # find the results with the smallest distance
-                    apy.shell.exit("TODO: 'GridRegion' for multiple snap files needs to be finished (snapSimple.py)")
+                    apy.shell.exit("TODO: 'RegionPoints' for multiple snap files needs to be finished (snapSimple.py)")
                     data[pid] = [ prop0, prop1 ]
                     # TODO: select only particles with the lowest distance
                 elif not prop['complex']: # stack only for simple properties, return raw for complex properties
@@ -210,53 +243,5 @@ class snap(propertiesComplex):
         for pid,prop in enumerate(properties):
             if data[pid] is None:
                 apy.shell.exit("Property '%s' could not be calculated (snapSimple.py)"%prop['name'])
-
         return data
-
-# This function calculates (simple) properties on every core separately
-def getProperty(fnum,fileName,fmode,optChem,comoving,properties,ids=None):
-    # Make sure that the list of properties is properly initialized
-    properties = apy.files.properties(properties)
-
-    # Construct property class according to the chemistry type
-    if optChem['type']=='sgchem1':
-        propClass = type("propClass", (propertiesSgchem1, propertiesSimple), {})
-    sp = propClass(fileName,fmode,fnum,optChem,comoving)
-    #print(sp.getProperty('Temperature'))    
-    #sp = apy.files.propertiesSimple(fileName,fmode,fnum)
-
-    # Read number of particles in each type
-    with hp.File(fileName,fmode) as sf:
-        nPart = sf['Header'].attrs['NumPart_ThisFile']
-
-    # Let's calculate all snapshot properties
-    allData = []
-    for prop in properties:
-        # If there are no particles we return an empty array
-        if nPart[prop['ptype']]==0:
-            if prop['name'] in ['GridRegion','RadialRegion','BoxRegion']:
-                if 'p' in prop:
-                    if isinstance(prop['p'],(str,dict)):
-                        allData.append( [[]]*(1+len(prop['p'])) )
-                    else:
-                        allData.append( [[],[]] )
-                    continue
-            allData.append( [] )
-            continue
-
-        if sp.hasProperty(prop):
-            data = sp.getProperty(prop,ids)
-
-        else:
-            # If there are no selected particles we select all
-            if ids is None:
-                ids = slice(0,nPart[prop['ptype']])
-
-            # Setting functions according to the file type
-            with hp.File(fileName,fmode) as sf:
-                data = getattr(apy.files,optChem['type']).getProperty(sf,prop['ptype'],prop['name'],ids,comoving,optChem)
-        
-        # Append calculated data
-        allData.append( data )
-                        
-    return allData
+'''
