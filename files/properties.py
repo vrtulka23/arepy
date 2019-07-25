@@ -10,7 +10,7 @@ class properties:
         self.current = 0        # iterator pointer
 
         self.propsComplex = [
-            'RadHistogram','BoxHistogram',
+            'HistSphere','HistBox',
             'BoxPoints','BoxSquareXY','BoxFieldXY','BoxHealpix',
             'BoxLine','BoxLineRZ','BoxLineXYZ',
             'BoxProjCube','BoxProjCylinder',

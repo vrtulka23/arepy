@@ -73,6 +73,14 @@ class propDefault:
         coord = self.prop_Coordinates(prop,ids) - prop['center']
         return coord[:,0]**2 + coord[:,1]**2 + coord[:,2]**2
         
+    # size of the velocity tangent component
+    def prop_VelocityRadial(self,prop,ids):            
+        rad = self.prop_Coordinates(prop,ids) - prop['center']          # translated origin
+        norm = np.linalg.norm(rad,axis=1)[:,None]
+        nhat = np.where(norm>0,rad/norm,np.zeros_like(rad)) # unit radial vector
+        # taken from https://en.wikipedia.org/wiki/Tangential_and_normal_components
+        return np.multiply(self.prop_Velocities(prop,ids),nhat).sum(1)  # element-wise dot product (v.n_hat)
+
     # voronoi cell volume
     def prop_CellVolume(self,prop,ids):                
         return self.prop_Masses(prop,ids) / self.prop_Density(prop,ids)
@@ -81,14 +89,6 @@ class propDefault:
     def prop_CellRadius(self,prop,ids):                
         volume = self.prop_CellVolume(prop,ids)
         return ((volume*3)/(4*np.pi))**(1./3.)
-
-    # size of the velocity tangent component
-    def prop_VelocityRadial(self,prop,ids):            
-        rad = self.prop_Coordinates(prop,ids) - prop['center']          # translated origin
-        norm = np.linalg.norm(rad,axis=1)[:,None]
-        nhat = np.where(norm>0,rad/norm,np.zeros_like(rad)) # unit radial vector
-        # taken from https://en.wikipedia.org/wiki/Tangential_and_normal_components
-        return np.multiply(self.prop_Velocities(prop,ids),nhat).sum(1)  # element-wise dot product (v.n_hat)
 
     ##############################
     # Particle selections
@@ -205,10 +205,9 @@ class propDefault:
     ###########################
 
     # create histogram from a property in this sub-file
-    # Example: {'name':'Histogram1D','bins':np.linspace(1,10,1),'x':'PosX','w':'Masses'}
-    def prop_Histogram1D(self,prop,ids):
+    # Example: {'name':'Hist1D','bins':np.linspace(1,10,1),'x':'PosX','w':'Masses'}
+    def prop_Hist1D(self,prop,ids):
         properties = apy.files.properties(prop['x'])
-        print('hello')
         if 'w' in prop:
             properties.add(prop['w'])
         data = self.getProperty(properties,ids,dictionary=True)
@@ -219,8 +218,8 @@ class propDefault:
 
     # create a 2D histogram from a property in this sub-file
     # Example: bins=[np.linspace(1,10,1),np.linspace(2,12,2)]
-    #          {'name':'Histogram2D','x':'PosX','y':'PosY','bins':bins,'w':'Masses'}
-    def prop_Histogram2D(self,prop,ids):
+    #          {'name':'Hist2D','x':'PosX','y':'PosY','bins':bins,'w':'Masses'}
+    def prop_Hist2D(self,prop,ids):
         properties = apy.files.properties([prop['x'],prop['y']])
         if 'w' in prop:
             properties.add(prop['w'])

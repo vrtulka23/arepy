@@ -223,7 +223,7 @@ class group(apy.data.groups.group):
             axis.addText(info,loc='bottom right',fontsize=6)
 
     # Create a 2D property histogram
-    def addHistogram2D(self, axis, xprop, yprop, bins, norm=None, normType='lin',
+    def addHist2D(self, axis, xprop, yprop, bins, norm=None, normType='lin',
                        xscale='lin', yscale='lin', cmap=None, aspect='auto'):
         if isinstance(bins,int): bins = [bins,bins]
         if isinstance(bins[0],int):
@@ -235,7 +235,7 @@ class group(apy.data.groups.group):
         pb = apy.shell.pb(vmax=self.size,label='Calculating histogram (%s,%s)'%(xprop,yprop))
         for item in self.items: 
             with item.getSnapshot() as sn:
-                hist = sn.getProperty({'name':'Histogram2D',"x":xprop,'y':yprop,'bins':bins,'xscale':xscale,'yscale':yscale})
+                hist = sn.getProperty({'name':'Hist2D',"x":xprop,'y':yprop,'bins':bins,'xscale':xscale,'yscale':yscale})
             allData.append( hist )
             pb.increase()
         pb.close()

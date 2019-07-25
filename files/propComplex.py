@@ -20,10 +20,8 @@ class propComplex:
         for i,pt in enumerate(pts):
             if npart[pt]==0: continue
             if 'transf' in prop and 'select' in prop['transf'].items:
-                center = prop['transf']['select']['center']
-                radius = prop['transf']['select']['radius']
                 rids = self.getProperty({
-                    'name':'RegionSphere','ptype':pt,'center':center,'radius':radius
+                    'name':'RegionSphere','ptype':pt,'transf':prop['transf'],
                 },ids=ids)
             else: 
                 rids = ids
@@ -74,9 +72,9 @@ class propComplex:
     # Histograms
     #######################
 
-    def prop_RadHistogram(self,prop,ids):
+    def prop_HistSphere(self,prop,ids):
         # Example: bins=np.linspace(1,10,1)
-        #          {'name':'RadHistogram','p':'X_HP','center':[0.5,0.5,0.5],'bins':bins}
+        #          {'name':'HistSphere','p':'X_HP','center':[0.5,0.5,0.5],'bins':bins}
         region = self.getProperty({
             'name':'RegionSphere','center':prop['center'],'radius':prop['bins'][-1],'ptype':prop['ptype'],
             'p':['Indexes',{'name':'Masses','ptype':prop['ptype']},{'name':'Radius2','center':prop['center']}]
@@ -91,29 +89,28 @@ class propComplex:
             properties.setData(pp['key'], pHist/wHist)
         return properties.getData()
 
-    def prop_BoxHistogram(self,prop,ids):
-        # Example: {'name':'BoxHistogram','center':[0.5,0.5,0.5],'size':1,'w':'Masses','bins':200}
+    def prop_HistBox(self,prop,ids):
+        # Example: {'name':'HistBox','center':[0.5,0.5,0.5],'size':1,'w':'Masses','bins':200}
         box = apy.coord.box(prop['size'],prop['center'])
         bins = [ np.linspace(box[0],box[1],prop['bins']), np.linspace(box[0],box[1],prop['bins']) ]         
-        data = self.getProperty({'name':'RegionBox','box':box,'p':['Coordinates',prop['w']]},ids=ids)
-        weights = data[prop['w']] # actually here we shold select name of the prop['w'], but we are lazy!!!
-        hist,xedges,yedges = np.histogram2d(data['Coordinates'][:,0], data['Coordinates'][:,1], bins=bins, weights=weights)
+        properties = apy.files.properties(['Coordinates',prop['w']])
+        data = self.getProperty({'name':'RegionBox','box':box,'p':properties},ids=ids)
+        hist,xedges,yedges = np.histogram2d(data['Coordinates'][:,0], data['Coordinates'][:,1], 
+                                            bins=bins, weights=data[properties[1]['key']])
         return hist
 
     #######################
     # Box Slices
     #######################
 
+    # Example: {'name':'BoxSquareXY','transf':transf,'w':'Density','bins':200,'n_jobs':1}
     def _propBoxSlice(self,prop,grid,ids):
         import scipy.spatial as spatial
 
-        # Example: {'name':'BoxSquareXY','transf':transf,'w':'Density','bins':200,'n_jobs':1}
         transf = prop['transf']
-        center = transf['select']['center']
-        radius = transf['select']['radius']
         region = self.getProperty({
-            'name':'RegionSphere', 'center':center, 
-            'radius':radius, 'p':['Indexes','Coordinates']},
+            'name':'RegionSphere', 'transf': transf,
+            'p':['Indexes','Coordinates']},
         ids=ids)
         
         # perform coordinate transformations
@@ -179,7 +176,8 @@ class propComplex:
         return self._propBoxSlice(prop,grid,ids)
 
     def prop_BoxHealpix(self,prop,ids):
-        grid = apy.coord.gridHealpix(prop['bins'], prop['transf']['crop']['box'])
+        box = prop['transf']['crop']['box']
+        grid = apy.coord.gridHealpix(prop['bins'], box)
         return self._propBoxSlice(prop,grid,ids)
 
     #####################
@@ -193,10 +191,8 @@ class propComplex:
             region = self.getProperty(['Indexes','Coordinates','Masses'], ids=ids)
         else:
             transf = prop['transf']
-            center = transf['select']['center']
-            radius = transf['select']['radius']
             region = self.getProperty({
-                'name':'RegionSphere','center':center,'radius':radius,
+                'name':'RegionSphere','transf':transf, 
                 'p':['Indexes','Coordinates','Masses']
             }, ids=ids)
             
@@ -231,15 +227,15 @@ class propComplex:
         
         # for each empty pixel find the closest full pixel
         kdt = spatial.cKDTree(coordFull)
-        
         n_jobs = prop['n_jobs'] if 'n_jobs' in prop else 1
-        dist,ngbEmpty = kdt.query(coordEmpty,n_jobs=n_jobs)
+        dist,ngbFull = kdt.query(coordEmpty,n_jobs=n_jobs)
         
+        # redistribute masses from full to their neighbor empty pixels
         numPix = np.full(pixFull.sum(),1,dtype=int)
-        np.add.at(numPix,ngbEmpty,1)
+        np.add.at(numPix,ngbFull,1)
         unitFullMass = massFull/numPix
         grid.data['mass'][pixFull] = unitFullMass
-        grid.data['mass'][pixEmpty] = unitFullMass[ngbEmpty]
+        grid.data['mass'][pixEmpty] = unitFullMass[ngbFull]
         
         # return final data
         for p,pp in enumerate(properties):
@@ -255,7 +251,7 @@ class propComplex:
                 grid.addAtPix(ppk, pix, data[ppk]*region['Masses'])
                 unitFullPP = grid.data[ppk][pixFull]/numPix
                 grid.data[ppk][pixFull] = unitFullPP
-                grid.data[ppk][pixEmpty] = unitFullPP[ngbEmpty]
+                grid.data[ppk][pixEmpty] = unitFullPP[ngbFull]
                 projection = grid.data[ppk].sum(axis=2) / massColumn
             properties.setData(pp['key'],projection)
             
@@ -269,12 +265,14 @@ class propComplex:
     # Example: {'name':'RegionBox','box':[0,1,0,1,0,1]}
     def _propRegion(self,prop,ids):
         if 'p' in prop:
+            # return properties in the selected region
             properties = apy.files.properties(prop['p'])
             del prop['p']
             region = self.getProperty(prop, ids=ids)
             return self.getProperty(properties, ids=region)
         else:
-            return self.getProperty(prop, ids=ids) # otherwise return only indexes
+            # otherwise return only indexes
+            return self.getProperty(prop, ids=ids) 
     def prop_RegionSphere(self,prop,ids):
         prop['name'] = 'SelectSphere'
         if 'transf' in prop:
@@ -294,15 +292,14 @@ class propComplex:
         return self._propRegion(prop,ids)
             
     def prop_RegionCone(self,prop,ids):
+        # select a spherical region
         transf = prop['transf']
-        center = transf['select']['center']
-        radius = transf['select']['radius']
         region = self.getProperty({
-            'name':'RegionSphere','center':center,'radius':radius,
+            'name':'RegionSphere','transf':transf,
             'p':['Indexes','Coordinates']},
         ids=ids)
 
-        # transform coordinates and indexes
+        # transform coordinates and indexes and cut out a cone
         region['Coordinates'] = transf.convert(['translate','align','flip','rotate','crop'],region['Coordinates'])
         idTrue = np.where(region['Indexes'])[0]   
         region['Indexes'][idTrue] = transf.items['crop']['ids'] 

@@ -17,9 +17,9 @@ class glueDefault:
     # Histograms
     ####################
 
-    def glue_Histogram1D(self,data):
+    def glue_Hist1D(self,data):
         return np.sum(data,axis=0) if self.opt['nsub']>1 else data
-    def glue_Histogram2D(self,data):
+    def glue_Hist2D(self,data):
         return np.sum(data,axis=0) if self.opt['nsub']>1 else data
 
     ####################
