@@ -1,0 +1,3 @@
+debug=/home/hd/hd_hd/hd_wd148/wsdebug
+pop3=/home/hd/hd_hd/hd_wd148/wspop3
+sprai2=/home/hd/hd_hd/hd_wd148/wssprai2

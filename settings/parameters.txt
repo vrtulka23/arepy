@@ -1,0 +1,7 @@
+runsh=bwforhd
+arepy=/home/hd/hd_hd/hd_wd148/lib/python/arepy
+scripy=/home/hd/hd_hd/hd_wd148/lib/python/scripy
+results=/home/hd/hd_hd/hd_wd148/results
+wspop3=/home/hd/hd_hd/hd_wd148/wspop3
+wssprai2=/home/hd/hd_hd/hd_wd148/wssprai2
+wsdebug=/home/hd/hd_hd/hd_wd148/wsdebug

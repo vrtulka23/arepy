@@ -3,4 +3,9 @@
 *#
 *.ipynb_checkpoints*
 __pycache__
-private
+private/*
+!private/.gitkeep
+python/scripy/*
+!python/scripy/.gitkeep
+results/*
+!results/.gitkeep
