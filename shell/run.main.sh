@@ -322,9 +322,10 @@ analyze()
     if [ $(type -t on_analyze) ]; then
 	on_analyze "$@"
     else
-	if [ $DIR_PROJECT == "none" ]
-	then
-	    echo -e "${RED}Cannot analyze a non-scripy directory!${NC}"
+	if [ "$1" == "init-proj" ]; then
+	    python3 -W ignore $DIR_AREPY/scripy/main.py none "$@"
+	elif [ $DIR_PROJECT == "none" ]; then
+	    echo -e "${RED}Cannot analyze a non-scripy directory!${NC}"	     
 	else
 	    python3 -W ignore $DIR_AREPY/scripy/main.py $DIR_PROJECT "$@"
 	fi
@@ -401,7 +402,7 @@ show_help()
     echo_green "Arepo run.sh script options:"
     echo "--plot <script>             run scripy plot scripts"
     echo "--setup <sim> [<part>]      run scripy setup scripts"
-    echo "--init-proj                 initialize scripy project directory"
+    echo "--init-project <name>       initialize scripy project directory"
     echo "--init-plot <name>          initialize a new scripy plot"
     echo "--init-setup <name>         initialize a new setup"
     echo "-i  | --initialize          creates output/results/scripts directories"
@@ -439,7 +440,7 @@ while [ "$1" != "" ]; do
 	--show )                   shift; analyze show "$@"; break;;
 	--setup )                  shift; analyze setup "$@"; break;;
 	--script )                 shift; analyze script "$@"; break;;
-	--init-proj )              shift; analyze init-proj "$@"; break;;
+	--init-project )           shift; analyze init-proj "$@"; break;;
 	--init-plot )              shift; analyze init-plot "$@"; break;;
 	--init-setup )             shift; analyze init-setup "$@"; break;;
 	--init-script )            shift; analyze init-script "$@"; break;;

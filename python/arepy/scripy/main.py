@@ -1,4 +1,3 @@
-print("Loading scripy")
 import arepy as apy
 import sys,os
 proj = sys.argv[1]
@@ -12,23 +11,23 @@ if fn in fns:
     if proj=='tmp':
         apy.shell.exit('Script "run.sh" was not found in this directory (main.py)')
     exec("from %s import *"%(proj))
-    proj = project(proj)
+    p = project(proj)
     if fn=='setup':
-        proj.setup(*args)
+        p.setup(*args)
     elif fn in ['plot','debug','show','movie']:
-        proj.plot(fn,*args)
+        p.plot(fn,*args)
     elif fn=='script':
-        proj.script(*args)
+        p.script(*args)
     elif fn=='init-setup':
-        proj.initSetup(*args)
+        p.initSetup(*args)
     elif fn=='init-plot':
-        proj.initPlot(*args)
+        p.initPlot(*args)
     elif fn=='init-script':
-        proj.initScript(*args)
+        p.initScript(*args)
 elif fn=='init-proj':    
     from arepy.scripy.project import *
-    proj = project(proj)
-    proj.initProj(proj,*args)    
+    p = project(proj)
+    p.initProj(*args)    
 else:
     exec("from %s.%s import main"%(proj,fn))
     main(*args)

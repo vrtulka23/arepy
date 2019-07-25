@@ -21,11 +21,16 @@ class project:
         self.sims['001'] ={'name':'default','setup':'default'}
 
     # Initialize different parts of the project
-    def initProj(self,proj,simID=None):
+    def initProj(self,name,dirData):
+        self.dirProject = apy.dirScripy+'/'+name
         apy.shell.mkdir( self.dirProject )
+        apy.shell.mkdir( dirData )
+        with open(apy.dirModule+'/settings/projects.txt','w+') as f:
+            f.write(name+'='+dirData+'\n')
         with apy.util.template( self.dirTemplates+'/project.py' ) as f:
             f.write( self.dirProject+'/__init__.py' )
-
+        apy.shell.printc('New project: '+self.dirProject)
+            
     def initPlot(self,name):
         if not apy.shell.isdir( self.dirPlots ):
             apy.shell.mkdir( self.dirPlots+'/%s'%name )

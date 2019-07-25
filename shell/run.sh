@@ -10,8 +10,9 @@ DIR_RESULTS=$DIR_MODULE/results       # directory with scripy results
 
 # Check if in the project directory
 DIR_PROJECT="none"
+
 while IFS='=' read -r pname pdir
-do 
+do
     if [[ $DIR_RUN == "$pdir"* ]]; then
 	DIR_PROJECT="$pname"
     fi
