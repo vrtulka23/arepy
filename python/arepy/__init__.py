@@ -35,11 +35,8 @@ import arepy.phys;               leap.show('phys')
 import arepy.scripy;             leap.show('scripy')
 leap.end()
 
-from os.path import expanduser
-with open(expanduser("~")+'/.arepy/settings','r') as f:
-    settings = {}
-    for line in f.read().split('\n'):
-        if line:
-            p,v = line.split('=')
-            settings[p] = v
-
+from os.path import dirname,realpath
+dirModule = dirname(dirname(dirname(realpath(__file__))))
+dirArepy = dirModule+'/python/arepy'
+dirScripy = dirModule+'/python/scripy'
+dirResults = dirModule+'/results'

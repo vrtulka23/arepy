@@ -5,9 +5,9 @@ import os
 class project:
     def __init__(self,name):
         self.name = name
-        self.dirProject = apy.settings['scripy']+'/'+name
-        self.dirResults = apy.settings['results']+'/'+name
-        self.dirTemplates = apy.settings['arepy']+'/scripy/tmpl' 
+        self.dirProject = apy.dirScripy+'/'+name
+        self.dirResults = apy.dirResults+'/'+name
+        self.dirTemplates = apy.dirArepy+'/scripy/tmpl' 
         
         self.dirPlots = self.dirProject+'/plots'
         self.dirScripts = self.dirProject+'/scripts'

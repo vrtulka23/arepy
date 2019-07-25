@@ -5,7 +5,7 @@ proj = sys.argv[1]
 fn = sys.argv[2]
 args = sys.argv[3:]
 
-sys.path.insert(0, apy.settings['scripy'])
+sys.path.insert(0, apy.dirScripy)
 
 fns = ['setup','plot','debug','show','movie','script','init-setup','init-plot','init-script']
 if fn in fns:

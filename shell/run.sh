@@ -1,6 +1,12 @@
 #!/bin/bash
  
-DIR_RUN=$(pwd)
+DIR_RUN=$(pwd)                        # directory where we run the script
+DIR_MODULE=$(dirname $(dirname $0))   # directory of the arepy module
+
+DIR_SETTINGS=$DIR_MODULE/settings     # directory with arepy settings
+DIR_AREPY=$DIR_MODULE/python/arepy    # arepy python scripts
+DIR_SCRIPY=$DIR_MODULE/python/scripy  # scripy python scripts
+DIR_RESULTS=$DIR_MODULE/results       # directory with scripy results
 
 # Check if in the project directory
 DIR_PROJECT="none"
@@ -9,7 +15,7 @@ do
     if [[ $DIR_RUN == "$pdir"* ]]; then
 	DIR_PROJECT="$pname"
     fi
-done < ~/.arepy/projects
+done < $DIR_SETTINGS/projects.txt
 
 # Load local settings
 while [ "$DIR_RUN" != "/" ]
@@ -24,17 +30,14 @@ do
 done
 
 # Loads global settings
-DIR_AREPY=$(grep "arepy=" ~/.arepy/settings | sed 's/arepy=//')
-DIR_SCRIPY=$(grep "scripy=" ~/.arepy/settings | sed 's/scripy=//')
-DIR_RESULTS=$(grep "results=" ~/.arepy/settings | sed 's/results=//')
-if [ -f ~/.arepy/settings ]; then
-    MACHINE=$(grep "runsh=" ~/.arepy/settings | sed 's/runsh=//')
+if [ -f $DIR_SETTINGS/parameters.txt ]; then
+    MACHINE=$(grep "runsh=" $DIR_SETTINGS/parameters.txt | sed 's/runsh=//')
     scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-    source "${DIR_AREPY}/shell/run.${MACHINE}.sh"
+    source "${DIR_MODULE}/shell/run.${MACHINE}.sh"
 else
     MACHINE="no-machine"
     echo -e "${RED}Could not find settings for this machine! Check if the machine name in ~/.runsh is set correctly.${NC}"
 fi
 
 # Call scripts
-source $DIR_AREPY/shell/run.main.sh
+source $DIR_MODULE/shell/run.main.sh
