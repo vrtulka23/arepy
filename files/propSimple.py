@@ -2,7 +2,7 @@ import numpy as np
 import arepy as apy
 import h5py as hp
 
-class propDefault:
+class propSimple:
 
     ########################
     # Direct properties

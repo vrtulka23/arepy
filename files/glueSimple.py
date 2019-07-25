@@ -2,7 +2,7 @@ import numpy as np
 import arepy as apy
 
 # Glues for the default properties
-class glueDefault:
+class glueSimple:
 
     ####################
     # Vector values

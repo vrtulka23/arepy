@@ -8,13 +8,13 @@ from arepy.files.properties import *    # Property list class
 
 # Snapshot properties
 from arepy.files.propClass import *     # Parent class for simple properties
-from arepy.files.propDefault import *   # Default properties
+from arepy.files.propSimple import *    # Simple properties
 from arepy.files.propSgchem1 import *   # SGChem specific properties
 from arepy.files.propComplex import *   # Complex properties
 
 # Property glues
 from arepy.files.glueClass import *     # Parent class for property glues
-from arepy.files.glueDefault import *   # Default property glues
+from arepy.files.glueSimple import *    # Simple property glues
 
 # Snapshot class
 class snap(propComplex):
@@ -186,12 +186,12 @@ class snap(propComplex):
 
 
 # This function calculates (simple) properties
-# It needs to be a global function if we want to use it on multiple cores
+# It needs to be a global function if we want to use it on parallel cores
 def getProperty(fnum,fileName,fmode,optChem,comoving,properties,ids=None):
 
     # Construct a property class according to the chemistry type
     if optChem['type']=='sgchem1':
-        propList = type("propClass", (propSgchem1, propDefault, propClass), {})
+        propList = type("propClass", (propSgchem1, propSimple, propClass), {})
     
     # Calculate properties and return values
     with propList(fileName,fmode,fnum,optChem,comoving) as sp:
