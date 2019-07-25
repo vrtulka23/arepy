@@ -11,27 +11,11 @@ This module requires `numpy`, `scipy` and `h5py` python modules.
 ## Installation
 
 Installation of the `arepy` is very simple.
-Clone `arepy` into one of the python include directory listed by `echo $PYTHONPATH`.
-
-Alternatively, if you cloned `arepy` into a different directory (e.g. `$HOME/my/python/modules/`) you can add it into the `$PYTHONPATH` by adding the following line in your `.bashrc` profile:
+Go to the `arepy` that you cloned from this website and run the installation BASH script:
 ```
-export PYTHONPATH=$PYTHONPATH:$HOME/my/python/modules/
-```
-
-Then, navigate to the `arepy` directory and run the installation BASH script.
-```
-cd $HOME/my/python/modules/arepy
+cd $HOME/path/to/arepy
 sh install.sh
 ```
-
-This will guide you through the installation and create a `.arepy` directory in the `$HOME` location of the current user. 
-This directory includes following files:
-
-| file      | description                                          |
-|-----------|------------------------------------------------------|
-| settings  | main settings of the environment and directories     |
-| projects  | list of projects used for `scripy`                   |
-| submitlog | log of the submitted jobs                            | 
 
 ## Documentation and examples
 
