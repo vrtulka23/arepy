@@ -31,14 +31,7 @@ do
 done
 
 # Loads global settings
-if [ -f $DIR_SETTINGS/parameters.txt ]; then
-    MACHINE=$(grep "runsh=" $DIR_SETTINGS/parameters.txt | sed 's/runsh=//')
-    scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-    source "${DIR_MODULE}/shell/run.${MACHINE}.sh"
-else
-    MACHINE="no-machine"
-    echo -e "${RED}Could not find settings for this machine! Check if the machine name in ~/.runsh is set correctly.${NC}"
-fi
+source $DIR_MODULE/shell/run.system.sh
 
 # Call scripts
 source $DIR_MODULE/shell/run.main.sh

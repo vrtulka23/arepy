@@ -14,5 +14,6 @@ python/scripy/*
 results/*
 !results/.gitkeep
 
-settings/*
-!settings/.gitkeep
+projects.txt
+submitlog.txt
+shell/run.system.sh
