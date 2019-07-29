@@ -18,7 +18,7 @@ do
 	    DIR_PROJECT="$pname"
 	fi
     fi
-done    
+done
 
 # Load local settings
 while [ "$DIR_RUN" != "/" ]
