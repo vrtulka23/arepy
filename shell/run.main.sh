@@ -39,7 +39,7 @@ SIM_NAME=${THIS_DIR#*$WORK_DIR}                # name of the simulation (path wi
 CURRENT_TIME=$(date '+%s')                     # current date stemp
 SIM_LOG=${SIM_LOG:-$HOME/.arepy/submitlog} # path to the file that logs the submit times
 
-RED='\e[31m'                                   # bash output mark for a red color
+RED='\033[0;31m'                               # bash output mark for a red color
 GRE='\033[0;32m'                               # bash output mark for a green color
 YEL='\033[0;33m'
 NC='\033[0m'                                   # bash output mark to terminate colors

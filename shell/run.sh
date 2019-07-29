@@ -3,20 +3,22 @@
 DIR_RUN=$(pwd)                        # directory where we run the script
 DIR_MODULE=$(dirname $(dirname $0))   # directory of the arepy module
 
-DIR_SETTINGS=$DIR_MODULE/settings     # directory with arepy settings
 DIR_AREPY=$DIR_MODULE/python/arepy    # arepy python scripts
 DIR_SCRIPY=$DIR_MODULE/python/scripy  # scripy python scripts
 DIR_RESULTS=$DIR_MODULE/results       # directory with scripy results
 
 # Check if in the project directory
 DIR_PROJECT="none"
-
-while IFS='=' read -r pname pdir
+for pdir in $(ls -d $DIR_SCRIPY/*)
 do
-    if [[ $DIR_RUN == "$pdir"* ]]; then
-	DIR_PROJECT="$pname"
+    pname=$(basename $pdir)
+    if [ -f $pdir/__init__.py ]; then
+	psim=$(grep -o '".*"' $pdir/__init__.py | sed 's/"//g')
+	if [[ $DIR_RUN == "$psim"* ]]; then
+	    DIR_PROJECT="$pname"
+	fi
     fi
-done < $DIR_SETTINGS/projects.txt
+done    
 
 # Load local settings
 while [ "$DIR_RUN" != "/" ]

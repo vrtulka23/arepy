@@ -118,7 +118,7 @@ class overview:
                        self.resultsDir+'/'+imgFiles)
 
     def show(self, figPrefix="figOverview_", ):
-        apy.shell.displayImage(fileName=self.resultsDir+'/%s*'%(figPrefix))
+        apy.util.displayImage(fileName=self.resultsDir+'/%s*'%(figPrefix))
 
     def addImages(self, axis, imgProperty, imgType, norm=None, title=None):
 

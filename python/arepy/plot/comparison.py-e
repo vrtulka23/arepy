@@ -48,7 +48,7 @@ class comparison:
 
     def show(self):
         fileName = self.dirResults+'/'+self.fileNameFigure%'*'
-        apy.shell.displayImage(fileName=fileName)
+        apy.util.displayImage(fileName=fileName)
 
     def __enter__(self):
         return self

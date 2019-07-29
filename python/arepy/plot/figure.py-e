@@ -121,6 +121,6 @@ class figure:
             fileName = self.dirAll+'/'+dirName+'/'+'*.'+self.opt['fileFormat']
         else:
             fileName = self.fileFigure+'*.'+self.opt['fileFormat']
-        apy.shell.displayImage(fileName=fileName)
+        apy.util.displayImage(fileName=fileName)
 
 

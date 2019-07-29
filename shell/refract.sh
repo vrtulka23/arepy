@@ -3,18 +3,21 @@
 YEL='\033[0;33m'
 NC='\033[0m'
 
+DIR_RUN=$(pwd)                        # directory where we run the script
+DIR_MODULE=$(dirname $(dirname $0))   # directory of the arepy module
+
 # go to the correct folder
-dirReplace=$(sed "s/${1}=//g" <<< $(grep "${1}" ~/.arepy/settings))
+dirReplace=$DIR_MODULE/python
 cd $dirReplace
 
-strFrom="${2}"
-strTo="${3}"
+strFrom="${1}"
+strTo="${2}"
 
 # look in the particular files
-if [[ -z "${4}" ]]; then
+if [[ -z "${3}" ]]; then
     format="*.py"
 else
-    format="${4}"
+    format="${3}"
 fi
 
 # replace everything
