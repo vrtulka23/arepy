@@ -37,7 +37,7 @@ THIS_DIR=$(pwd)                                # path to the simulation director
 WORK_DIR=${WORK_DIR:-$(dirname $PWD)}          # main directory with simulations
 SIM_NAME=${THIS_DIR#*$WORK_DIR}                # name of the simulation (path within the work dir.)
 CURRENT_TIME=$(date '+%s')                     # current date stemp
-SIM_LOG=${SIM_LOG:-$HOME/.arepy/submitlog} # path to the file that logs the submit times
+SIM_LOG=${SIM_LOG:-$DIR_MODULE/.submitlog}     # path to the file that logs the submit times
 
 RED='\033[0;31m'                               # bash output mark for a red color
 GRE='\033[0;32m'                               # bash output mark for a green color

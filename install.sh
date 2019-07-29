@@ -8,8 +8,7 @@ NC='\033[0m'               # bash output mark to terminate colors
 dirModule=$(pwd)
 dirArepy="$dirModule/python/arepy"
 dirScripy="$dirModule/python/scripy"
-fileProjects="$dirModule/projects.txt"
-fileSubmitLog="$dirModule/submitlog.txt"
+fileSubmitLog="$dirModule/.submitlog"
 
 echo ""
 echo -e "${GRE}Arepy installation${NC}"
@@ -48,7 +47,6 @@ fi
 
 # Create corresponding files and directories
 touch $fileSubmitLog
-touch $fileProjects
 
 echo ""
 echo "Specific settings for this system/machine can be edited in:"
