@@ -35,12 +35,19 @@ This module requires `numpy`, `scipy` and `h5py` python modules.
 
 ## Installation
 
-Installation of the `arepy` is very simple.
-Go to the `arepy` that you cloned from this website and run the installation BASH script:
+Installation of the `arepy` is very simple!
+
+Go to the main `arepy` directory that you cloned from this website and run the installation BASH script:
 ```
 cd $HOME/path/to/arepy
 sh install.sh
 ```
+
+The installation script will ask you to include `python/` directory into your local $PYTHONPATH and also to create an alias for the `arepy` bash script `shell/run.sh`.
+
+In the next step you will havet to choose system settings. You can choose an existing settings by inputing one of the system names in `shell/systems/run.{SYSTEM_NAME}.sh` or create a new one by putting your own name.
+
+After this the `arepy` python module can be included in any python script and you will be also able to use `arepy` shell scripts from your terminal.
 
 ## Documentation and examples
 
