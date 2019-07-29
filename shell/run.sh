@@ -9,16 +9,18 @@ DIR_RESULTS=$DIR_MODULE/results       # directory with scripy results
 
 # Check if in the project directory
 DIR_PROJECT="none"
-for pdir in $(ls -d $DIR_SCRIPY/*)
-do
-    pname=$(basename $pdir)
-    if [ -f $pdir/__init__.py ]; then
-	psim=$(grep -o '".*"' $pdir/__init__.py | sed 's/"//g')
-	if [[ $DIR_RUN == "$psim"* ]]; then
-	    DIR_PROJECT="$pname"
+if [ -d $DIR_SCRIPY/* ]; then
+    for pdir in $(ls -d $DIR_SCRIPY/*)
+    do
+	pname=$(basename $pdir)
+	if [ -f $pdir/__init__.py ]; then
+	    psim=$(grep -o '".*"' $pdir/__init__.py | sed 's/"//g')
+	    if [[ $DIR_RUN == "$psim"* ]]; then
+		DIR_PROJECT="$pname"
+	    fi
 	fi
-    fi
-done
+    done
+fi
 
 # Load local settings
 while [ "$DIR_RUN" != "/" ]

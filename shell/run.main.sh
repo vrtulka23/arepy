@@ -298,6 +298,36 @@ results_sync()
     fi
 }
 
+refract()
+{
+    strFrom="${1}"
+    strTo="${2}"
+
+    # look in the particular files
+    if [[ -z "${3}" ]]; then
+	format="*.py"
+    else
+	format="${3}"
+    fi
+    
+    # replace everything
+    echo -e "${YEL}Changing '${strFrom}' to '${strTo}'${NC}"
+    found=$(grep -r --include="$format" "${strFrom}" $DIR_MODULE/python)
+    if [[ ! -z $found ]]; then
+	echo -e "${YEL}The following strings will be replaced:${NC}"
+	echo "$found"
+	read -p $'\e[33mAre you sure (Y/n)?\e[0m ' -n 1 -r
+	echo
+	if [[ $REPLY =~ ^[Yy]?$ ]]; then
+	    echo -e "${YEL}processing...${NC}"
+	    sedstring="s/${strFrom}/${strTo}/g"
+	    find ./ -iname "$format" -exec sed -i -e "$sedstring" {} \;
+	    echo -e "${YEL}done${NC}"
+	fi
+    else
+	echo -e "${YEL}No string was found${NC}"
+    fi
+}
 
 # Run an interactive session
 inter_run()
@@ -417,6 +447,7 @@ show_help()
     echo "--init-plot <name>          initialize a new scripy plot"
     echo "--init-setup <name>         initialize a new setup"
     echo "--sync                      synchronize scripy results"
+    echo "--refract <old> <new> [<fileType>] replace <old> with <new> code in scripy and arepy python scripts"
     echo "-i  | --initialize          creates output/results/scripts directories"
     echo "-d  | --clean-dir           delete all Arepo runtime files"
     echo "-as | --analyze-snaps       finds the last created snapshots in all subfolders"
@@ -458,6 +489,7 @@ while [ "$1" != "" ]; do
 	--init-script )            shift; analyze init-script "$@"; break;;
 
 	--sync )                   results_sync ;;
+	--refract )                shift; refract "$@"; break;;
 
 	-i | --initialize )        initialize ;;
 	-d | --clean-dir )         clean_directory ;;
