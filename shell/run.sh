@@ -9,7 +9,7 @@ DIR_RESULTS=$DIR_MODULE/results       # directory with scripy results
 
 # Check if in the project directory
 DIR_PROJECT="none"
-if [ -d $DIR_SCRIPY/* ]; then
+if [ -d "$DIR_SCRIPY/*" ]; then
     for pdir in $(ls -d $DIR_SCRIPY/*)
     do
 	pname=$(basename $pdir)
