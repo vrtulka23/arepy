@@ -288,6 +288,17 @@ submit_queue()
     fi
 }
 
+results_sync()
+{
+    echo_green "Synchronizing results:"
+    if [ $(type -t on_results_sync) ]; then
+        on_results_sync
+    else
+	echo_red "No synchronization script available..."
+    fi
+}
+
+
 # Run an interactive session
 inter_run()
 {
@@ -405,6 +416,7 @@ show_help()
     echo "--init-project <name>       initialize scripy project directory"
     echo "--init-plot <name>          initialize a new scripy plot"
     echo "--init-setup <name>         initialize a new setup"
+    echo "--sync                      synchronize scripy results"
     echo "-i  | --initialize          creates output/results/scripts directories"
     echo "-d  | --clean-dir           delete all Arepo runtime files"
     echo "-as | --analyze-snaps       finds the last created snapshots in all subfolders"
@@ -444,6 +456,8 @@ while [ "$1" != "" ]; do
 	--init-plot )              shift; analyze init-plot "$@"; break;;
 	--init-setup )             shift; analyze init-setup "$@"; break;;
 	--init-script )            shift; analyze init-script "$@"; break;;
+
+	--sync )                   results_sync ;;
 
 	-i | --initialize )        initialize ;;
 	-d | --clean-dir )         clean_directory ;;
