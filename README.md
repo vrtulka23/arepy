@@ -19,6 +19,7 @@ This module requires `numpy`, `scipy` and `h5py` python modules.
 | &nbsp; &nbsp;/arepy | arepy python scripts (main arepy module) |
 | &nbsp; &nbsp; &nbsp; &nbsp;/coord | routines for coordinate manipulation |
 | &nbsp; &nbsp; &nbsp; &nbsp;/data | routines for dataset manipulation |
+| &nbsp; &nbsp; &nbsp; &nbsp;/files | routines that open/edit/wirte Arepo files and simulations |
 | &nbsp; &nbsp; &nbsp; &nbsp;/phys | routines with various physical/analytical models and functions |
 | &nbsp; &nbsp; &nbsp; &nbsp;/plot | standardized plotting routines |
 | &nbsp; &nbsp; &nbsp; &nbsp;/scripy | `scripy` classes and templates |
