@@ -59,8 +59,10 @@ def plotSubplot(ax,opt,canvas,fid=0):
 
         # Draw x/y point scatter
         if d['draw']=='scatter':
-            xvals = d['x'] if np.isscalar(d['x'][0]) else d['x'][fid]
-            yvals = d['y'] if np.isscalar(d['y'][0]) else d['y'][fid]
+            if np.isscalar(d['x']): xvals=d['x']
+            else: xvals = d['x'] if np.isscalar(d['x'][0]) else d['x'][fid]
+            if np.isscalar(d['y']): yvals=d['y']
+            else: yvals = d['y'] if np.isscalar(d['y'][0]) else d['y'][fid]
             if d['z'] is None:
                 li = drawax.scatter(xvals,yvals,**d['opt'])
             else:

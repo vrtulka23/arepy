@@ -1,3 +1,4 @@
+
 #!/bin/bash
  
 DIR_RUN=$(pwd)                        # directory where we run the script
@@ -9,7 +10,8 @@ DIR_RESULTS=$DIR_MODULE/results       # directory with scripy results
 
 # Check if in the project directory
 DIR_PROJECT="none"
-if [ -d "$DIR_SCRIPY/*" ]; then
+nd=$(ls -l $DIR_SCRIPY | grep ^d | wc -l)  # count number of projects
+if [ "$nd" -gt "0" ]; then
     for pdir in $(ls -d $DIR_SCRIPY/*)
     do
 	pname=$(basename $pdir)

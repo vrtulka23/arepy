@@ -10,6 +10,7 @@ private/*
 
 python/scripy/*
 !python/scripy/.gitkeep
+!python/scripy/__init__.py
 
 results/*
 !results/.gitkeep
