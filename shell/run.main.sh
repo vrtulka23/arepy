@@ -375,7 +375,7 @@ analyze()
 analyze_snaps()
 {
     for d in $(find -name output -type d | sort) ; do
-	find $d -name snap_* -type f | sort | tail -1
+	find $d -name snap_* -type f | sort -V | tail -1
     done
 }
 archive_outputs()

@@ -47,7 +47,7 @@ class subplot:
 
     # Standard way how to set a norm for the subplot
     def setNorm(self,xdata=None,ydata=None,zdata=None,
-                xname=None,yname=None,zname=None,twinx=False):
+                xname=None,yname=None,zname=None,twinx=False,zlim=None):
         if xdata is not None:
             self.xnorm = self.figure.norms.setNorm(xdata,self.xnorm if xname is None else xname)
         if ydata is not None:
@@ -57,6 +57,8 @@ class subplot:
             else:
                 self.ynorm = self.figure.norms.setNorm(ydata,self.ynorm if yname is None else yname)        
         if zdata is not None:
+            if zlim is not None: # clip data within the limit range
+                zdata = np.clip(zdata,zlim[0],zlim[1])
             self.znorm = self.figure.norms.setNorm(zdata,self.znorm if zname is None else zname)
                     
     # Add unique objects to the canvas
@@ -74,11 +76,12 @@ class subplot:
             nopt['loc'] = nopt['loc'].replace('bottom','lower').replace('top','upper')
         self.canvas['legendLS'] = {'draw':'legendLS','ls':linestyles,'labels':labels,'color':color,'nopt':nopt}
 
-    def setImage(self, data, extent=(0,1,0,1), norm=None, normType='lin', cmap=None, aspect='equal', xnorm=None, ynorm=None):
+    def setImage(self, data, extent=(0,1,0,1), norm=None, normType='lin', normLim=None, cmap=None, aspect='equal', xnorm=None, ynorm=None):
         xextent = extent[:,:2] if np.ndim(extent)>1 else extent[:2]
         yextent = extent[:,2:] if np.ndim(extent)>1 else extent[2:]
         self.setNorm(xdata=xextent,ydata=yextent,zdata=data,
-                     xname=xnorm,yname=ynorm,zname=norm)        
+                     xname=xnorm,yname=ynorm,zname=norm,
+                     zlim=normLim)        
         self.setOption(xlim=xextent, ylim=yextent)
         self.canvas['image'] = {'data':data,'norm':self.znorm,'normType':normType,
                                 'extent':extent,'cmap':cmap,'aspect':aspect}

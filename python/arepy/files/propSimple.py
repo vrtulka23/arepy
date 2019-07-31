@@ -2,6 +2,23 @@ import numpy as np
 import arepy as apy
 import h5py as hp
 
+##################################
+#
+# A new property called NEW can be include simply by adding a new class method.
+# For example:
+#
+# def prop_NEW(self,prop,ids):
+#     return self.getDataset('NEW',prop['ptype'],ids)
+#
+#
+# More complicated properties (COMPLICATED) should always use the simple one
+# For example:
+#
+# def prop_COMPLICATED(self,prop,ids):
+#     return self.prop_NEW(prop,ids) * 2
+#
+##################################
+
 class propSimple:
 
     ########################

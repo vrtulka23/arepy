@@ -30,14 +30,12 @@ class snap(propComplex):
         self.opt = {
             'fmode':    'r',
             'nsub':     default['nsub'],
+            'nproc':    default['nproc'],
             'initChem': 'sgchem1',
             'comoving': False
             # other: nproc, nproc_ckdt
         }
         self.opt.update(opt)
-        if 'nproc' not in self.opt:
-            apy.shell.printc('Number of processors set to number of subfiles: %d'%self.opt['nsub'])
-            self.opt['nproc'] = self.opt['nsub']
             
         # initialize chemistry
         self.initChem(self.opt['initChem'])

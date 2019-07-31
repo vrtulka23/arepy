@@ -27,7 +27,7 @@ if [ "$isPythonDir" == "0" ]; then
     echo -e "${RED}You need to include the following two lines in your .bashrc file:${NC}"
     echo ""
     echo "export PYTHONPATH=\$PYTHONPATH:$dirModule/python
-alias arepy='sh $dirModule/shell/run.sh'"
+alias apy='sh $dirModule/shell/run.sh'"
     echo ""
     exit
 fi

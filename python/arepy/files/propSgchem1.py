@@ -51,7 +51,7 @@ class propSgchem1:
         return self.chem['X_H'] * self.prop_x_HE(prop,ids) * 4
     def prop_X_D(self,prop,ids):
         return self.chem['X_H'] * self.prop_x_D(prop,ids) * 2
-
+        
     ###############################
     # Total mass of species in the cell (code units)
     ###############################
@@ -74,6 +74,29 @@ class propSgchem1:
         return self.prop_X_HE(prop,ids) *   self.prop_Masses(prop,ids)
     def prop_M_D(self,prop,ids):
         return self.prop_X_D(prop,ids) *    self.prop_Masses(prop,ids)
+
+    ###############################
+    # Total number of species
+    ###############################
+
+    def prop_N_H2(self,prop,ids):
+        return self.chem['X_H'] * self.prop_x_H2(prop,ids) *   self.prop_Masses(prop,ids) / apy.const.m_p
+    def prop_N_HP(self,prop,ids):
+        return self.chem['X_H'] * self.prop_x_HP(prop,ids) *   self.prop_Masses(prop,ids) / apy.const.m_p
+    def prop_N_DP(self,prop,ids):
+        return self.chem['X_H'] * self.prop_x_DP(prop,ids) *   self.prop_Masses(prop,ids) / apy.const.m_p
+    def prop_N_HD(self,prop,ids):
+        return self.chem['X_H'] * self.prop_x_HD(prop,ids) *   self.prop_Masses(prop,ids) / apy.const.m_p
+    def prop_N_HEP(self,prop,ids):
+        return self.chem['X_H'] * self.prop_x_HEP(prop,ids) *  self.prop_Masses(prop,ids) / apy.const.m_p
+    def prop_N_HEPP(self,prop,ids):
+        return self.chem['X_H'] * self.prop_x_HEPP(prop,ids) * self.prop_Masses(prop,ids) / apy.const.m_p
+    def prop_N_H(self,prop,ids):
+        return self.chem['X_H'] * self.prop_x_H(prop,ids) *    self.prop_Masses(prop,ids) / apy.const.m_p
+    def prop_N_HE(self,prop,ids):
+        return self.chem['X_H'] * self.prop_x_HE(prop,ids) *   self.prop_Masses(prop,ids) / apy.const.m_p
+    def prop_N_D(self,prop,ids):
+        return self.chem['X_H'] * self.prop_x_D(prop,ids) *    self.prop_Masses(prop,ids) / apy.const.m_p
 
     ###############################
     # Photon ionization/heating rates 
@@ -154,7 +177,7 @@ class propSgchem1:
               self.prop_x_HEP(prop,ids) + 2*self.prop_x_HEPP(prop,ids) )
         return mu
     
-    # Number density of the gas (particles per cubic centimeter)
+    # Number density of the gas (cm^{-3})
     def prop_NumberDensity(self,prop,ids):
         density = self.prop_Density(prop,ids) * self.units['density']  # density (g/cm^3)
         return density / ( apy.const.m_p * self.prop_Mu(prop,ids) )        
@@ -186,3 +209,12 @@ class propSgchem1:
             mu=self.prop_Mu(prop,ids)
         )
         return test.r_st / self.units['length'] 
+
+    # Sound speed (code units)
+    # Formula taken from: https://en.wikipedia.org/wiki/Speed_of_sound
+    # Chapter: Speed of sound in ideal gases and air
+    def prop_SoundSpeed(self,prop,ids):
+        temp = self.prop_Temperature(prop,ids)
+        gamma = self.prop_Gamma(prop,ids)
+        mu = self.prop_Mu(prop,ids)
+        return np.sqrt( (gamma * apy.const.k_B * temp) / (mu * apy.const.m_p) ) / self.units['velocity']

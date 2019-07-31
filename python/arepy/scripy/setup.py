@@ -43,6 +43,7 @@ class setup:
 
         # additional settings
         self.sim = proj.getSimulation(self.simID) # instance of the simulation class
+        self.dirSim = proj.dirSim                 # directory with project simulations
         self.dirSetup = proj.dirProject +'/sim_'+ proj.getSetting(self.simID,'setup')  # setup directory 
         self.opt = opt                            # additional options from settings
         self.units = proj.getUnits(self.simID)    # initial units of the simulation

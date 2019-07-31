@@ -13,14 +13,16 @@ class propClass:
         self.comoving = comoving
         self.chem = optChem
         self.units = {
-            'mass':    self.sf['Header'].attrs['UnitMass_in_g'],
-            'length':  self.sf['Header'].attrs['UnitLength_in_cm'],
-            'volume':  self.sf['Header'].attrs['UnitLength_in_cm']**3,
-            'density': self.sf['Header'].attrs['UnitMass_in_g']/self.sf['Header'].attrs['UnitLength_in_cm']**3,
-            'energy':  self.sf['Header'].attrs['UnitVelocity_in_cm_per_s']**2 * self.sf['Header'].attrs['UnitMass_in_g'],
+            'mass':     self.sf['Header'].attrs['UnitMass_in_g'],
+            'length':   self.sf['Header'].attrs['UnitLength_in_cm'],
+            'velocity': self.sf['Header'].attrs['UnitVelocity_in_cm_per_s'],
+            'volume':   self.sf['Header'].attrs['UnitLength_in_cm']**3,
+            'density':  self.sf['Header'].attrs['UnitMass_in_g']/self.sf['Header'].attrs['UnitLength_in_cm']**3,
+            'energy':   self.sf['Header'].attrs['UnitVelocity_in_cm_per_s']**2 * self.sf['Header'].attrs['UnitMass_in_g'],
         }
-        if 'UnitPhotons_per_s' in self.sf['Parameters'].attrs:
-            self.units['flux'] = self.sf['Parameters'].attrs['UnitPhotons_per_s']
+        if 'Parameters' in self.sf:
+            if 'UnitPhotons_per_s' in self.sf['Parameters'].attrs:
+                self.units['flux'] = self.sf['Parameters'].attrs['UnitPhotons_per_s']
 
     def __enter__(self):
         return self

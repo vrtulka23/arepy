@@ -1,3 +1,6 @@
+
+# loc = "vertical horizontal"
+
 def calculateLoc(loc,xlim,ylim,padding=None):
     if padding is None:
         padding = (0.01,0.01)
