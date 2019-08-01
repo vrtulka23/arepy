@@ -30,7 +30,7 @@ This module requires `numpy`, `scipy` and `h5py` python modules.
 | &nbsp; &nbsp; &nbsp; &nbsp;/setups/{SETUP} | simulation setup scripts  |
 | results | directory which stores figures and tables created by `scripy` scripts |
 | shell | shell scripts and system settings |
-| &nbsp; &nbsp;/systems | predefined system settings |
+| &nbsp; &nbsp;/systems/run.{SYSTEM}.sh | predefined system settings |
 
 ## Installation
 
