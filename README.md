@@ -25,12 +25,9 @@ This module requires `numpy`, `scipy` and `h5py` python modules.
 | &nbsp; &nbsp; &nbsp; &nbsp;/scripy | `scripy` classes and templates |
 | &nbsp; &nbsp; &nbsp; &nbsp;/shell | python routines that work with a bash shell |
 | &nbsp; &nbsp; &nbsp; &nbsp;/util | various python routines and utilities |
-| &nbsp; &nbsp;/scripy | `scripy` python project scripts |
-| &nbsp; &nbsp; &nbsp; &nbsp;/{PROJ} | project directory |
-| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;/plots | plotting scripts |
-| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;/{PLOT} | plotting group  |
-| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;/setups | simulation setups |
-| &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;/{SETUP} | setup group  |
+| &nbsp; &nbsp;/scripy/{PROJECT} | project directory |
+| &nbsp; &nbsp; &nbsp; &nbsp;/plots/{PLOT} | plotting scripts |
+| &nbsp; &nbsp; &nbsp; &nbsp;/setups/{SETUP} | simulation setup scripts  |
 | results | directory which stores figures and tables created by `scripy` scripts |
 | shell | shell scripts and system settings |
 | &nbsp; &nbsp;/systems | predefined system settings |
