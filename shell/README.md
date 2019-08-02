@@ -8,46 +8,46 @@ Every option can be triggered by calling `apy` in the commandline
 
 Following options can be used system-wide
 
-```bash
-       --init-project <name>         initialize scripy project directory
-       --sync                        synchronize scripy results
-       --refract <old> <new> [<ft>]  replace <old> with <new> code in scripy and arepy python scripts or with extension <ft>
--sa  | --submit-avail                show available resources on the cluster
--sq  | --submit-queue                show queue information on the cluster
--sl  | --submit-log                  show simulation history log
--slr | --submit-log-running          show running simulation
--I   | --inter-sess                  query for an interactive session
--h   | --help                        show this help
-```
+| Option                       | Description                                  |
+|------------------------------|----------------------------------------------|
+| --init-project NAME          | initialize scripy project in NAME directory  |  
+| --refract OLD NEW [FTYPE]    | replace OLD with NEW code string in scripy and arepy python files or with extension FTYPE |
+| --sync                       | synchronize scripy results                   |
+|-sa                           | show available resources on the cluster      |
+|-sq                           | show queue information on the cluster        |
+|-sl                           | show simulation history log                  |
+|-slr                          | show running simulation                      |
+|-I                            | query for an interactive session             |
+|-h                            | show this help                               |
 
 ## Project options
 
 Following options can be used only within the project directory tree
 
-```bash
-       --init-plot <name>            initialize a new scripy plot
-       --init-setup <name>           initialize a new setup
-       --plot <script>               run scripy plot scripts
-       --setup <sim> [<part>]        run scripy setup scripts
--i   | --initialize                  creates output/results/scripts directories
--d   | --clean-dir                   delete all Arepo runtime files
--as  | --analyze-snaps               finds the last created snapshots in all subfolders
-```
+| Option                | Description                                        |
+|-----------------------|----------------------------------------------------|
+| --init-plot NAME      | initialize a new scripy plot called NAME           |
+| --init-setup NAME     | initialize a new scripy setup called NAME          |
+| --plot NAME [SUBNAME] | run scripy plot called NAME or its subplot SUBNAME |
+| --setup SIM [PART]    | run scripy setup scripts for simulation SIM or its part PART |
+|-i                     | creates output/results/scripts directories         |
+|-d                     | delete all Arepo runtime files                     |
+|-as                    | finds the last created snapshots in all subfolders |
 
 ## Simulation options
 
 Following options can be used only in the main simulation directory tree
 
-```bash
--si  | --submit-image                submit a job that creates arepo images
--ss  | --submit-stats                show simulation stats
--sr  | --submit-restart              submit a restarted job
--sc  | --submit-cancel               cancel submited job
--s   | --submit                      submit a new job
--ri  | --terminal-image              create a custom arepo image
--rr  | --terminal-restart            restart job in a terminal
--r   | --terminal                    run job in a terminal
--cc  | --compile-clean               clean Arepo directory and recompile
--c   | --compile                     compile Arep
--ao  | --archive-output              puts output and submit files to an archive directory
-```
+| Option | Description                                          |
+|--------|------------------------------------------------------|
+|-si     | submit a job that creates arepo images               |
+|-ss     | show simulation stats                                |
+|-sr     | submit a restarted job                               |
+|-sc     | cancel submited job                                  |
+|-s      | submit a new job                                     |
+|-ri     | create a custom arepo image                          |
+|-rr     | restart job in a terminal                            |
+|-r      | run job in a terminal                                |
+|-cc     | clean Arepo directory and recompile                  |
+|-c      | compile Arep                                         |
+|-ao     | puts output and submit files to an archive directory |
