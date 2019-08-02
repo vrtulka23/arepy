@@ -25,12 +25,12 @@ This module requires `numpy`, `scipy` and `h5py` python modules.
 | &nbsp; &nbsp; &nbsp; &nbsp;![/scripy](https://github.com/vrtulka23/arepy/tree/master/python/arepy/scripy) | `scripy` classes and templates |
 | &nbsp; &nbsp; &nbsp; &nbsp;![/shell](https://github.com/vrtulka23/arepy/tree/master/python/arepy/shell) | python routines that work with a bash shell |
 | &nbsp; &nbsp; &nbsp; &nbsp;![/util](https://github.com/vrtulka23/arepy/tree/master/python/arepy/util) | various python routines and utilities |
-| &nbsp; &nbsp;/scripy/{PROJECT} | project directory |
-| &nbsp; &nbsp; &nbsp; &nbsp;/plots/{PLOT} | plotting scripts |
-| &nbsp; &nbsp; &nbsp; &nbsp;/setups/{SETUP} | simulation setup scripts  |
+| &nbsp; &nbsp;![/scripy/PROJECT](https://github.com/vrtulka23/arepy/tree/master/python/scripy) | project directory |
+| &nbsp; &nbsp; &nbsp; &nbsp;/plots/PLOT | plotting scripts |
+| &nbsp; &nbsp; &nbsp; &nbsp;/setups/SETUP | simulation setup scripts  |
 | results | directory which stores figures and tables created by `scripy` scripts |
 | ![shell](https://github.com/vrtulka23/arepy/tree/master/shell) | shell scripts and system settings |
-| &nbsp; &nbsp;/systems/run.{SYSTEM}.sh | predefined system settings |
+| &nbsp; &nbsp;![/systems/run.SYSTEM.sh](https://github.com/vrtulka23/arepy/tree/master/shell/systems) | predefined system settings |
 
 ## Installation
 
