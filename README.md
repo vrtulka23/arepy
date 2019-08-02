@@ -16,7 +16,7 @@ This module requires `numpy`, `scipy` and `h5py` python modules.
 |---|---|
 | private | a directory for your privat data and files that will not synchronize with the `arepy` |
 | python | directory included in $PYTHONPATH with the `arepy` and `scripy` scripts |
-| &nbsp; &nbsp;/arepy | arepy python scripts (main arepy module) |
+| &nbsp; &nbsp;![/arepy](https://github.com/vrtulka23/arepy/tree/master/python/arepy) | arepy python scripts (main arepy module) |
 | &nbsp; &nbsp; &nbsp; &nbsp;![/coord](https://github.com/vrtulka23/arepy/tree/master/python/arepy/coord) | routines for coordinate manipulation |
 | &nbsp; &nbsp; &nbsp; &nbsp;![/data](https://github.com/vrtulka23/arepy/tree/master/python/arepy/data) | routines for dataset manipulation |
 | &nbsp; &nbsp; &nbsp; &nbsp;![/files](https://github.com/vrtulka23/arepy/tree/master/python/arepy/files) | routines that open/edit/wirte Arepo files and simulations |
