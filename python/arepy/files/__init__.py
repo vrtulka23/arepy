@@ -1,6 +1,3 @@
-import arepy.files.sgchem1              # Specific functions for SGChem primordial
-import arepy.files.fiby                 # Specific functions for FiBY snapshots
-
 # simulations and snapshot groups
 from arepy.files.simulation import *    # Single simulation
 

@@ -39,9 +39,6 @@ class snap(propComplex):
             
         # initialize chemistry
         self.initChem(self.opt['initChem'])
-
-        # setup constants
-        self.const = getattr(apy.files,self.optChem['type']).const
         
         # parse all file names
         if self.opt['nsub']>1:

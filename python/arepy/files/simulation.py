@@ -58,11 +58,13 @@ class simulation:
             cf = apy.files.config(self.fileConfig) 
         else:
             apy.shell.printc('Warning: Configuration file does not exist','r')
+            apy.shell.printc('         '+self.fileConfig,'r')
             cf = None
         if apy.shell.isfile(self.fileParam): 
             pf = apy.files.param(self.fileParam) 
         else:
             apy.shell.printc('Warning: Parameter file does not exist','r')
+            apy.shell.printc('         '+self.fileParam,'r')
             pf = None
 
         if self.opt['initUnitsNew']:
