@@ -43,7 +43,7 @@ Following options can be used only within the project directory tree
 
 ## Simulation options
 
-Following options can be used only in the main simulation directory tree
+Following options can be used only in the main directory of a simulation
 
 | Option | Description                                          |
 |--------|------------------------------------------------------|
