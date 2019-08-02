@@ -18,7 +18,7 @@ Following options can be used system-wide
 | Option                       | Description                                  |
 |------------------------------|----------------------------------------------|
 | --init-project NAME          | initialize scripy project in NAME directory  |  
-| --refract OLD NEW [FTYPE]    | replace OLD with NEW code string in scripy and arepy python files or with extension FTYPE |
+| --refract OLD NEW [FTYPE]    | replace OLD with NEW code string in scripy and arepy</br> python files or with extension FTYPE |
 | --sync                       | synchronize scripy results                   |
 |-sa                           | show available resources on the cluster      |
 |-sq                           | show queue information on the cluster        |
