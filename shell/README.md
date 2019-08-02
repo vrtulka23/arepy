@@ -31,15 +31,17 @@ Following options can be used system-wide
 
 Following options can be used only within the project directory tree
 
-| Option                | Description                                        |
-|-----------------------|----------------------------------------------------|
-| --init-plot NAME      | initialize a new scripy plot called NAME           |
-| --init-setup NAME     | initialize a new scripy setup called NAME          |
-| --plot NAME [SUBNAME] | run scripy plot called NAME or its subplot SUBNAME |
-| --setup SIM [PART]    | run scripy setup scripts for simulation SIM or its part PART |
-|-i                     | creates output/results/scripts directories         |
-|-d                     | delete all Arepo runtime files                     |
-|-as                    | finds the last created snapshots in all subfolders |
+| Option                 | Description                                        |
+|------------------------|----------------------------------------------------|
+| --init-plot NAME       | initialize a new scripy plot called NAME           |
+| --init-setup NAME      | initialize a new scripy setup called NAME          |
+| --plot NAME [SUBNAME]  | run scripy plot called NAME or its subplot SUBNAME |
+| --debug NAME [SUBNAME] | same as --plot, but the plot will be saved to a debug</br> folder instead of a separate time-stamped folder |
+| --show NAME [SUBNAME]  | display the last created plot |
+| --setup SIM [PART]     | run scripy setup scripts for simulation SIM or its part PART |
+|-i                      | creates output/results/scripts directories         |
+|-d                      | delete all Arepo runtime files                     |
+|-as                     | finds the last created snapshots in all subfolders |
 
 ## Simulation options
 
@@ -56,5 +58,5 @@ Following options can be used only in the main directory of a simulation
 |-rr     | restart job in a terminal                            |
 |-r      | run job in a terminal                                |
 |-cc     | clean Arepo directory and recompile                  |
-|-c      | compile Arep                                         |
+|-c      | compile Arepo                                        |
 |-ao     | puts output and submit files to an archive directory |
