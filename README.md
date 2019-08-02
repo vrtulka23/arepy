@@ -29,7 +29,7 @@ This module requires `numpy`, `scipy` and `h5py` python modules.
 | &nbsp; &nbsp; &nbsp; &nbsp;!/plots/{PLOT} | plotting scripts |
 | &nbsp; &nbsp; &nbsp; &nbsp;/setups/{SETUP} | simulation setup scripts  |
 | results | directory which stores figures and tables created by `scripy` scripts |
-| ![shell](https://github.com/vrtulka23/arepy/tree/master/setup) | shell scripts and system settings |
+| ![shell](https://github.com/vrtulka23/arepy/tree/master/shell) | shell scripts and system settings |
 | &nbsp; &nbsp;/systems/run.{SYSTEM}.sh | predefined system settings |
 
 ## Installation
