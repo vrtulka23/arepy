@@ -440,35 +440,8 @@ show_params()
 }
 show_help()
 {
-    echo_green "Arepo run.sh script options:"
-    echo "--plot <script>             run scripy plot scripts"
-    echo "--setup <sim> [<part>]      run scripy setup scripts"
-    echo "--init-project <name>       initialize scripy project directory"
-    echo "--init-plot <name>          initialize a new scripy plot"
-    echo "--init-setup <name>         initialize a new setup"
-    echo "--sync                      synchronize scripy results"
-    echo "--refract <old> <new> [<fileType>] replace <old> with <new> code in scripy and arepy python scripts"
-    echo "-i  | --initialize          creates output/results/scripts directories"
-    echo "-d  | --clean-dir           delete all Arepo runtime files"
-    echo "-as | --analyze-snaps       finds the last created snapshots in all subfolders"
-    echo "-ao | --archive-output      puts output and submit files to an archive directory"
-    echo "-a  | --analyze <script> [<args>...] run the scripts/analyze.py script"
-    echo "-sa | --submit-avail        show available resources on the cluster"
-    echo "-sq | --submit-queue        show queue information on the cluster"
-    echo "-si | --submit-image        submit a job that creates arepo images"
-    echo "-sl | --submit-log          show simulation history log"
-    echo "-slr | --submit-log-running show running simulation"
-    echo "-ss | --submit-stats        show simulation stats"
-    echo "-sr | --submit-restart      submit a restarted job"
-    echo "-sc | --submit-cancel       cancel submited job"
-    echo "-s  | --submit              submit a new job"
-    echo "-I  | --inter-sess          query for an interactive session"
-    echo "-ri | --terminal-image      create a custom arepo image"
-    echo "-rr | --terminal-restart    restart job in a terminal"
-    echo "-r  | --terminal            run job in a terminal"
-    echo "-cc | --clean-compile       clean Arepo directory and recompile"
-    echo "-c  | --compile             compile Arepo"
-    echo "-h  | --help                show this help"
+    echo_green "Arepy bash script options:"
+    less $DIR_MODULE/shell/README.txt
 }
 
 interactive=
@@ -476,7 +449,6 @@ filename=~/sysinfo_page.html
 
 while [ "$1" != "" ]; do
     case $1 in
-        -a | --analyze )           shift; analyze "$@"; break;;
 	--plot )                   shift; analyze plot "$@"; break;;
 	--debug )                  shift; analyze debug "$@"; break;;
 	--movie )                  shift; analyze movie "$@"; break;;
