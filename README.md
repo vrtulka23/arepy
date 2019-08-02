@@ -26,7 +26,7 @@ This module requires `numpy`, `scipy` and `h5py` python modules.
 | &nbsp; &nbsp; &nbsp; &nbsp;![/shell](https://github.com/vrtulka23/arepy/tree/master/python/arepy/shell) | python routines that work with a bash shell |
 | &nbsp; &nbsp; &nbsp; &nbsp;![/util](https://github.com/vrtulka23/arepy/tree/master/python/arepy/util) | various python routines and utilities |
 | &nbsp; &nbsp;/scripy/{PROJECT} | project directory |
-| &nbsp; &nbsp; &nbsp; &nbsp;!/plots/{PLOT} | plotting scripts |
+| &nbsp; &nbsp; &nbsp; &nbsp;/plots/{PLOT} | plotting scripts |
 | &nbsp; &nbsp; &nbsp; &nbsp;/setups/{SETUP} | simulation setup scripts  |
 | results | directory which stores figures and tables created by `scripy` scripts |
 | ![shell](https://github.com/vrtulka23/arepy/tree/master/shell) | shell scripts and system settings |
@@ -50,7 +50,7 @@ After this the `arepy` python module can be included in any python script and yo
 
 ## Documentation and examples
 
-Example scripts are given in subdirectories in corresponding `README.md` files.
+Example scripts are given in subdirectories in corresponding `README.md` files. You can quickly go to a corresponding subdirectory by clicking links provided in the file structure section.
 
 ## Licensing and contribution
 Everybody is welcomed to use this code for private or research purpouse in terms of its license.
