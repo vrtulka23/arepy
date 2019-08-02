@@ -441,7 +441,7 @@ show_params()
 show_help()
 {
     echo_green "Arepy bash script options:"
-    less $DIR_MODULE/shell/README.txt
+    less $DIR_MODULE/shell/README.md
 }
 
 interactive=

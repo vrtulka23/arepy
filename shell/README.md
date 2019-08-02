@@ -2,7 +2,14 @@
 
 ## Usage
 
-Every option can be triggered by calling `apy` in the commandline
+Every option can be triggered by calling `apy` in the commandline.
+For example the following arepy call
+
+```bash
+apy --init-project myProject
+```
+
+will create a new project called 'myProject'.
 
 ## General options
 
