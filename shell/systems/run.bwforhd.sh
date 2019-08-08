@@ -16,9 +16,6 @@ submit_init()
 }
 CLEAN_FILES="${JOB_NAME}.e* ${JOB_NAME}.o*"
 
-AREPO_DIR=$arepodir
-WORK_DIR=$workdir
-
 on_inter_run()
 {
     INTER_CMD="msub -I -V -X -l nodes=${nodes}:ppn=${ppn}:${type},walltime=${walltime}"
