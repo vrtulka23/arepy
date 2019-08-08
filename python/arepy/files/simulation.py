@@ -120,7 +120,10 @@ class simulation:
                     self.optChem = {'type':'sgchem1'}
             else:
                 apy.shell.exit('Chemistry has to be initialized (simulation.py)')
+
         if self.optChem['type']=='sgchem1':
+            self.optChem['rates'] = [ 'RIH', 'HRIH', 'RIH2', 'HRIH2', 'RDH2', 'HRD', 'RIHE', 'HRIHE' ]
+            self.optChem['images'] = [ 'rih', 'xHP' ]
             if 'abund' not in self.optChem:
                 if cf and cf.getValue('SX_HYDROGEN_ONLY'):
                     self.optChem['abund'] = 'HydrogenOnly'
@@ -211,11 +214,10 @@ class simulation:
     ######################
     
     def getImage(self, isnap, iprop, itype):
-        imageTypes = getattr(apy.files,self.optChem['type']).const.imageTypes
-        if iprop in imageTypes:
-            i = imageTypes.index(iprop)
+        if iprop in self.optChem['rates']:
+            i = self.optChem['rates'].index(iprop)
             fileImage = self.fileImage%('sxrates',itype,isnap)
-            return apy.files.image( fileImage, len(imageTypes), i )            
+            return apy.files.image( fileImage, len(self.optChem['rates']), i )            
         elif iprop=='ndens':
             fileImage = self.fileImage%('density',itype,isnap)
             im,px,py = apy.files.image( fileImage )            

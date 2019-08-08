@@ -195,7 +195,11 @@ class subplot:
         # prepare unique objects
         if canvas['image'] is not None:
             image = canvas['image']
-            canvas['image']['norm'] = self.figure.norms.getLimits(image['norm'])
+            norm = self.figure.norms.getLimits(image['norm'])
+            if norm is None:
+                apy.shell.printc("\nWarning: Image norm '%s' is None and will be marked as empty plot! (subplot.py)"%image['norm'],'r')
+                canvas['empty'] = True
+            canvas['image']['norm'] = norm
             canvas['image']['extent'] = image['extent']
             
         # prepare multiple objects

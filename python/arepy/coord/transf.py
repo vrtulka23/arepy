@@ -182,3 +182,10 @@ class transf:
                 continue
             coord = self._transf(name,coord,**opt)
         return coord
+
+    # print out all transformations
+    def show(self):
+        for key,val in self.items.items():
+            print(key)
+            for k,v in val.items():
+                print('  ',k, v)

@@ -41,9 +41,6 @@ class figure:
         self.dirResults = self.dirAll+'/'+self.opt['timeStamp']     # plot directory
         self.fileFigure = self.dirResults+'/'+self.opt['fileName']  # complete figure path
 
-        #if self.opt['debug']: # clean the debug directory
-        #    apy.shell.rm(self.dirResults+'/*')
-
         # setup child objects
         self.norms = apy.plot.norms()
         self.subplot = [apy.plot.subplot(self,row,col) for row in range(nrows) for col in range(ncols)]
@@ -80,6 +77,12 @@ class figure:
         
     # plot all figures and save the corresponding files
     def plot(self):
+
+        # clean the debug directory
+        if self.opt['debug']: 
+            apy.shell.rm(self.dirResults)
+            apy.shell.mkdir(self.dirResults)
+        
         # Plot figures
         pb = apy.shell.pb(vmax=self.nfigs,label="Plotting figures")
 

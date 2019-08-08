@@ -394,6 +394,8 @@ def renderImage(item,imgType,prop,bins,n_jobs):
         data = {'data': data}
     if 'Coordinates' in data:
         data['Coordinates'] = np.array(data['Coordinates']) * item.sim.units.conv['length']
+    if 'Density' in data:
+        data['Density'] = data['Density'][:] * item.sim.units.conv['density']
     data['extent'] = item.transf['crop']['box'][:4] * item.sim.units.conv['length']
     return data
 

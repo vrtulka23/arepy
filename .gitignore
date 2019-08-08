@@ -5,15 +5,16 @@
 *.ipynb_checkpoints*
 __pycache__
 
+python/scripy/*
+!python/scripy/__init__.py
+
 private/*
 !private/.gitkeep
-
-python/scripy/*
-!python/scripy/.gitkeep
-!python/scripy/__init__.py
 
 results/*
 !results/.gitkeep
 
 .submitlog
 shell/run.system.sh
+
+arepo/*

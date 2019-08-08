@@ -29,29 +29,31 @@ if [ "$isPythonDir" == "0" ]; then
     echo "export PYTHONPATH=\$PYTHONPATH:$dirModule/python
 alias apy='sh $dirModule/shell/run.sh'"
     echo ""
+    echo -e "${RED}After that restart this installation script for further steps.${NC}"
     exit
 fi
 
 # Ask for some additional info
-echo -e -n "${YEL}Enter your system/machine name (small letters only):${NC} "
+echo -e -n "${YEL}Enter your system/machine name (small letters only):${NC}\n  "
 read nameSystem
 echo ""
 
 fileSystemTemplate="${dirModule}/shell/systems/run.${nameSystem}.sh"
 fileSystem=$dirModule/shell/run.system.sh
-if [ -f $fileSystemTemplate ]; then
+if [ -f $fileSystemTemplate ] && [ ! -f $fileSystem ]; then
     cp $fileSystemTemplate $fileSystem
 else
     touch $fileSystem
 fi
 
-# Create corresponding files and directories
+# Create submit log file
 touch $fileSubmitLog
 
+echo -e "${YEL}Specific settings for this system/machine can be edited in:${NC}"
+echo "  $fileSystem"
 echo ""
-echo "Specific settings for this system/machine can be edited in:"
+echo -e "${YEL}More advanced arepy commands require Arepo source code in the following directory:${NC}"
+echo "  $dirModule/arepo/(SourceCode)"
 echo ""
-echo "$fileSystem"
-echo ""
-echo "Arepy installation finished, Bye!"
+echo -e "${GRE}Arepy installation finished, Bye!${NC}"
 echo ""
