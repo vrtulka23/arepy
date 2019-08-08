@@ -79,7 +79,7 @@ SIM_LOG=${SIM_LOG:-$DIR_AREPY/.submitlog}     # path to the file that logs the s
 RED='\033[0;31m'                               # bash output mark for a red color
 GRE='\033[0;32m'                               # bash output mark for a green color
 YEL='\033[0;33m'
-NC='\033[0m'                                   # bash output mark to terminate colors
+='\033[0m'                                   # bash output mark to terminate colors
 
 # Helper functions
 echo_green()

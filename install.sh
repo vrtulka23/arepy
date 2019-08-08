@@ -6,6 +6,7 @@ YEL='\033[0;33m'           # bash output mark for a yellow color
 NC='\033[0m'               # bash output mark to terminate colors
 
 DIR_PWD=$(pwd)
+DIR_PYTHON=$DIR_PWD/python
 
 echo ""
 echo -e "${GRE}Arepy installation${NC}"
@@ -20,21 +21,26 @@ for i in "${ADDR[@]}"; do
 	break
     fi
 done
+echo -e "${YEL}Step 1) Setting arepy python path and alias${NC}"
+echo ""
 if [ "$isPythonDir" == "0" ]; then
-    echo -e "${RED}Step 1) You need to include the following two lines in your .bashrc file:${NC}"
+    echo -e "  ${RED}You need to include the following two lines in your .bashrc file:"
     echo ""
-    echo "export PYTHONPATH=\$PYTHONPATH:$DIR_PWD/python
-alias apy='sh $DIR_PWD/shell/run.sh'"
+    echo "  export PYTHONPATH=\$PYTHONPATH:$DIR_PYTHON"
+    echo "  alias apy='sh $DIR_PWD/shell/run.sh'"
     echo ""
-    echo -e "${RED}After that restart this installation script for further steps.${NC}"
+    echo -e "  ${RED}After that restart this installation script for further steps.${NC}"
     exit
 else
-    echo -e "${YEL}Step 1) Python path and aliases are included in .bashrc${NC}"
+    echo "  Settings saved to .bashrc:"
     echo ""
+    echo "  export PYTHONPATH=\$PYTHONPATH:$DIR_PYTHON"
+    echo "  alias apy='sh $DIR_PWD/shell/run.sh'"
 fi
+echo ""
 
 # Ask for some additional info
-echo -e -n "${YEL}Step 2) Enter your system/machine name (small letters only):${NC}\n  "
+echo -e -n "${YEL}Step 2) Enter your system/machine name (small letters only):${NC}\n\n  "
 read nameSystem
 echo ""
 
@@ -49,11 +55,13 @@ fi
 # Create submit log file
 touch "$DIR_PWD/.submitlog"
 
-echo -e "${YEL}Step 3) Specific settings for this system/machine can be edited in:${NC}"
-echo "  $fileSystem"
+echo -e "${YEL}Step 3) Setting up Arepo${NC}"
 echo ""
-echo -e "${YEL}Step 4) More advanced arepy commands require Arepo source code in the following directory:${NC}"
+echo "  For more advanced arepy commands you need to clone arepo source code to:"
 echo "  $DIR_PWD/arepo/(SourceCode)"
+echo ""
+echo "  Alternatively, you can add your arepo path to the 'shell/run.system.sh' script as:"
+echo "  DIR_AREPO=/your/favourite/path/to/arepo"
 echo ""
 echo -e "${GRE}Arepy installation finished, Bye!${NC}"
 echo ""
