@@ -60,3 +60,51 @@ Following options can be used only in the main directory of a simulation
 |-cc     | clean Arepo directory and recompile                  |
 |-c      | compile Arepo                                        |
 |-ao     | puts output and submit files to an archive directory |
+
+## Settings
+
+Some of the above options need to be configured in `run.system.sh`.
+
+### Arepo source code
+
+In order to use `-cc` or `-c` options you need to set the correct path to the Arepo source code. You can either clone your arepo version directly to the arepy main directory `...../arepy/arepo/(source code)` or set a custom path to the `run.system.sh` shell settings:
+```bash
+DIR_AREPO=/my/path/to/arepo
+```
+
+### Queue options
+
+Option `-qa` lists available queues on the cluster. Example of the configuration:
+```bash
+on_queue_avail()
+{
+    echo -e "\033[0;33mStandard\033[0m";
+    printf "$(showbf -f standard)\n"
+    echo -e "\033[0;33mBest\033[0m";
+    printf "$(showbf -f best)\n"
+    echo -e "\033[0;33mFat\033[0m";
+    printf "$(showbf -f fat)\n"
+}
+```
+ 
+Option `-ql` lists all jobs in the queue on the cluster. Example of the configuration:
+```bash
+on_queue_list()
+{
+    showq
+}
+```
+
+### Interactive session
+
+Some clusters give a possibility to use an interactive sessions for work. Example of the configuration:
+```bash
+on_inter_run()
+{
+    INTER_CMD="msub -I -V -X -l nodes=${nodes}:ppn=${ppn}:${type},walltime=${walltime}"
+}
+```
+
+### Job submitting
+
+to be added
