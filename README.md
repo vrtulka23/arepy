@@ -41,8 +41,9 @@ Go to the main `arepy` directory that you cloned from this website and run the i
 cd $HOME/path/to/arepy
 sh install.sh
 ```
-
 The installation script will ask you to include `python/` directory into your local $PYTHONPATH and also to create an alias for the `arepy` bash script `shell/run.sh`.
+
+After this the `arepy` python module can be included in any python script and you will be also able to use `arepy` shell scripts from your terminal.
 
 In the next step you will have to choose system settings. You can either choose existing settings by inputing one of the system names in `shell/systems/run.{SYSTEM_NAME}.sh` or create a new one by putting your own name.
 
@@ -51,8 +52,7 @@ Arepo source code can be either stored directly in the arepy main directory `/pa
 ```bash
 DIR_AREPO=/my/path/to/arepo
 ```
-
-After this the `arepy` python module can be included in any python script and you will be also able to use `arepy` shell scripts from your terminal.
+For more system settings please refer to the ![shell settings](https://github.com/vrtulka23/arepy/tree/master/shell).
 
 ## Documentation and examples
 
