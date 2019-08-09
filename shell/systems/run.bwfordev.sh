@@ -21,12 +21,12 @@ INTER_CMD="srun -N 2 --ntasks-per-node=16 --pty bash"
 AREPO_DIR=$arepodir
 WORK_DIR=$workdir
 
-on_submit_avail()
+on_queue_avail()
 {
     sinfo
 }
 
-on_submit_queue()
+on_queue_list()
 {
     squeue
 }

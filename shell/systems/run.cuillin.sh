@@ -22,12 +22,12 @@ CLEAN_FILES="slurm*"
 AREPO_DIR=$arepodir
 WORK_DIR=$workdir
 
-on_submit_avail()
+on_queue_avail()
 {
     sinfo
 }
 
-on_submit_queue()
+on_queue_list()
 {
     squeue
 }

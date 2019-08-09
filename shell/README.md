@@ -20,10 +20,10 @@ Following options can be used system-wide
 | --init-project NAME          | initialize scripy project in NAME directory  |  
 | --refract OLD NEW [FTYPE]    | replace OLD with NEW code string in scripy and arepy</br> python files or with extension FTYPE |
 | --sync                       | synchronize scripy results                   |
-|-sa                           | show available resources on the cluster      |
-|-sq                           | show queue information on the cluster        |
-|-sl                           | show simulation history log                  |
-|-slr                          | show running simulation                      |
+|-qa                           | show available resources on the cluster      |
+|-ql                           | show queue information on the cluster        |
+|-qr                           | show running simulation                      |
+|-qh                           | show simulation history log                  |
 |-I                            | query for an interactive session             |
 |-h                            | show this help                               |
 

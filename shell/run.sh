@@ -224,15 +224,15 @@ submit_cancel()
 	fi
     done
 }
-submit_log()
+queue_history()
 {
-    echo_green "Submit logs:"	
+    echo_green "Submit log history:"	
     log=$(tail -16 $SIM_LOG)
     echo "$log"
 }
-submit_running()
+queue_running()
 {
-    queue=$(submit_queue)
+    queue=$(queue_list)
     while read p; do
 	IFS='-' read -ra ADDR <<< "$p"
 	queueID="${ADDR[1]//[[:blank:]]/}"
@@ -307,20 +307,20 @@ submit_stats()
 	fi
     fi
 }
-submit_avail()
+queue_avail()
 {
     echo_green "Available submit resources:"
-    if [ $(type -t on_submit_avail) ]; then
-        on_submit_avail
+    if [ $(type -t on_queue_avail) ]; then
+        on_queue_avail
     else
 	echo_red "Information not available..."
     fi
 }
-submit_queue()
+queue_list()
 {
     echo_green "Subimt queue:"
-    if [ $(type -t on_submit_queue) ]; then
-        on_submit_queue
+    if [ $(type -t on_queue_list) ]; then
+        on_queue_list
     else
 	echo_red "Information not available..."
     fi
@@ -403,6 +403,11 @@ analyze()
     else
 	if [ "$1" == "init-proj" ]; then
 	    python3 -W ignore $DIR_PYTHON_AREPY/scripy/main.py none "$@"
+	elif [ "$1" == "plot" ] && [ "$2" == "" ]; then  # print the available plot classes
+	    classes=$(find $DIR_PROJECT/plots -name *.py -exec grep -hr class {} \;) # find all files with classes
+	    classes=$(sed 's/class //g; s/apy.scripy.plot//g; s/)://g; s/(/ /g' <<< "$classes") # remove python stuff
+	    classes=$(awk 'NF >= 2{t=$2;$2=$1;$1=t};{print}' <<< "$classes") # swap classes names
+	    sort <<< "$classes" # sort names
 	elif [ $PROJECT_NAME == "none" ]; then
 	    echo -e "${RED}Cannot analyze a non-scripy directory!${NC}"	     
 	else
@@ -504,12 +509,13 @@ while [ "$1" != "" ]; do
 
 	-as | --analyze-snaps )    analyze_snaps ;;
 	-ao | --archive-outputs )  archive_outputs ;;
-	
-	-sa | --submit-avali )     submit_avail ;;
-	-sq | --submit-queue )     submit_queue ;;
+
+	-qa | --queue-avail )      queue_avail ;;
+	-ql | --queue-list )       queue_list ;;
+	-qr | --queue-running )    queue_running ;;
+	-qh | --queue-history )    queue_history ;;
+
 	-si | --submit-image )     submit_image ;;
-	-sl | --submit-log )       submit_log ;;
-	-slr | --submit-running)   submit_running ;;
 	-ss | --submit-stats )     submit_stats ;;
 	-sr | --submit-restart )   submit_restart ;;
 	-sc | --submit-cancel )    submit_cancel ;;

@@ -21,7 +21,7 @@ on_inter_run()
     INTER_CMD="msub -I -V -X -l nodes=${nodes}:ppn=${ppn}:${type},walltime=${walltime}"
 }
 
-on_submit_avail()
+on_queue_avail()
 {
     echo -e "\033[0;33mStandard\033[0m";
     printf "$(showbf -f standard)\n"
@@ -37,7 +37,7 @@ on_submit_avail()
     printf "$(showbf -f gpu)\n"
 }
 
-on_submit_queue()
+on_queue_list()
 {
     showq
 }

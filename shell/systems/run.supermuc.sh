@@ -39,7 +39,7 @@ module unload mpi.intel intel mkl
 module load mkl/11.3 intel/16.0 mpi.intel/5.1
 export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:${library}"
 
-on_submit_avail()
+on_queue_avail()
 {
     echo -e "\033[0;33mFat\033[0m";
     llq -c fat | tail -1
@@ -47,7 +47,7 @@ on_submit_avail()
     llq -c test | tail -1
 }
 
-on_submit_queue()
+on_queue_list()
 {
     llq -u di57jir2
 }
