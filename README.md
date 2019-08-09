@@ -46,6 +46,12 @@ The installation script will ask you to include `python/` directory into your lo
 
 In the next step you will have to choose system settings. You can either choose existing settings by inputing one of the system names in `shell/systems/run.{SYSTEM_NAME}.sh` or create a new one by putting your own name.
 
+Arepo source code can be either stored directly in the arepy main directory `/path/to/arepy/arepo/(source code)`, or you can set your own path to the `shell/run.system.sh` as:
+
+```bash
+DIR_AREPO=/my/path/to/arepo
+```
+
 After this the `arepy` python module can be included in any python script and you will be also able to use `arepy` shell scripts from your terminal.
 
 ## Documentation and examples
