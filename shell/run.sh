@@ -38,7 +38,7 @@ do
 done
 
 # Load system settings
-source $DIR_AREPY/shell/run.system.sh
+source $DIR_AREPY/shell/system.sh
 
 # Load default settings if necessary
 DIR_HOME=${DIR_HOME:-$HOME}                    # home directory

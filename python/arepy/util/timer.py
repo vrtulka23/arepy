@@ -14,8 +14,8 @@ class timer:
     def get(self,leap=0):
         return self.times[leap]
         
-    def end(self,show=True):
-        self.show(0,'Done in: ')
+    def end(self,show=True,msg=None):
+        self.show(0,'Done in: ' if msg is None else msg)
 
     def show(self,leap,msg):
         step = time.time() - self.get(leap)

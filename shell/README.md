@@ -63,11 +63,11 @@ Following options can be used only in the main directory of a simulation
 
 ## Settings
 
-Some of the above options need to be configured in `run.system.sh`.
+Some of the above options need to be configured in `shell/system.sh`.
 
 ### Arepo source code
 
-In order to use `-cc` or `-c` options you need to set the correct path to the Arepo source code. You can either clone your arepo version directly to the arepy main directory `...../arepy/arepo/(source code)` or set a custom path to the `run.system.sh` shell settings:
+In order to use `-cc` or `-c` options you need to set the correct path to the Arepo source code. You can either clone your arepo version directly to the arepy main directory `...../arepy/arepo/(source code)` or set a custom path to the `shell/system.sh` shell settings:
 ```bash
 DIR_AREPO=/my/path/to/arepo
 ```

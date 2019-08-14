@@ -80,7 +80,8 @@ class figure:
 
         # clean the debug directory
         if self.opt['debug']: 
-            apy.shell.rm(self.dirResults)
+            if apy.shell.isdir(self.dirResults):
+                apy.shell.rm(self.dirResults)
             apy.shell.mkdir(self.dirResults)
         
         # Plot figures

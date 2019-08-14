@@ -172,9 +172,9 @@ class propSgchem1:
     # Mean molecular weight
     def prop_Mu(self,prop,ids):
         mu = ( self.chem['x0_H'] + 2.*self.chem['x0_D'] + 4.*self.chem['x0_He'] ) / \
-            ( self.chem['x0_H'] + self.chem['x0_D'] + self.chem['x0_He'] + \
-              self.prop_x_HP(prop,ids) + self.prop_x_DP(prop,ids) + \
-              self.prop_x_HEP(prop,ids) + 2*self.prop_x_HEPP(prop,ids) )
+             ( self.chem['x0_H'] + self.chem['x0_D'] + self.chem['x0_He'] + \
+               self.prop_x_HP(prop,ids) + self.prop_x_DP(prop,ids) + \
+               self.prop_x_HEP(prop,ids) + 2*self.prop_x_HEPP(prop,ids) )
         return mu
     
     # Number density of the gas (cm^{-3})
@@ -199,22 +199,20 @@ class propSgchem1:
 
     # Stromgren radius if a source is in the cell (physical code units)
     def prop_StromgrenRadius(self,prop,ids):
-        flux = self.prop_PhotonFlux(prop,ids)
-        test = apy.phys.IonizationFrontTest(
-            a=self.prop_AlphaB(prop,ids), 
-            n=self.prop_NumberDensity(prop,ids),
-            Q=np.sum(flux[:,2:],axis=1),
-            T_avg=self.prop_Temperature(prop,ids), 
-            gamma=self.prop_Gamma(prop,ids), 
-            mu=self.prop_Mu(prop,ids)
-        )
+        alpha = prop['alpha'] if 'alpha' in prop else self.prop_AlphaB(prop,ids)         # (rec*cm^3/s)
+        ndens = prop['ndens'] if 'ndens' in prop else self.prop_NumberDensity(prop,ids)  # (cm^{-3})
+        flux  = prop['flux']  if 'flux'  in prop else np.sum(self.prop_PhotonFlux(prop,ids)[:,2:],axis=1) # (phot/s)
+        temp  = prop['temp']  if 'temp'  in prop else self.prop_Temperature(prop,ids)    # (K)
+        gamma = prop['gamma'] if 'gamma' in prop else self.prop_Gamma(prop,ids)        
+        mu    = prop['mu']    if 'mu'    in prop else self.prop_Mu(prop,ids)
+        test = apy.phys.IonizationFrontTest(a=alpha, n=ndens, Q=flux, T_avg=temp, gamma=gamma, mu=mu)
         return test.r_st / self.units['length'] 
 
     # Sound speed (code units)
     # Formula taken from: https://en.wikipedia.org/wiki/Speed_of_sound
     # Chapter: Speed of sound in ideal gases and air
     def prop_SoundSpeed(self,prop,ids):
-        temp = self.prop_Temperature(prop,ids)
-        gamma = self.prop_Gamma(prop,ids)
-        mu = self.prop_Mu(prop,ids)
+        temp  = prop['temp']  if 'temp'  in prop else self.prop_Temperature(prop,ids)  # (K)
+        gamma = prop['gamma'] if 'gamma' in prop else self.prop_Gamma(prop,ids)        
+        mu    = prop['mu']    if 'mu'    in prop else self.prop_Mu(prop,ids)
         return np.sqrt( (gamma * apy.const.k_B * temp) / (mu * apy.const.m_p) ) / self.units['velocity']

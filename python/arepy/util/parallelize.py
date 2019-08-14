@@ -1,4 +1,4 @@
-from multiprocessing import Process, Queue, Pool
+import multiprocessing as mpi
 
 '''
 Example:
@@ -11,8 +11,8 @@ print parallelize(myFunction,args)
 '''
 def parallelProcess(fn,tasks,pBar=False):
     nTasks = len(tasks)
-    q = Queue(); g = []
-    p = [ Process(target=fn, args=(q,i,tasks[i])) for i in range(nTasks) ]
+    q = mpi.Queue(); g = []
+    p = [ mpi.Process(target=fn, args=(q,i,tasks[i])) for i in range(nTasks) ]
     for i in range(nTasks): p[i].start()
     for i in range(nTasks):
         g.append( q.get() )
@@ -34,7 +34,7 @@ print parallelPool(myFunction,args)
 '''
 def parallelPool(fn,args,pbar=False,nproc=16):
     nTasks = len(args)
-    pool = Pool(processes=nproc)
+    pool = mpi.Pool(processes=nproc)
     results = [pool.apply_async(_parallelPool, args=(i,fn,args[i])) for i in range(nTasks)]
     output = [[]]*nTasks
     for p in results:

@@ -31,18 +31,19 @@ def cache( data, cacheName, cacheDir=None, reCache=False, args=[], update=False 
         cacheFile = '%s.npy'%(cacheName)
     else:
         cacheFile = '%s/%s.npy'%(cacheDir,cacheName)
+    cacheFileShort = cacheFile #apy.util.shortPath(cacheFile)
     if not os.path.isfile(cacheFile) or reCache:
         if callable(data):
             data = data(*args,None) if update else data(*args)
         np.save(cacheFile,data)
-        apy.shell.printc('Caching data as "%s"'%cacheFile)
+        apy.shell.printc('Writing cache: "%s"'%cacheFileShort)
     else:
-        if update: # update is only for incrementin
+        if update: # update is only for incrementing
             data = data(*args,_cacheLoad(cacheFile)) if callable(data) else data
             np.save(cacheFile,data)
-            apy.shell.printc('Updating cached data in "%s"'%cacheFile)
+            apy.shell.printc('Updating cache: "%s"'%cacheFileShort)
         else:
-            apy.shell.printc('Reading cached data from "%s"'%cacheFile)
+            apy.shell.printc('Reading cache: "%s"'%cacheFileShort)
 
     return _cacheLoad(cacheFile)
 

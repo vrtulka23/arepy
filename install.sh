@@ -44,8 +44,8 @@ echo -e -n "${YEL}Step 2) Enter your system/machine name (small letters only):${
 read nameSystem
 echo ""
 
-fileSystemTemplate="${DIR_PWD}/shell/systems/run.${nameSystem}.sh"
-fileSystem=$DIR_PWD/shell/run.system.sh
+fileSystemTemplate="${DIR_PWD}/shell/systems/${nameSystem}.sh"
+fileSystem=$DIR_PWD/shell/system.sh
 if [ -f $fileSystemTemplate ] && [ ! -f $fileSystem ]; then
     cp $fileSystemTemplate $fileSystem
 else
@@ -60,7 +60,7 @@ echo ""
 echo "  For more advanced arepy commands you need to clone arepo source code to:"
 echo "  $DIR_PWD/arepo/(SourceCode)"
 echo ""
-echo "  Alternatively, you can add your arepo path to the 'shell/run.system.sh' script as:"
+echo "  Alternatively, you can add your arepo path to the 'shell/system.sh' script as:"
 echo "  DIR_AREPO=/your/favourite/path/to/arepo"
 echo ""
 echo -e "${GRE}Arepy installation finished, Bye!${NC}"

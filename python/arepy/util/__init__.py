@@ -10,3 +10,4 @@ from arepy.util.palette import *
 from arepy.util.imgDim import *
 from arepy.util.timeStamp import *
 from arepy.util.strDec import *
+from arepy.util.shortPath import *

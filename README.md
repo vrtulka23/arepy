@@ -30,7 +30,7 @@ This module requires `numpy`, `scipy` and `h5py` python modules.
 | &nbsp; &nbsp; &nbsp; &nbsp;/setups/SETUP | simulation setup scripts  |
 | results | directory which stores figures and tables created by `scripy` scripts |
 | ![shell](https://github.com/vrtulka23/arepy/tree/master/shell) | shell scripts and system settings |
-| &nbsp; &nbsp;![/systems/run.SYSTEM.sh](https://github.com/vrtulka23/arepy/tree/master/shell/systems) | predefined system settings |
+| &nbsp; &nbsp;![/systems/SYSTEM.sh](https://github.com/vrtulka23/arepy/tree/master/shell/systems) | predefined system settings |
 
 ## Installation
 
@@ -45,9 +45,9 @@ The installation script will ask you to include `python/` directory into your lo
 
 After this the `arepy` python module can be included in any python script and you will be also able to use `arepy` shell scripts from your terminal.
 
-In the next step you will have to choose system settings. You can either choose existing settings by inputing one of the system names in `shell/systems/run.{SYSTEM_NAME}.sh` or create a new one by putting your own name.
+In the next step you will have to choose system settings. You can either choose existing settings by inputing one of the system names in `shell/systems/{SYSTEM_NAME}.sh` or create a new one by putting your own name.
 
-Arepo source code can be either stored directly in the arepy main directory `/path/to/arepy/arepo/(source code)`, or you can set your own path to the `shell/run.system.sh` as:
+Arepo source code can be either stored directly in the arepy main directory `/path/to/arepy/arepo/(source code)`, or you can set your own path to the `shell/system.sh` as:
 
 ```bash
 DIR_AREPO=/my/path/to/arepo
