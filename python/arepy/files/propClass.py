@@ -39,12 +39,12 @@ class propClass:
     def getProperty(self,prop,ids=None,dictionary=False):
         properties = apy.files.properties(prop)
         for pp in properties:
-            if ids is None:
-                npart = self.sf['Header'].attrs['NumPart_ThisFile'][pp['ptype']]
-                indexes = slice(0,npart)
+            npart = self.sf['Header'].attrs['NumPart_ThisFile'][pp['ptype']]
+            if npart>0:
+                indexes = slice(0,npart) if ids is None else ids
+                properties.setData( pp['key'], getattr(self,'prop_'+pp['name'])(pp,indexes) )
             else:
-                indexes = ids
-            properties.setData( pp['key'], getattr(self,'prop_'+pp['name'])(pp,indexes) )
+                properties.setData( pp['key'], [] )
         return properties.getData(dictionary=dictionary)
 
     ##########################

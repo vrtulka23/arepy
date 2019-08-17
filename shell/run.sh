@@ -167,48 +167,60 @@ ${SUBMIT_END}
 }
 submit_run()          # submit job to the cluster queue
 {
-    submitLog="${SUBMIT_LOG}0.log"
-    if [ -f $submitLog ]; then
-	while true; do
-	    read -p $'\e[31mSubmitting a new job will delete all old data. Do you want to proceed? (y/N)\e[0m ' yn
-	    case $yn in
-		[Yy]* ) clean_directory; break;;
-		[Nn]* ) exit;;
-		* ) exit;;
-	    esac
-	done
-    fi
+    if [ -f ./Arepo ]; then
+	submitLog="${SUBMIT_LOG}0.log"
+	if [ -f $submitLog ]; then
+	    while true; do
+		read -p $'\e[31mSubmitting a new job will delete all old data. Do you want to proceed? (y/N)\e[0m ' yn
+		case $yn in
+		    [Yy]* ) clean_directory; break;;
+		    [Nn]* ) exit;;
+		    * ) exit;;
+		esac
+	    done
+	fi
+	
+	echo_green "Submitting the job..."
+	if [ $(type -t on_submit_run) ]; then
+	    on_submit_run
+	fi
 
-    echo_green "Submitting the job..."
-    if [ $(type -t on_submit_run) ]; then
-	on_submit_run
+	submit 0 "${RUN_CMD_SUBMIT} ./Arepo ${PARAM_FILE} ${FLAGS_RUN} > output/output0.log"
+    else
+	echo_red "You are not in an arepo simulation directory!"
     fi
-
-    submit 0 "${RUN_CMD_SUBMIT} ./Arepo ${PARAM_FILE} ${FLAGS_RUN} > output/output0.log"
 }
 submit_restart()
 {
-    echo_green "Restarting the job..."
-    if [ $(type -t on_submit_restart) ]; then
-	on_submit_restart
+    if [ -f ./Arepo ]; then
+	echo_green "Restarting the job..."
+	if [ $(type -t on_submit_restart) ]; then
+	    on_submit_restart
+	fi
+	outputNum=$(output_num "")
+	submit $outputNum "${RUN_CMD_SUBMIT} ./Arepo ${PARAM_FILE} ${FLAGS_RESTART} > output/output${outputNum}.log"
+    else
+	echo_red "You are not in an arepo simulation directory!"
     fi
-    outputNum=$(output_num "")
-    submit $outputNum "${RUN_CMD_SUBMIT} ./Arepo ${PARAM_FILE} ${FLAGS_RESTART} > output/output${outputNum}.log"
 }
 submit_image()
 {
-    echo_green "Creating arepo images..."
-    if [ $(type -t on_submit_image) ]; then
-        on_submit_image
-    fi
-    box="${IMAGE_FLAGS[2]} ${IMAGE_FLAGS[3]} ${IMAGE_FLAGS[4]} ${IMAGE_FLAGS[5]} ${IMAGE_FLAGS[6]} ${IMAGE_FLAGS[7]}"
-    for i in $(seq ${IMAGE_FLAGS[0]} ${IMAGE_FLAGS[1]})
-    do
-	jobcmd="${jobcmd}
+    if [ -f ./Arepo ]; then
+	echo_green "Creating arepo images..."
+	if [ $(type -t on_submit_image) ]; then
+            on_submit_image
+	fi
+	box="${IMAGE_FLAGS[2]} ${IMAGE_FLAGS[3]} ${IMAGE_FLAGS[4]} ${IMAGE_FLAGS[5]} ${IMAGE_FLAGS[6]} ${IMAGE_FLAGS[7]}"
+	for i in $(seq ${IMAGE_FLAGS[0]} ${IMAGE_FLAGS[1]})
+	do
+	    jobcmd="${jobcmd}
 ${RUN_CMD_SUBMIT} ./Arepo ${PARAM_FILE} 5 $i 1000 1000 0 1 2 ${box} > output/output_img.log"
-    done
-    rm -f submitIMG*
-    submit "IMG" "$jobcmd"
+	done
+	rm -f submitIMG*
+	submit "IMG" "$jobcmd"
+    else
+	echo_red "You are not in an arepo simulation directory!"
+    fi
 }
 submit_cancel()
 {
@@ -396,6 +408,17 @@ clean_directory()
         cd ..
     fi
 }
+
+# Print out a list of all possible plots for current project
+show_plots()
+{
+    classes=$(find $DIR_PROJECT/plots -name *.py -exec grep -hr class {} \;) # find all files with classes
+    classes=$(sed 's/class //g; s/apy.scripy.plot//g; s/)://g; s/(/ /g' <<< "$classes") # remove python stuff
+    classes=$(awk 'NF >= 2{t=$2;$2=$1;$1=t};{print}' <<< "$classes") # swap classes names
+    sort <<< "$classes" # sort names
+}
+
+# Analyze project
 analyze()
 {
     if [ $(type -t on_analyze) ]; then
@@ -404,10 +427,9 @@ analyze()
 	if [ "$1" == "init-proj" ]; then
 	    python3 -W ignore $DIR_PYTHON_AREPY/scripy/main.py none "$@"
 	elif [ "$1" == "plot" ] && [ "$2" == "" ]; then  # print the available plot classes
-	    classes=$(find $DIR_PROJECT/plots -name *.py -exec grep -hr class {} \;) # find all files with classes
-	    classes=$(sed 's/class //g; s/apy.scripy.plot//g; s/)://g; s/(/ /g' <<< "$classes") # remove python stuff
-	    classes=$(awk 'NF >= 2{t=$2;$2=$1;$1=t};{print}' <<< "$classes") # swap classes names
-	    sort <<< "$classes" # sort names
+	    show_plots
+	elif [ "$1" == "debug" ] && [ "$2" == "" ]; then  # print the available plot classes
+	    show_plots
 	elif [ $PROJECT_NAME == "none" ]; then
 	    echo -e "${RED}Cannot analyze a non-scripy directory!${NC}"	     
 	else

@@ -1,5 +1,4 @@
-# adapted from http://code.activestate.com/recipes/578228-progress-bar-class/
-#
+# Progress bar
 # Example:
 # 
 # pb = progressBar(vmax=30, label="")
@@ -13,20 +12,18 @@ import sys
 import arepy as apy
 
 class progressBar:
-    def __init__(self, vmax=100, label="", vmin = 0, nparts=50, draw=True):
-        if vmax==0:
-            apy.shell.exit('vmax=%d  (progressBar.py)'%(vmax))
-        elif vmax<=vmin:
-            apy.shell.exit('vmax=%d <= vmin=%d  (progressBar.py)'%(vmax,vmin))
+    def __init__(self, vmax=100, label="", nparts=80, draw=True):
+        if vmax<=0:
+            apy.shell.exit('vmax=%d has to be higher than zero  (progressBar.py)'%(vmax))
+
         self.pbar = ""
         self.pbarOld = ""
         self.label = label if label=="" else label+" "
-        self.vmin = vmin
+
+        self.vcurrent = 0 
         self.vmax = vmax
-        self.span = vmax - vmin
-        self.nparts = nparts - 2
-        self.spanPart = self.span / float(self.nparts)
-        self.amount = 0 
+
+        self.nparts = nparts
         self.setAmount(0)
         if draw: self.draw()
 
@@ -39,32 +36,30 @@ class progressBar:
     def __exit__(self, exc_type, exc_value, traceback):
         self.close()
         
-    def setAmount(self, amount = 0):
-        if amount < self.vmin: amount = self.vmin
-        if amount > self.vmax: amount = self.vmax
-        self.amount = amount
-        diffFromMin = float(self.amount - self.vmin)
-        fractionDone = (diffFromMin / float(self.span)) * 100.0
-        percentDone = int(round(fractionDone))
-        numHashes = (percentDone / 100.0) * self.nparts
-        hashDone = (numHashes-int(numHashes))*10.0
-        numHashes = int(numHashes)
-        if numHashes == 0:
-            self.pbar = "[%d%s]" % (hashDone,' '*(self.nparts-1))
-        elif numHashes == self.nparts:
-            self.pbar = "[%s]" % ('='*self.nparts)
-        else:
-            self.pbar = "[%s%d%s]" % ('='*(numHashes-1),hashDone,' '*(self.nparts-numHashes))
-        percentPlace = (len(self.pbar) / 2) - len(str(percentDone))
-        percentString = str(percentDone) + "%"
-        self.pbar = apy.shell.textc(' '.join([self.pbar, "%4s"%percentString, self.label]),'yellow')
+    def setAmount(self, vcurrent = 0):
+        # enforce values to be within the interval
+        if vcurrent < 0: vcurrent = 0
+        if vcurrent > self.vmax: vcurrent = self.vmax
+        self.vcurrent = vcurrent
+
+        # calculate progress
+        donePercent = int(round( (float(self.vcurrent) / float(self.vmax)) * 100.0 ))
+        doneParts = int((donePercent / 100.0) * self.nparts)
+
+        # prepare text for the console
+        pbartext = "%"+str(len(str(self.vmax)))+"d/%d %3s%%"
+        pbartext = pbartext%(self.vcurrent,self.vmax,str(donePercent))
+        pbartext = self.label+' '*(self.nparts-len(self.label)-len(pbartext))+pbartext
+        if doneParts<self.nparts:
+            pbartext = '\033[7m'+pbartext[:doneParts] +'\033[27m'+ pbartext[doneParts:]
+        self.pbar = apy.shell.textc(pbartext,'yellow')
         
     def setPercentage(self,newPercentage,draw=True):
         self.setAmount((newPercentage * float(self.vmax)) / 100.0)
         if (draw): self.draw()
         
-    def increase(self,amount=1,draw=True):
-        self.setAmount( self.amount + amount )
+    def increase(self,vcurrent=1,draw=True):
+        self.setAmount( self.vcurrent + vcurrent )
         if (draw): self.draw()
         
     def draw(self):

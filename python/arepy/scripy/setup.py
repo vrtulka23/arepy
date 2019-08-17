@@ -35,10 +35,13 @@ class setup:
         else:
             self.simID = int(args[0])    # simulation ID in the project
             args = args[1:]
+
         if args:    
-            self.simPart = str(args[0])  # specifies the part of the setup
-            args = args[1:]
-        else: self.simPart = None
+            #self.simPart = str(args[0])  # specifies the part of the setup
+            #args = args[1:]
+            self.simPart = [str(a) for a in args]
+        else: self.simPart = [None]
+
         self.args = args                 # save the rest of the arguments
 
         # additional settings
@@ -51,17 +54,22 @@ class setup:
         self.init()                               # custom update of additional options
 
         # Prepare and copy simulation parts
-        if self.simPart in [None,'dir']:
+        apy.shell.printc('Initializing')
+        if any(i in [None,'dir'] for i in self.simPart):
+            apy.shell.printc('- directory')
             self.setupDirectory()
-        if self.simPart in [None,'config']:
+        if any(i in [None,'config'] for i in self.simPart):
+            apy.shell.printc('- configuration file: '+self.sim.fileConfig)
             self.setupConfig(self.sim.fileConfig,{})
-        if self.simPart in [None,'param']:
+        if any(i in [None,'param'] for i in self.simPart):
+            apy.shell.printc('- parameter file: '+self.sim.fileParam)
             self.setupParam(self.sim.fileParam,{
                 'UnitMass_in_g':            self.units['mass'],
                 'UnitLength_in_cm':         self.units['length'],
                 'UnitVelocity_in_cm_per_s': self.units['velocity'],
             })
-        if self.simPart in [None,'run']:
+        if any(i in [None,'run'] for i in self.simPart):
+            apy.shell.printc('- run file'+self.sim.fileRunsh)
             self.setupRun(self.sim.fileRunsh,{
                 "NUM_NODES":     self.job['nodes'] if 'nodes'       in self.job else 1,
                 "NUM_PROC":      self.job['proc']  if 'proc'        in self.job else 40,
@@ -78,17 +86,20 @@ class setup:
             })
 
         # Prepare and copy simulation parts that depend on the parameter file
-        if self.simPart in [None,'ics','sources','olist']:
+        if any(i in [None,'ics','sources','olist'] for i in self.simPart):
             self.sim.initParamNames()        
-        if self.simPart in [None,'ics']:
+        if any(i in [None,'ics'] for i in self.simPart):
+            apy.shell.printc('- initial conditions: '+self.sim.fileIcs)
             self.setupIcs(self.sim.fileIcs)
-        if self.simPart in [None,'sources'] and hasattr(self.sim,'fileSources'):
+        if any(i in [None,'sources'] for i in self.simPart) and hasattr(self.sim,'fileSources'):
+            apy.shell.printc('- sources: '+self.sim.fileSources)
             self.setupSources(self.sim.fileSources)
-        if self.simPart in [None,'olist'] and hasattr(self.sim,'fileOlist'):
+        if any(i in [None,'olist'] for i in self.simPart) and hasattr(self.sim,'fileOlist'):
+            apy.shell.printc('- output list: '+self.sim.fileOlist)
             self.setupOlist(self.sim.fileOlist)
 
         # Create an output directory
-        if self.simPart in [None,'output']:
+        if any(i in [None,'output'] for i in self.simPart):
             if os.path.isdir(self.sim.dirOutput):
                 call(['rm','-f','-r',self.sim.dirOutput])
             if not os.path.isdir(self.sim.dirOutput):

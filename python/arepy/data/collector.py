@@ -21,6 +21,12 @@ class collector():
         m,n = self.offset[key], self.offset[key]+ndata
         self.data[key][m:n] = value[:]
         self.offset[key] += ndata
+
+    # Add new stuff to collector
+    # fid    - file index
+    # ntot   - total number of data
+    # ndata  - number of data in the current file
+    # values - dictionary of the data
     def add(self,fid,ntot,ndata,values):
         for key,value in values.items():
             if fid==0:

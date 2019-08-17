@@ -94,7 +94,7 @@ def plotSubplot(ax,opt,canvas,fid=0):
         # Draw a text field
         if d['draw']=='text':
             if not isinstance(d['loc'],str):
-                x,y = d['loc']
+                x,y,ha,va = d['loc']
             elif ('xlim' in axProp) and ('ylim' in axProp):
                 x,y,ha,va = apy.util.calculateLoc(d['loc'],xlim,ylim,d['padding'])
             else:

@@ -1,4 +1,5 @@
 from arepy.data.collector import *
+from arepy.data.heap import *
 from arepy.data.foreach import *
 from arepy.data.cache import *
 from arepy.data.interp import *

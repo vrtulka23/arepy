@@ -64,7 +64,8 @@ class param():
              'params':['SGChemInitCHxAbund', 'SGChemInitOHxAbund', 'SGChemInitHCOPAbund', 'SGChemInitHePAbund', 
                        'SGChemInitMPAbund']},
             {'id':22, 'name':'SGChem - elemental abundances',
-             'params':['CarbAbund', 'OxyAbund', 'MAbund', 'ZAtom', 'AtomicCoolOption', 'DeutAbund', 'H2OpacityOption']},
+             'params':['CarbAbund', 'OxyAbund', 'MAbund', 'ZAtom', 'AtomicCoolOption', 'DeutAbund', 'H2OpacityOption',
+                       'SGChemTemperatureFloor']},
             {'id':23, 'name':'SGChem - dust properties',
              'params':['InitDustTemp', 'UVFieldStrength', 'DustToGasRatio', 'CosmicRayIonRate', 'InitRedshift', 
                        'ExternalDustExtinction']},
@@ -203,6 +204,7 @@ class param():
             'AtomicCoolOption': {'dtype':'i','default':0,'format':'%d'},
             'DeutAbund': {'dtype':'f','default':2.6e-5,'format':'%e'},
             'H2OpacityOption': {'dtype':'i','default':0,'format':'%d'},
+            'SGChemTemperatureFloor': {'dtype':'f','default':100,'format':'%f'},
             'InitDustTemp': {'dtype':'f','default':0,'format':'%f'},                 # Kelvin
             'UVFieldStrength': {'dtype':'f','default':0,'format':'%e'},
             'DustToGasRatio': {'dtype':'f','default':0,'format':'%e'},
