@@ -47,9 +47,15 @@ class transf:
         # flip axes
         if 'flip' in opt:
             self.addFlip('flip', opt['flip'])
+            if 'box' in opt:
+                box = np.reshape(opt['box'],(2,3),order='F')
+                box = self.convert('flip',box,axes=opt['flip'])
+                opt['box'] = np.reshape(box,(6,),order='F')
         # rotate axis by an angle
         if 'rotate' in opt:
             self.addRotation('rotate', opt['rotate'])
+            #if 'box' in opt:
+            #    opt['box'] = self.convert('rotate',opt['box'])
         # post-select
         if 'box' in opt:
             self.addSelection('crop','box', box=opt['box'])
@@ -98,7 +104,7 @@ class transf:
         ttype = self.items[name]['type']
         opt = self.items[name]
         if ttype=='translation':  # translate origin
-            if 'dims' in opt:
+            if 'dims' in data:
                 coord -= opt['origin'][data['dims']]
             else:
                 coord -= opt['origin']

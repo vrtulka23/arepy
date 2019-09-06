@@ -155,7 +155,8 @@ class propComplex:
 
     def prop_BoxSquareXY(self,prop,ids):
         box = prop['transf']['crop']['box']
-        grid = apy.coord.gridSquareXY([prop['bins']]*2, box[:4], zfill=np.mean(box[4:]))
+        bins = [prop['bins']]*2 if np.isscalar(prop['bins']) else prop['bins']
+        grid = apy.coord.gridSquareXY(bins, box[:4], zfill=np.mean(box[4:]))
         return self._propBoxSlice(prop,grid,ids)
 
     def prop_BoxFieldXY(self,prop,ids):

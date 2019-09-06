@@ -39,9 +39,13 @@ def cache( data, cacheName, cacheDir=None, reCache=False, args=[], update=False 
         apy.shell.printc('Writing cache: "%s"'%cacheFileShort)
     else:
         if update: # update is only for incrementing
-            data = data(*args,_cacheLoad(cacheFile)) if callable(data) else data
-            np.save(cacheFile,data)
-            apy.shell.printc('Updating cache: "%s"'%cacheFileShort)
+            oldData = _cacheLoad(cacheFile)
+            data = data(*args,oldData) if callable(data) else data
+            if oldData!=data:
+                apy.shell.printc('Updating cache: "%s"'%cacheFileShort)
+                np.save(cacheFile,data)
+            else:
+                apy.shell.printc('Reading cache: "%s"'%cacheFileShort)
         else:
             apy.shell.printc('Reading cache: "%s"'%cacheFileShort)
 

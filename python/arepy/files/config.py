@@ -940,7 +940,7 @@ class config():
             'SX_RADIATION_PRESSURE': {'value':False,'dtype':'e'},
             'SX_FLOAT_PRECISION': {'value':False,'dtype':'e'},
             'SX_PP_ZERO_SNAPSHOT': {'value':False,'dtype':'e'},
-            'SX_SKIP_RADIUS': {'value':False,'dtype':'e'},
+            'SX_SKIP_RADIUS': {'value':False,'dtype':'i','default':0,'format':'%d'},
             'MAX_VARIATION_TOLERANCE': {'value':False,'dtype':'i','default':100,'format':'%d'}
         }
 

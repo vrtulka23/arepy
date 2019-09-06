@@ -138,6 +138,28 @@ terminal_image()
     echo_green "Creating arepo image..."
     terminal "_img" "${FLAGS_IMAGE}"
 }
+debug()
+{
+    eval="${RUN_CMD_DEBUG} ./Arepo ${PARAM_FILE} ${2} | tee output/output_debug${1}.log"
+    echo -e "${YEL}$eval${NC}"
+    eval "$eval"
+}
+debug_run()      # run simulations in the current environment
+{
+    echo_green "Runnig the simulation..."
+    if [ $(type -t on_debug_run) ]; then
+	on_debug_run
+    fi
+    debug 0 "${FLAGS_RUN}"
+}
+debug_restart()
+{
+    echo_green "Restarting the simulation..."
+    if [ $(type -t on_debug_restart) ]; then
+	on_debug_restart
+    fi
+    debug $(output_num "_tr") "${FLAGS_RESTART}"
+}
 
 # Functions used to submit a job to the queue
 submit()
@@ -544,7 +566,10 @@ while [ "$1" != "" ]; do
 	-s | --submit )            submit_run ;;
 
 	-I | --interactive )        inter_run ;;
-	
+
+	-d  | --debug )            debug_run ;;
+	-dr | --debug-restart )    debug_restart ;;
+
 	-ti | --terminal-image )   terminal_image ;;
 	-tr | --terminal-restart ) terminal_restart ;;
 	-t | --terminal )          terminal_run ;;

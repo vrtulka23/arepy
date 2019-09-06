@@ -65,14 +65,14 @@ class subplot:
 
     # Note: frameon=False
     def setLegend(self, handles=None, labels=None, **nopt):
-        if 'loc' in nopt:
+        if 'loc' in nopt and isinstance(nopt['loc'],str):
             nopt['loc'] = nopt['loc'].replace('bottom','lower').replace('top','upper')
         self.canvas['legend'] = {'draw':'legend','handles':handles,'labels':labels,'nopt':nopt}
 
     # Example: sp.setLegendLS([':','--'],['foo','bar'])
     # Note: frameon=False
     def setLegendLS(self, linestyles, labels, color='black', **nopt):
-        if 'loc' in nopt:
+        if 'loc' in nopt and isinstance(nopt['loc'],str):
             nopt['loc'] = nopt['loc'].replace('bottom','lower').replace('top','upper')
         self.canvas['legendLS'] = {'draw':'legendLS','ls':linestyles,'labels':labels,'color':color,'nopt':nopt}
 
@@ -91,7 +91,7 @@ class subplot:
 
     # colorbar on new axis
     def setColorbarNA(self, pos, **nopt):
-        opt = {'location':'right'}
+        opt = {'location':'right','label':None}
         opt.update(nopt)
         self.canvas['colorbarNA'] = {'pos':pos,**opt}
         
@@ -101,11 +101,11 @@ class subplot:
         opt.update(nopt)
         self.canvas['other'].append({'draw':'plot','twinx':twinx,'x':x,'y':y,'kwargs':opt})
 
-    def addStep(self, x, y, color=None, ls='-', twinx=False, label='', 
-                xnorm=None, ynorm=None):
+    def addStep(self, x, y, twinx=False, xnorm=None, ynorm=None, **nopt):
         self.setNorm(xdata=x,ydata=y,xname=xnorm,yname=ynorm,twinx=twinx)
-        self.canvas['other'].append({'draw':'step','twinx':twinx,'x':x,'y':y,'label':label,
-                                     'color':color,'linestyle':ls})
+        opt = {'lw': 1}
+        opt.update(nopt)
+        self.canvas['other'].append({'draw':'step','twinx':twinx,'x':x,'y':y,'kwargs':opt})
 
     def addScatter(self, *coord, xnorm=None, ynorm=None,**nopt):
         opt = {'c': 'black'}
@@ -117,12 +117,8 @@ class subplot:
     def addQuiver(self, *coord, **nopt):
         self.canvas['other'].append({'draw':'quiver','twinx':False,'coord':coord,'kwargs':nopt})
 
-    def addBar(self, y, x=None, color=None, label='', labelrot=None, twinx=False):
-        if x is None:
-            x = np.arange(1,1+len(y))
-            self.setNorm(xdata=[0,1+len(y)])
-        self.canvas['other'].append({'draw':'bar','twinx':twinx,'x':x,'y':y,
-                                     'color':color,'label':label,'labelrot':labelrot})
+    def addBar(self, x, y, twinx=False, **nopt):
+        self.canvas['other'].append({'draw':'bar','twinx':twinx,'x':x,'y':y,'kwargs':nopt})
 
     def addLine(self, axis, pos, twinx=False, **nopt):
         opt = {'color':'grey', 'ls':'-', 'label':'', 'lw': 1}

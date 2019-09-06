@@ -52,9 +52,11 @@ def plotSubplot(ax,opt,canvas,fid=0):
 
         # Draw x/y line step function
         if d['draw']=='step':
-            yvals = d['y'][fid] if np.array(d['y']).ndim>1 else d['y']
-            li = drawax.step(d['x'],yvals,color=d['color'],ls=d['linestyle'],lw=1.,label=d['label'])
-            if d['label']:
+            xvals = d['x'] if np.isscalar(d['x'][0]) else d['x'][fid]
+            yvals = d['y'] if np.isscalar(d['y'][0]) else d['y'][fid]
+            #yvals = d['y'][fid] if np.array(d['y']).ndim>1 else d['y']
+            li = drawax.plot(xvals,yvals, drawstyle='steps', **d['kwargs'])
+            if 'label' in d['kwargs']:
                 handles.append(li[0]) # for some reason this is a list of objects
 
         # Draw x/y point scatter
@@ -84,12 +86,14 @@ def plotSubplot(ax,opt,canvas,fid=0):
 
         # Draw a bar plot
         if d['draw']=='bar':
-            yvals = d['y'] if np.isscalar(d['y'][0]) else d['y'][fid]
             xvals = d['x'] if np.isscalar(d['x'][0]) else d['x'][fid]
-            li = drawax.bar(xvals,yvals,tick_label=d['label'],color=d['color'])
-            if d['labelrot'] is not None:
-                for tick in drawax.get_xticklabels():
-                    tick.set_rotation(d['labelrot'])
+            yvals = d['y'] if np.isscalar(d['y'][0]) else d['y'][fid]
+            li = drawax.bar(xvals,yvals, **d['kwargs'])
+            if 'label' in d['kwargs']:
+                handles.append(li)
+            #if d['labelrot'] is not None:
+            #    for tick in drawax.get_xticklabels():
+            #        tick.set_rotation(d['labelrot'])
 
         # Draw a text field
         if d['draw']=='text':
@@ -106,7 +110,9 @@ def plotSubplot(ax,opt,canvas,fid=0):
 
         # Draw a circle
         if d['draw']=='circle':
-            shape = plt.Circle( d['center'], d['radius'], **d['kwargs'])
+            rad    = d['radius'] if np.isscalar(d['radius']) else d['radius'][fid]
+            center = d['center'] if np.isscalar(d['center'][0]) else d['center'][fid]
+            shape = plt.Circle( center, rad, **d['kwargs'])
             drawax.add_artist(shape)
 
         # Draw a rectangle
@@ -267,6 +273,19 @@ def plotFigure(f,opt,canvas):
                 axis = canvas[index]['axis']
                 if 'projection' in axis and axis['projection'] is not None:
                     apy.shell.exit('Projection needs to be implemented for the axesgrid (plot.py)')
+    elif opt['imagegrid'] is not None:
+        fig = plt.figure(figsize=opt['figSize'])
+        if 'nrows_ncols' not in opt['imagegrid']:
+            opt['imagegrid']['nrows_ncols'] = (opt['nrows'], opt['ncols'])
+        grid = axesgrid.ImageGrid(fig, 111, **opt['imagegrid'])
+        axs = []
+        for r in range(opt['nrows']):
+            for c in range(opt['ncols']):
+                index = r*opt['ncols']+c
+                axs.append( grid[index] )
+                axis = canvas[index]['axis']
+                if 'projection' in axis and axis['projection'] is not None:
+                    apy.shell.exit('Projection needs to be implemented for the axesgrid (plot.py)')        
     elif opt['gridspec'] is not None:
         # Create a figure using gridspec to get a tight layout
         fig = plt.figure(figsize=opt['figSize'])

@@ -2,6 +2,7 @@
 
 # cluster related settings
 RUN_CMD_TERMINAL="mpirun -np $((NUM_NODES*NUM_PROC))"
+RUN_CMD_DEBUG="mpirun -gdb -n $((NUM_NODES*NUM_PROC))"
 RUN_CMD_SUBMIT="mpirun"
 
 JOBID_REGEXP="([0-9]+)"

@@ -42,6 +42,7 @@ class simulation:
             self.opt['nproc'] = self.opt['nsub']
 
         # set names of files and directories
+        self.dirCache = self.dirSim+'/cache'
         self.dirSimIcs = self.dirSim+'/ics'
         self.fileParam = self.dirSim+'/'+self.opt['fileNameParam']
         self.fileConfig = self.dirSim+'/'+self.opt['fileNameConfig']
@@ -268,15 +269,52 @@ class simulation:
             snapNums[s] = m.group(1)
         return np.sort(snapNums)
 
-    # find snapshot number at given times
+    # find snapshot number at given times  DEPRECATED: too slow!!
+    '''
     def findSnapsAtTimes(self,times,**opt):
         snaps = self.getSnapNums()
         snapTimes = np.zeros(len(snaps))
         for s,snap in enumerate(snaps):
             with self.getSnapshot(snap,**opt) as sf:
                 snapTimes[s] = sf.getHeader('Time')
-        return np.floor(np.interp(times,snapTimes,snaps)).astype(int)
+                print(s,snap,snapTimes[s])
+        return np.round(np.interp(times,snapTimes,snaps)).astype(int)
+    '''
 
     def hasSnapshot(self,snap):
         return apy.shell.isfile(self.fileSnap(snap))
 
+    # Get snapshot numbers of 'times'
+    def getSnapAtTimes(self,times):
+        csn = self.cacheSnapNums()
+        return np.round(np.interp(times,csn['Time'],csn['Snapshot'])).astype(int)
+
+    # Get snapshot numbers of 'times' after the formation of a first sink particle
+    def getSnapAfterFirstSink(self,times):
+        csn = self.cacheSnapNums()
+        nsinks = csn['NumPart_Total'][:,5]
+        if np.any(nsinks>0): # substract a formation time of the first sink particle
+            sink = self.getSink(csn['Snapshot'][-1])
+            csn['Time'] -= np.min(sink.getValues('FormationTime'))
+        else:                # use normal times instead
+            apy.shell.printc("Warning: There are no sink particles in the simulation '%s'! (simulation.py)"%self.name,"r")
+        return np.round(np.interp(times,csn['Time'],csn['Snapshot'])).astype(int)        
+
+    ##############################################
+    # Cache header or data values for each snapshot
+    ##############################################
+    
+    def cacheSnapNums(self):
+        snaps = self.getSnapNums()
+        grp = apy.files.group(self, snaps, dirCache=self.dirCache, nproc=apy.numCpu)
+        return grp.foreach(cacheSnapNums,cache=self.name,update=True)
+
+# Cache snapshot times
+def cacheSnapNums(item):
+    snap = item.getSnapshot()
+    header = snap.getHeader(['Time','NumPart_Total'])
+    return {
+        'Snapshot':      item.snap,
+        'Time':          header['Time'],
+        'NumPart_Total': header['NumPart_Total'],
+    }

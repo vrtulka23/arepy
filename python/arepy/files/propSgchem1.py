@@ -182,20 +182,29 @@ class propSgchem1:
         density = self.prop_Density(prop,ids) * self.units['density']  # density (g/cm^3)
         return density / ( apy.const.m_p * self.prop_Mu(prop,ids) )        
 
-    # Recombination factor of Hydrogen type B from SGChem/coolinmo.F (rec*cm^3/s)
-    def prop_AlphaB(self,prop,ids):
-        tinv = 1.0 / self.prop_Temperature(prop,ids)
-        return 2.753e-14 * (315614 * tinv)**1.5 / ( 1. + (115188 * tinv)**0.407 )**2.242
-
     # Pressure (code units)
     def prop_Pressure(self,prop,ids):
         return (self.prop_Gamma(prop,ids)-1.) * self.prop_Density(prop,ids) * self.prop_InternalEnergy(prop,ids)
 
-    # Recombination rate (rec/s)
+    # Recombination factor of Hydrogen and Helium type B from sx_chem_sgchem.c and SGChem/coolinmo.F (rec*cm^3/s)
+    def prop_AlphaB(self,prop,ids):
+        tinv = 1.0 / self.prop_Temperature(prop,ids)
+        return 2.753e-14 * (315614 * tinv)**1.5 / ( 1. + (115188 * tinv)**0.407 )**2.242
+    def prop_AlphaBHe(self,prop,ids):
+        temp = self.prop_Temperature(prop,ids)
+        logT = np.log10( temp )
+        return 1e-11 * (11.19e0 - 1.676e0 * logT - 0.2852e0 * logT * logT 
+                        + 4.433e-2 * logT * logT * logT) / np.sqrt(temp);
+
+    # Recombination rate of Hydrogen and Helium (rec/s)
     def prop_RecombH(self,prop,ids): 
         density = self.prop_Density(prop,ids) * self.units['density']  # density (g/cm^3)
         numdens = density / ((1. + 4. * self.chem['x0_He']) * apy.const.m_p); # nucleon number density [1/cm^3]
         return self.prop_AlphaB(prop,ids) * numdens
+    def prop_RecombHe(self,prop,ids): 
+        density = self.prop_Density(prop,ids) * self.units['density']  # density (g/cm^3)
+        numdens = density / ((1. + 4. * self.chem['x0_He']) * apy.const.m_p); # nucleon number density [1/cm^3]
+        return self.prop_AlphaBHe(prop,ids) * numdens
 
     # Stromgren radius if a source is in the cell (physical code units)
     def prop_StromgrenRadius(self,prop,ids):

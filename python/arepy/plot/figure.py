@@ -8,9 +8,9 @@ class figure:
     def __init__(self, nrows=1, ncols=1, nfigs=1, **opt):
         
         # initial settings
-        self.nrows = nrows     # number of subplots in the row
-        self.ncols = ncols     # number of subplots in the column
-        self.nfigs = nfigs     # number of figures to plot
+        self.nrows = int(nrows)     # number of subplots in the row
+        self.ncols = int(ncols)     # number of subplots in the column
+        self.nfigs = int(nfigs)     # number of figures to plot
         
         # set options
         self.opt = {
@@ -24,6 +24,7 @@ class figure:
             'nproc':      1,
             'gridspec':   None,                  # use GridSpec axes
             'axesgrid':   None,                  # use AxesGrid
+            'imagegrid':  None,                  # use ImageGrid
             'fileFormat': 'png',                 # file format of the final figure (png,pdf,jpeg,...)
             'projection': None,                  # default value of projection for each subplot
         }
@@ -97,6 +98,7 @@ class figure:
             'dirResults': self.dirResults,
             'gridspec':   self.opt['gridspec'],
             'axesgrid':   self.opt['axesgrid'],
+            'imagegrid':  self.opt['imagegrid'],
         }
         arguments = [[f,optFig,canvas] for f in range(self.nfigs)]
         if self.opt['nproc']>1:

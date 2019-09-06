@@ -135,9 +135,13 @@ class project:
             self.timer = apy.util.timer()
             name = str(name)
             if args:
-                exec("from scripy.%s.plots.%s.%s import *"%(self.name,name,args[0]),globals())
+                nameClass = "scripy.%s.plots.%s.%s"%(self.name,name,args[0])
+                exec("from %s import *"%nameClass,globals())
                 fn = str(args[0])
-                globals()[fn](action,self,name,args[0],*args[1:])
+                if fn in globals():
+                    globals()[fn](action,self,name,args[0],*args[1:])
+                else:
+                    apy.shell.exit("Class '%s' was not found in '%s'! (project.py)"%(fn,nameClass))
             else:
                 exec("from scripy.%s.plots.%s import *"%(self.name,name),globals())
                 globals()[name](action,self,name,name,*args)

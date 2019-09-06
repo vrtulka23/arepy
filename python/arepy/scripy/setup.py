@@ -109,7 +109,8 @@ class setup:
                     call(['ln','-s',self.sim.dirOutput,self.sim.linkOutput])
 
         # Do some other initialization
-        if self.simPart in [None,'other']:
+        if any(i in [None,'other'] for i in self.simPart):
+            apy.shell.printc('- other files')
             self.setupOther()
 
     # additional initialization
