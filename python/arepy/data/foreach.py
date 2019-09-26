@@ -49,6 +49,9 @@ def _foreach(fn,args,nproc,label,append,udata=None):
                 if index==0:
                     emptydata = np.zeros( (nargs,)+part.shape, dtype=part.dtype)
                     data[key] = emptydata
+                #if (data[key][index].shape!=part.shape):
+                #    msg = "Length of partial '%s' data %d differs from collector array %d (foreach.py)"
+                #    apy.shell.exit( msg%(key,len(part),len(data[key][index])) )
                 data[key][index] = part
 
     if udata: # combine cached and new data
@@ -59,6 +62,7 @@ def _foreach(fn,args,nproc,label,append,udata=None):
             if append or isinstance(values[c],str):
                 data[key] = udata[key] + data[key]
             else:
+                print(key,udata[key].shape,data[key].shape)
                 data[key] = np.concatenate((udata[key],data[key]),axis=0)
 
     # return appropriate format

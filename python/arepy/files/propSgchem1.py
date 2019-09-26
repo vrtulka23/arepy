@@ -225,3 +225,10 @@ class propSgchem1:
         gamma = prop['gamma'] if 'gamma' in prop else self.prop_Gamma(prop,ids)        
         mu    = prop['mu']    if 'mu'    in prop else self.prop_Mu(prop,ids)
         return np.sqrt( (gamma * apy.const.k_B * temp) / (mu * apy.const.m_p) ) / self.units['velocity']
+
+    def prop_ToomreQ(self,prop,ids):
+        density = self.prop_Density(prop,ids) * self.units['density']     # density (g/cm^3)
+        csound = self.prop_SoundSpeed(prop,ids) * self.units['velocity']  # cm/s
+        kappa = 1 # ??????
+        toomre = ( csound * kappa ) / ( apy.const.G * np.pi * density )
+        # DEBUG: nned to be implemented

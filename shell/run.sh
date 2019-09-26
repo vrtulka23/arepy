@@ -2,10 +2,11 @@
 #set -e  # exit always if there is some error
  
 DIR_PWD=$(pwd)                          # directory where we run the script
-DIR_AREPY=$(dirname $(dirname $0))          # directory of the arepy module
-DIR_RESULTS=$DIR_AREPY/results              # directory with scripy results
-DIR_PYTHON_AREPY=$DIR_AREPY/python/arepy    # arepy python scripts
-DIR_PYTHON_SCRIPY=$DIR_AREPY/python/scripy  # scripy python scripts
+DIR_AREPY=$(dirname $(dirname $0))      # directory of the arepy module
+DIR_RESULTS=$DIR_AREPY/results          # directory with scripy results
+DIR_PYTHON=$DIR_AREPY/python            # directory with the python scripts
+DIR_PYTHON_AREPY=$DIR_PYTHON/arepy      # arepy python scripts
+DIR_PYTHON_SCRIPY=$DIR_PYTHON/scripy    # scripy python scripts
 
 # Find out a project name and directory
 PROJECT_NAME="none"
@@ -384,7 +385,7 @@ refract()
     
     # replace everything
     echo -e "${YEL}Changing '${strFrom}' to '${strTo}'${NC}"
-    found=$(grep -r --include="$format" "${strFrom}" $DIR_AREPY/python)
+    found=$(grep -r --include="$format" "${strFrom}" $DIR_PYTHON)
     if [[ ! -z $found ]]; then
 	echo -e "${YEL}The following strings will be replaced:${NC}"
 	echo "$found"
@@ -393,7 +394,7 @@ refract()
 	if [[ $REPLY =~ ^[Yy]?$ ]]; then
 	    echo -e "${YEL}processing...${NC}"
 	    sedstring="s/${strFrom}/${strTo}/g"
-	    find ./ -iname "$format" -exec sed -i -e "$sedstring" {} \;
+	    find $DIR_PYTHON/ -iname "$format" -exec sed -i -e "$sedstring" {} \;
 	    echo -e "${YEL}done${NC}"
 	fi
     else
@@ -467,11 +468,13 @@ analyze_snaps()
 }
 archive_outputs()
 {
+    echo_green "Archiving output files..."
     name=$(date +%y%m%d_%H%M)
     name="arch_$name"
     mkdir $name
     mv submit* $name
     mv output/output* $name
+    echo $name
 }
 clean_arepo()
 {

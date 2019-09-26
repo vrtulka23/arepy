@@ -150,6 +150,19 @@ def plotSubplot(ax,opt,canvas,fid=0):
         leg = mpl.legend.Legend(ax, elements, legend['labels'], **legend['nopt'])
         ax.add_artist(leg);
 
+    # Draw a marker legend
+    if canvas['legendM'] is not None:
+        legend = canvas['legendM']
+        if 'fontsize' not in legend['nopt']:
+            legend['nopt']['fontsize'] = fontsize
+        elements = []
+        for i in range(len(legend['markers'])):
+            elements.append( mpl.lines.Line2D([], [], color='None', marker=legend['markers'][i], 
+                                              linestyle='', markersize=5, markerfacecolor='None', 
+                                              markeredgecolor=legend['color'] ) )
+        leg = mpl.legend.Legend(ax, elements, legend['labels'], **legend['nopt'])
+        ax.add_artist(leg);
+
     if canvas['image'] is not None:
         image = canvas['image']
         data = image['data'][fid] if len(np.array(image['data']).shape)>2 else image['data']

@@ -16,7 +16,7 @@ class properties:
             'BoxProjCube','BoxProjCylinder',
             'AngularMomentum','MassCenter',
             'RegionCone','RegionSphere','RegionBox','RegionIds',
-            'VolumeFraction'
+            'FractionVolume','FractionMass'
         ]
 
         if props is not None:

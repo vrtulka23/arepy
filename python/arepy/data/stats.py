@@ -19,6 +19,9 @@ def stats(name, data, show=None):
             stat = " max=%.03e "%np.max(data)
         elif s=='sum':
             stat = " sum=%.03e "%np.sum(data)
+        elif s=='posmin':
+            stat = " posmin=%.03e "%np.min(data[data>0])
+        # ignore NaN data
         elif s=='nanmin':
             stat = " nanmin=%.03e "%np.nanmin(data)
         elif s=='nanmax':

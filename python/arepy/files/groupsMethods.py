@@ -81,7 +81,8 @@ class groupsMethods:
         for item in self.items:
             if 'boxSize' not in item.sim.optImages:
                 apy.shell.exit("No 'boxSize' option for simulation %d (groups.py)"%item.index)
-            item.setTransf(box=item.sim.optImages['boxSize'])
+            region = apy.coord.box(item.sim.optImages['boxSize'])
+            item.setTransf(region=region)
         data = self.foreach(setImage,args=[prop,imgType])
         logNormsProps = ['density','rih','ndens']
         if not normType:
@@ -91,7 +92,7 @@ class groupsMethods:
 
     # Add rendering of the box projection/slice
     def _renderImage(self, axis, prop, imgType, norm=None, normType=None, cmap=None, 
-                     bins=200, cache=False, nproc=None, n_jobs=None, xnorm=None, ynorm=None):
+                     bins=200, cache=False, nproc=None, n_jobs=None, xnorm=None, ynorm=None, aspect='equal'):
         n_jobs = self.opt['n_jobs'] if n_jobs is None else n_jobs
         prop = apy.files.properties(prop)
         proj = self.foreach(renderImage,args=[imgType,prop,bins,n_jobs],
@@ -104,11 +105,11 @@ class groupsMethods:
                 c = cmap[i] if isinstance(cmap,list) else cmap
                 axis[i].setImage(data=data, extent=proj['extent'], 
                                  norm=n, normType=nt, cmap=c, 
-                                 xnorm=xnorm, ynorm=ynorm)
+                                 xnorm=xnorm, ynorm=ynorm, aspect=aspect)
         else:
             axis.setImage(data=proj['data'],extent=proj['extent'], 
                           norm=norm, normType=normType, cmap=cmap, 
-                          xnorm=xnorm, ynorm=ynorm)
+                          xnorm=xnorm, ynorm=ynorm, aspect=aspect)
     def setProjection(self, axis, prop, **opt):
         self._renderImage(axis, prop, 'BoxProjCube', **opt)
     def setSlice(self, axis, prop, **opt):
@@ -259,12 +260,12 @@ def getTransf(item,name,*args):
 # Get sink properties
 def getSinkProps(item,props,select):
     with item.getSink() as sn:
-        pdata = sn.getValues(props,order='FormationOrder')
-    ids = slice(len(pdata[0])) if select is None else np.in1d(pdata['ID'],select)
-    data = {}
-    for p,prop in enumerate(props):
-        data[prop] = pdata[p][ids]
-    return data
+        pdata = sn.getValues(props,order='FormationOrder',dictionary=True)        
+    if select is not None:
+        ids = np.in1d(pdata['ID'],select)
+        for key in list(pdata.keys()):
+            pdata[key] = pdata[key][ids]
+    return pdata
 
 # Get snapshot number
 def addSnapNums(item):
@@ -272,7 +273,7 @@ def addSnapNums(item):
 
 # Get coordinate system vector projections
 def addCoordSystem(item,vector):
-    box = item.transf['crop']['box']
+    box = item.transf['crop']['region'].limits
     size = np.min((box[1::2]-box[::2]) * 0.5 * item.sim.units.conv['length'])
     coord = [[size,0,0],[0,size,0],[0,0,size]]
     if 'align' in item.transf.items:   # show the alignment vector
@@ -305,8 +306,8 @@ def addTimes(item):
 # Add particles
 def addParticles(item,ptype):
     with item.getSnapshot() as sn:
-        center = item.transf['select']['center']
-        radius = item.transf['select']['radius']
+        center = item.transf['select']['region'].center
+        radius = item.transf['select']['region'].radius
         ids = sn.getProperty({'name':'RegionSphere','ptype':ptype,"center":center,'radius':radius})
         if len(ids)>0:
             coord = sn.getProperty({'name':'Coordinates','ptype':ptype},ids=ids)
@@ -324,7 +325,7 @@ def setImage(item,prop,imgType):
     im,px,py = item.sim.getImage(item.snap,prop,imgType)
     if prop=='density':
         im *= item.sim.units.conv['density']
-    box = item.transf['crop']['box']
+    box = item.transf['crop']['region'].limits
     return {
         'im':     im,
         'box':    box,
@@ -344,5 +345,5 @@ def renderImage(item,imgType,prop,bins,n_jobs):
         data['Coordinates'] = np.array(data['Coordinates']) * item.sim.units.conv['length']
     if 'Density' in data:
         data['Density'] = data['Density'][:] * item.sim.units.conv['density']
-    data['extent'] = item.transf['crop']['box'][:4] * item.sim.units.conv['length']
+    data['extent'] = item.transf['crop']['region'].limits[:4] * item.sim.units.conv['length']
     return data

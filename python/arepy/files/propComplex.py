@@ -8,8 +8,8 @@ class propComplex:
     # Various
     ########################
 
+    # Example: {'name':'MassCenter','transf':transf,'ptype':[0,1]}
     def prop_MassCenter(self,prop,ids):
-        # Example: {'name':'MassCenter','transf':transf,'ptype':[0,1]}
         if 'ptype' in prop:
             pts = [prop['ptype']] if np.isscalar(prop['ptype']) else prop['ptype']
         else:
@@ -44,8 +44,8 @@ class propComplex:
         else:
             return [np.nan]*3
 
+    # Example: {'name':'AngularMomentum','center':[0.5,0.5,0.5],'radius':0.5}
     def prop_AngularMomentum(self,prop,ids):
-        # Example: {'name':'AngularMomentum','center':[0.5,0.5,0.5],'radius':0.5}
         region = self.getProperty({
             'name':'RegionSphere','center':prop['center'],'radius':prop['radius'],
             'p': ['Coordinates','Masses','Velocities']
@@ -54,27 +54,13 @@ class propComplex:
         Lx,Ly,Lz = np.sum([ m*(y*vz-z*vy), m*(z*vx-x*vz), m*(x*vy-y*vx) ],axis=1) # total angular momentum
         return [Lx,Ly,Lz]
 
-    def prop_VolumeFraction(self,prop,ids):
-        # Volume fraction of the cells with some properties, relative to the selected region (ids)
-        # Example: {'name':'VolumeFraction','p':'Mass','lt':1}
-        volume = self.getProperty('CellVolume',ids=ids)
-        properties = apy.files.properties(prop['p'])
-        data = self.getProperty(properties,ids=ids)
-        volTot = np.sum(volume)
-        ids = [True]*len(volume)
-        if 'lt' in prop: # larger than
-            ids = ids & (data>prop['lt'])
-        if 'st' in prop: # smaller than
-            ids = ids & (data<prop['st'])
-        return np.sum(volume[ids])/volTot            
-
     #######################
     # Histograms
     #######################
 
+    # Example: bins=np.linspace(1,10,1)
+    #          {'name':'HistSphere','p':'X_HP','center':[0.5,0.5,0.5],'bins':bins}
     def prop_HistSphere(self,prop,ids):
-        # Example: bins=np.linspace(1,10,1)
-        #          {'name':'HistSphere','p':'X_HP','center':[0.5,0.5,0.5],'bins':bins}
         region = self.getProperty({
             'name':'RegionSphere','center':prop['center'],'radius':prop['bins'][-1],'ptype':prop['ptype'],
             'p':['Indexes',{'name':'Masses','ptype':prop['ptype']},{'name':'Radius2','center':prop['center']}]
@@ -88,9 +74,9 @@ class propComplex:
                                         weights=region['Masses']*data[pp['key']],density=False)
             properties.setData(pp['key'], pHist/wHist)
         return properties.getData()
-
+        
+    # Example: {'name':'HistBox','center':[0.5,0.5,0.5],'size':1,'w':'Masses','bins':200}
     def prop_HistBox(self,prop,ids):
-        # Example: {'name':'HistBox','center':[0.5,0.5,0.5],'size':1,'w':'Masses','bins':200}
         box = apy.coord.box(prop['size'],prop['center'])
         bins = [ np.linspace(box[0],box[1],prop['bins']), np.linspace(box[0],box[1],prop['bins']) ]         
         properties = apy.files.properties(['Coordinates',prop['w']])
@@ -139,6 +125,8 @@ class propComplex:
                         reshaped = transf.convert(['align','flip','rotate'],reshaped)
                     properties.setData(pp['key'], reshaped )
         else:
+            apy.shell.warn('No cells in the selected region (propComplex.py)')
+            print(transf['select']['region'].center,transf['select']['region'].radius)
             for pp in properties:
                 properties.setData(pp['key'], None )
         return properties.getData()
@@ -149,35 +137,35 @@ class propComplex:
         return self._propBoxSlice(prop,points,ids)
 
     def prop_BoxLine(self,prop,ids):
-        box = prop['transf']['crop']['box']
+        box = prop['transf']['crop']['region'].limits
         grid = apy.coord.gridLine(prop['bins'], box[:2], yfill=np.mean(box[2:4]), zfill=np.mean(box[4:]))
         return self._propBoxSlice(prop,grid,ids)
 
     def prop_BoxSquareXY(self,prop,ids):
-        box = prop['transf']['crop']['box']
+        box = prop['transf']['crop']['region'].limits
         bins = [prop['bins']]*2 if np.isscalar(prop['bins']) else prop['bins']
         grid = apy.coord.gridSquareXY(bins, box[:4], zfill=np.mean(box[4:]))
         return self._propBoxSlice(prop,grid,ids)
 
     def prop_BoxFieldXY(self,prop,ids):
-        box = prop['transf']['crop']['box']
+        box = prop['transf']['crop']['region'].limits
         grid = apy.coord.gridFieldXY([prop['bins']]*2, box[:4], zfill=np.mean(box[4:]))
         return self._propBoxSlice(prop,grid,ids)
 
     def prop_BoxLineRZ(self,prop,ids):
-        box = prop['transf']['crop']['box']
+        box = prop['transf']['crop']['region'].limits
         extent = [np.mean(box[0:2]), box[1], box[4], box[5]]
         grid = apy.coord.gridLineRZ([prop['bins'],prop['bins']*2], extent, xfill=np.mean(box[:2]), yfill=np.mean(box[2:4]))
         return self._propBoxSlice(prop,grid,ids)
 
     def prop_BoxLineXYZ(self,prop,ids):
-        box = prop['transf']['crop']['box']
+        box = prop['transf']['crop']['region'].limits
         grid = apy.coord.gridLineXYZ([prop['bins']]*3, box, xfill=np.mean(box[:2]),
                                      yfill=np.mean(box[2:4]), zfill=np.mean(box[4:]))
         return self._propBoxSlice(prop,grid,ids)
 
     def prop_BoxHealpix(self,prop,ids):
-        box = prop['transf']['crop']['box']
+        box = prop['transf']['crop']['region'].limits
         grid = apy.coord.gridHealpix(prop['bins'], box)
         return self._propBoxSlice(prop,grid,ids)
 
@@ -185,9 +173,9 @@ class propComplex:
     # Box Projections
     #####################
 
+    # Example: {'name':'BoxProjCube','transf':transf,'w':'Density','bins':200,'n_jobs':1}
     def prop_BoxProjCube(self,prop,ids):
         import scipy.spatial as spatial
-        # Example: {'name':'BoxProjCube','transf':transf,'w':'Density','bins':200,'n_jobs':1}
         if prop['transf'] is None:
             region = self.getProperty(['Indexes','Coordinates','Masses'], ids=ids)
         else:
@@ -211,9 +199,9 @@ class propComplex:
 
         # initiate a grid
         if prop['transf'] is None:  # TODO: this case need to be edited
-            grid = apy.coord.gridCube([prop['bins']]*3, transf['crop']['box'] )
+            grid = apy.coord.gridCube([prop['bins']]*3, transf['crop']['region'].limits )
         else:
-            grid = apy.coord.gridCube([prop['bins']]*3, transf['crop']['box'] )
+            grid = apy.coord.gridCube([prop['bins']]*3, transf['crop']['region'].limits )
 
         pix = grid.getPixFromCoord(region['Coordinates'])
         grid.addAtPix('num',pix,1)
@@ -244,7 +232,7 @@ class propComplex:
             if pp['name']=='Masses':
                 projection = massColumn
             elif pp['name']=='Density':
-                box = transf['crop']['box']
+                box = transf['crop']['region'].limits
                 area = (box[1]-box[0])*(box[3]-box[2])
                 projection = massColumn / area * prop['bins']**2
             else:
@@ -277,13 +265,13 @@ class propComplex:
     def prop_RegionSphere(self,prop,ids):
         prop['name'] = 'SelectSphere'
         if 'transf' in prop:
-            prop['center'] = prop['transf']['select']['center']
-            prop['radius'] = prop['transf']['select']['radius']
+            prop['center'] = prop['transf']['select']['region'].center
+            prop['radius'] = prop['transf']['select']['region'].radius
         return self._propRegion(prop,ids)
     def prop_RegionBox(self,prop,ids):
         prop['name'] = 'SelectBox'
         if 'transf' in prop:
-            prop['box'] = prop['transf']['select']['box']
+            prop['box'] = prop['transf']['select']['region'].limits
         return self._propRegion(prop,ids)
     def prop_RegionIds(self,prop,ids):
         prop['name'] = 'SelectIds'
@@ -321,3 +309,29 @@ class propComplex:
         else:
             return region['Indexes']
         
+    #################################
+    # Calculation on selected regions
+    #################################
+
+    # Volume fraction of the cells with some properties, relative to the selected region (ids)
+    # Example: {'name':'FractionVolume','p':'Mass','lt':1}
+    def prop_FractionVolume(self,prop,ids):
+        volume = self.getProperty('CellVolume',ids=ids)
+        volTot = np.sum(volume)
+        properties = apy.files.properties(prop['p'])
+        data = self.getProperty(properties,ids=ids)
+        ids = np.ones((len(volume)), dtype=bool) #[True]*len(volume)
+        if 'lt' in prop: # larger than
+            ids = (ids & (data>prop['lt']))
+        if 'st' in prop: # smaller than
+            ids = (ids & (data<prop['st']))
+        return np.sum(volume[ids])/volTot            
+
+    # Mass fraction of a species mass relative to the selected region (ids)
+    # Example: {'name':'FractionMass','p':'M_H2'}
+    def prop_FractionMass(self,prop,ids):
+        masses = self.getProperty('Masses',ids=ids)
+        massTot = np.sum(masses)
+        properties = apy.files.properties(prop['p'])
+        data = self.getProperty(properties,ids=ids)
+        return np.sum(data)/massTot

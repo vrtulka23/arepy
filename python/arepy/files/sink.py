@@ -141,19 +141,24 @@ class sink():
             self.order(order,reverse=reverse)
         self.props[prop]['data'] = values
 
-    def getValues(self,props,order=None,reverse=False,limit=None):
+    def getValues(self,props,order=None,reverse=False,limit=None,dictionary=False):
         if order is not None:
             self.order(order,reverse=reverse)
         ids = slice(0,self.nSinks if limit is None else limit)
         def fn(prop):
-            if prop=='SnapTime':
+            if prop=='SnapTime':            # snapshot time
                 return np.full(self.nSinks,self.snapTime)
+            elif prop=='MassCenterRadius':  # radius to the center of the sink mass
+                mass = self.props['Mass']['data']
+                pos = self.props['Pos']['data']
+                massCenter = np.sum(pos.T*mass,axis=1)/np.sum(mass)
+                return np.linalg.norm(pos-massCenter,axis=1)
             else:
                 return self.props[prop]['data'][ids] if prop in self.props else None
-        if isinstance(props,(str,int,float)):
+        if isinstance(props,(str,int,float)) and dictionary==False:
             return fn(props)
         else:
-            return [ fn(value) for value in props ]
+            return { prop:fn(prop) for prop in props }
 
     def getEmpty(self,prop):
         return np.zeros(self.props[prop]['dim'],dtype=self.props[prop]['dtype'])

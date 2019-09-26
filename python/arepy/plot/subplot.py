@@ -22,6 +22,7 @@ class subplot:
             'colorbarNA': None, # colorbar on a new axis
             'legend': None,     # standard plot legend
             'legendLS': None,   # plot linestyle legend
+            'legendM': None,    # plot marker legend
             'other': [],        # other canvas objects
             'axis': {           # axis properties
                 'xpos':   'bottom',     # x axis position
@@ -76,6 +77,13 @@ class subplot:
             nopt['loc'] = nopt['loc'].replace('bottom','lower').replace('top','upper')
         self.canvas['legendLS'] = {'draw':'legendLS','ls':linestyles,'labels':labels,'color':color,'nopt':nopt}
 
+    # Example: sp.setLegendM(['s','^'],['foo','bar'])
+    # Note: frameon=False
+    def setLegendM(self, markers, labels, color='black', **nopt):
+        if 'loc' in nopt and isinstance(nopt['loc'],str):
+            nopt['loc'] = nopt['loc'].replace('bottom','lower').replace('top','upper')
+        self.canvas['legendM'] = {'draw':'legendM','markers':markers,'labels':labels,'color':color,'nopt':nopt}
+
     def setImage(self, data, extent=(0,1,0,1), norm=None, normType='lin', normLim=None, cmap=None, aspect='equal', xnorm=None, ynorm=None):
         xextent = extent[:,:2] if np.ndim(extent)>1 else extent[:2]
         yextent = extent[:,2:] if np.ndim(extent)>1 else extent[2:]
@@ -108,7 +116,7 @@ class subplot:
         self.canvas['other'].append({'draw':'step','twinx':twinx,'x':x,'y':y,'kwargs':opt})
 
     def addScatter(self, *coord, xnorm=None, ynorm=None,**nopt):
-        opt = {'c': 'black'}
+        opt = {} # default 'c':'black' will disable 'facecolor' and 'edgecolor' !!!
         opt.update(nopt)
         self.setNorm(xdata=coord[0],ydata=coord[1],xname=xnorm,yname=ynorm)
         x,y,z = coord if self.opt['projection']=='3d' else (coord[0],coord[1],None)

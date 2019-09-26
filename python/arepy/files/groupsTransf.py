@@ -21,7 +21,7 @@ class groupsTransf:
     # Get trasformation from a sink particle ID
     def transf_SinkID(self,lrad,ids):
         snap = self.item.getSnapshot()
-        sid = ids[self.item.index]
+        sid = self.item.opt[ids] if isinstance(ids,str) else ids[self.item.index]
         data = snap.getProperty({'name':'RegionIds','ptype':5,'ids':sid,'p':[
             {'name':'Coordinates','ptype':5},
             {'name':'Masses','ptype':5}
