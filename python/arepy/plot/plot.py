@@ -110,14 +110,17 @@ def plotSubplot(ax,opt,canvas,fid=0):
 
         # Draw a circle
         if d['draw']=='circle':
-            rad    = d['radius'] if np.isscalar(d['radius']) else d['radius'][fid]
+            rad    = d['radius'] if np.isscalar(d['radius'])    else d['radius'][fid]
             center = d['center'] if np.isscalar(d['center'][0]) else d['center'][fid]
             shape = plt.Circle( center, rad, **d['kwargs'])
             drawax.add_artist(shape)
 
         # Draw a rectangle
         if d['draw']=='rectangle':
-            shape = mpl.patches.Rectangle(d['origin'],d['width'],d['height'],**d['kwargs'])
+            xy     = d['xy']     if np.isscalar(d['xy'][0])  else d['xy'][fid]
+            width  = d['width']  if np.isscalar(d['width'])  else d['width'][fid]
+            height = d['height'] if np.isscalar(d['height']) else d['height'][fid]
+            shape = mpl.patches.Rectangle(xy,width,height,**d['kwargs'])
             drawax.add_patch(shape)
         
     # Draw a standard legend
@@ -186,12 +189,12 @@ def plotSubplot(ax,opt,canvas,fid=0):
         if not im:
             apy.shell.exit('Colorbar cannot find any image')
         cbar = fig.colorbar(im, cax=cax, orientation=orientation)
-        cbar.ax.tick_params(labelsize=fontsize)
         if colorbar['label'] is not None:
             cbar.set_label(colorbar['label'],fontsize=fontsize)
         if colorbar['location']=='top':
             cbar.ax.xaxis.set_label_position('top') 
             cbar.ax.xaxis.set_ticks_position('top') 
+        cbar.ax.tick_params(labelsize=fontsize)
 
     if canvas['colorbarNA'] is not None:
         colorbar = canvas['colorbarNA']
@@ -200,12 +203,12 @@ def plotSubplot(ax,opt,canvas,fid=0):
         if not im:
             apy.shell.exit('Colorbar cannot find any image')
         cbar = fig.colorbar(im, cax=cbar_ax, orientation=orientation)
-        cbar.ax.tick_params(labelsize=fontsize)
         if colorbar['label'] is not None:
             cbar.set_label(colorbar['label'])
         if colorbar['location']=='top':
             cbar.ax.xaxis.set_label_position('top') 
             cbar.ax.xaxis.set_ticks_position('top') 
+        cbar.ax.tick_params(labelsize=fontsize)
 
     if axProp['xpos']=='top': 
         ax.xaxis.tick_top()

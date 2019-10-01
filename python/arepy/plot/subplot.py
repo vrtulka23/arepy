@@ -139,17 +139,18 @@ class subplot:
         self.canvas['other'].append({'draw':'circle','twinx':twinx,'center':center,
                                      'radius':radius,'kwargs':opt})
         
+    def addRectangle(self, xy, width, height, **nopt):
+        opt = {'color':'grey'}
+        opt.update(nopt)
+        self.canvas['other'].append({'draw':'rectangle','twinx':False,'xy':xy,
+                                     'width':width,'height':height,'kwargs':opt})
+
     def addText(self, text, loc, bgcolor=None, twinx=False, padding=None, **nopt):
         opt = {'color':'black', 'fontsize': 8}
         opt.update(nopt)
         self.canvas['other'].append({'draw':'text','twinx':twinx,'loc':loc,'text':text,
                                      'bgcolor':bgcolor,'padding':padding,'kwargs':opt})
 
-    def addRectangle(self, origin, width, height, **nopt):
-        opt = {'color':'grey'}
-        opt.update(nopt)
-        self.canvas['other'].append({'draw':'rectangle','twinx':False,'origin':origin,
-                                     'width':width,'height':height,'kwargs':opt})
 
     # Read dataset and add its objects to the canvas
     def readDataset(self, sim, snaps):

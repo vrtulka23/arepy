@@ -16,15 +16,29 @@ class groupsMethods:
         for item in self.items:
             nopt = {}
             for k,v in opt.items():
-                if k in ['size']:
-                    nopt[k] = v if np.isscalar(v) else v[item.index]
+                if k in ['region']:
+                    nopt[k] = v[item.index] if isinstance(v,list) else v
                 else:
                     nopt[k] = v[item.index] if np.ndim(v)>1 else v
             item.setTransf(**nopt)
 
     # Get transformation parameters from a particle
-    def getTransf(self,name,*args,**opt):
-        return self.foreach(getTransf,args=[name]+list(args),**opt)
+    def getTransf(self,name,args,**opt):        
+        return self.foreach(getTransf,args=[name,args],**opt)
+
+
+    # Use transformation values
+    def useTransf(self,transf,use=True,add={}):
+        opt = {}
+        if isinstance(use,list):
+            for key in use:
+                opt[key] = transf[key]
+        else:
+            for key in list(transf.keys()):
+                opt[key] = transf[key]
+        for key,val in add.items():
+            opt[key] = val
+        self.setTransf(**opt)
 
     ##################################
     # Commont snapshot analysis      #
@@ -252,10 +266,10 @@ class groupsMethods:
 ############################################
 
 # Get a transformation by name
-def getTransf(item,name,*args):
+def getTransf(item,name,args):
     from arepy.files.groupsTransf import groupsTransf
     with groupsTransf(item) as tr:
-        return tr.getTransf(name,*args)
+        return tr.getTransf(name,args)
 
 # Get sink properties
 def getSinkProps(item,props,select):

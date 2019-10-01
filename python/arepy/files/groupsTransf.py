@@ -15,11 +15,11 @@ class groupsTransf:
     def __exit__(self, exc_type, exc_value, traceback):
         return
 
-    def getTransf(self,name,*args):
-        return getattr(self,'transf_'+name)(*args)
+    def getTransf(self,name,args):
+        return getattr(self,'transf_'+name)(**args)
 
     # Get trasformation from a sink particle ID
-    def transf_SinkID(self,lrad,ids):
+    def transf_SinkID(self,lrad,ids,size=None):
         snap = self.item.getSnapshot()
         sid = self.item.opt[ids] if isinstance(ids,str) else ids[self.item.index]
         data = snap.getProperty({'name':'RegionIds','ptype':5,'ids':sid,'p':[
@@ -29,20 +29,24 @@ class groupsTransf:
         if len(data['Masses'])>0:
             center = data['Coordinates'][0]         # select the most massive sink
             L = snap.getProperty({'name':'AngularMomentum','center':center,'radius':lrad})
-            return {
-                'center':center,
+            transf = {
                 'origin':center,
                 'align':L,
             }
+            if size is not None:
+                transf['region'] = apy.coord.box(center,size)
+            else:
+                transf['region'] = apy.coord.sphere(center,lrad)
+            return transf
         else:
             return {
-                'center': [np.nan]*3,
+                'region': apy.coord.sphere([np.nan]*3,lrad),
                 'origin': [np.nan]*3,
                 'align':  [np.nan]*3,
             }
 
     # Get transformation from the position of the main sink particle
-    def transf_MainSink(self,lrad):
+    def transf_MainSink(self,lrad,size=None):
         snap = self.item.getSnapshot()
         data = snap.getProperty([
             {'name':'Coordinates','ptype':5},
@@ -52,14 +56,18 @@ class groupsTransf:
             ids = np.argmax(data['Masses'])
             center = data['Coordinates'][ids]         # select the most massive sink
             L = snap.getProperty({'name':'AngularMomentum','center':center,'radius':lrad})
-            return {
-                'center':center,
+            transf = {
                 'origin':center,
                 'align':L,
             }
+            if size is not None:
+                transf['region'] = apy.coord.box(center,size)
+            else:
+                transf['region'] = apy.coord.sphere(center,lrad)            
+            return transf
         else:
             return {
-                'center': [np.nan]*3,
+                'region': apy.coord.sphere([np.nan]*3,lrad),
                 'origin': [np.nan]*3,
                 'align':  [np.nan]*3,
             }

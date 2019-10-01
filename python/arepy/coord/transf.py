@@ -1,5 +1,6 @@
 import numpy as np
 import arepy as apy
+import copy
 
 # This works in both ways:
 # 1)  tr = transf(data)
@@ -24,12 +25,13 @@ class transf:
 
         # pre select coordinates
         if 'region' in opt:
-            self.addSelection('select', region=opt['region'].getSphere() )
+            region = copy.copy(opt['region']) # copy the object before applying changes
+            self.addSelection('select', region=region.getSphere() )
         # translate coordinates
         if 'origin' in opt:
             self.addTranslation('translate', opt['origin'])
             if 'region' in opt:
-                opt['region'].setTranslation(opt['origin'])
+                region.setTranslation(opt['origin'])
         # align z-axis to some vector
         if 'align' in opt:
             self.addAlignment('align', opt['align'])
@@ -37,13 +39,13 @@ class transf:
         if 'flip' in opt:
             self.addFlip('flip', opt['flip'])
             if 'region' in opt:
-                opt['region'].setFlip(opt['flip'])
+                region.setFlip(opt['flip'])
         # rotate axis by an angle
         if 'rotate' in opt:
             self.addRotation('rotate', opt['rotate'])
         # post-select
         if 'region' in opt:
-            self.addSelection('crop', region=opt['region'])
+            self.addSelection('crop', region=region)
                 
         # print out the settings for debugging
         if show:
@@ -93,7 +95,7 @@ class transf:
             else:
                 coord = self._rotEuler(coord,opt['angles'])
         elif ttype=='selection':     # select coordinates from a region
-            self.items[name]['ids'], coord = opt['region'].selectInner(coord)
+            self.items[name]['ids'], coord = opt['region'].selectCoordinates(coord)
         elif ttype=='flip':
             coord = coord.T[opt['axes']].T
         return coord
@@ -135,6 +137,9 @@ class transf:
     # print out all transformations
     def show(self):
         for key,val in self.items.items():
-            print(key)
+            print('>>>',key)
             for k,v in val.items():
-                print('  ',k, v)
+                if k=='region':
+                    v.show()
+                else:
+                    print(k, v)

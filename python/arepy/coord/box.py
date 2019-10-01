@@ -42,7 +42,7 @@ class box:
         return self.getOuterSphere()
 
     # select coordinates inside of the box
-    def selectInner(self,coord):
+    def selectCoordinates(self,coord):
         x,y,z = coord.T
         ids =  (self.limits[0]<x) & (x<self.limits[1]) &\
                (self.limits[2]<y) & (y<self.limits[3]) &\

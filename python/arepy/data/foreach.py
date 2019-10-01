@@ -1,5 +1,6 @@
 import arepy as apy
 import numpy as np
+import inspect
 '''
 Arguments:
 fn       - function that will be called
@@ -33,6 +34,7 @@ def _foreach(fn,args,nproc,label,append,udata=None):
     pb.close()
 
     # rearrange data from the all results
+    adtypes = (str,apy.coord.box,apy.coord.sphere,apy.coord.cone)
     data = {}
     for index in range(nargs):
         result = results[index]
@@ -40,7 +42,7 @@ def _foreach(fn,args,nproc,label,append,udata=None):
         values = list(result.values()) if isinstance(result,dict) else [result]
         ncols = len(values)
         for c,key in enumerate(keys):
-            if append or isinstance(values[c],str):
+            if append or isinstance(values[c],adtypes):
                 if index==0:
                     data[key] = []
                 data[key].append(values[c])
@@ -62,7 +64,6 @@ def _foreach(fn,args,nproc,label,append,udata=None):
             if append or isinstance(values[c],str):
                 data[key] = udata[key] + data[key]
             else:
-                print(key,udata[key].shape,data[key].shape)
                 data[key] = np.concatenate((udata[key],data[key]),axis=0)
 
     # return appropriate format

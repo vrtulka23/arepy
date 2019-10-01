@@ -36,7 +36,7 @@ class cone:
         return apy.coord.sphere(self.center,self.radius)
 
     # select coordinates within the cone
-    def selectInner(self,coord):
+    def selectCoordinates(self,coord):
         x,y,z = (coord-opt['center']).T
         theta = np.arccos( z / np.sqrt(x*x + y*y + z*z) )   # inclination 
         if (opt['theta']>0):  # around z-axis

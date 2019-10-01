@@ -35,7 +35,7 @@ class sphere:
         return self
 
     # select coordinates within the sphere
-    def selectInner(self,coord):
+    def selectCoordinates(self,coord):
         x,y,z = (coord-self.center).T
         ids = (x*x + y*y + z*z) < self.radius**2
         if np.ndim(coord)>1:
