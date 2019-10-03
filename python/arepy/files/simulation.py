@@ -17,10 +17,7 @@ class simulation:
         return
 
     def __init__(self, dirSim='.', name='', **opt):
-
-        # set initial parameters
-        self.dirSim = dirSim
-        self.name = name
+        # update default options
         self.opt = {
             'fileNameParam': 'param.txt',
             'fileNameConfig': 'Config.sh',
@@ -36,8 +33,13 @@ class simulation:
             'initSinks': False,    # loads sink settings from the config file
             'initImages': False,   # loads image settings from the parameter file
             # other: nproc, dirOutput
+            **opt
         }
-        self.opt.update(opt)
+
+        # set initial parameters
+        self.dirSim = dirSim
+        self.name = name
+
         if 'nproc' not in self.opt:
             self.opt['nproc'] = self.opt['nsub']
 
@@ -238,13 +240,16 @@ class simulation:
         fileName = self.fileSnap(snap)
         nopt = self.optSnap.copy()
         nopt.update(opt)
+        if self.optSinks is not None:
+            nopt['sinkOpt']  = self.optSinks.copy()
+            nopt['sinkOpt']['fileName'] = self.fileSink(snap)
         return apy.files.snap(fileName,**nopt)
 
     def getSink(self,snap,**opt):
-        fileName = self.fileSink(snap)
         nopt = self.optSinks.copy()
         nopt.update(opt)
-        return apy.files.sink(fileName,**nopt)        
+        nopt['fileName'] = self.fileSink(snap)
+        return apy.files.sink(**nopt)        
         
     def getSources(self):
         return apy.files.sources(self.fileSources)

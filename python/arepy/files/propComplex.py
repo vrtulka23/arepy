@@ -255,7 +255,7 @@ class propComplex:
     def _propRegion(self,prop,ids):
         if 'p' in prop:
             # return properties in the selected region
-            properties = apy.files.properties(prop['p'])
+            properties = apy.files.properties(prop['p'],ptype=prop['ptype'])
             del prop['p']
             region = self.getProperty(prop, ids=ids)
             return self.getProperty(properties, ids=region)
@@ -273,13 +273,15 @@ class propComplex:
         if 'transf' in prop:
             prop['box'] = prop['transf']['select']['region'].limits
         return self._propRegion(prop,ids)
-    def prop_RegionIds(self,prop,ids):
+    def prop_RegionIds(self,prop,ids):             # ids = ParticleIDs    (standard snapshots)
         prop['name'] = 'SelectIds'
+        return self._propRegion(prop,ids)
+    def prop_RegionFormationOrder(self,prop,ids):  # ids = FormationOrder (sink snapshots)
+        prop['name'] = 'SelectFormationOrder'
         return self._propRegion(prop,ids)
     def prop_RegionPoints(self,prop,ids):
         prop['name'] = 'SelectPoints'
         return self._propRegion(prop,ids)
-            
     def prop_RegionCone(self,prop,ids):
         # select a spherical region
         transf = prop['transf']
@@ -334,4 +336,8 @@ class propComplex:
         massTot = np.sum(masses)
         properties = apy.files.properties(prop['p'])
         data = self.getProperty(properties,ids=ids)
-        return np.sum(data)/massTot
+        for prop in properties:
+            key = prop['key']
+            values = np.sum(data[key])/massTot
+            properties.setData(key,values)
+        return properties.getData()

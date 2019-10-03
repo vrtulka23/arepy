@@ -8,14 +8,7 @@ import h5py as hp
 # For example:
 #
 # def prop_NEW(self,prop,ids):
-#     return self.getDataset('NEW',prop['ptype'],ids)
-#
-#
-# More complicated properties (COMPLICATED) should always use the simple one
-# For example:
-#
-# def prop_COMPLICATED(self,prop,ids):
-#     return self.prop_NEW(prop,ids) * 2
+#     return self.getSnapData('NEW',prop['ptype'],ids)
 #
 ##################################
 
@@ -26,37 +19,37 @@ class propSimple:
     ########################
 
     def prop_ParticleIDs(self,prop,ids):
-        return self.getDataset('ParticleIDs',prop['ptype'],ids)
+        return self.getSnapData('ParticleIDs',prop['ptype'],ids)
     def prop_Masses(self,prop,ids):
-        return self.getDataset('Masses',prop['ptype'],ids)
+        return self.getSnapData('Masses',prop['ptype'],ids)
     def prop_Density(self,prop,ids):
-        return self.getDataset('Density',prop['ptype'],ids)
+        return self.getSnapData('Density',prop['ptype'],ids)
     def prop_InternalEnergy(self,prop,ids):
-        return self.getDataset('InternalEnergy',prop['ptype'],ids)
+        return self.getSnapData('InternalEnergy',prop['ptype'],ids)
     def prop_PhotonRates(self,prop,ids):
-        return self.getDataset('PhotonRates',prop['ptype'],ids)
+        return self.getSnapData('PhotonRates',prop['ptype'],ids)
     def prop_Coppied(self,prop,ids):
-        return self.getDataset('Coppied',prop['ptype'],ids)
+        return self.getSnapData('Coppied',prop['ptype'],ids)
 
     # position vector components
     def prop_Coordinates(self,prop,ids):
-        return self.getDataset('Coordinates',prop['ptype'],ids)
+        return self.getSnapData('Coordinates',prop['ptype'],ids)
     def prop_PosX(self,prop,ids):
-        return self.getDataset('Coordinates',prop['ptype'],ids,0)
+        return self.getSnapData('Coordinates',prop['ptype'],ids,0)
     def prop_PosY(self,prop,ids):
-        return self.getDataset('Coordinates',prop['ptype'],ids,1)
+        return self.getSnapData('Coordinates',prop['ptype'],ids,1)
     def prop_PosZ(self,prop,ids):
-        return self.getDataset('Coordinates',prop['ptype'],ids,2)
+        return self.getSnapData('Coordinates',prop['ptype'],ids,2)
 
     # velocity vector components
     def prop_Velocities(self,prop,ids):
-        return self.getDataset('Velocities',prop['ptype'],ids)
+        return self.getSnapData('Velocities',prop['ptype'],ids)
     def prop_VelX(self,prop,ids):
-        return self.getDataset('Velocities',prop['ptype'],ids,0)
+        return self.getSnapData('Velocities',prop['ptype'],ids,0)
     def prop_VelY(self,prop,ids):
-        return self.getDataset('Velocities',prop['ptype'],ids,1)
+        return self.getSnapData('Velocities',prop['ptype'],ids,1)
     def prop_VelZ(self,prop,ids):
-        return self.getDataset('Velocities',prop['ptype'],ids,2)
+        return self.getSnapData('Velocities',prop['ptype'],ids,2)
 
     ##########################
     # Indexes and counters
@@ -114,7 +107,7 @@ class propSimple:
     def prop_SelectIds(self,prop,ids):
         idsSelect = np.in1d(self.prop_ParticleIDs(prop,ids),prop['ids'])
         ids = np.where(ids, idsSelect, False)
-        return self.getProperty(prop['p'],ids) if 'p' in prop else ids
+        return self.getProperty(prop['p'],ids=ids,ptype=prop['ptype']) if 'p' in prop else ids
 
     # radial region
     def prop_SelectSphere(self,prop,ids): 
@@ -123,7 +116,7 @@ class propSimple:
         r2 = coord[:,0]**2 + coord[:,1]**2 + coord[:,2]**2
         idsSelect = r2 < prop['radius']**2
         ids = np.where(ids, idsSelect, False)
-        return self.getProperty(prop['p'],ids) if 'p' in prop else ids
+        return self.getProperty(prop['p'],ids=ids,ptype=prop['ptype']) if 'p' in prop else ids
 
     # box region
     def prop_SelectBox(self,prop,ids):    
@@ -134,7 +127,7 @@ class propSimple:
                     (box[2]<coord[:,1]) & (coord[:,1]<box[3]) & \
                     (box[4]<coord[:,2]) & (coord[:,2]<box[5])
         ids = np.where(ids, idsSelect, False)
-        return self.getProperty(prop['p'],ids) if 'p' in prop else ids
+        return self.getProperty(prop['p'],ids=ids,ptype=prop['ptype']) if 'p' in prop else ids
 
     # distances in code units
     def prop_SelectPoints(self,prop,ids):
@@ -145,21 +138,21 @@ class propSimple:
         dist,ids = kdt.query(grid)
         data = [ dist, ids ]
         #DEBUG: this must be still implemented for multiple snap files!!!!!
-        return self.getProperty(prop['p'],ids) if 'p' in prop else ids
+        return self.getProperty(prop['p'],ids=ids,ptype=prop['ptype']) if 'p' in prop else ids
 
     ############################
     # Statistic functions
     ############################
 
     def prop_StatMinimum(self,prop,ids):
-        properties = apy.files.properties(prop['p'])
+        properties = apy.files.properties(prop['p'],ptype=prop['ptype'])
         data = self.getProperty(properties,ids,dictionary=True)
         for pp in properties:
             properties.setData( pp['key'], np.min(data[pp['key']]) )
         return properties.getData()
 
     def prop_StatMinPos(self,prop,ids):
-        properties = apy.files.properties(prop['p'])
+        properties = apy.files.properties(prop['p'],ptype=prop['ptype'])
         data = self.getProperty(properties,ids,dictionary=True)
         for pp in properties:
             ppdata = data[pp['key']]
@@ -168,21 +161,21 @@ class propSimple:
         return properties.getData()
 
     def prop_StatMaximum(self,prop,ids):
-        properties = apy.files.properties(prop['p'])
+        properties = apy.files.properties(prop['p'],ptype=prop['ptype'])
         data = self.getProperty(properties,ids,dictionary=True)
         for pp in properties:
             properties.setData( pp['key'], np.max(data[pp['key']]) )
         return properties.getData()
         
     def prop_StatMean(self,prop,ids):
-        properties = apy.files.properties(prop['p'])
+        properties = apy.files.properties(prop['p'],ptype=prop['ptype'])
         data = self.getProperty(properties,ids,dictionary=True)
         for pp in properties:
             properties.setData( pp['key'], np.mean(data[pp['key']]) )
         return properties.getData()
 
     def prop_StatSum(self,prop,ids):
-        properties = apy.files.properties(prop['p'])
+        properties = apy.files.properties(prop['p'],ptype=prop['ptype'])
         data = self.getProperty(properties,ids,dictionary=True)
         for pp in properties:
             properties.setData( pp['key'], np.sum(data[pp['key']]) )
@@ -193,27 +186,27 @@ class propSimple:
     ############################
 
     def prop_MathPlus(self,prop,ids):
-        properties = apy.files.properties([prop['x'],prop['y']])
+        properties = apy.files.properties([prop['x'],prop['y']],ptype=prop['ptype'])
         data = self.getProperty(properties,ids)
         return data[properties[0]['key']] + data[properties[1]['key']]        
 
     def prop_MathMinus(self,prop,ids):
-        properties = apy.files.properties([prop['x'],prop['y']])
+        properties = apy.files.properties([prop['x'],prop['y']],ptype=prop['ptype'])
         data = self.getProperty(properties,ids)
         return data[properties[0]['key']] - data[properties[1]['key']]        
 
     def prop_MathMultiply(self,prop,ids):
-        properties = apy.files.properties([prop['x'],prop['y']])
+        properties = apy.files.properties([prop['x'],prop['y']],ptype=prop['ptype'])
         data = self.getProperty(properties,ids)
         return data[properties[0]['key']] * data[properties[1]['key']]        
 
     def prop_MathDivide(self,prop,ids):
-        properties = apy.files.properties([prop['x'],prop['y']])
+        properties = apy.files.properties([prop['x'],prop['y']],ptype=prop['ptype'])
         data = self.getProperty(properties,ids)
         return data[properties[0]['key']] / data[properties[1]['key']]        
 
     def prop_MathModulo(self,prop,ids):
-        properties = apy.files.properties([prop['x'],prop['y']])
+        properties = apy.files.properties([prop['x'],prop['y']],ptype=prop['ptype'])
         data = self.getProperty(properties,ids)
         return data[properties[0]['key']] % data[properties[1]['key']]        
 
@@ -224,7 +217,7 @@ class propSimple:
     # create histogram from a property in this sub-file
     # Example: {'name':'Hist1D','bins':np.linspace(1,10,1),'x':'PosX','w':'Masses'}
     def prop_Hist1D(self,prop,ids):
-        properties = apy.files.properties(prop['x'])
+        properties = apy.files.properties(prop['x'],ptype=prop['ptype'])
         if 'w' in prop:
             properties.add(prop['w'])
         data = self.getProperty(properties,ids,dictionary=True)
@@ -237,7 +230,7 @@ class propSimple:
     # Example: bins=[np.linspace(1,10,1),np.linspace(2,12,2)]
     #          {'name':'Hist2D','x':'PosX','y':'PosY','bins':bins,'w':'Masses'}
     def prop_Hist2D(self,prop,ids):
-        properties = apy.files.properties([prop['x'],prop['y']])
+        properties = apy.files.properties([prop['x'],prop['y']],ptype=prop['ptype'])
         if 'w' in prop:
             properties.add(prop['w'])
         data = self.getProperty(properties,ids,dictionary=True)

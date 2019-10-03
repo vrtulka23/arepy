@@ -75,9 +75,10 @@ class sink():
             self.props3D = []
             for prop in self.propsOrder:
                 if self.props[prop]['dim']>1:
-                    self.props[prop]['data'] = np.zeros((self.nSinks,self.props[prop]['dim']))
+                    shape = (self.nSinks,self.props[prop]['dim'])
                 else: 
-                    self.props[prop]['data'] = np.zeros(self.nSinks)
+                    shape = self.nSinks
+                self.props[prop]['data'] = np.zeros(shape,dtype=self.props[prop]['dtype'])
             for i in np.arange(self.nSinks):            
                 for prop in self.propsOrder:
                     dim = self.props[prop]['dim']

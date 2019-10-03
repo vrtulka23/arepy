@@ -3,21 +3,12 @@ import numpy as np
 
 # Initialize a property list with a correct format
 class properties:
-    def __init__(self,props=None):
+    def __init__(self,props=None,ptype=None):
         self.items = []         # list of items
         self.data = {}          # dictionary for data collecting
         self.size = 0           # number of items
         self.current = 0        # iterator pointer
-
-        self.propsComplex = [
-            'HistSphere','HistBox',
-            'BoxPoints','BoxSquareXY','BoxFieldXY','BoxHealpix',
-            'BoxLine','BoxLineRZ','BoxLineXYZ',
-            'BoxProjCube','BoxProjCylinder',
-            'AngularMomentum','MassCenter',
-            'RegionCone','RegionSphere','RegionBox','RegionIds',
-            'FractionVolume','FractionMass'
-        ]
+        self.ptype = 0 if ptype is None else ptype
 
         if props is not None:
             if isinstance(props,properties):  # simpy copy the item list
@@ -34,11 +25,13 @@ class properties:
                 item = {'name':item}
             if 'key' not in item:             # add key if missing
                 item['key'] = item['name']
-            if 'ptype' not in item:           # add particle type if missing
-                item['ptype'] = 0
+            if 'ptype' not in item:           # add default particle type if missing
+                item['ptype'] = self.ptype
 
             # decide whether the property is simple or complex
-            item['complex'] = True if item['name'] in self.propsComplex else False
+            item['complex'] = False
+            if hasattr(apy.files.propComplex,'prop_'+item['name']):
+                item['complex'] = True 
 
             self.items.append(item)
             self.size += 1

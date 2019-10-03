@@ -19,7 +19,3 @@ from arepy.files.groups import *        # Group/s of Arepo snapshots
 from arepy.files.ics import *           # Create ICs from the grid or from the snapshot
 from arepy.files.cut import *           # Create a time/space cut from a simulation snapshot 
 
-# Default settings
-default = {
-    'snap':{'ftype':'sgchem1','nsub':1,'nproc':1},
-}

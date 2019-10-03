@@ -11,6 +11,7 @@ from arepy.files.propClass import *     # Parent class for simple properties
 from arepy.files.propSimple import *    # Simple properties
 from arepy.files.propSgchem1 import *   # SGChem specific properties
 from arepy.files.propComplex import *   # Complex properties
+from arepy.files.propSink import *      # Properties from a sink file
 
 # Property glues
 from arepy.files.glueClass import *     # Parent class for property glues
@@ -23,19 +24,21 @@ class snap(propComplex):
     def __exit__(self, type, value, tb):
         return
     def __init__(self,fileName,**opt):
-        default = apy.files.default['snap']
-        self.fileName = fileName
-
         # set options
         self.opt = {
             'fmode':    'r',
-            'nsub':     default['nsub'],
-            'nproc':    default['nproc'],
+            'nsub':     1,
+            'nproc':    1,
             'initChem': 'sgchem1',
-            'comoving': False
+            'comoving': False,
+            'snapFile': fileName,
+            'sinkOpt':  None,
             # other: nproc, nproc_ckdt
+            **opt
         }
-        self.opt.update(opt)
+
+        # initial parameters
+        self.fileName = fileName
             
         # initialize chemistry
         self.initChem(self.opt['initChem'])
@@ -151,9 +154,9 @@ class snap(propComplex):
 
     # This function switches between complex and simple properties
     # Example: sn.getProperty(['Masses',{'name':'Minimum','p':'PosX'}])
-    def getProperty(self,props,ids=None,dictionary=False):
+    def getProperty(self,props,ids=None,ptype=None,dictionary=False):
         # Convert to array if needed
-        aProps = apy.files.properties(props)
+        aProps = apy.files.properties(props,ptype=ptype)
 
         # Select and load simple properties
         sProps = aProps.getSimple()
@@ -163,8 +166,13 @@ class snap(propComplex):
                 apy.shell.exit('Property gluing is not implemented')
             else: 
                 # Get property from a single file
-                arguments = [ 0,self.sfileName[0],self.opt['fmode'],self.optChem,self.opt['comoving'],sProps,ids ]
-                data = getProperty(*arguments)
+                data = getProperty({
+                    'sinkOpt':  self.opt['sinkOpt'],
+                    'snapFile': self.sfileName[0],
+                    'snapMode': self.opt['fmode'],
+                    'comoving': self.opt['comoving'],
+                    'chem':     self.optChem,
+                },sProps,ids)
         else:
             data = {}
         
@@ -182,61 +190,16 @@ class snap(propComplex):
 
 # This function calculates (simple) properties
 # It needs to be a global function if we want to use it on parallel cores
-def getProperty(fnum,fileName,fmode,optChem,comoving,properties,ids=None):
+def getProperty(opt,properties,ids=None):
 
     # Construct a property class according to the chemistry type
-    if optChem['type']=='sgchem1':
-        propList = type("propClass", (propSgchem1, propSimple, propClass), {})
-    
+    classes = (propSimple, propClass)
+    if opt['chem']['type']=='sgchem1':
+        classes = (propSgchem1,) + classes
+    if opt['sinkOpt'] is not None:
+        classes = (propSink,) + classes
+    propList = type("propClass", classes, {})
+        
     # Calculate properties and return values
-    with propList(fileName,fmode,fnum,optChem,comoving) as sp:
+    with propList(opt) as sp:
         return sp.getProperty(properties,ids,dictionary=True)
-
-'''
-    # This function collects and reorders (simple) properties calculated on different cores
-    def getPropertySimple(self,properties,ids=None,dictionary=False):
-        if self.opt['nsub']>1: # Get property from multiple files
-            # Prepare arguments
-            if ids is None: ids = [None for s in range(self.opt['nsub'])]
-            arguments = []
-            for s in range(self.opt['nsub']):
-                arguments.append([s,self.sfileName[s],self.opt['fmode'],self.optChem,
-                                  self.opt['comoving'],properties,ids[s]])
-            # Use more cores for calculations if possible
-            if self.opt['nproc']>1:
-                allData = apy.util.parallelPool(getProperty,arguments,nproc=self.opt['nproc'])
-            else:
-                allData = [ getProperty(*arguments[s]) for s in range(self.opt['nsub']) ]
-            # Combine data from all files
-            data = []
-            for pid,prop in enumerate(properties):
-                subData = []
-                for allDataSub in allData:
-                    if allDataSub[pid] is None:
-                        apy.shell.exit("Query of roperty '%s' returns 'None' value (snapSimple.py)"%prop['name'])
-                    elif len(allDataSub[pid])>0:
-                        subData.append( allDataSub[pid] )
-                data.append( subData )
-            # Arrange data to appropriate shapes
-            for pid,prop in enumerate(properties):
-                if prop['name'] in getattr(apy.files,self.optChem['type']).const.dsets:
-                    data[pid] = np.vstack(data[pid])
-                elif prop['name'] in apy.const.dsets:
-                    data[pid] = np.vstack(data[pid])
-                elif prop['name'] in ['RegionPoints']:
-                    prop0 = [ s[0] for s in data[pid] ]
-                    prop1 = [ s[1] for s in data[pid] ]
-                    minids = np.argmin(prop1,axis=0) # find the results with the smallest distance
-                    apy.shell.exit("TODO: 'RegionPoints' for multiple snap files needs to be finished (snapSimple.py)")
-                    data[pid] = [ prop0, prop1 ]
-                    # TODO: select only particles with the lowest distance
-                elif not prop['complex']: # stack only for simple properties, return raw for complex properties
-                    data[pid] = np.hstack(data[pid])
-        else: # Get property from a single file
-            arguments = [ 0,self.sfileName[0],self.opt['fmode'],self.optChem,self.opt['comoving'],properties,ids ]
-            data = getProperty(*arguments)
-        for pid,prop in enumerate(properties):
-            if data[pid] is None:
-                apy.shell.exit("Property '%s' could not be calculated (snapSimple.py)"%prop['name'])
-        return data
-'''

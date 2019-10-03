@@ -9,48 +9,48 @@ class propSgchem1:
     ###############################
 
     def prop_ChemicalAbundances(self,prop,ids):
-        return self.getDataset('ChemicalAbundances',prop['ptype'],ids)
+        return self.getSnapData('ChemicalAbundances',prop['ptype'],ids)
     def prop_x_H2(self,prop,ids):
-        return self.getDataset('ChemicalAbundances',prop['ptype'],ids,0)
+        return self.getSnapData('ChemicalAbundances',prop['ptype'],ids,0)
     def prop_x_HP(self,prop,ids):
-        return self.getDataset('ChemicalAbundances',prop['ptype'],ids,1)
+        return self.getSnapData('ChemicalAbundances',prop['ptype'],ids,1)
     def prop_x_DP(self,prop,ids):
-        return self.getDataset('ChemicalAbundances',prop['ptype'],ids,2)
+        return self.getSnapData('ChemicalAbundances',prop['ptype'],ids,2)
     def prop_x_HD(self,prop,ids):
-        return self.getDataset('ChemicalAbundances',prop['ptype'],ids,3)
+        return self.getSnapData('ChemicalAbundances',prop['ptype'],ids,3)
     def prop_x_HEP(self,prop,ids):
-        return self.getDataset('ChemicalAbundances',prop['ptype'],ids,4)
+        return self.getSnapData('ChemicalAbundances',prop['ptype'],ids,4)
     def prop_x_HEPP(self,prop,ids):
-        return self.getDataset('ChemicalAbundances',prop['ptype'],ids,5)
+        return self.getSnapData('ChemicalAbundances',prop['ptype'],ids,5)
     def prop_x_H(self,prop,ids):
-        return self.chem['x0_H']  - 2*self.prop_x_H2(prop,ids) - self.prop_x_HP(prop,ids) - self.prop_x_HD(prop,ids)
+        return self.opt['chem']['x0_H']  - 2*self.prop_x_H2(prop,ids) - self.prop_x_HP(prop,ids) - self.prop_x_HD(prop,ids)
     def prop_x_HE(self,prop,ids):
-        return self.chem['x0_He'] - self.prop_x_HEP(prop,ids)  - self.prop_x_HEPP(prop,ids)
+        return self.opt['chem']['x0_He'] - self.prop_x_HEP(prop,ids)  - self.prop_x_HEPP(prop,ids)
     def prop_x_D(self,prop,ids):
-        return self.chem['x0_D']  - self.prop_x_DP(prop,ids)   - self.prop_x_HD(prop,ids)
+        return self.opt['chem']['x0_D']  - self.prop_x_DP(prop,ids)   - self.prop_x_HD(prop,ids)
 
     ###############################
     # Mass fractions of species in the cell
     ###############################
 
     def prop_X_H2(self,prop,ids):
-        return self.chem['X_H'] * self.prop_x_H2(prop,ids) * 2
+        return self.opt['chem']['X_H'] * self.prop_x_H2(prop,ids) * 2
     def prop_X_HP(self,prop,ids):
-        return self.chem['X_H'] * self.prop_x_HP(prop,ids) * 1
+        return self.opt['chem']['X_H'] * self.prop_x_HP(prop,ids) * 1
     def prop_X_DP(self,prop,ids):
-        return self.chem['X_H'] * self.prop_x_DP(prop,ids) * 2
+        return self.opt['chem']['X_H'] * self.prop_x_DP(prop,ids) * 2
     def prop_X_HD(self,prop,ids):
-        return self.chem['X_H'] * self.prop_x_HD(prop,ids) * 3
+        return self.opt['chem']['X_H'] * self.prop_x_HD(prop,ids) * 3
     def prop_X_HEP(self,prop,ids):
-        return self.chem['X_H'] * self.prop_x_HEP(prop,ids) * 4
+        return self.opt['chem']['X_H'] * self.prop_x_HEP(prop,ids) * 4
     def prop_X_HEPP(self,prop,ids):
-        return self.chem['X_H'] * self.prop_x_HEPP(prop,ids) * 4
+        return self.opt['chem']['X_H'] * self.prop_x_HEPP(prop,ids) * 4
     def prop_X_H(self,prop,ids):
-        return self.chem['X_H'] * self.prop_x_H(prop,ids) * 1
+        return self.opt['chem']['X_H'] * self.prop_x_H(prop,ids) * 1
     def prop_X_HE(self,prop,ids):
-        return self.chem['X_H'] * self.prop_x_HE(prop,ids) * 4
+        return self.opt['chem']['X_H'] * self.prop_x_HE(prop,ids) * 4
     def prop_X_D(self,prop,ids):
-        return self.chem['X_H'] * self.prop_x_D(prop,ids) * 2
+        return self.opt['chem']['X_H'] * self.prop_x_D(prop,ids) * 2
         
     ###############################
     # Total mass of species in the cell (code units)
@@ -80,46 +80,46 @@ class propSgchem1:
     ###############################
 
     def prop_N_H2(self,prop,ids):
-        return self.chem['X_H'] * self.prop_x_H2(prop,ids) *   self.prop_Masses(prop,ids) / apy.const.m_p
+        return self.opt['chem']['X_H'] * self.prop_x_H2(prop,ids) *   self.prop_Masses(prop,ids) / apy.const.m_p
     def prop_N_HP(self,prop,ids):
-        return self.chem['X_H'] * self.prop_x_HP(prop,ids) *   self.prop_Masses(prop,ids) / apy.const.m_p
+        return self.opt['chem']['X_H'] * self.prop_x_HP(prop,ids) *   self.prop_Masses(prop,ids) / apy.const.m_p
     def prop_N_DP(self,prop,ids):
-        return self.chem['X_H'] * self.prop_x_DP(prop,ids) *   self.prop_Masses(prop,ids) / apy.const.m_p
+        return self.opt['chem']['X_H'] * self.prop_x_DP(prop,ids) *   self.prop_Masses(prop,ids) / apy.const.m_p
     def prop_N_HD(self,prop,ids):
-        return self.chem['X_H'] * self.prop_x_HD(prop,ids) *   self.prop_Masses(prop,ids) / apy.const.m_p
+        return self.opt['chem']['X_H'] * self.prop_x_HD(prop,ids) *   self.prop_Masses(prop,ids) / apy.const.m_p
     def prop_N_HEP(self,prop,ids):
-        return self.chem['X_H'] * self.prop_x_HEP(prop,ids) *  self.prop_Masses(prop,ids) / apy.const.m_p
+        return self.opt['chem']['X_H'] * self.prop_x_HEP(prop,ids) *  self.prop_Masses(prop,ids) / apy.const.m_p
     def prop_N_HEPP(self,prop,ids):
-        return self.chem['X_H'] * self.prop_x_HEPP(prop,ids) * self.prop_Masses(prop,ids) / apy.const.m_p
+        return self.opt['chem']['X_H'] * self.prop_x_HEPP(prop,ids) * self.prop_Masses(prop,ids) / apy.const.m_p
     def prop_N_H(self,prop,ids):
-        return self.chem['X_H'] * self.prop_x_H(prop,ids) *    self.prop_Masses(prop,ids) / apy.const.m_p
+        return self.opt['chem']['X_H'] * self.prop_x_H(prop,ids) *    self.prop_Masses(prop,ids) / apy.const.m_p
     def prop_N_HE(self,prop,ids):
-        return self.chem['X_H'] * self.prop_x_HE(prop,ids) *   self.prop_Masses(prop,ids) / apy.const.m_p
+        return self.opt['chem']['X_H'] * self.prop_x_HE(prop,ids) *   self.prop_Masses(prop,ids) / apy.const.m_p
     def prop_N_D(self,prop,ids):
-        return self.chem['X_H'] * self.prop_x_D(prop,ids) *    self.prop_Masses(prop,ids) / apy.const.m_p
+        return self.opt['chem']['X_H'] * self.prop_x_D(prop,ids) *    self.prop_Masses(prop,ids) / apy.const.m_p
 
     ###############################
     # Photon ionization/heating rates 
     ###############################
  
     def prop_PhotonRates(self,prop,ids):         
-        return self.getDataset('PhotonRates',prop['ptype'],ids)
+        return self.getSnapData('PhotonRates',prop['ptype'],ids)
     def prop_RIH(self,prop,ids):         
-        return self.getDataset('PhotonRates',prop['ptype'],ids,0)
+        return self.getSnapData('PhotonRates',prop['ptype'],ids,0)
     def prop_HRIH(self,prop,ids):         
-        return self.getDataset('PhotonRates',prop['ptype'],ids,1)
+        return self.getSnapData('PhotonRates',prop['ptype'],ids,1)
     def prop_RIH2(self,prop,ids):         
-        return self.getDataset('PhotonRates',prop['ptype'],ids,2)
+        return self.getSnapData('PhotonRates',prop['ptype'],ids,2)
     def prop_HRIH2(self,prop,ids):         
-        return self.getDataset('PhotonRates',prop['ptype'],ids,3)
+        return self.getSnapData('PhotonRates',prop['ptype'],ids,3)
     def prop_RDH2(self,prop,ids):         
-        return self.getDataset('PhotonRates',prop['ptype'],ids,4)
+        return self.getSnapData('PhotonRates',prop['ptype'],ids,4)
     def prop_HRD(self,prop,ids):         
-        return self.getDataset('PhotonRates',prop['ptype'],ids,5)
+        return self.getSnapData('PhotonRates',prop['ptype'],ids,5)
     def prop_RIHE(self,prop,ids):         
-        return self.getDataset('PhotonRates',prop['ptype'],ids,6)
+        return self.getSnapData('PhotonRates',prop['ptype'],ids,6)
     def prop_HRIHE(self,prop,ids):         
-        return self.getDataset('PhotonRates',prop['ptype'],ids,7)
+        return self.getSnapData('PhotonRates',prop['ptype'],ids,7)
 
 
     ###############################
@@ -127,17 +127,17 @@ class propSgchem1:
     ###############################
 
     def prop_PhotonFlux(self,prop,ids):         
-        return self.getDataset('PhotonFlux',prop['ptype'],ids) * self.units['flux']
+        return self.getSnapData('PhotonFlux',prop['ptype'],ids) * self.units['flux']
     def prop_F056(self,prop,ids):
-        return self.getDataset('PhotonFlux',prop['ptype'],ids,0) * self.units['flux']
+        return self.getSnapData('PhotonFlux',prop['ptype'],ids,0) * self.units['flux']
     def prop_F112(self,prop,ids):
-        return self.getDataset('PhotonFlux',prop['ptype'],ids,1) * self.units['flux']
+        return self.getSnapData('PhotonFlux',prop['ptype'],ids,1) * self.units['flux']
     def prop_F136(self,prop,ids):
-        return self.getDataset('PhotonFlux',prop['ptype'],ids,2) * self.units['flux']
+        return self.getSnapData('PhotonFlux',prop['ptype'],ids,2) * self.units['flux']
     def prop_F152(self,prop,ids):
-        return self.getDataset('PhotonFlux',prop['ptype'],ids,3) * self.units['flux']
+        return self.getSnapData('PhotonFlux',prop['ptype'],ids,3) * self.units['flux']
     def prop_F246(self,prop,ids):
-        return self.getDataset('PhotonFlux',prop['ptype'],ids,4) * self.units['flux']
+        return self.getSnapData('PhotonFlux',prop['ptype'],ids,4) * self.units['flux']
     def prop_FTOT(self,prop,ids):
         return np.sum(self.prop_PhotonFlux(prop,ids),axis=1)
 
@@ -149,7 +149,7 @@ class propSgchem1:
     # Polytropic index
     def prop_Gamma(self,prop,ids):
         if self.hasDataset('Gamma',prop['ptype']):
-            return self.getDataset('Gamma',prop['ptype'],ids)
+            return self.getSnapData('Gamma',prop['ptype'],ids)
         else:
             return apy.const.gamma    
     
@@ -163,16 +163,16 @@ class propSgchem1:
         # The following calculation was taken from voronoi_makeimage.c line 2240 
         # and gives the same temperatures as are shown on the Arepo images
         dens = self.prop_Density(prop,ids)
-        yn = dens * self.units['density'] / ((1.0 + 4.0 * self.chem['x0_He']) * apy.const.m_p)
+        yn = dens * self.units['density'] / ((1.0 + 4.0 * self.opt['chem']['x0_He']) * apy.const.m_p)
         en = self.prop_InternalEnergy(prop,ids) * dens * self.units['energy'] / self.units['volume']
-        yntot = (1.0 + self.chem['x0_He'] - self.prop_x_H2(prop,ids) + self.prop_x_HP(prop,ids) + \
+        yntot = (1.0 + self.opt['chem']['x0_He'] - self.prop_x_H2(prop,ids) + self.prop_x_HP(prop,ids) + \
                  self.prop_x_HEP(prop,ids) + self.prop_x_HEPP(prop,ids) ) * yn
         return (self.prop_Gamma(prop,ids) - 1.0) * en / (yntot * apy.const.k_B) 
 
     # Mean molecular weight
     def prop_Mu(self,prop,ids):
-        mu = ( self.chem['x0_H'] + 2.*self.chem['x0_D'] + 4.*self.chem['x0_He'] ) / \
-             ( self.chem['x0_H'] + self.chem['x0_D'] + self.chem['x0_He'] + \
+        mu = ( self.opt['chem']['x0_H'] + 2.*self.opt['chem']['x0_D'] + 4.*self.opt['chem']['x0_He'] ) / \
+             ( self.opt['chem']['x0_H'] + self.opt['chem']['x0_D'] + self.opt['chem']['x0_He'] + \
                self.prop_x_HP(prop,ids) + self.prop_x_DP(prop,ids) + \
                self.prop_x_HEP(prop,ids) + 2*self.prop_x_HEPP(prop,ids) )
         return mu
@@ -199,11 +199,11 @@ class propSgchem1:
     # Recombination rate of Hydrogen and Helium (rec/s)
     def prop_RecombH(self,prop,ids): 
         density = self.prop_Density(prop,ids) * self.units['density']  # density (g/cm^3)
-        numdens = density / ((1. + 4. * self.chem['x0_He']) * apy.const.m_p); # nucleon number density [1/cm^3]
+        numdens = density / ((1. + 4. * self.opt['chem']['x0_He']) * apy.const.m_p); # nucleon number density [1/cm^3]
         return self.prop_AlphaB(prop,ids) * numdens
     def prop_RecombHe(self,prop,ids): 
         density = self.prop_Density(prop,ids) * self.units['density']  # density (g/cm^3)
-        numdens = density / ((1. + 4. * self.chem['x0_He']) * apy.const.m_p); # nucleon number density [1/cm^3]
+        numdens = density / ((1. + 4. * self.opt['chem']['x0_He']) * apy.const.m_p); # nucleon number density [1/cm^3]
         return self.prop_AlphaBHe(prop,ids) * numdens
 
     # Stromgren radius if a source is in the cell (physical code units)
