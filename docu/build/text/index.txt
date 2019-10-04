@@ -1,0 +1,66 @@
+Welcome to arepy's documentation!
+*********************************
+
+Python module ArePy
+
+ArePy is an open-source Analyzing tool for Arepo simulation data.  The
+main module is written in Python, but some parts are also written in
+bash.
+
+class arepy.showLeap(name)
+
+   Time measuring function
+
+   Args:
+      name: name of a timer
+
+   This class is mainly used to calculate the loading times of the
+   imported modules and libraries. However, it can be used also in
+   other parts of the code.
+
+   end()
+
+      End the timer
+
+   show(name)
+
+      Show time of the particular timer
+
+      Args:
+         name: name of a timer
+
+class arepy.files.snap.propSink
+
+   Properties of the sink particle file
+
+   Direct properties
+
+   prop_SinkAccretionRate(prop, ids)
+
+      Returns value of the sink 'AccretionRate'
+
+   prop_SinkFormationOrder(prop, ids)
+
+      Returns value of the sink 'FormationOrder'
+
+   prop_SinkFormationTime(prop, ids)
+
+      Returns value of the sink 'FormationTime'
+
+   prop_SinkID(prop, ids)
+
+      Returns value of the sink 'ID'
+
+   prop_SinkMass(prop, ids)
+
+      Returns value of the sink 'Mass'
+
+
+Indices and tables
+******************
+
+* Index
+
+* Module Index
+
+* Search Page
