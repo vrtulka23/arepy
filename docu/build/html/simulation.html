@@ -1,0 +1,297 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Simulation &#8212; arepy 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Snapshot" href="snap.html" />
+    <link rel="prev" title="Introduction to the ArePy" href="intro.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="snap.html" title="Snapshot"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Introduction to the ArePy"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="simulation">
+<h1>Simulation<a class="headerlink" href="#simulation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="snap.html">Snapshot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="snap.html#snapshot-properties">Snapshot properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="snap.html#snapshot-class">Snapshot class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sink.html">Sink snapshots</a></li>
+</ul>
+</div>
+<p>A set of initial and output files that belong to a single simulation can be handled using the following class and its methods:</p>
+<dl class="class">
+<dt id="arepy.files.simulation">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.files.</code><code class="sig-name descname">simulation</code><span class="sig-paren">(</span><em class="sig-param">dirSim='.'</em>, <em class="sig-param">name=''</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.simulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulation class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dirSim</strong> (<em>str</em>) – Path to a simulation directory.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of a simulation.</p></li>
+<li><p><strong>fileNameParam</strong> (<em>str</em>) – Name of a parameter file</p></li>
+<li><p><strong>fileNameConfig</strong> (<em>str</em>) – Name of a configuration file</p></li>
+<li><p><strong>fileNameIcs'</strong> (<em>str</em>) – Name of a file with initial conditions</p></li>
+<li><p><strong>comoving</strong> (<em>bool</em>) – Indicates whether simulation is comoving or not.</p></li>
+<li><p><strong>nsub</strong> (<em>int</em>) – Number of subfiles</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="arepy.files.simulation.getConfig">
+<code class="sig-name descname">getConfig</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.simulation.getConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a configuration file object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Configuration file object</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>apy.files.config</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.simulation.getImage">
+<code class="sig-name descname">getImage</code><span class="sig-paren">(</span><em class="sig-param">isnap</em>, <em class="sig-param">iprop</em>, <em class="sig-param">itype</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.simulation.getImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an object of a specific image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>isnap</strong> (<em>int</em>) – Number of the snapshot</p></li>
+<li><p><strong>iprop</strong> (<em>str</em>) – Image property</p></li>
+<li><p><strong>itype</strong> (<em>str</em>) – Image type (slice/proj)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Image object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>apy.files.image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.simulation.getParameters">
+<code class="sig-name descname">getParameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.simulation.getParameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a parameter file object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Parameter file object</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>apy.files.param</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.simulation.getSink">
+<code class="sig-name descname">getSink</code><span class="sig-paren">(</span><em class="sig-param">snap</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.simulation.getSink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a sink snapshot object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snap</strong> (<em>int</em>) – Snapshot number</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Sink snapshot object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>apy.files.sink</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.simulation.getSnapAfterFirstSink">
+<code class="sig-name descname">getSnapAfterFirstSink</code><span class="sig-paren">(</span><em class="sig-param">times</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.simulation.getSnapAfterFirstSink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for a closest snap number to a time after creation of a first sink particle</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>times</strong> (<em>float</em><em> or </em><em>list</em><em>(</em><em>float</em><em>)</em>) – Searched times in code units</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Cloasest snapshot numbers</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int or list(int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.simulation.getSnapAtTimes">
+<code class="sig-name descname">getSnapAtTimes</code><span class="sig-paren">(</span><em class="sig-param">times</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.simulation.getSnapAtTimes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search a closest snap number to a specific simulation times</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>times</strong> (<em>float</em><em> or </em><em>list</em><em>(</em><em>float</em><em>)</em>) – Searched times in code unites</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Closest snapshot numbers</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int or list(int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.simulation.getSnapNums">
+<code class="sig-name descname">getSnapNums</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.simulation.getSnapNums" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all snapshot numbers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of snapshot numbers</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list(int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.simulation.getSnapshot">
+<code class="sig-name descname">getSnapshot</code><span class="sig-paren">(</span><em class="sig-param">snap</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.simulation.getSnapshot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a snapshot object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snap</strong> (<em>int</em>) – Snapshot number</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Snapshot object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>apy.files.snap</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.simulation.getSources">
+<code class="sig-name descname">getSources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.simulation.getSources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an object with radiation sources</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Radiation sources object</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>apy.files.sources</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.simulation.hasSnapshot">
+<code class="sig-name descname">hasSnapshot</code><span class="sig-paren">(</span><em class="sig-param">snap</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.simulation.hasSnapshot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a snapshot exist</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snap</strong> (<em>int</em>) – Snapshot number</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Status of a snapshot</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="intro.html"
+                        title="previous chapter">Introduction to the ArePy</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="snap.html"
+                        title="next chapter">Snapshot</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/simulation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="snap.html" title="Snapshot"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Introduction to the ArePy"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Ondrej Jaura.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>

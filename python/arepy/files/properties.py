@@ -5,15 +5,17 @@ import numpy as np
 class properties:
     def __init__(self,props=None,ptype=None):
         self.items = []         # list of items
-        self.data = {}          # dictionary for data collecting
         self.size = 0           # number of items
+        self.ptype = 0 if ptype is None else ptype # particle type
+
+        self.data = {}          # dictionary for data collecting
         self.current = 0        # iterator pointer
-        self.ptype = 0 if ptype is None else ptype
 
         if props is not None:
             if isinstance(props,properties):  # simpy copy the item list
                 self.items = props.items
                 self.size = props.size
+                self.ptype = ptype
             else:                                 # set new properties
                 self.add(props)
 

@@ -1,0 +1,7 @@
+Complex properties
+******************
+
+Complex properties can make use of all above properties and combine them to more complex functions and data reduction. 
+
+.. autoclass:: arepy.files.snap.propComplex
+   :members:

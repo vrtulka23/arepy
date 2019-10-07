@@ -1,0 +1,11 @@
+Files
+*****
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   snap
+   sink
+
+In this chapter we describe all classes used to analyze Arepo output/input files.

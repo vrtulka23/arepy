@@ -22,7 +22,7 @@ class groupsTransf:
     def transf_SinkID(self,lrad,ids,size=None):
         snap = self.item.getSnapshot()
         sid = self.item.opt[ids] if isinstance(ids,str) else ids[self.item.index]
-        data = snap.getProperty({'name':'RegionIds','ptype':5,'ids':sid,'p':[
+        data = snap.getProperty({'name':'RegionIds','ptype':5,'pids':sid,'p':[
             {'name':'Coordinates','ptype':5},
             {'name':'Masses','ptype':5}
         ]})    

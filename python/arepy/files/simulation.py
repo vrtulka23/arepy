@@ -3,13 +3,18 @@ import arepy as apy
 import os, glob, re
 from subprocess import call
 
-#
-# Example:
-# sim = apy.files.simulation("./")
-# snap = sim.getSnapshot(236)
-# data = snap.getProperty("Masses")
-#
 class simulation:
+    """Simulation class
+    
+    :param str dirSim:         Path to a simulation directory.
+    :param str name:           Name of a simulation.
+    :param str fileNameParam:  Name of a parameter file
+    :param str fileNameConfig: Name of a configuration file
+    :param str fileNameIcs':   Name of a file with initial conditions
+    :param bool comoving:      Indicates whether simulation is comoving or not.
+    :param int nsub:           Number of subfiles
+    """
+
     def __enter__(self):
         return self
 
@@ -217,6 +222,14 @@ class simulation:
     ######################
     
     def getImage(self, isnap, iprop, itype):
+        """Get an object of a specific image
+        
+        :param int isnap: Number of the snapshot
+        :param str iprop: Image property
+        :param str itype: Image type (slice/proj)
+        :return: Image object
+        :rtype: apy.files.image
+        """
         if iprop in self.optChem['rates']:
             i = self.optChem['rates'].index(iprop)
             fileImage = self.fileImage%('sxrates',itype,isnap)
@@ -237,6 +250,12 @@ class simulation:
             return apy.files.image( fileImage )
 
     def getSnapshot(self,snap,**opt):
+        """Get a snapshot object
+
+        :param int snap: Snapshot number
+        :return: Snapshot object
+        :rtype: apy.files.snap
+        """
         fileName = self.fileSnap(snap)
         nopt = self.optSnap.copy()
         nopt.update(opt)
@@ -246,18 +265,39 @@ class simulation:
         return apy.files.snap(fileName,**nopt)
 
     def getSink(self,snap,**opt):
+        """Get a sink snapshot object
+
+        :param int snap: Snapshot number
+        :return: Sink snapshot object
+        :rtype: apy.files.sink
+        """
         nopt = self.optSinks.copy()
         nopt.update(opt)
         nopt['fileName'] = self.fileSink(snap)
         return apy.files.sink(**nopt)        
         
     def getSources(self):
+        """Get an object with radiation sources
+
+        :return: Radiation sources object
+        :rtype: apy.files.sources
+        """
         return apy.files.sources(self.fileSources)
 
     def getParameters(self):
+        """Get a parameter file object
+        
+        :return: Parameter file object
+        :rtype: apy.files.param
+        """
         return apy.files.param(self.fileParam)
 
     def getConfig(self):
+        """Get a configuration file object
+        
+        :return: Configuration file object
+        :rtype: apy.files.config
+        """
         return apy.files.config(self.fileConfig)
 
     #############################################
@@ -265,6 +305,11 @@ class simulation:
     #############################################
             
     def getSnapNums(self):
+        """Get all snapshot numbers
+
+        :return: List of snapshot numbers
+        :rtype: list(int)
+        """
         snapFiles = glob.glob(self.fileSnap())
         snapNums = np.zeros(len(snapFiles),dtype=int)
         for s,snap in enumerate(snapFiles):
@@ -274,28 +319,34 @@ class simulation:
             snapNums[s] = m.group(1)
         return np.sort(snapNums)
 
-    # find snapshot number at given times  DEPRECATED: too slow!!
-    '''
-    def findSnapsAtTimes(self,times,**opt):
-        snaps = self.getSnapNums()
-        snapTimes = np.zeros(len(snaps))
-        for s,snap in enumerate(snaps):
-            with self.getSnapshot(snap,**opt) as sf:
-                snapTimes[s] = sf.getHeader('Time')
-                print(s,snap,snapTimes[s])
-        return np.round(np.interp(times,snapTimes,snaps)).astype(int)
-    '''
-
     def hasSnapshot(self,snap):
+        """Checks whether a snapshot exist
+
+        :param int snap: Snapshot number
+        :return: Status of a snapshot
+        :rtype: bool
+        """
         return apy.shell.isfile(self.fileSnap(snap))
 
-    # Get snapshot numbers of 'times'
     def getSnapAtTimes(self,times):
+        """Search a closest snap number to a specific simulation times
+
+        :param times: Searched times in code unites
+        :type times: float or list(float)
+        :return: Closest snapshot numbers
+        :rtype: int or list(int)
+        """
         csn = self.cacheSnapNums()
         return np.round(np.interp(times,csn['Time'],csn['Snapshot'])).astype(int)
 
-    # Get snapshot numbers of 'times' after the formation of a first sink particle
     def getSnapAfterFirstSink(self,times):
+        """Search for a closest snap number to a time after creation of a first sink particle
+        
+        :param times: Searched times in code units
+        :type times: float or list(float)
+        :return: Cloasest snapshot numbers
+        :rtype: int or list(int)
+        """
         csn = self.cacheSnapNums()
         nsinks = csn['NumPart_Total'][:,5]
         if np.any(nsinks>0): # substract a formation time of the first sink particle

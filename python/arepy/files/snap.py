@@ -19,6 +19,20 @@ from arepy.files.glueSimple import *    # Simple property glues
 
 # Snapshot class
 class snap(propComplex):
+    """Snapshot class
+
+    :param str fileName: Path to the snapshot file
+    :param dict initChem: Chemistry initialization settings
+    :param dict sinkOpt: Sink particle file settings
+    :return: Snapshot object
+
+    Snapshot class is used to extract some data from the Arepo or sink snapshots and 
+    it can be called within any Python script as follwos::
+
+        >>> import arepy as apy
+        >>> snap = apy.files.snap('./snap_001.hdf5')
+    """
+
     def __enter__(self):
         return self
     def __exit__(self, type, value, tb):
@@ -96,6 +110,12 @@ class snap(propComplex):
 
 
     def getHeader(self,names=None,s=0):
+        """Get header properties
+        
+        :param list[str] names: List of header properties.
+        :param int s: Index of the partial snapshot file.
+        :return: Property values
+        """
         if names is None:
             with hp.File(self.sfileName[s],self.opt['fmode']) as f:
                 return dict(f['Header'].attrs)
@@ -154,7 +174,91 @@ class snap(propComplex):
 
     # This function switches between complex and simple properties
     # Example: sn.getProperty(['Masses',{'name':'Minimum','p':'PosX'}])
-    def getProperty(self,props,ids=None,ptype=None,dictionary=False):
+    def getProperty(self,props,ids=None,ptype=0,dictionary=False):
+        """Get particle properties
+        
+        :param list(prop) props: Snapshot properties.
+        :param list(bool) ids: Particle selector list.
+        :param int ptype: Default particle type.
+        :param bool dictionary: Return property values as dictionary only.
+        :return: Property values
+
+        Examples:
+        
+        1) Properties that do not need any additional settings can be called only using their name.
+           Calling only a single property will return only values of the property::
+        
+            >>> snap.getProperty('Masses')
+        
+            [23.43, 34.23, 12.0, ...]
+        
+        2) Properties that need additional settings besides 'name', 'ptype' and 'ids' have to be called using a dictionary::
+        
+            >>> snap.getProperty({
+            >>>     'name': 'SelectSphere',
+            >>>     'center': [0.5,0.5,0.5],
+            >>>     'radius': 0.2
+            >>> })
+        
+            [True, False, False, ...]
+        
+        3) It is also possible to query for a list of properties.
+           In this case the results will be given in a form of a dictionary like this::
+        
+            >>> snap.getProperty([
+            >>>     'FormationOrder','Masses',
+            >>>     {'name':'SelectFormationOrder','forder':[3,10,11]}
+            >>> ])
+        
+            {'FormationOrder': [3, 23, 33, ...],
+             'Masses':  [23.43, 34.23, 12.0, ...],
+             'SelectFormationOrder': [True, False, False, ...]}
+        
+        4) It might be sometimes advantageous to return dictionaries also for single properties::
+        
+            >>> snap.getProperty('Masses', dictionary=True)
+        
+            {'Masses': [23.43, 34.23, 12.0, ...]}
+        
+        5) Property types can be set globally. The following example wil select masses and velocities of the sink particles only::
+        
+            >>> snap.getProperty([
+            >>>     'Masses','ParticleIDs'
+            >>> ], ptype=5)
+        
+            {'Masses': [23.43, 34.23, 12.0, ...],
+             'ParticleIDs': [23, 233, 0, ...]}
+        
+        6) Property types can be also specified for each property individually.
+           The following example will select masses of the gas particles, but velocities of the sink particles::
+        
+            >>> snap.getProperty([
+            >>>     'Masses',
+            >>>     {'name':'ParticleIDs', 'ptype':5}
+            >>> ])
+        
+            {'Masses': [23.43, 34.23, 12.0, ...],
+             'ParticleIDs': [13, 35, 22, ...]}
+         
+        7) If two properties in the list have a same name one has to be altered using a 'key' parameter::
+        
+            >>> snap.getProperty([
+            >>>     'Masses',
+            >>>     {'name':'Masses', 'ptype':5, 'key': 'SinkMasses'}
+            >>> ])
+        
+            {'Masses': [23.43, 34.23, 12.0, ...],
+             'SinkMasses': [13.23, 35.23, 22.0, ...]}
+        
+        8) It is also possible to directly input a property class::
+            
+            >>> properties = apy.files.properties(['Masses','Velocities'])
+            >>> snap.getProperty(properties)
+            
+            {'Masses': [23.43, 34.23, 12.0, ...],
+             'Velocities': [[23.34,26.6,834.3], [35.23, 22.0, 340,2], ...]}
+        
+        """
         # Convert to array if needed
         aProps = apy.files.properties(props,ptype=ptype)
 
@@ -172,7 +276,7 @@ class snap(propComplex):
                     'snapMode': self.opt['fmode'],
                     'comoving': self.opt['comoving'],
                     'chem':     self.optChem,
-                },sProps,ids)
+                },sProps,ids,ptype)
         else:
             data = {}
         
@@ -181,7 +285,9 @@ class snap(propComplex):
             if prop['key'] in data:
                 aProps.setData(prop['key'], data[prop['key']])
             else:
-                results = getattr(self, 'prop_'+prop['name'])(prop,ids)
+                if 'ids' in prop:
+                    print(prop)
+                results = getattr(self, 'prop_'+prop['name'])(ids,**prop)
                 aProps.setData(prop['key'], results)
 
         # !! do not wrap np.array() around, because we want to return native array dtypes
@@ -190,7 +296,7 @@ class snap(propComplex):
 
 # This function calculates (simple) properties
 # It needs to be a global function if we want to use it on parallel cores
-def getProperty(opt,properties,ids=None):
+def getProperty(opt,properties,ids=None,ptype=0):
 
     # Construct a property class according to the chemistry type
     classes = (propSimple, propClass)
@@ -202,4 +308,4 @@ def getProperty(opt,properties,ids=None):
         
     # Calculate properties and return values
     with propList(opt) as sp:
-        return sp.getProperty(properties,ids,dictionary=True)
+        return sp.getProperty(properties,ids,ptype=ptype,dictionary=True)

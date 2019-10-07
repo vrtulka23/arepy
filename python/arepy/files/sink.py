@@ -3,6 +3,18 @@ import arepy as apy
 import os
 
 class sink():
+    """Sink snapshot object
+
+    :param str fileName:   Path to a sink snapshot file
+    :param bool simplex:   Indicates whether SimpleX radiation is used.
+    :param bool varAccRad: Indicates whether Variable Accretion Radiation is used
+    :param bool accLum:    Indicates whether Accretion Luminosity is used
+    :param bool sinkFeed:  Indicates whether sink feeding is used
+    :param bool intPad:    Number of bites to pad one snapshot block
+    :param str order:      Name of the property that will be used to order a data
+    :param bool reverse:   Reverse the order of data
+    :param bool verbose:   Display more information
+    """
 
     def __enter__(self):
         return self
@@ -143,6 +155,15 @@ class sink():
         self.props[prop]['data'] = values
 
     def getValues(self,props,order=None,reverse=False,limit=None,dictionary=False):
+        """Get values from a sink snapshot
+        
+        :param list(str) prop:  Single property or property list to select
+        :param str order:       Name of the property that will be used to order a data
+        :param bool reverse:    Reverse the order of data
+        :param int limit:       Restrict number of returned data
+        :param bool dictionary: Return single properties also in a dictionary
+        :return:                Data of a single property or an dictionary of multiple properties
+        """
         if order is not None:
             self.order(order,reverse=reverse)
         ids = slice(0,self.nSinks if limit is None else limit)

@@ -1,33 +1,54 @@
 import numpy as np
 import arepy as apy
 
-class propSink:
-    """Properties of the sink particle file"""
+from arepy.files.propSinkSelect import *
 
-    def prop_SinkFormationOrder(self,prop,ids):
-        """Returns value of the sink 'FormationOrder'"""
+class propSink(propSinkSelect):
+    """Properties of the sink particle file
+
+    Propertis in this class are extracted from the sink particle snapshot files.
+    Therefore, they are accessible only if the sink particle snapshot are available.
+    It is possible to call sink snapshot properties when particle type is set to ptype=5.
+    """
+
+    def prop_SinkFormationOrder(self,ids,ptype,**prop):
+        """Returns value of the sink formation order
+
+        :return: Formation order of sink particles
+        :rtype: list[int]
+        """
         return self.getSinkData('FormationOrder',ids)
 
-    def prop_SinkFormationTime(self,prop,ids):
-        """Returns value of the sink 'FormationTime'"""
+    def prop_SinkFormationTime(self,ids,ptype,**prop):
+        """Returns value of the sink formation time
+
+        :return: Formation time of sink particles
+        :rtype: list[float]
+        """
         return self.getSinkData('FormationTime',ids)
 
-    def prop_SinkID(self,prop,ids):
-        """Returns value of the sink 'ID'"""
+    def prop_SinkID(self,ids,ptype,**prop):
+        """Returns value of the sink IDs
+
+        :return: Particle IDs of sink particles
+        :rtype: list[int]
+        """
         return self.getSinkData('ID',ids)
 
-    def prop_SinkMass(self,prop,ids):
-        """Returns value of the sink 'Mass'"""
+    def prop_SinkMass(self,ids,ptype,**prop):
+        """Returns value of the sink masses
+
+        :return: Masses of sink particles
+        :rtype: list[float]
+        """
         return self.getSinkData('Mass',ids)
 
-    def prop_SinkAccretionRate(self,prop,ids):
-        """Returns value of the sink 'AccretionRate'"""
+    def prop_SinkAccretionRate(self,ids,ptype,**prop):
+        """Returns value of the sink accretion rate
+
+        :return: Accretion rate of sink particles
+        :rtype: list[float]
+        """
         return self.getSinkData('AccretionRate',ids)
 
 
-
-    def prop_SelectFormationOrder(self,prop,ids):
-        """Selecting particles from the list"""
-        idsSelect = np.in1d(self.prop_SinkFormationOrder(prop,ids),prop['ids'])
-        ids = np.where(ids, idsSelect, False)
-        return self.getProperty(prop['p'],ids=ids,ptype=prop['ptype']) if 'p' in prop else ids

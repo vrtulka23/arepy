@@ -2,71 +2,122 @@ import numpy as np
 import arepy as apy
 import h5py as hp
 
-##################################
-#
-# A new property called NEW can be include simply by adding a new class method.
-# For example:
-#
-# def prop_NEW(self,prop,ids):
-#     return self.getSnapData('NEW',prop['ptype'],ids)
-#
-##################################
+from arepy.files.propSimpleSelect import *
+from arepy.files.propSimpleMath import *
+from arepy.files.propSimpleStat import *
 
-class propSimple:
+class propSimple(propSimpleSelect,propSimpleMath,propSimpleStat):
+    """Simple properties
 
-    ########################
-    # Direct properties
-    ########################
+    Properties in this class can be extracted directly from the Arepo snapshot.
+    """
 
-    def prop_ParticleIDs(self,prop,ids):
-        return self.getSnapData('ParticleIDs',prop['ptype'],ids)
-    def prop_Masses(self,prop,ids):
-        return self.getSnapData('Masses',prop['ptype'],ids)
-    def prop_Density(self,prop,ids):
-        return self.getSnapData('Density',prop['ptype'],ids)
-    def prop_InternalEnergy(self,prop,ids):
-        return self.getSnapData('InternalEnergy',prop['ptype'],ids)
-    def prop_PhotonRates(self,prop,ids):
-        return self.getSnapData('PhotonRates',prop['ptype'],ids)
-    def prop_Coppied(self,prop,ids):
-        return self.getSnapData('Coppied',prop['ptype'],ids)
+    def prop_ParticleIDs(self,ids,ptype,**prop):
+        """Get cell IDs
 
-    # position vector components
-    def prop_Coordinates(self,prop,ids):
-        return self.getSnapData('Coordinates',prop['ptype'],ids)
-    def prop_PosX(self,prop,ids):
-        return self.getSnapData('Coordinates',prop['ptype'],ids,0)
-    def prop_PosY(self,prop,ids):
-        return self.getSnapData('Coordinates',prop['ptype'],ids,1)
-    def prop_PosZ(self,prop,ids):
-        return self.getSnapData('Coordinates',prop['ptype'],ids,2)
+        :return: Array with particle IDs
+        :rtype: list[int]
+        """
+        return self.getSnapData('ParticleIDs',ptype,ids)
+
+    def prop_Masses(self,ids,ptype,**prop):
+        """Get cell masses
+
+        :return: Array of particle masses
+        :rtype: list[float]
+        """
+        return self.getSnapData('Masses',ptype,ids)
+
+    def prop_Density(self,ids,ptype,**prop):
+        """Get cell densities
+
+        :return: Array of particle densities
+        :rtype: list[float]
+        """
+        return self.getSnapData('Density',ptype,ids)
+
+    def prop_InternalEnergy(self,ids,ptype,**prop):
+        """Get cell internal energies
+
+        :return: Array of particle internal energies
+        :rtype: list[float]
+        """
+        return self.getSnapData('InternalEnergy',ptype,ids)
+
+    def prop_Coordinates(self,ids,ptype,**prop):
+        """Get cell coordinates
+
+        :return: Array of particle coordinates
+        :rtype: list[[float]*3]
+        """
+        return self.getSnapData('Coordinates',ptype,ids)
+
+    def prop_PosX(self,ids,ptype,**prop):
+        """Get cell x coordinates
+
+        :return: Array of particle x coordinates
+        :rtype: list[float]
+        """
+        return self.getSnapData('Coordinates',ptype,ids,0)
+
+    def prop_PosY(self,ids,ptype,**prop):
+        """Get cell y coordinates
+
+        :return: Array of particle y coordinates
+        :rtype: list[float]
+        """
+        return self.getSnapData('Coordinates',ptype,ids,1)
+
+    def prop_PosZ(self,ids,ptype,**prop):
+        """Get cell z coordinates
+
+        :return: Array of particle z coordinates
+        :rtype: list[float]
+        """
+        return self.getSnapData('Coordinates',ptype,ids,2)
 
     # velocity vector components
-    def prop_Velocities(self,prop,ids):
-        return self.getSnapData('Velocities',prop['ptype'],ids)
-    def prop_VelX(self,prop,ids):
-        return self.getSnapData('Velocities',prop['ptype'],ids,0)
-    def prop_VelY(self,prop,ids):
-        return self.getSnapData('Velocities',prop['ptype'],ids,1)
-    def prop_VelZ(self,prop,ids):
-        return self.getSnapData('Velocities',prop['ptype'],ids,2)
+    def prop_Velocities(self,ids,ptype,**prop):
+        """Get cell velocities
 
-    ##########################
-    # Indexes and counters
-    ##########################
+        :return: Array of particle velocities
+        :rtype: list[[float]*3]
+        """
+        return self.getSnapData('Velocities',ptype,ids)
 
-    # return selection indexes
-    def prop_Indexes(self,prop,ids):
-        return ids
+    def prop_VelX(self,ids,ptype,**prop):
+        """Get cell x velocities
 
-    # index of the sub-snapshot file
-    def prop_FileIndex(self,prop,ids):                 
-        npart = self.sf['Header'].attrs['NumPart_ThisFile'][prop['ptype']]
+        :return: Array of particle x velocities
+        :rtype: list[float]
+        """
+        return self.getSnapData('Velocities',ptype,ids,0)
+
+    def prop_VelY(self,ids,ptype,**prop):
+        """Get cell y velocities
+
+        :return: Array of particle y velocities
+        :rtype: list[float]
+        """
+        return self.getSnapData('Velocities',ptype,ids,1)
+
+    def prop_VelZ(self,ids,ptype,**prop):
+        """Get cell z velocities
+
+        :return: Array of particle z velocities
+        :rtype: list[float]
+        """
+        return self.getSnapData('Velocities',ptype,ids,2)
+
+    def prop_FileIndex(self,ids,ptype,**prop):                 
+        """Index of a file where the particle is saved"""
+        npart = self.sf['Header'].attrs['NumPart_ThisFile'][ptype]
         return np.full(npart,self.fnum)
 
     # particle index within the file
-    def prop_ParticleIndex(self,prop,ids):             
-        data = np.arange(self.sf['Header'].attrs['NumPart_ThisFile'][prop['ptype']])
+    def prop_ParticleIndex(self,ids,ptype,**prop):       
+        """Index of a particle within the dataset"""
+        data = np.arange(self.sf['Header'].attrs['NumPart_ThisFile'][ptype])
         return data[ids]            
     
     ##########################
@@ -74,167 +125,38 @@ class propSimple:
     ##########################
 
     # radius from a given center
-    def prop_Radius(self,prop,ids):                    
-        coord = self.prop_Coordinates(prop,ids) - prop['center']
+    def prop_Radius(self,ids,ptype,**prop):                    
+        """Get radius distances from a given center point
+
+        :param [int,int,int] center: Center point coordinates
+        :return: Cell distances from the center
+        :rtype: list[int]
+        """
+        coord = self.prop_Coordinates(ids,ptype,**prop) - prop['center']
         return np.linalg.norm(coord,axis=1)
 
     # quadrate of the radius from a given center
-    def prop_Radius2(self,prop,ids):                   
-        coord = self.prop_Coordinates(prop,ids) - prop['center']
+    def prop_Radius2(self,ids,ptype,**prop):                   
+        """Square of a particle radius from a given center"""
+        coord = self.prop_Coordinates(ids,ptype,**prop) - prop['center']
         return coord[:,0]**2 + coord[:,1]**2 + coord[:,2]**2
         
     # size of the velocity tangent component
-    def prop_VelocityRadial(self,prop,ids):            
-        rad = self.prop_Coordinates(prop,ids) - prop['center']          # translated origin
+    def prop_VelocityRadial(self,ids,ptype,**prop):            
+        """Radial component of the velocities"""
+        rad = self.prop_Coordinates(ids,ptype,**prop) - prop['center']          # translated origin
         norm = np.linalg.norm(rad,axis=1)[:,None]
         nhat = np.where(norm>0,rad/norm,np.zeros_like(rad)) # unit radial vector
         # taken from https://en.wikipedia.org/wiki/Tangential_and_normal_components
-        return np.multiply(self.prop_Velocities(prop,ids),nhat).sum(1)  # element-wise dot product (v.n_hat)
+        return np.multiply(self.prop_Velocities(ids,ptype,**prop),nhat).sum(1)  # element-wise dot product (v.n_hat)
 
     # voronoi cell volume
-    def prop_CellVolume(self,prop,ids):                
-        return self.prop_Masses(prop,ids) / self.prop_Density(prop,ids)
+    def prop_CellVolume(self,ids,ptype,**prop): 
+        """Particle cell Volume"""
+        return self.prop_Masses(ids,ptype,**prop) / self.prop_Density(ids,ptype,**prop)
         
     # cell radius when assumed a spherical shape
-    def prop_CellRadius(self,prop,ids):                
-        volume = self.prop_CellVolume(prop,ids)
+    def prop_CellRadius(self,ids,ptype,**prop): 
+        """Particle cell mean radius"""
+        volume = self.prop_CellVolume(ids,ptype,**prop)
         return ((volume*3)/(4*np.pi))**(1./3.)
-
-    ##############################
-    # Particle selections
-    ##############################
-
-    def prop_SelectIds(self,prop,ids):
-        idsSelect = np.in1d(self.prop_ParticleIDs(prop,ids),prop['ids'])
-        ids = np.where(ids, idsSelect, False)
-        return self.getProperty(prop['p'],ids=ids,ptype=prop['ptype']) if 'p' in prop else ids
-
-    # radial region
-    def prop_SelectSphere(self,prop,ids): 
-        # Example: {'name':'SelectSphere','center':center,'radius':radius,'p':'Mass'}
-        coord = self.prop_Coordinates(prop,ids)-prop['center']
-        r2 = coord[:,0]**2 + coord[:,1]**2 + coord[:,2]**2
-        idsSelect = r2 < prop['radius']**2
-        ids = np.where(ids, idsSelect, False)
-        return self.getProperty(prop['p'],ids=ids,ptype=prop['ptype']) if 'p' in prop else ids
-
-    # box region
-    def prop_SelectBox(self,prop,ids):    
-        # Example: {'name':'SelectBox','box':box,'p':'Mass'}
-        coord = np.array(self.prop_Coordinates(prop,ids))
-        box = np.array(prop['box'])
-        idsSelect = (box[0]<coord[:,0]) & (coord[:,0]<box[1]) & \
-                    (box[2]<coord[:,1]) & (coord[:,1]<box[3]) & \
-                    (box[4]<coord[:,2]) & (coord[:,2]<box[5])
-        ids = np.where(ids, idsSelect, False)
-        return self.getProperty(prop['p'],ids=ids,ptype=prop['ptype']) if 'p' in prop else ids
-
-    # distances in code units
-    def prop_SelectPoints(self,prop,ids):
-        from scipy.spatial import cKDTree
-        coord = self.prop_Coordinates(prop,ids)
-        grid = prop['grid']
-        kdt = cKDTree(coord)
-        dist,ids = kdt.query(grid)
-        data = [ dist, ids ]
-        #DEBUG: this must be still implemented for multiple snap files!!!!!
-        return self.getProperty(prop['p'],ids=ids,ptype=prop['ptype']) if 'p' in prop else ids
-
-    ############################
-    # Statistic functions
-    ############################
-
-    def prop_StatMinimum(self,prop,ids):
-        properties = apy.files.properties(prop['p'],ptype=prop['ptype'])
-        data = self.getProperty(properties,ids,dictionary=True)
-        for pp in properties:
-            properties.setData( pp['key'], np.min(data[pp['key']]) )
-        return properties.getData()
-
-    def prop_StatMinPos(self,prop,ids):
-        properties = apy.files.properties(prop['p'],ptype=prop['ptype'])
-        data = self.getProperty(properties,ids,dictionary=True)
-        for pp in properties:
-            ppdata = data[pp['key']]
-            ppdata = [np.min(ppdata[ppdata>0])] if np.any(ppdata>0) else []
-            properties.setData( pp['key'], np.min(values) )
-        return properties.getData()
-
-    def prop_StatMaximum(self,prop,ids):
-        properties = apy.files.properties(prop['p'],ptype=prop['ptype'])
-        data = self.getProperty(properties,ids,dictionary=True)
-        for pp in properties:
-            properties.setData( pp['key'], np.max(data[pp['key']]) )
-        return properties.getData()
-        
-    def prop_StatMean(self,prop,ids):
-        properties = apy.files.properties(prop['p'],ptype=prop['ptype'])
-        data = self.getProperty(properties,ids,dictionary=True)
-        for pp in properties:
-            properties.setData( pp['key'], np.mean(data[pp['key']]) )
-        return properties.getData()
-
-    def prop_StatSum(self,prop,ids):
-        properties = apy.files.properties(prop['p'],ptype=prop['ptype'])
-        data = self.getProperty(properties,ids,dictionary=True)
-        for pp in properties:
-            properties.setData( pp['key'], np.sum(data[pp['key']]) )
-        return properties.getData()
-
-    ############################
-    # Mathematical functions
-    ############################
-
-    def prop_MathPlus(self,prop,ids):
-        properties = apy.files.properties([prop['x'],prop['y']],ptype=prop['ptype'])
-        data = self.getProperty(properties,ids)
-        return data[properties[0]['key']] + data[properties[1]['key']]        
-
-    def prop_MathMinus(self,prop,ids):
-        properties = apy.files.properties([prop['x'],prop['y']],ptype=prop['ptype'])
-        data = self.getProperty(properties,ids)
-        return data[properties[0]['key']] - data[properties[1]['key']]        
-
-    def prop_MathMultiply(self,prop,ids):
-        properties = apy.files.properties([prop['x'],prop['y']],ptype=prop['ptype'])
-        data = self.getProperty(properties,ids)
-        return data[properties[0]['key']] * data[properties[1]['key']]        
-
-    def prop_MathDivide(self,prop,ids):
-        properties = apy.files.properties([prop['x'],prop['y']],ptype=prop['ptype'])
-        data = self.getProperty(properties,ids)
-        return data[properties[0]['key']] / data[properties[1]['key']]        
-
-    def prop_MathModulo(self,prop,ids):
-        properties = apy.files.properties([prop['x'],prop['y']],ptype=prop['ptype'])
-        data = self.getProperty(properties,ids)
-        return data[properties[0]['key']] % data[properties[1]['key']]        
-
-    ###########################
-    # Histograms
-    ###########################
-
-    # create histogram from a property in this sub-file
-    # Example: {'name':'Hist1D','bins':np.linspace(1,10,1),'x':'PosX','w':'Masses'}
-    def prop_Hist1D(self,prop,ids):
-        properties = apy.files.properties(prop['x'],ptype=prop['ptype'])
-        if 'w' in prop:
-            properties.add(prop['w'])
-        data = self.getProperty(properties,ids,dictionary=True)
-        weights = data[properties[1]['key']] if 'w' in prop else None
-        hist,edges = np.histogram(data[properties[0]['key']], 
-                                  bins=prop['bins'], density=False, weights=weights)
-        return hist
-
-    # create a 2D histogram from a property in this sub-file
-    # Example: bins=[np.linspace(1,10,1),np.linspace(2,12,2)]
-    #          {'name':'Hist2D','x':'PosX','y':'PosY','bins':bins,'w':'Masses'}
-    def prop_Hist2D(self,prop,ids):
-        properties = apy.files.properties([prop['x'],prop['y']],ptype=prop['ptype'])
-        if 'w' in prop:
-            properties.add(prop['w'])
-        data = self.getProperty(properties,ids,dictionary=True)
-        weights = data[properties[2]['key']] if 'w' in prop else None
-        hist,xedges,yedges = np.histogram2d(data[properties[0]['key']], data[properties[1]['key']], 
-                                            bins=prop['bins'], weights=weights) #, density=False)
-        return hist

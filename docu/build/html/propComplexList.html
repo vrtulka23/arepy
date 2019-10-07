@@ -1,0 +1,343 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Complex properties &#8212; arepy 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Sink snapshots" href="sink.html" />
+    <link rel="prev" title="Simple properties" href="propSimpleList.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sink.html" title="Sink snapshots"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="propSimpleList.html" title="Simple properties"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="simulation.html" >Simulation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="snap.html" accesskey="U">Snapshot</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="complex-properties">
+<h1>Complex properties<a class="headerlink" href="#complex-properties" title="Permalink to this headline">¶</a></h1>
+<p>Complex properties can make use of all above properties and combine them to more complex functions and data reduction.</p>
+<p>Every property called &lt;NAME&gt; is defined as:</p>
+<dl class="function">
+<dt>
+<code class="sig-name descname">prop_&lt;NAME&gt;(ids, ptype, **prop)</code></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ids</strong> (<em>list</em><em>[</em><em>bool</em><em>]</em>) – Particle IDs selectors</p></li>
+<li><p><strong>ptype</strong> (<em>int</em>) – Particle type</p></li>
+<li><p><strong>prop</strong> (<em>dict</em>) – Dictionary with additional properties</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>wIn the class descriptions below we will list only additional parameters included in the <em>prop</em> dictionary.</p>
+<div class="section" id="various">
+<h2>Various<a class="headerlink" href="#various" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="arepy.files.snap.propComplex">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propComplex</code><a class="headerlink" href="#arepy.files.snap.propComplex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Complex properties</p>
+<dl class="method">
+<dt id="arepy.files.snap.propComplex.prop_AngularMomentum">
+<code class="sig-name descname">prop_AngularMomentum</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplex.prop_AngularMomentum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get angular momentum around some point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>center</strong> (<em>[</em><em>float</em><em>]</em><em>*3</em>) – Center of a sphere</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – Radius of a sphere</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Angular momentum vector</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[float]*3</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propComplex.prop_FractionMass">
+<code class="sig-name descname">prop_FractionMass</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplex.prop_FractionMass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get mass fraction of some element</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>p</strong> (<em>prop</em>) – A property or list of properties</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Mass fraction within the selected region</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float or list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propComplex.prop_FractionVolume">
+<code class="sig-name descname">prop_FractionVolume</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplex.prop_FractionVolume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a volume fraction of a property in some region</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> (<em>prop</em>) – A property or list of properties</p></li>
+<li><p><strong>lt</strong> (<em>float</em>) – Select cells with properties larger than this value</p></li>
+<li><p><strong>st</strong> (<em>float</em>) – Select cells with properties smaller than this value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Volume fraction within the selected region</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float or list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propComplex.prop_HistBox">
+<code class="sig-name descname">prop_HistBox</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplex.prop_HistBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Two dimensional histogram of a property within a selected box region</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propComplex.prop_HistSphere">
+<code class="sig-name descname">prop_HistSphere</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplex.prop_HistSphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radial histogram of a property within a spherical region</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propComplex.prop_MassCenter">
+<code class="sig-name descname">prop_MassCenter</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplex.prop_MassCenter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get mass center of a gas</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>transf</strong> (<em>arepy.coord.transf</em>) – Coordinate transformation</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Mass center of the gas</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[float]*3</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="regions">
+<h2>Regions<a class="headerlink" href="#regions" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="arepy.files.snap.propComplexRegion">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propComplexRegion</code><a class="headerlink" href="#arepy.files.snap.propComplexRegion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select particle values within a given region</p>
+<dl class="method">
+<dt id="arepy.files.snap.propComplexRegion.prop_RegionBox">
+<code class="sig-name descname">prop_RegionBox</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplexRegion.prop_RegionBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select properties within a box region</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propComplexRegion.prop_RegionCone">
+<code class="sig-name descname">prop_RegionCone</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplexRegion.prop_RegionCone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select property values within a given cone region</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propComplexRegion.prop_RegionFormationOrder">
+<code class="sig-name descname">prop_RegionFormationOrder</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplexRegion.prop_RegionFormationOrder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select properties of sink particles with formation order IDs</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propComplexRegion.prop_RegionIds">
+<code class="sig-name descname">prop_RegionIds</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplexRegion.prop_RegionIds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select properties of particles with IDs</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propComplexRegion.prop_RegionPoints">
+<code class="sig-name descname">prop_RegionPoints</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplexRegion.prop_RegionPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select property values at some coordinates</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propComplexRegion.prop_RegionSphere">
+<code class="sig-name descname">prop_RegionSphere</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplexRegion.prop_RegionSphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select properties within a sphere region</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="slices">
+<h2>Slices<a class="headerlink" href="#slices" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="arepy.files.snap.propComplexSlice">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propComplexSlice</code><a class="headerlink" href="#arepy.files.snap.propComplexSlice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Box slices</p>
+<dl class="method">
+<dt id="arepy.files.snap.propComplexSlice.prop_BoxFieldXY">
+<code class="sig-name descname">prop_BoxFieldXY</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplexSlice.prop_BoxFieldXY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find property values for a given field</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propComplexSlice.prop_BoxHealpix">
+<code class="sig-name descname">prop_BoxHealpix</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplexSlice.prop_BoxHealpix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find property values for a Healpix gird</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propComplexSlice.prop_BoxLine">
+<code class="sig-name descname">prop_BoxLine</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplexSlice.prop_BoxLine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find property values for a given line</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propComplexSlice.prop_BoxLineRZ">
+<code class="sig-name descname">prop_BoxLineRZ</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplexSlice.prop_BoxLineRZ" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find property values for a RZ lines</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propComplexSlice.prop_BoxLineXYZ">
+<code class="sig-name descname">prop_BoxLineXYZ</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplexSlice.prop_BoxLineXYZ" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find property values for a given XYZ line</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propComplexSlice.prop_BoxPoints">
+<code class="sig-name descname">prop_BoxPoints</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplexSlice.prop_BoxPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find property values for given points</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propComplexSlice.prop_BoxSquareXY">
+<code class="sig-name descname">prop_BoxSquareXY</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplexSlice.prop_BoxSquareXY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find property values for a given XY sphere</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="projections">
+<h2>Projections<a class="headerlink" href="#projections" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="arepy.files.snap.propComplexProj">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propComplexProj</code><a class="headerlink" href="#arepy.files.snap.propComplexProj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Projection image of a property</p>
+<dl class="method">
+<dt id="arepy.files.snap.propComplexProj.prop_BoxProjCube">
+<code class="sig-name descname">prop_BoxProjCube</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplexProj.prop_BoxProjCube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Weighted projection of a property within a cube</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Complex properties</a><ul>
+<li><a class="reference internal" href="#various">Various</a></li>
+<li><a class="reference internal" href="#regions">Regions</a></li>
+<li><a class="reference internal" href="#slices">Slices</a></li>
+<li><a class="reference internal" href="#projections">Projections</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="propSimpleList.html"
+                        title="previous chapter">Simple properties</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="sink.html"
+                        title="next chapter">Sink snapshots</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/propComplexList.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sink.html" title="Sink snapshots"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="propSimpleList.html" title="Simple properties"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="simulation.html" >Simulation</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="snap.html" >Snapshot</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Ondrej Jaura.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>

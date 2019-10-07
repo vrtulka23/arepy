@@ -42,8 +42,8 @@ class propClass:
     def hasProperty(self,prop):
         return hasattr(self,'prop_'+prop['name'])
 
-    def getProperty(self,prop,ids=None,dictionary=False):
-        properties = apy.files.properties(prop)
+    def getProperty(self,prop,ids=None,ptype=0,dictionary=False):
+        properties = apy.files.properties(prop,ptype=ptype)
         for pp in properties:
             npart = self.fileSnap['Header'].attrs['NumPart_ThisFile'][pp['ptype']]
             propMethod = 'prop_'+pp['name']
@@ -52,7 +52,7 @@ class propClass:
                 apy.shell.warn("Property '%s' it is not defined! (propClass)"%pp['name'])
             elif npart>0:
                 indexes = slice(0,npart) if ids is None else ids
-                properties.setData( pp['key'], getattr(self,propMethod)(pp,indexes) )
+                properties.setData( pp['key'], getattr(self,propMethod)(indexes,**pp) )
             else:
                 properties.setData( pp['key'], [] )
         return properties.getData(dictionary=dictionary)

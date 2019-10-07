@@ -7,14 +7,12 @@ Welcome to arepy's documentation!
 =================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 5
    :caption: Contents:
 
-.. automodule:: arepy
-   :members:
+   intro
+   simulation
 
-.. autoclass:: arepy.files.snap.propSink
-   :members:
 
 Indices and tables
 ==================

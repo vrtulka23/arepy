@@ -1,0 +1,55 @@
+Simple properties
+*****************
+
+Arepo snapshots
+^^^^^^^^^^^^^^^
+
+Properties in this section can be extracted directly from the Arepo snapshot.
+Some properties are chemistry specific and can be used only if SGChem is set on.
+
+Properties
+""""""""""
+
+Basic properties from the Arepo snapshot file.
+
+.. autoclass:: arepy.files.snap.propSimple
+   :members:
+
+SGChem
+""""""
+
+Chemistry specific properties that can be used only with the primordial chemistry module SGChem.
+
+.. autoclass:: arepy.files.snap.propSgchem1
+   :members:
+
+Selectors
+"""""""""
+
+These function return selection indexes according to different selection criteria.
+
+.. autoclass:: arepy.files.snap.propSimpleSelect
+   :members:
+
+Sink snapshots
+^^^^^^^^^^^^^^
+
+Propertis in this section can be extracted from the sink particle snapshot files.
+Therefore, they are accessible only if the sink particle snapshot are available.
+It is possible to call sink snapshot properties when particle type is set to ptype=5.
+
+Properties
+""""""""""
+
+Basic properties from the sink snapshot file
+
+.. autoclass:: arepy.files.snap.propSink
+   :members:
+
+Selectors
+"""""""""
+
+Selector function specific for the sink particle properties only accessible in the sink particle snapshot.
+
+.. autoclass:: arepy.files.snap.propSinkSelect
+   :members:
