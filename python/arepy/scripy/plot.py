@@ -45,30 +45,102 @@ class plot:
         """Plot settings
 
         This is the place for general settings of the simulation.
+        In principle, data set in this functions should be available for all subplots.
         For example the plotting units can be set here::
         
-            >>> self.opt['simOpt'] = {
-            >>>     'initUnitsNew': {'length':apy.const.pc},
-            >>>     'initImages':True,
-            >>>     'initSinks':True,
-            >>>     'initSnap': True,
-            >>> }
+            self.opt['simOpt'] = {
+                'initUnitsNew': {'length':apy.const.pc},
+                'initImages':True,
+                'initSinks':True,
+                'initSnap': True,
+            }
         """
         return
             
     def init(self):
         """Initialization of a plot
 
-        This is the place for particular settings of the plot::
+        This is the place for particular settings of the plot.
+        A basic figure setup could be::
         
-            >>> self.setProcessors( fig=6 )
-            >>> self.setGroups(['names','sim','snaps'],[            
-            >>>     ('nrpm3',4, 100),
-            >>>     ('nrp0', 5, 65),
-            >>> ])
-            >>> self.setFigure(2,5,1)
+            # allocate processors
+            self.setProcessors( fig=6 )
+        
+            # setup snapshot groups
+            self.setGroups(['names','sim','snaps'],[            
+                ('nrpm3',4, [100,33]),
+                ('nrp0', 5, [65,23]),
+            ])
+        
+            # setup figure
+            self.setFigure(2,1,2)
         """
         return
+
+    # plot
+    def plot(self):
+        """Main plotting routine
+
+        This method prepares the figure for plotting.
+        A simple plotting routine could look like::
+            
+            # loop through all groups
+            for grp in self.grps:
+        
+                # setup a simulation
+                sim = self.getSimulation(grp.opt['sim'],**self.opt['simOpt'])
+
+                # add snapshot to the group
+                grp.addSnapshot(sim,grp.opt['snaps'])
+        
+                # select a subplot where we plot data
+                sp = self.fig.getSubplot(grp.index,0, xlabel='x',ylabel='y' )
+        
+                # plot an image
+                grp.setImage(sp,'density','slice')
+        """
+        return
+    def _plot(self):
+        if self.optPlot is None:
+            apy.shell.exit("Plot '%s' was not set (plot.py)"%(self.dirPlot))
+        if self.optPlot['type']=='figure':
+            self.fig = apy.plot.figure(self.optPlot['ncol'],self.optPlot['nrow'],self.optPlot['nfig'],**self.optPlot['opt'])
+            self.plot()
+            if self.optPlot['plot']:
+                self.fig.plot()
+            if self.optPlot['show']:
+                self.fig.show()
+            if self.optPlot['movie']:
+                self.fig.movie()
+        elif self.optPlot['type']=='table':
+            self.tab = apy.data.table(**self.optPlot['opt'])
+            self.plot()
+            self.tab.save()
+            if self.optPlot['show']:
+                self.tab.show()
+                    
+    # display
+    def _show(self):
+        if self.optPlot is None:
+            apy.shell.exit("Plot '%s' was not set (plot.py)"%(self.dirPlot))
+        if self.optPlot['type']=='figure':
+            self.fig = apy.plot.figure(self.optPlot['ncol'],self.optPlot['nrow'],self.optPlot['nfig'],**self.optPlot['opt'])
+            self.fig.show(last=True)
+        elif self.optPlot['type']=='table':
+            self.tab = apy.data.table(**self.optPlot['opt'])
+            with open(self.tab.fileName, 'r') as f:
+                contents = f.read()
+                print(contents)
+
+    # movie
+    def _movie(self):
+        if self.optPlot is None:
+            apy.shell.exit("Plot '%s' was not set (plot.py)"%(self.dirPlot))
+        if self.optPlot['type']=='figure':
+            self.fig = apy.plot.figure(self.optPlot['ncol'],self.optPlot['nrow'],self.optPlot['nfig'],**self.optPlot['opt'])
+            self.fig.movie()
+        elif self.optPlot['type']=='table':
+            apy.shell.exit('Cannot plot movie from a table (plot.py)')
 
     def getSimulation(self,sim,**opt):
         """Get a project simulation
@@ -164,49 +236,3 @@ class plot:
             'show':show,
             'opt':nopt,
         }
-
-    # plot
-    def plot(self):
-        """Main plotting routine"""
-        return
-    def _plot(self):
-        if self.optPlot is None:
-            apy.shell.exit("Plot '%s' was not set (plot.py)"%(self.dirPlot))
-        if self.optPlot['type']=='figure':
-            self.fig = apy.plot.figure(self.optPlot['ncol'],self.optPlot['nrow'],self.optPlot['nfig'],**self.optPlot['opt'])
-            self.plot()
-            if self.optPlot['plot']:
-                self.fig.plot()
-            if self.optPlot['show']:
-                self.fig.show()
-            if self.optPlot['movie']:
-                self.fig.movie()
-        elif self.optPlot['type']=='table':
-            self.tab = apy.data.table(**self.optPlot['opt'])
-            self.plot()
-            self.tab.save()
-            if self.optPlot['show']:
-                self.tab.show()
-                    
-    # display
-    def _show(self):
-        if self.optPlot is None:
-            apy.shell.exit("Plot '%s' was not set (plot.py)"%(self.dirPlot))
-        if self.optPlot['type']=='figure':
-            self.fig = apy.plot.figure(self.optPlot['ncol'],self.optPlot['nrow'],self.optPlot['nfig'],**self.optPlot['opt'])
-            self.fig.show(last=True)
-        elif self.optPlot['type']=='table':
-            self.tab = apy.data.table(**self.optPlot['opt'])
-            with open(self.tab.fileName, 'r') as f:
-                contents = f.read()
-                print(contents)
-
-    # movie
-    def _movie(self):
-        if self.optPlot is None:
-            apy.shell.exit("Plot '%s' was not set (plot.py)"%(self.dirPlot))
-        if self.optPlot['type']=='figure':
-            self.fig = apy.plot.figure(self.optPlot['ncol'],self.optPlot['nrow'],self.optPlot['nfig'],**self.optPlot['opt'])
-            self.fig.movie()
-        elif self.optPlot['type']=='table':
-            apy.shell.exit('Cannot plot movie from a table (plot.py)')

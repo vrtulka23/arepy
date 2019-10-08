@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>2.1. Simulation setup &#8212; arepy 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2.2. Plotting and analysis" href="plots.html" />
+    <link rel="prev" title="2. Management of simulations (scripy)" href="scripy.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="plots.html" title="2.2. Plotting and analysis"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="scripy.html" title="2. Management of simulations (scripy)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="scripy.html" accesskey="U">2. Management of simulations (scripy)</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="simulation-setup">
+<h1>2.1. Simulation setup<a class="headerlink" href="#simulation-setup" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="setup-class">
+<h2>2.1.1. Setup class<a class="headerlink" href="#setup-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="arepy.scripy.setup">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.scripy.</code><code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param">proj</em>, <em class="sig-param">*args</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulation setup</p>
+<dl class="method">
+<dt id="arepy.scripy.setup.init">
+<code class="sig-name descname">init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.setup.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulation initialization</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.setup.setupDirectory">
+<code class="sig-name descname">setupDirectory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.setup.setupDirectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary setup</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.setup.setupConfig">
+<code class="sig-name descname">setupConfig</code><span class="sig-paren">(</span><em class="sig-param">fileName</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.setup.setupConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration file setup</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fileName</strong> (<em>str</em>) – Path to a configuration file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.setup.setupParam">
+<code class="sig-name descname">setupParam</code><span class="sig-paren">(</span><em class="sig-param">fileName</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.setup.setupParam" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameter file setup</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fileName</strong> (<em>str</em>) – Path to a parameter file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.setup.setupRun">
+<code class="sig-name descname">setupRun</code><span class="sig-paren">(</span><em class="sig-param">fileName</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.setup.setupRun" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run script setup</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fileName</strong> (<em>str</em>) – Path to a run script file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.setup.setupSources">
+<code class="sig-name descname">setupSources</code><span class="sig-paren">(</span><em class="sig-param">fileName</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.setup.setupSources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setup of radiation sources</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fileName</strong> (<em>str</em>) – Path to a file with sources</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.setup.setupIcs">
+<code class="sig-name descname">setupIcs</code><span class="sig-paren">(</span><em class="sig-param">fileName</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.setup.setupIcs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setup of initial conditions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fileName</strong> (<em>str</em>) – Path to an initial conditions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.setup.setupOlist">
+<code class="sig-name descname">setupOlist</code><span class="sig-paren">(</span><em class="sig-param">fileName</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.setup.setupOlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setup of time output list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fileName</strong> (<em>str</em>) – Path to an output list file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.setup.setupOther">
+<code class="sig-name descname">setupOther</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.setup.setupOther" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aditional setup</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">2.1. Simulation setup</a><ul>
+<li><a class="reference internal" href="#setup-class">2.1.1. Setup class</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="scripy.html"
+                        title="previous chapter">2. Management of simulations (scripy)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="plots.html"
+                        title="next chapter">2.2. Plotting and analysis</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/setups.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="plots.html" title="2.2. Plotting and analysis"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="scripy.html" title="2. Management of simulations (scripy)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="scripy.html" >2. Management of simulations (scripy)</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Ondrej Jaura.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>

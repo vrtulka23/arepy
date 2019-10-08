@@ -63,3 +63,6 @@ source_suffix = {
 
 
 add_module_names = True
+
+# order method as in the source
+autodoc_member_order = 'bysource'

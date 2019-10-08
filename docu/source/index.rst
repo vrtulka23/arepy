@@ -7,12 +7,12 @@ Welcome to arepy's documentation!
 =================================
 
 .. toctree::
-   :maxdepth: 5
-   :caption: Contents:
+   :maxdepth: 2
+   :numbered:
 
    intro
-   simulation
-   plots
+   scripy
+   arepy
 
 Indices and tables
 ==================

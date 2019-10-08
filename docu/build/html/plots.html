@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Creating plots &#8212; arepy 1.0 documentation</title>
+    <title>2.2. Plotting and analysis &#8212; arepy 1.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -14,7 +14,8 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Sink snapshots" href="sink.html" /> 
+    <link rel="next" title="3. Simulation data (arepy)" href="arepy.html" />
+    <link rel="prev" title="2.1. Simulation setup" href="setups.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -26,9 +27,13 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="sink.html" title="Sink snapshots"
+          <a href="arepy.html" title="3. Simulation data (arepy)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="setups.html" title="2.1. Simulation setup"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="scripy.html" accesskey="U">2. Project management (scripy)</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -37,14 +42,130 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="creating-plots">
-<h1>Creating plots<a class="headerlink" href="#creating-plots" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="plotting-and-analysis">
+<h1>2.2. Plotting and analysis<a class="headerlink" href="#plotting-and-analysis" title="Permalink to this headline">¶</a></h1>
+<p>A new plot called “PLOT” for a particular project can be initialized using the following command in the therminal:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apy --init-plot PLOT
+</pre></div>
+</div>
+<p>Following class is a parent class for an arbitrary PLOT class, that should implement its three basic methods:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">arepy</span> <span class="k">as</span> <span class="nn">apy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">class</span> <span class="nc">PLOT</span><span class="p">(</span><span class="n">apy</span><span class="o">.</span><span class="n">scripy</span><span class="o">.</span><span class="n">plot</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">settings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Some general settings go here...</span>
+
+    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Plot initialization goes here...</span>
+
+    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Plotting routine goes here...</span>
+</pre></div>
+</div>
+<p>Alternatively, it is possible to split it into several SUBPLOT classes and store them in separate files:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">PLOT</span><span class="p">(</span><span class="n">apy</span><span class="o">.</span><span class="n">scripy</span><span class="o">.</span><span class="n">plot</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">settings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Some general settings go here...</span>
+
+<span class="k">class</span> <span class="nc">SUBPLOT1</span><span class="p">(</span><span class="n">PLOT</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Plot initialization goes here...</span>
+
+    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Plotting routine goes here...</span>
+
+<span class="k">class</span> <span class="nc">SUBPLOT2</span><span class="p">(</span><span class="n">PLOT</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Plot initialization goes here...</span>
+
+    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Plotting routine goes here...</span>
+</pre></div>
+</div>
+<p>Such plots can be afterwards called from the command line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simple plot</span>
+apy --plot PLOT <span class="o">[</span>SUBPLOT<span class="o">]</span>
+
+<span class="c1"># Debugging plot</span>
+apy --debug PLOT <span class="o">[</span>SUBPLOT<span class="o">]</span>
+
+<span class="c1"># Show figure/table only</span>
+apy --show PLOT <span class="o">[</span>SUBPLOT<span class="o">]</span>
+</pre></div>
+</div>
 <div class="section" id="plotting-class">
-<h2>Plotting class<a class="headerlink" href="#plotting-class" title="Permalink to this headline">¶</a></h2>
+<h2>2.2.1. Plotting class<a class="headerlink" href="#plotting-class" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.scripy.plot">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.scripy.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param">action</em>, <em class="sig-param">proj</em>, <em class="sig-param">dirName</em>, <em class="sig-param">fileName=None</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>General class of a plot</p>
+<dl class="method">
+<dt id="arepy.scripy.plot.settings">
+<code class="sig-name descname">settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot settings</p>
+<p>This is the place for general settings of the simulation.
+In principle, data set in this functions should be available for all subplots.
+For example the plotting units can be set here:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;simOpt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;initUnitsNew&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;length&#39;</span><span class="p">:</span><span class="n">apy</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">pc</span><span class="p">},</span>
+    <span class="s1">&#39;initImages&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;initSinks&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span>
+    <span class="s1">&#39;initSnap&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.plot.init">
+<code class="sig-name descname">init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialization of a plot</p>
+<p>This is the place for particular settings of the plot.
+A basic figure setup could be:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># allocate processors</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">setProcessors</span><span class="p">(</span> <span class="n">fig</span><span class="o">=</span><span class="mi">6</span> <span class="p">)</span>
+
+<span class="c1"># setup snapshot groups</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">setGroups</span><span class="p">([</span><span class="s1">&#39;names&#39;</span><span class="p">,</span><span class="s1">&#39;sim&#39;</span><span class="p">,</span><span class="s1">&#39;snaps&#39;</span><span class="p">],[</span>            
+    <span class="p">(</span><span class="s1">&#39;nrpm3&#39;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="mi">33</span><span class="p">]),</span>
+    <span class="p">(</span><span class="s1">&#39;nrp0&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="mi">65</span><span class="p">,</span><span class="mi">23</span><span class="p">]),</span>
+<span class="p">])</span>
+
+<span class="c1"># setup figure</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">setFigure</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.plot.plot">
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main plotting routine</p>
+<p>This method prepares the figure for plotting.
+A simple plotting routine could look like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># loop through all groups</span>
+<span class="k">for</span> <span class="n">grp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">grps</span><span class="p">:</span>
+
+    <span class="c1"># setup a simulation</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getSimulation</span><span class="p">(</span><span class="n">grp</span><span class="o">.</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;sim&#39;</span><span class="p">],</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;simOpt&#39;</span><span class="p">])</span>
+
+    <span class="c1"># add snapshot to the group</span>
+    <span class="n">grp</span><span class="o">.</span><span class="n">addSnapshot</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span><span class="n">grp</span><span class="o">.</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;snaps&#39;</span><span class="p">])</span>
+
+    <span class="c1"># select a subplot where we plot data</span>
+    <span class="n">sp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">getSubplot</span><span class="p">(</span><span class="n">grp</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span><span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;y&#39;</span> <span class="p">)</span>
+
+    <span class="c1"># plot an image</span>
+    <span class="n">grp</span><span class="o">.</span><span class="n">setImage</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span><span class="s1">&#39;density&#39;</span><span class="p">,</span><span class="s1">&#39;slice&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="method">
 <dt id="arepy.scripy.plot.getSimulation">
 <code class="sig-name descname">getSimulation</code><span class="sig-paren">(</span><em class="sig-param">sim</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.getSimulation" title="Permalink to this definition">¶</a></dt>
@@ -60,24 +181,33 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="arepy.scripy.plot.init">
-<code class="sig-name descname">init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.init" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialization of a plot</p>
-<p>This is the place for particular settings of the plot:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">setProcessors</span><span class="p">(</span> <span class="n">fig</span><span class="o">=</span><span class="mi">6</span> <span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">setGroups</span><span class="p">([</span><span class="s1">&#39;names&#39;</span><span class="p">,</span><span class="s1">&#39;sim&#39;</span><span class="p">,</span><span class="s1">&#39;snaps&#39;</span><span class="p">],[</span>            
-<span class="gp">&gt;&gt;&gt; </span>    <span class="p">(</span><span class="s1">&#39;nrpm3&#39;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="p">(</span><span class="s1">&#39;nrp0&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">65</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">setFigure</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
+<dt id="arepy.scripy.plot.setProcessors">
+<code class="sig-name descname">setProcessors</code><span class="sig-paren">(</span><em class="sig-param">fig=1</em>, <em class="sig-param">kdt=1</em>, <em class="sig-param">snap=1</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.setProcessors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Distribute number of processors</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fig</strong> (<em>int</em>) – Number of processors used for figure plotting</p></li>
+<li><p><strong>kdt</strong> (<em>int</em>) – Number of processors used by a KDTree algorithm</p></li>
+<li><p><strong>snap</strong> (<em>int</em>) – Number of processors used to read a multi-file snapshot</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="arepy.scripy.plot.plot">
-<code class="sig-name descname">plot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.plot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main plotting routine</p>
+<dt id="arepy.scripy.plot.setGroups">
+<code class="sig-name descname">setGroups</code><span class="sig-paren">(</span><em class="sig-param">names</em>, <em class="sig-param">options</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.setGroups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set simulation groups</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>names</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Table column names</p></li>
+<li><p><strong>options</strong> (<em>list</em><em>[</em><em>tuple</em><em>]</em>) – Table rows</p></li>
+<li><p><strong>opt</strong> (<em>dict</em>) – Additional group options</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -101,36 +231,6 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="arepy.scripy.plot.setGroups">
-<code class="sig-name descname">setGroups</code><span class="sig-paren">(</span><em class="sig-param">names</em>, <em class="sig-param">options</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.setGroups" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set simulation groups</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>names</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Table column names</p></li>
-<li><p><strong>options</strong> (<em>list</em><em>[</em><em>tuple</em><em>]</em>) – Table rows</p></li>
-<li><p><strong>opt</strong> (<em>dict</em>) – Additional group options</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="arepy.scripy.plot.setProcessors">
-<code class="sig-name descname">setProcessors</code><span class="sig-paren">(</span><em class="sig-param">fig=1</em>, <em class="sig-param">kdt=1</em>, <em class="sig-param">snap=1</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.setProcessors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Distribute number of processors</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fig</strong> (<em>int</em>) – Number of processors used for figure plotting</p></li>
-<li><p><strong>kdt</strong> (<em>int</em>) – Number of processors used by a KDTree algorithm</p></li>
-<li><p><strong>snap</strong> (<em>int</em>) – Number of processors used to read a multi-file snapshot</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="arepy.scripy.plot.setTable">
 <code class="sig-name descname">setTable</code><span class="sig-paren">(</span><em class="sig-param">show=False</em>, <em class="sig-param">debug=False</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.setTable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Table settings</p>
@@ -143,22 +243,6 @@
 </ul>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="arepy.scripy.plot.settings">
-<code class="sig-name descname">settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.settings" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot settings</p>
-<p>This is the place for general settings of the simulation.
-For example the plotting units can be set here:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;simOpt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;initUnitsNew&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;length&#39;</span><span class="p">:</span><span class="n">apy</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">pc</span><span class="p">},</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;initImages&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;initSinks&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;initSnap&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
-</pre></div>
-</div>
 </dd></dl>
 
 </dd></dl>
@@ -174,15 +258,18 @@ For example the plotting units can be set here:</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Creating plots</a><ul>
-<li><a class="reference internal" href="#plotting-class">Plotting class</a></li>
+<li><a class="reference internal" href="#">2.2. Plotting and analysis</a><ul>
+<li><a class="reference internal" href="#plotting-class">2.2.1. Plotting class</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="sink.html"
-                        title="previous chapter">Sink snapshots</a></p>
+  <p class="topless"><a href="setups.html"
+                        title="previous chapter">2.1. Simulation setup</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="arepy.html"
+                        title="next chapter">3. Simulation data (arepy)</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -214,9 +301,13 @@ For example the plotting units can be set here:</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="sink.html" title="Sink snapshots"
+          <a href="arepy.html" title="3. Simulation data (arepy)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="setups.html" title="2.1. Simulation setup"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="scripy.html" >2. Project management (scripy)</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

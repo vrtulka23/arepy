@@ -91,17 +91,19 @@ class groupsMethods:
     ######################################
 
     # Plot Arepo image
-    def setImage(self, axis, prop, imgType, norm=None, normType=None, cmap=None):
+    def setImage(self, axis, prop, imgType, norm=None, normType=None, cmap=None, multiply=None):
         for item in self.items:
             if 'boxSize' not in item.sim.optImages:
                 apy.shell.exit("No 'boxSize' option for simulation %d (groups.py)"%item.index)
             region = apy.coord.box(item.sim.optImages['boxSize'])
-            item.setTransf(region=region)
+            item.setTransf(region=region,origin=region.center)
         data = self.foreach(setImage,args=[prop,imgType])
         logNormsProps = ['density','rih','ndens']
         if not normType:
             normType = 'log' if prop in logNormsProps else 'lin'
         norm = 'img_%s_%s'%(prop,imgType) if norm is None else norm
+        if multiply is not None: 
+            data['im'] *= multiply
         axis.setImage(data=data['im'],extent=data['extent'],norm=norm,normType=normType,cmap=cmap)
 
     # Add rendering of the box projection/slice

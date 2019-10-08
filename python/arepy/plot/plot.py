@@ -177,8 +177,7 @@ def plotSubplot(ax,opt,canvas,fid=0):
             elif image['normType'] in ['lin',None]:
                 norm = mpl.colors.Normalize(vmin=image['norm'][0],vmax=image['norm'][2])
             extent = image['extent'][fid] if np.ndim(image['extent'])>1 else image['extent']
-            im = ax.imshow( data.T, extent=extent, origin='lower', aspect=image['aspect'],
-                            norm=norm, cmap=image['cmap'] )
+            im = ax.imshow( data.T, origin='lower', norm=norm, extent=extent, **image['kwargs'] )
 
     if canvas['colorbar'] is not None:
         #ax = mappable.axes

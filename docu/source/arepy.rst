@@ -1,9 +1,8 @@
-Simulation
-**********
+Simulation data (arepy)
+***********************
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
    snap
    sink

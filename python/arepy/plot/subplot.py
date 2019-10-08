@@ -84,7 +84,8 @@ class subplot:
             nopt['loc'] = nopt['loc'].replace('bottom','lower').replace('top','upper')
         self.canvas['legendM'] = {'draw':'legendM','markers':markers,'labels':labels,'color':color,'nopt':nopt}
 
-    def setImage(self, data, extent=(0,1,0,1), norm=None, normType='lin', normLim=None, cmap=None, aspect='equal', xnorm=None, ynorm=None):
+    def setImage(self, data, extent=(0,1,0,1), norm=None, normType='lin', normLim=None,
+                 xnorm=None, ynorm=None, **kwargs):
         xextent = extent[:,:2] if np.ndim(extent)>1 else extent[:2]
         yextent = extent[:,2:] if np.ndim(extent)>1 else extent[2:]
         self.setNorm(xdata=xextent,ydata=yextent,zdata=data,
@@ -92,13 +93,18 @@ class subplot:
                      zlim=normLim)        
         self.setOption(xlim=xextent, ylim=yextent)
         self.canvas['image'] = {'data':data,'norm':self.znorm,'normType':normType,
-                                'extent':extent,'cmap':cmap,'aspect':aspect}
+                                'extent':extent,'kwargs':kwargs}
 
     def setColorbar(self, location='right', label=None):
         self.canvas['colorbar'] = {'location':location,'label':label}
 
-    # colorbar on new axis
     def setColorbarNA(self, pos, **nopt):
+        """Plot a colorbar on arbitrary position
+        
+        Example::
+            
+            >>> grp.setColorbarNA(pos=(1.0,0.2,0.01,0.6),label='Mass (g)')
+        """
         opt = {'location':'right','label':None}
         opt.update(nopt)
         self.canvas['colorbarNA'] = {'pos':pos,**opt}

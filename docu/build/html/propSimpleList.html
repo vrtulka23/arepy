@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Simple properties &#8212; arepy 1.0 documentation</title>
+    <title>3.1.2.1. Simple properties &#8212; arepy 1.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Complex properties" href="propComplexList.html" />
-    <link rel="prev" title="Snapshot" href="snap.html" /> 
+    <link rel="next" title="3.1.2.2. Complex properties" href="propComplexList.html" />
+    <link rel="prev" title="3.1. Snapshot" href="snap.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,14 +27,14 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="propComplexList.html" title="Complex properties"
+          <a href="propComplexList.html" title="3.1.2.2. Complex properties"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="snap.html" title="Snapshot"
+          <a href="snap.html" title="3.1. Snapshot"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="simulation.html" >Simulation</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="snap.html" accesskey="U">Snapshot</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="arepy.html" >3. Reading simulation data (arepy)</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="snap.html" accesskey="U">3.1. Snapshot</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -44,7 +44,7 @@
           <div class="body" role="main">
             
   <div class="section" id="simple-properties">
-<h1>Simple properties<a class="headerlink" href="#simple-properties" title="Permalink to this headline">¶</a></h1>
+<h1>3.1.2.1. Simple properties<a class="headerlink" href="#simple-properties" title="Permalink to this headline">¶</a></h1>
 <p>Simple properties are directly taken or derived from the snapshot properties.</p>
 <p>Every property called &lt;NAME&gt; is defined as:</p>
 <dl class="function">
@@ -63,68 +63,22 @@
 
 <p>In the class descriptions below we will list only additional parameters included in the <em>prop</em> dictionary.</p>
 <div class="section" id="basic-properties">
-<h2>Basic properties<a class="headerlink" href="#basic-properties" title="Permalink to this headline">¶</a></h2>
+<h2>3.1.2.1.1. Basic properties<a class="headerlink" href="#basic-properties" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.snap.propSimple">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propSimple</code><a class="headerlink" href="#arepy.files.snap.propSimple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple properties</p>
 <p>Properties in this class can be extracted directly from the Arepo snapshot.</p>
 <dl class="method">
-<dt id="arepy.files.snap.propSimple.prop_CellRadius">
-<code class="sig-name descname">prop_CellRadius</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_CellRadius" title="Permalink to this definition">¶</a></dt>
-<dd><p>Particle cell mean radius</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="arepy.files.snap.propSimple.prop_CellVolume">
-<code class="sig-name descname">prop_CellVolume</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_CellVolume" title="Permalink to this definition">¶</a></dt>
-<dd><p>Particle cell Volume</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="arepy.files.snap.propSimple.prop_Coordinates">
-<code class="sig-name descname">prop_Coordinates</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_Coordinates" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get cell coordinates</p>
+<dt id="arepy.files.snap.propSimple.prop_ParticleIDs">
+<code class="sig-name descname">prop_ParticleIDs</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_ParticleIDs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get cell IDs</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Array of particle coordinates</p>
+<dd class="field-odd"><p>Array with particle IDs</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list[[float]*3]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="arepy.files.snap.propSimple.prop_Density">
-<code class="sig-name descname">prop_Density</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_Density" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get cell densities</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Array of particle densities</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list[float]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="arepy.files.snap.propSimple.prop_FileIndex">
-<code class="sig-name descname">prop_FileIndex</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_FileIndex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Index of a file where the particle is saved</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="arepy.files.snap.propSimple.prop_InternalEnergy">
-<code class="sig-name descname">prop_InternalEnergy</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_InternalEnergy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get cell internal energies</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Array of particle internal energies</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list[float]</p>
+<dd class="field-even"><p>list[int]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -144,23 +98,45 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="arepy.files.snap.propSimple.prop_ParticleIDs">
-<code class="sig-name descname">prop_ParticleIDs</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_ParticleIDs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get cell IDs</p>
+<dt id="arepy.files.snap.propSimple.prop_Density">
+<code class="sig-name descname">prop_Density</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_Density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get cell densities</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Array with particle IDs</p>
+<dd class="field-odd"><p>Array of particle densities</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list[int]</p>
+<dd class="field-even"><p>list[float]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="arepy.files.snap.propSimple.prop_ParticleIndex">
-<code class="sig-name descname">prop_ParticleIndex</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_ParticleIndex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Index of a particle within the dataset</p>
+<dt id="arepy.files.snap.propSimple.prop_InternalEnergy">
+<code class="sig-name descname">prop_InternalEnergy</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_InternalEnergy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get cell internal energies</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Array of particle internal energies</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propSimple.prop_Coordinates">
+<code class="sig-name descname">prop_Coordinates</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_Coordinates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get cell coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Array of particle coordinates</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list[[float]*3]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -206,26 +182,17 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="arepy.files.snap.propSimple.prop_Radius">
-<code class="sig-name descname">prop_Radius</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_Radius" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get radius distances from a given center point</p>
+<dt id="arepy.files.snap.propSimple.prop_Velocities">
+<code class="sig-name descname">prop_Velocities</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_Velocities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get cell velocities</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>center</strong> (<em>[</em><em>int</em><em>,</em><em>int</em><em>,</em><em>int</em><em>]</em>) – Center point coordinates</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Array of particle velocities</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Cell distances from the center</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list[int]</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list[[float]*3]</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="arepy.files.snap.propSimple.prop_Radius2">
-<code class="sig-name descname">prop_Radius2</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_Radius2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Square of a particle radius from a given center</p>
 </dd></dl>
 
 <dl class="method">
@@ -271,17 +238,38 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="arepy.files.snap.propSimple.prop_Velocities">
-<code class="sig-name descname">prop_Velocities</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_Velocities" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get cell velocities</p>
+<dt id="arepy.files.snap.propSimple.prop_FileIndex">
+<code class="sig-name descname">prop_FileIndex</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_FileIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Index of a file where the particle is saved</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propSimple.prop_ParticleIndex">
+<code class="sig-name descname">prop_ParticleIndex</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_ParticleIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Index of a particle within the dataset</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propSimple.prop_Radius">
+<code class="sig-name descname">prop_Radius</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_Radius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get radius distances from a given center point</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Array of particle velocities</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>center</strong> (<em>[</em><em>int</em><em>,</em><em>int</em><em>,</em><em>int</em><em>]</em>) – Center point coordinates</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list[[float]*3]</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Cell distances from the center</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[int]</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propSimple.prop_Radius2">
+<code class="sig-name descname">prop_Radius2</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_Radius2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Square of a particle radius from a given center</p>
 </dd></dl>
 
 <dl class="method">
@@ -290,11 +278,23 @@
 <dd><p>Radial component of the velocities</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="arepy.files.snap.propSimple.prop_CellVolume">
+<code class="sig-name descname">prop_CellVolume</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_CellVolume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Particle cell Volume</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propSimple.prop_CellRadius">
+<code class="sig-name descname">prop_CellRadius</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimple.prop_CellRadius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Particle cell mean radius</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
 <div class="section" id="basic-selectors">
-<h2>Basic selectors<a class="headerlink" href="#basic-selectors" title="Permalink to this headline">¶</a></h2>
+<h2>3.1.2.1.2. Basic selectors<a class="headerlink" href="#basic-selectors" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.snap.propSimpleSelect">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propSimpleSelect</code><a class="headerlink" href="#arepy.files.snap.propSimpleSelect" title="Permalink to this definition">¶</a></dt>
@@ -324,37 +324,6 @@
 </li>
 </ol>
 <dl class="method">
-<dt id="arepy.files.snap.propSimpleSelect.prop_Indexes">
-<code class="sig-name descname">prop_Indexes</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleSelect.prop_Indexes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get current selector indexes</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Array with selector indexes</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list[bool]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="arepy.files.snap.propSimpleSelect.prop_SelectBox">
-<code class="sig-name descname">prop_SelectBox</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleSelect.prop_SelectBox" title="Permalink to this definition">¶</a></dt>
-<dd><p>Select cells from a box</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>center</strong> (<em>[</em><em>float</em><em>]</em><em>*6</em>) – Box limits (xmin,xmax,ymin,ymax,zmin,zmax)</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Selection indexes of the selected particles</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list[int]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="arepy.files.snap.propSimpleSelect.prop_SelectIds">
 <code class="sig-name descname">prop_SelectIds</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleSelect.prop_SelectIds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select cells with particular IDs</p>
@@ -373,23 +342,6 @@
 <p class="admonition-title">Note</p>
 <p>For large numbers of IDs this can get quite slow, because it uses <em>numpy.in1d()</em> function.</p>
 </div>
-</dd></dl>
-
-<dl class="method">
-<dt id="arepy.files.snap.propSimpleSelect.prop_SelectPoints">
-<code class="sig-name descname">prop_SelectPoints</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleSelect.prop_SelectPoints" title="Permalink to this definition">¶</a></dt>
-<dd><p>Select cells closest to the given points</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>grid</strong> (<em>list</em><em>[</em><em>[</em><em>float</em><em>]</em><em>*3</em><em>]</em>) – List of grid points</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Selection indexes of the selected particles</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list[int]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="method">
@@ -412,20 +364,68 @@
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="arepy.files.snap.propSimpleSelect.prop_SelectBox">
+<code class="sig-name descname">prop_SelectBox</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleSelect.prop_SelectBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select cells from a box</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>center</strong> (<em>[</em><em>float</em><em>]</em><em>*6</em>) – Box limits (xmin,xmax,ymin,ymax,zmin,zmax)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Selection indexes of the selected particles</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propSimpleSelect.prop_SelectPoints">
+<code class="sig-name descname">prop_SelectPoints</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleSelect.prop_SelectPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select cells closest to the given points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>grid</strong> (<em>list</em><em>[</em><em>[</em><em>float</em><em>]</em><em>*3</em><em>]</em>) – List of grid points</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Selection indexes of the selected particles</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propSimpleSelect.prop_Indexes">
+<code class="sig-name descname">prop_Indexes</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleSelect.prop_Indexes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get current selector indexes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Array with selector indexes</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list[bool]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
 <div class="section" id="basic-mathematical-functions">
-<h2>Basic mathematical functions<a class="headerlink" href="#basic-mathematical-functions" title="Permalink to this headline">¶</a></h2>
+<h2>3.1.2.1.3. Basic mathematical functions<a class="headerlink" href="#basic-mathematical-functions" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.snap.propSimpleMath">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propSimpleMath</code><a class="headerlink" href="#arepy.files.snap.propSimpleMath" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple mathematical operation</p>
 <p>The properties in this class perform simple mathematical operations with the snapshot data</p>
 <dl class="method">
-<dt id="arepy.files.snap.propSimpleMath.prop_MathDivide">
-<code class="sig-name descname">prop_MathDivide</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleMath.prop_MathDivide" title="Permalink to this definition">¶</a></dt>
-<dd><p>Division of two datasets</p>
+<dt id="arepy.files.snap.propSimpleMath.prop_MathPlus">
+<code class="sig-name descname">prop_MathPlus</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleMath.prop_MathPlus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Addition of two datasets</p>
 </dd></dl>
 
 <dl class="method">
@@ -435,43 +435,43 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="arepy.files.snap.propSimpleMath.prop_MathModulo">
-<code class="sig-name descname">prop_MathModulo</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleMath.prop_MathModulo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Modulo of two datasets</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="arepy.files.snap.propSimpleMath.prop_MathMultiply">
 <code class="sig-name descname">prop_MathMultiply</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleMath.prop_MathMultiply" title="Permalink to this definition">¶</a></dt>
 <dd><p>Multiplication of two datasets</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="arepy.files.snap.propSimpleMath.prop_MathPlus">
-<code class="sig-name descname">prop_MathPlus</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleMath.prop_MathPlus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Addition of two datasets</p>
+<dt id="arepy.files.snap.propSimpleMath.prop_MathDivide">
+<code class="sig-name descname">prop_MathDivide</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleMath.prop_MathDivide" title="Permalink to this definition">¶</a></dt>
+<dd><p>Division of two datasets</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propSimpleMath.prop_MathModulo">
+<code class="sig-name descname">prop_MathModulo</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleMath.prop_MathModulo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modulo of two datasets</p>
 </dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="basic-statistical-functions">
-<h2>Basic statistical functions<a class="headerlink" href="#basic-statistical-functions" title="Permalink to this headline">¶</a></h2>
+<h2>3.1.2.1.4. Basic statistical functions<a class="headerlink" href="#basic-statistical-functions" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.snap.propSimpleStat">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propSimpleStat</code><a class="headerlink" href="#arepy.files.snap.propSimpleStat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Simple statistics</p>
 <p>The properties in this class perform simple statistical operations on the snapshot data.</p>
 <dl class="method">
-<dt id="arepy.files.snap.propSimpleStat.prop_Hist1D">
-<code class="sig-name descname">prop_Hist1D</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleStat.prop_Hist1D" title="Permalink to this definition">¶</a></dt>
-<dd><p>Histogram of a single property</p>
+<dt id="arepy.files.snap.propSimpleStat.prop_StatMinimum">
+<code class="sig-name descname">prop_StatMinimum</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleStat.prop_StatMinimum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimum value of a property</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="arepy.files.snap.propSimpleStat.prop_Hist2D">
-<code class="sig-name descname">prop_Hist2D</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleStat.prop_Hist2D" title="Permalink to this definition">¶</a></dt>
-<dd><p>Histogram of two properties</p>
+<dt id="arepy.files.snap.propSimpleStat.prop_StatMinPos">
+<code class="sig-name descname">prop_StatMinPos</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleStat.prop_StatMinPos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimum positive value of a property</p>
 </dd></dl>
 
 <dl class="method">
@@ -487,28 +487,28 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="arepy.files.snap.propSimpleStat.prop_StatMinPos">
-<code class="sig-name descname">prop_StatMinPos</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleStat.prop_StatMinPos" title="Permalink to this definition">¶</a></dt>
-<dd><p>Minimum positive value of a property</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="arepy.files.snap.propSimpleStat.prop_StatMinimum">
-<code class="sig-name descname">prop_StatMinimum</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleStat.prop_StatMinimum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Minimum value of a property</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="arepy.files.snap.propSimpleStat.prop_StatSum">
 <code class="sig-name descname">prop_StatSum</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleStat.prop_StatSum" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sum of values of a property</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propSimpleStat.prop_Hist1D">
+<code class="sig-name descname">prop_Hist1D</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleStat.prop_Hist1D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Histogram of a single property</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.propSimpleStat.prop_Hist2D">
+<code class="sig-name descname">prop_Hist2D</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSimpleStat.prop_Hist2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Histogram of two properties</p>
 </dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="sgchem-properties">
-<h2>SGChem properties<a class="headerlink" href="#sgchem-properties" title="Permalink to this headline">¶</a></h2>
+<h2>3.1.2.1.5. SGChem properties<a class="headerlink" href="#sgchem-properties" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.snap.propSgchem1">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propSgchem1</code><a class="headerlink" href="#arepy.files.snap.propSgchem1" title="Permalink to this definition">¶</a></dt>
@@ -524,20 +524,6 @@
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>list[float]*9</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="arepy.files.snap.propSgchem1.prop_x_DP">
-<code class="sig-name descname">prop_x_DP</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSgchem1.prop_x_DP" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abundance of a ionized Deuterium</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>List of D+ abundances</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list[float]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -570,25 +556,13 @@
 </dl>
 </dd></dl>
 
-</dd></dl>
-
-</div>
-<div class="section" id="sink-particle-properties">
-<h2>Sink particle properties<a class="headerlink" href="#sink-particle-properties" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="arepy.files.snap.propSink">
-<em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propSink</code><a class="headerlink" href="#arepy.files.snap.propSink" title="Permalink to this definition">¶</a></dt>
-<dd><p>Properties of the sink particle file</p>
-<p>Propertis in this class are extracted from the sink particle snapshot files.
-Therefore, they are accessible only if the sink particle snapshot are available.
-It is possible to call sink snapshot properties when particle type is set to ptype=5.</p>
 <dl class="method">
-<dt id="arepy.files.snap.propSink.prop_SinkAccretionRate">
-<code class="sig-name descname">prop_SinkAccretionRate</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSink.prop_SinkAccretionRate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns value of the sink accretion rate</p>
+<dt id="arepy.files.snap.propSgchem1.prop_x_DP">
+<code class="sig-name descname">prop_x_DP</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSgchem1.prop_x_DP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abundance of a ionized Deuterium</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Accretion rate of sink particles</p>
+<dd class="field-odd"><p>List of D+ abundances</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>list[float]</p>
@@ -596,6 +570,18 @@ It is possible to call sink snapshot properties when particle type is set to pty
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="sink-particle-properties">
+<h2>3.1.2.1.6. Sink particle properties<a class="headerlink" href="#sink-particle-properties" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="arepy.files.snap.propSink">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propSink</code><a class="headerlink" href="#arepy.files.snap.propSink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Properties of the sink particle file</p>
+<p>Propertis in this class are extracted from the sink particle snapshot files.
+Therefore, they are accessible only if the sink particle snapshot are available.
+It is possible to call sink snapshot properties when particle type is set to ptype=5.</p>
 <dl class="method">
 <dt id="arepy.files.snap.propSink.prop_SinkFormationOrder">
 <code class="sig-name descname">prop_SinkFormationOrder</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSink.prop_SinkFormationOrder" title="Permalink to this definition">¶</a></dt>
@@ -652,11 +638,25 @@ It is possible to call sink snapshot properties when particle type is set to pty
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="arepy.files.snap.propSink.prop_SinkAccretionRate">
+<code class="sig-name descname">prop_SinkAccretionRate</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSink.prop_SinkAccretionRate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns value of the sink accretion rate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Accretion rate of sink particles</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
 <div class="section" id="sink-particle-selectors">
-<h2>Sink particle selectors<a class="headerlink" href="#sink-particle-selectors" title="Permalink to this headline">¶</a></h2>
+<h2>3.1.2.1.7. Sink particle selectors<a class="headerlink" href="#sink-particle-selectors" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.snap.propSinkSelect">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propSinkSelect</code><a class="headerlink" href="#arepy.files.snap.propSinkSelect" title="Permalink to this definition">¶</a></dt>
@@ -692,24 +692,24 @@ It is possible to call sink snapshot properties when particle type is set to pty
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Simple properties</a><ul>
-<li><a class="reference internal" href="#basic-properties">Basic properties</a></li>
-<li><a class="reference internal" href="#basic-selectors">Basic selectors</a></li>
-<li><a class="reference internal" href="#basic-mathematical-functions">Basic mathematical functions</a></li>
-<li><a class="reference internal" href="#basic-statistical-functions">Basic statistical functions</a></li>
-<li><a class="reference internal" href="#sgchem-properties">SGChem properties</a></li>
-<li><a class="reference internal" href="#sink-particle-properties">Sink particle properties</a></li>
-<li><a class="reference internal" href="#sink-particle-selectors">Sink particle selectors</a></li>
+<li><a class="reference internal" href="#">3.1.2.1. Simple properties</a><ul>
+<li><a class="reference internal" href="#basic-properties">3.1.2.1.1. Basic properties</a></li>
+<li><a class="reference internal" href="#basic-selectors">3.1.2.1.2. Basic selectors</a></li>
+<li><a class="reference internal" href="#basic-mathematical-functions">3.1.2.1.3. Basic mathematical functions</a></li>
+<li><a class="reference internal" href="#basic-statistical-functions">3.1.2.1.4. Basic statistical functions</a></li>
+<li><a class="reference internal" href="#sgchem-properties">3.1.2.1.5. SGChem properties</a></li>
+<li><a class="reference internal" href="#sink-particle-properties">3.1.2.1.6. Sink particle properties</a></li>
+<li><a class="reference internal" href="#sink-particle-selectors">3.1.2.1.7. Sink particle selectors</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="snap.html"
-                        title="previous chapter">Snapshot</a></p>
+                        title="previous chapter">3.1. Snapshot</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="propComplexList.html"
-                        title="next chapter">Complex properties</a></p>
+                        title="next chapter">3.1.2.2. Complex properties</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -741,14 +741,14 @@ It is possible to call sink snapshot properties when particle type is set to pty
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="propComplexList.html" title="Complex properties"
+          <a href="propComplexList.html" title="3.1.2.2. Complex properties"
              >next</a> |</li>
         <li class="right" >
-          <a href="snap.html" title="Snapshot"
+          <a href="snap.html" title="3.1. Snapshot"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="simulation.html" >Simulation</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="snap.html" >Snapshot</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="arepy.html" >3. Reading simulation data (arepy)</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="snap.html" >3.1. Snapshot</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

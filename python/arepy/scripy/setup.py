@@ -1,22 +1,11 @@
-import os
-from subprocess import call
 import arepy as apy
-
-''' Example use:
-
-class setup(scr.setup):
-    def init(self):
-        self.opt['MeshRelax'] = True
-    def config(self,fileName):
-        f = apy.files.config(self.dirSetup+'/Config.sh')
-        f.setValue({
-             'MESHRELAX': self.opt['MeshRelax']
-        })
-        f.write(fileName)
-    ...
-'''
+from subprocess import call
+import os
 
 class setup:
+    """Simulation setup
+    """
+
     def __enter__(self):
         return self
 
@@ -71,12 +60,12 @@ class setup:
         if any(i in [None,'run'] for i in self.simPart):
             apy.shell.printc('- run file'+self.sim.fileRunsh)
             self.setupRun(self.sim.fileRunsh,{
-                "NUM_NODES":     self.job['nodes'] if 'nodes'       in self.job else 1,
-                "NUM_PROC":      self.job['proc']  if 'proc'        in self.job else 40,
-                "JOB_WALL_TIME": self.job['time']  if 'time'        in self.job else "1:00:00",
-                "JOB_TYPE":      self.job['type']  if 'type'        in self.job else "fat",
-                "FLAGS_RUN":     self.job['frun']  if 'frun'        in self.job else "",
-                "FLAGS_RESTART": self.job['frestart'] if 'frestart' in self.job else "1",
+                "NUM_NODES":      self.job['nodes']        if 'nodes'        in self.job else 1,
+                "NUM_PROC":       self.job['proc']         if 'proc'         in self.job else 40,
+                "JOB_WALL_TIME":  self.job['time']         if 'time'         in self.job else "1:00:00",
+                "JOB_TYPE":       self.job['type']         if 'type'         in self.job else "fat",
+                "FLAGS_RUN":      self.job['frun']         if 'frun'         in self.job else "",
+                "FLAGS_RESTART":  self.job['frestart']     if 'frestart'     in self.job else "1",
 
                 'IMAGE_NODES':    self.job['img_nodes']    if 'img_nodes'    in self.job else 1,
                 'IMAGE_PROC':     self.job['img_proc']     if 'img_proc'     in self.job else 40,
@@ -113,44 +102,64 @@ class setup:
             apy.shell.printc('- other files')
             self.setupOther()
 
-    # additional initialization
     def init(self):
+        """Simulation initialization
+        """
         return
 
-    # Create the main simulation directory
     def setupDirectory(self):
+        """Dictionary setup
+        """
         if os.path.isdir(self.sim.dirSim):
             apy.shell.prompt('Simulation directory already exists, override?')
             call(['rm','-f','-r',self.sim.dirSim])
         if not os.path.isdir(self.sim.dirSim):
             call(['mkdir','-p',self.sim.dirSim])
 
-    # Create a configuration file
     def setupConfig(self,fileName):
+        """Configuration file setup
+        
+        :param str fileName: Path to a configuration file
+        """
         return
 
-    # Create a parameter file
     def setupParam(self,fileName):
+        """Parameter file setup
+        
+        :param str fileName: Path to a parameter file
+        """
         return
 
-    # Create a running scrip
     def setupRun(self,fileName):
+        """Run script setup
+        
+        :param str fileName: Path to a run script file
+        """
         return
     
-    # Create a file with sources
     def setupSources(self,fileName):
+        """Setup of radiation sources
+        
+        :param str fileName: Path to a file with sources
+        """
         return
 
-    # Create initial conditions
     def setupIcs(self,fileName):
+        """Setup of initial conditions
+        
+        :param str fileName: Path to an initial conditions
+        """
         return
 
-    # Create an list of output times
     def setupOlist(self,fileName):
+        """Setup of time output list
+        
+        :param str fileName: Path to an output list file
+        """
         return
 
-    # Do some additional initialization
     def setupOther(self):
+        """Aditional setup"""
         return
 
     # Create initial output directory
