@@ -2,6 +2,8 @@ import arepy as apy
 import numpy as np
 
 class plot:
+    """General class of a plot
+    """
     def __init__(self,action,proj,dirName,fileName=None,*args):
         self.proj = proj                      # project object
         self.args = args                      # additional arguments
@@ -29,6 +31,7 @@ class plot:
         self.tab = None
         self.grps = None
 
+        self.settings()                       # plot settings
         self.init()                           # initialization of the plot        
 
         if action=='plot':
@@ -37,11 +40,42 @@ class plot:
             self._show()
         elif action=='movie':
             self._movie()
+
+    def settings(self):
+        """Plot settings
+
+        This is the place for general settings of the simulation.
+        For example the plotting units can be set here::
+        
+            >>> self.opt['simOpt'] = {
+            >>>     'initUnitsNew': {'length':apy.const.pc},
+            >>>     'initImages':True,
+            >>>     'initSinks':True,
+            >>>     'initSnap': True,
+            >>> }
+        """
+        return
             
     def init(self):
+        """Initialization of a plot
+
+        This is the place for particular settings of the plot::
+        
+            >>> self.setProcessors( fig=6 )
+            >>> self.setGroups(['names','sim','snaps'],[            
+            >>>     ('nrpm3',4, 100),
+            >>>     ('nrp0', 5, 65),
+            >>> ])
+            >>> self.setFigure(2,5,1)
+        """
         return
 
     def getSimulation(self,sim,**opt):
+        """Get a project simulation
+        
+        :param int sim: Simulation ID
+        :param dict opt: Additional simulation settings
+        """
         if 'initSnap' in opt:
             if isinstance(opt['initSnap'],dict) and 'nproc' not in opt['initSnap']:
                 opt['initSnap']['nproc'] = self.nproc['snap']
@@ -49,16 +83,26 @@ class plot:
                 opt['initSnap'] = {'nproc': self.nproc['snap']}
         return self.proj.getSimulation(sim,**opt)
 
-    # Set number of available processors
     def setProcessors(self,fig=1,kdt=1,snap=1):
+        """Distribute number of processors
+        
+        :param int fig: Number of processors used for figure plotting
+        :param int kdt: Number of processors used by a KDTree algorithm
+        :param int snap: Number of processors used to read a multi-file snapshot
+        """
         self.nproc = {
             'fig':  fig,
             'kdt':  kdt,
             'snap': snap
         }
 
-    # Add group
     def setGroups(self,names,options,**opt):
+        """Set simulation groups
+        
+        :param list[str] names: Table column names
+        :param list[tuple] options: Table rows
+        :param dict opt: Additional group options
+        """
         nopt = {
             'dirCache': self.proj.dirResults+'/'+self.dirPlot+'/cache',
             'nproc':    self.nproc['fig'],
@@ -69,6 +113,17 @@ class plot:
 
     # Add a new figure to the list of plots
     def setFigure(self,ncol,nrow,nfig,movie=False,show=False,debug=False,plot=True,**opt):
+        """Figure settings
+        
+        :param int ncol: Number of collumns
+        :param int nrow: Number of rows
+        :param int nfig: Number of figures
+        :param bool movie: Create a movie from all figures
+        :param bool show: Display figures at the end of the plotting
+        :param bool debug: Save figures into a debug folder
+        :param bool plot: Plot figures
+        :param dict opt: Additional figure options
+        """
         nopt = {
             'debug':      np.any([debug,self.debug]),
             'fileName':   self.fileName,
@@ -91,6 +146,12 @@ class plot:
 
     # Add new table to the list of plots
     def setTable(self,show=False,debug=False,**opt):
+        """Table settings
+
+        :param bool show: Display table at the end of the calculation
+        :param bool debug: Save table into a debug folder
+        :param dict opt: Additional table options
+        """
         nopt = {
             'debug':      np.any([debug,self.debug]),
             'fileName':   self.fileName,
@@ -106,6 +167,7 @@ class plot:
 
     # plot
     def plot(self):
+        """Main plotting routine"""
         return
     def _plot(self):
         if self.optPlot is None:

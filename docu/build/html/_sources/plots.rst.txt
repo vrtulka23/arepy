@@ -1,0 +1,9 @@
+Creating plots
+**************
+
+
+Plotting class
+^^^^^^^^^^^^^^
+
+.. autoclass:: arepy.scripy.plot
+   :members:

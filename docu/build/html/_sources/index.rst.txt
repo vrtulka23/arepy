@@ -12,7 +12,7 @@ Welcome to arepy's documentation!
 
    intro
    simulation
-
+   plots
 
 Indices and tables
 ==================

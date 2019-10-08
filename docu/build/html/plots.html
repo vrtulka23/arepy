@@ -1,0 +1,227 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Creating plots &#8212; arepy 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Sink snapshots" href="sink.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sink.html" title="Sink snapshots"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="creating-plots">
+<h1>Creating plots<a class="headerlink" href="#creating-plots" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="plotting-class">
+<h2>Plotting class<a class="headerlink" href="#plotting-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="arepy.scripy.plot">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.scripy.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param">action</em>, <em class="sig-param">proj</em>, <em class="sig-param">dirName</em>, <em class="sig-param">fileName=None</em>, <em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>General class of a plot</p>
+<dl class="method">
+<dt id="arepy.scripy.plot.getSimulation">
+<code class="sig-name descname">getSimulation</code><span class="sig-paren">(</span><em class="sig-param">sim</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.getSimulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a project simulation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim</strong> (<em>int</em>) – Simulation ID</p></li>
+<li><p><strong>opt</strong> (<em>dict</em>) – Additional simulation settings</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.plot.init">
+<code class="sig-name descname">init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialization of a plot</p>
+<p>This is the place for particular settings of the plot:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">setProcessors</span><span class="p">(</span> <span class="n">fig</span><span class="o">=</span><span class="mi">6</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">setGroups</span><span class="p">([</span><span class="s1">&#39;names&#39;</span><span class="p">,</span><span class="s1">&#39;sim&#39;</span><span class="p">,</span><span class="s1">&#39;snaps&#39;</span><span class="p">],[</span>            
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">(</span><span class="s1">&#39;nrpm3&#39;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">(</span><span class="s1">&#39;nrp0&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">65</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">setFigure</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.plot.plot">
+<code class="sig-name descname">plot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main plotting routine</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.plot.setFigure">
+<code class="sig-name descname">setFigure</code><span class="sig-paren">(</span><em class="sig-param">ncol</em>, <em class="sig-param">nrow</em>, <em class="sig-param">nfig</em>, <em class="sig-param">movie=False</em>, <em class="sig-param">show=False</em>, <em class="sig-param">debug=False</em>, <em class="sig-param">plot=True</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.setFigure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Figure settings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ncol</strong> (<em>int</em>) – Number of collumns</p></li>
+<li><p><strong>nrow</strong> (<em>int</em>) – Number of rows</p></li>
+<li><p><strong>nfig</strong> (<em>int</em>) – Number of figures</p></li>
+<li><p><strong>movie</strong> (<em>bool</em>) – Create a movie from all figures</p></li>
+<li><p><strong>show</strong> (<em>bool</em>) – Display figures at the end of the plotting</p></li>
+<li><p><strong>debug</strong> (<em>bool</em>) – Save figures into a debug folder</p></li>
+<li><p><strong>plot</strong> (<em>bool</em>) – Plot figures</p></li>
+<li><p><strong>opt</strong> (<em>dict</em>) – Additional figure options</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.plot.setGroups">
+<code class="sig-name descname">setGroups</code><span class="sig-paren">(</span><em class="sig-param">names</em>, <em class="sig-param">options</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.setGroups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set simulation groups</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>names</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Table column names</p></li>
+<li><p><strong>options</strong> (<em>list</em><em>[</em><em>tuple</em><em>]</em>) – Table rows</p></li>
+<li><p><strong>opt</strong> (<em>dict</em>) – Additional group options</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.plot.setProcessors">
+<code class="sig-name descname">setProcessors</code><span class="sig-paren">(</span><em class="sig-param">fig=1</em>, <em class="sig-param">kdt=1</em>, <em class="sig-param">snap=1</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.setProcessors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Distribute number of processors</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fig</strong> (<em>int</em>) – Number of processors used for figure plotting</p></li>
+<li><p><strong>kdt</strong> (<em>int</em>) – Number of processors used by a KDTree algorithm</p></li>
+<li><p><strong>snap</strong> (<em>int</em>) – Number of processors used to read a multi-file snapshot</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.plot.setTable">
+<code class="sig-name descname">setTable</code><span class="sig-paren">(</span><em class="sig-param">show=False</em>, <em class="sig-param">debug=False</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.setTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Table settings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>show</strong> (<em>bool</em>) – Display table at the end of the calculation</p></li>
+<li><p><strong>debug</strong> (<em>bool</em>) – Save table into a debug folder</p></li>
+<li><p><strong>opt</strong> (<em>dict</em>) – Additional table options</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.plot.settings">
+<code class="sig-name descname">settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.plot.settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot settings</p>
+<p>This is the place for general settings of the simulation.
+For example the plotting units can be set here:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;simOpt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;initUnitsNew&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;length&#39;</span><span class="p">:</span><span class="n">apy</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">pc</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;initImages&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;initSinks&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;initSnap&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Creating plots</a><ul>
+<li><a class="reference internal" href="#plotting-class">Plotting class</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="sink.html"
+                        title="previous chapter">Sink snapshots</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/plots.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="sink.html" title="Sink snapshots"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Ondrej Jaura.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>
