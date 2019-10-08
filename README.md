@@ -52,11 +52,10 @@ Arepo source code can be either stored directly in the arepy main directory `/pa
 ```bash
 DIR_AREPO=/my/path/to/arepo
 ```
-For more system settings please refer to the ![shell settings](https://github.com/vrtulka23/arepy/tree/master/shell).
 
 ## Documentation and examples
 
-Example scripts are given in subdirectories in corresponding `README.md` files. You can quickly go to a corresponding subdirectory by clicking links provided in the file structure section.
+For more information see the ![documentation](https://vrtulka23.github.io/arepy/index.html).
 
 ## Licensing and contribution
 Everybody is welcomed to use this code for private or research purpouse in terms of its license.
