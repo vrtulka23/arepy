@@ -13,6 +13,18 @@ class simulation:
     :param str fileNameIcs':   Name of a file with initial conditions
     :param bool comoving:      Indicates whether simulation is comoving or not.
     :param int nsub:           Number of subfiles
+
+    Example of use::
+    
+        >>> import arepy as apy
+        >>> sim = apy.files.simulation(
+        >>>     '/path/to/simulation/directory/', 'simulationName',
+        >>>     initUnitsNew={'length': apy.const.kpc, 'time': apy.const.kyr}
+        >>> )
+        >>> snap = sim.getSnapshot(10)
+        >>> snap.getProperty('Masses')
+    
+        [234.234, 33.34, 234.34,...]
     """
 
     def __enter__(self):
@@ -60,7 +72,7 @@ class simulation:
         else:
             self.dirResults = self.dirSim+'/'+self.opt['dirResults']
         if apy.shell.isfile(self.fileParam):
-            self.initParamNames()
+            self._initParamNames()
             
         if apy.shell.isfile(self.fileConfig):
             cf = apy.files.config(self.fileConfig) 
@@ -80,18 +92,18 @@ class simulation:
         if self.opt['initUnitsOld']:
             self.opt['initUnits'] = {'old':self.opt['initUnitsOld']}
 
-        self.initChem(cf,pf,self.opt['initChem'])     # initialize chemistry properties
-        self.initUnits(cf,pf,self.opt['initUnits'])   # initialize units from the parameter file
-        self.initSnap(cf,pf,self.opt['initSnap'])     # initialize sink file settings
-        self.initSinks(cf,pf,self.opt['initSinks'])   # initialize sink file settings
-        self.initImages(cf,pf,self.opt['initImages']) # initialize sink file settings
+        self._initChem(cf,pf,self.opt['initChem'])     # initialize chemistry properties
+        self._initUnits(cf,pf,self.opt['initUnits'])   # initialize units from the parameter file
+        self._initSnap(cf,pf,self.opt['initSnap'])     # initialize sink file settings
+        self._initSinks(cf,pf,self.opt['initSinks'])   # initialize sink file settings
+        self._initImages(cf,pf,self.opt['initImages']) # initialize sink file settings
 
     ###########################
     # Additional initialization
     ###########################
 
     # Initialize additional file/dir names dependant on the parameter file
-    def initParamNames(self):
+    def _initParamNames(self):
         with apy.files.param(self.fileParam) as f:
             params = ['InitCondFile','OutputDir','SnapshotFileBase','TestSrcFile','OutputListOn','OutputListFilename']
             fIcs, dOutput, fSnapBase, fSources, isOlist, fOlist = f.getValue(params)
@@ -117,7 +129,7 @@ class simulation:
                 self.fileOlist = fOlist if fOlist[0]=='/' else self.dirSim +'/'+ fOlist
 
     # Initialize constants
-    def initChem(self,cf,pf,opt):
+    def _initChem(self,cf,pf,opt):
         if isinstance(opt,dict):
             self.optChem = opt.copy()
         elif isinstance(opt,str):
@@ -137,7 +149,7 @@ class simulation:
                     self.optChem['abund'] = 'HydrogenOnly'
 
     # Initialize units
-    def initUnits(self,cf,pf,opt):
+    def _initUnits(self,cf,pf,opt):
         def loadOld():
             names = ['UnitMass_in_g','UnitLength_in_cm','UnitVelocity_in_cm_per_s','UnitPhotons_per_s']
             values = pf.getValue(names)
@@ -152,7 +164,7 @@ class simulation:
             self.units = None
 
     # Initialize snapshot file settings
-    def initSnap(self,cf,pf,opt):
+    def _initSnap(self,cf,pf,opt):
         if opt is not False:
             names = ['NumFilesPerSnapshot','ComovingIntegrationOn']
             values = pf.getValue(names)
@@ -169,7 +181,7 @@ class simulation:
             self.optSnap = dopt.update(opt) if isinstance(opt,dict) else dopt
 
     # Initialize sink file settings
-    def initSinks(self,cf,pf,opt):
+    def _initSinks(self,cf,pf,opt):
         if opt is True:
             values = cf.getValue(['SINK_SIMPLEX','SINK_PARTICLES_VARIABLE_ACC_RADIUS',
                                   'SGCHEM_ACCRETION_LUMINOSITY','SINK_PARTICLES_FEEDBACK'])
@@ -178,7 +190,7 @@ class simulation:
             self.optSinks = opt if isinstance(opt,dict) else {}
 
     # Initialize image file settings
-    def initImages(self,cf,pf,opt):
+    def _initImages(self,cf,pf,opt):
         if opt is True:
             self.optImages = {
                 'boxSize':np.array( pf.getValue(['PicXmin','PicXmax','PicYmin','PicYmax','PicZmin','PicZmax']) ),
@@ -193,14 +205,24 @@ class simulation:
 
     # Compose a snapshot directory name
     def dirSnap(self,snap,init=False):
+        """Compose a snapshot directory path
+        
+        :param int snap: Number of a snapshot
+        :param bool init: Switches between normal or initial output directory
+        :return str: Path of the simulation output directory
+        """
         dirName = self.dirOutputIni if init else self.dirOutput
         if self.opt['nsub']>1: 
             snapNum = '%03d'%snap if isinstance(snap,(int,float)) else snap
             dirName = dirName+'/'+self.dirNameSnap%snapNum      
         return dirName
 
-    # Compose a sink file name
     def fileSink(self,snap=None):
+        """Compose a sink file name
+
+        :param int snap: Snapshot number
+        :return str: Path to the sink snapshot file
+        """
         if snap is None:
             fileSink = self.dirSnap('*') if self.opt['nsub']>1 else self.fileNameSink%'*'
         else:
@@ -208,8 +230,13 @@ class simulation:
             fileSink = self.fileNameSink%(snapNum) if self.opt['nsub']>1 else self.fileNameSink%snapNum
         return self.dirSnap(snap) +'/'+ fileSink        
 
-    # Compose a snapshot file name
     def fileSnap(self,snap=None,init=False):
+        """Compose a snapshot file name
+        
+        :param int snap: Snapshot number
+        :param bool init: Switches between snapshots in normal or initial output directory
+        :return str: Path to the snapshot file
+        """
         if snap is None:
             fileSnap = self.dirSnap('*') if self.opt['nsub']>1 else self.fileNameSnap%'*'
         else:
@@ -280,7 +307,7 @@ class simulation:
         """Get an object with radiation sources
 
         :return: Radiation sources object
-        :rtype: apy.files.sources
+        :rtype: :class:`apy.files.sources`
         """
         return apy.files.sources(self.fileSources)
 
@@ -288,7 +315,7 @@ class simulation:
         """Get a parameter file object
         
         :return: Parameter file object
-        :rtype: apy.files.param
+        :rtype: :class:`apy.files.param`
         """
         return apy.files.param(self.fileParam)
 
@@ -296,7 +323,7 @@ class simulation:
         """Get a configuration file object
         
         :return: Configuration file object
-        :rtype: apy.files.config
+        :rtype: :class:`apy.files.config`
         """
         return apy.files.config(self.fileConfig)
 

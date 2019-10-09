@@ -90,6 +90,66 @@
 </ul>
 </dd>
 </dl>
+<p>Example of use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">arepy</span> <span class="k">as</span> <span class="nn">apy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">apy</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">simulation</span><span class="p">(</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;/path/to/simulation/directory/&#39;</span><span class="p">,</span> <span class="s1">&#39;simulationName&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">initUnitsNew</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;length&#39;</span><span class="p">:</span> <span class="n">apy</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">kpc</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="n">apy</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">kyr</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">snap</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">getSnapshot</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">snap</span><span class="o">.</span><span class="n">getProperty</span><span class="p">(</span><span class="s1">&#39;Masses&#39;</span><span class="p">)</span>
+
+<span class="go">[234.234, 33.34, 234.34,...]</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="arepy.files.simulation.dirSnap">
+<code class="sig-name descname">dirSnap</code><span class="sig-paren">(</span><em class="sig-param">snap</em>, <em class="sig-param">init=False</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.simulation.dirSnap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compose a snapshot directory path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>snap</strong> (<em>int</em>) – Number of a snapshot</p></li>
+<li><p><strong>init</strong> (<em>bool</em>) – Switches between normal or initial output directory</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return str</dt>
+<dd class="field-even"><p>Path of the simulation output directory</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.simulation.fileSink">
+<code class="sig-name descname">fileSink</code><span class="sig-paren">(</span><em class="sig-param">snap=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.simulation.fileSink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compose a sink file name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>snap</strong> (<em>int</em>) – Snapshot number</p>
+</dd>
+<dt class="field-even">Return str</dt>
+<dd class="field-even"><p>Path to the sink snapshot file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.simulation.fileSnap">
+<code class="sig-name descname">fileSnap</code><span class="sig-paren">(</span><em class="sig-param">snap=None</em>, <em class="sig-param">init=False</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.simulation.fileSnap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compose a snapshot file name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>snap</strong> (<em>int</em>) – Snapshot number</p></li>
+<li><p><strong>init</strong> (<em>bool</em>) – Switches between snapshots in normal or initial output directory</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return str</dt>
+<dd class="field-even"><p>Path to the snapshot file</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="arepy.files.simulation.getImage">
 <code class="sig-name descname">getImage</code><span class="sig-paren">(</span><em class="sig-param">isnap</em>, <em class="sig-param">iprop</em>, <em class="sig-param">itype</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.simulation.getImage" title="Permalink to this definition">¶</a></dt>
@@ -154,7 +214,7 @@
 <dd class="field-odd"><p>Radiation sources object</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>apy.files.sources</p>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">apy.files.sources</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -168,7 +228,7 @@
 <dd class="field-odd"><p>Parameter file object</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>apy.files.param</p>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">apy.files.param</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -182,7 +242,7 @@
 <dd class="field-odd"><p>Configuration file object</p>
 </dd>
 <dt class="field-even">Return type</dt>
-<dd class="field-even"><p>apy.files.config</p>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">apy.files.config</span></code></p>
 </dd>
 </dl>
 </dd></dl>
