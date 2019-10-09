@@ -255,7 +255,7 @@ class simulation:
         :param str iprop: Image property
         :param str itype: Image type (slice/proj)
         :return: Image object
-        :rtype: apy.files.image
+        :rtype: :class:`arepy.files.image`
         """
         if iprop in self.optChem['rates']:
             i = self.optChem['rates'].index(iprop)
@@ -281,7 +281,7 @@ class simulation:
 
         :param int snap: Snapshot number
         :return: Snapshot object
-        :rtype: apy.files.snap
+        :rtype: :class:`arepy.files.snap`
         """
         fileName = self.fileSnap(snap)
         nopt = self.optSnap.copy()
@@ -296,7 +296,7 @@ class simulation:
 
         :param int snap: Snapshot number
         :return: Sink snapshot object
-        :rtype: apy.files.sink
+        :rtype: :class:`arepy.files.sink`
         """
         nopt = self.optSinks.copy()
         nopt.update(opt)
@@ -307,7 +307,7 @@ class simulation:
         """Get an object with radiation sources
 
         :return: Radiation sources object
-        :rtype: :class:`apy.files.sources`
+        :rtype: :class:`arepy.files.sources`
         """
         return apy.files.sources(self.fileSources)
 
@@ -315,7 +315,7 @@ class simulation:
         """Get a parameter file object
         
         :return: Parameter file object
-        :rtype: :class:`apy.files.param`
+        :rtype: :class:`arepy.files.param`
         """
         return apy.files.param(self.fileParam)
 
@@ -323,7 +323,7 @@ class simulation:
         """Get a configuration file object
         
         :return: Configuration file object
-        :rtype: :class:`apy.files.config`
+        :rtype: :class:`arepy.files.config`
         """
         return apy.files.config(self.fileConfig)
 

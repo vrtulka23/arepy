@@ -7,12 +7,18 @@ Snapshot
 Snapshot class
 ^^^^^^^^^^^^^^
 
-.. autoclass:: arepy.files.snap.snap
+.. autoclass:: arepy.files.snap
+   :members:
+
+Properties class
+^^^^^^^^^^^^^^^^
+
+.. autoclass:: arepy.files.properties
    :members:
 
 
-Snapshot properties
-^^^^^^^^^^^^^^^^^^^
+List of properties
+^^^^^^^^^^^^^^^^^^
 
 All snapshot properties are summarised in the following sections.
 

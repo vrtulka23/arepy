@@ -48,14 +48,15 @@
 <p class="topic-title first">Contents</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#snapshot-class" id="id1">Snapshot class</a></p></li>
-<li><p><a class="reference internal" href="#snapshot-properties" id="id2">Snapshot properties</a></p></li>
+<li><p><a class="reference internal" href="#properties-class" id="id2">Properties class</a></p></li>
+<li><p><a class="reference internal" href="#list-of-properties" id="id3">List of properties</a></p></li>
 </ul>
 </div>
 <div class="section" id="snapshot-class">
 <h2><a class="toc-backref" href="#id1">Snapshot class</a><a class="headerlink" href="#snapshot-class" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="arepy.files.snap.snap">
-<em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">snap</code><span class="sig-paren">(</span><em class="sig-param">fileName</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.snap" title="Permalink to this definition">¶</a></dt>
+<dt id="arepy.files.snap">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.files.</code><code class="sig-name descname">snap</code><span class="sig-paren">(</span><em class="sig-param">fileName</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Snapshot class</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -76,8 +77,8 @@ it can be called within any Python script as follwos:</p>
 </pre></div>
 </div>
 <dl class="method">
-<dt id="arepy.files.snap.snap.getHeader">
-<code class="sig-name descname">getHeader</code><span class="sig-paren">(</span><em class="sig-param">names=None</em>, <em class="sig-param">s=0</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.snap.getHeader" title="Permalink to this definition">¶</a></dt>
+<dt id="arepy.files.snap.getHeader">
+<code class="sig-name descname">getHeader</code><span class="sig-paren">(</span><em class="sig-param">names=None</em>, <em class="sig-param">s=0</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.getHeader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get header properties</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -93,8 +94,8 @@ it can be called within any Python script as follwos:</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="arepy.files.snap.snap.getProperty">
-<code class="sig-name descname">getProperty</code><span class="sig-paren">(</span><em class="sig-param">props</em>, <em class="sig-param">ids=None</em>, <em class="sig-param">ptype=0</em>, <em class="sig-param">dictionary=False</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.snap.getProperty" title="Permalink to this definition">¶</a></dt>
+<dt id="arepy.files.snap.getProperty">
+<code class="sig-name descname">getProperty</code><span class="sig-paren">(</span><em class="sig-param">props</em>, <em class="sig-param">ids=None</em>, <em class="sig-param">ptype=0</em>, <em class="sig-param">dictionary=False</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.getProperty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get particle properties</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -198,8 +199,16 @@ The following example will select masses of the gas particles, but velocities of
 </dd></dl>
 
 </div>
-<div class="section" id="snapshot-properties">
-<h2><a class="toc-backref" href="#id2">Snapshot properties</a><a class="headerlink" href="#snapshot-properties" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="properties-class">
+<h2><a class="toc-backref" href="#id2">Properties class</a><a class="headerlink" href="#properties-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="arepy.files.properties">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.files.</code><code class="sig-name descname">properties</code><span class="sig-paren">(</span><em class="sig-param">props=None</em>, <em class="sig-param">ptype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.properties" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="list-of-properties">
+<h2><a class="toc-backref" href="#id3">List of properties</a><a class="headerlink" href="#list-of-properties" title="Permalink to this headline">¶</a></h2>
 <p>All snapshot properties are summarised in the following sections.</p>
 <div class="toctree-wrapper compound">
 <ul>
@@ -237,7 +246,8 @@ The following example will select masses of the gas particles, but velocities of
   <ul>
 <li><a class="reference internal" href="#">Snapshot</a><ul>
 <li><a class="reference internal" href="#snapshot-class">Snapshot class</a></li>
-<li><a class="reference internal" href="#snapshot-properties">Snapshot properties</a></li>
+<li><a class="reference internal" href="#properties-class">Properties class</a></li>
+<li><a class="reference internal" href="#list-of-properties">List of properties</a></li>
 </ul>
 </li>
 </ul>
