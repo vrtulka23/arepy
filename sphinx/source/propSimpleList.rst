@@ -1,6 +1,12 @@
 Simple properties
 *****************
 
+.. contents:: Contents
+   :local:
+
+Property functions
+^^^^^^^^^^^^^^^^^^
+
 Simple properties are directly taken or derived from the snapshot properties.
 
 Every property called <NAME> is defined as:

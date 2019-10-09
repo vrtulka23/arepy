@@ -72,10 +72,24 @@ class propComplex(propComplexRegion,propComplexSlice,propComplexProj):
     # Histograms
     #######################
 
-    # Example: bins=np.linspace(1,10,1)
-    #          {'name':'HistSphere','p':'X_HP','center':[0.5,0.5,0.5],'bins':bins}
     def prop_HistSphere(self,ids,ptype,**prop):
-        """Radial histogram of a property within a spherical region"""
+        """Mass weighted radial histogram of a property within a spherical region
+
+        :param [float]*3 center: Center of the sphere
+        :param list[float] bins: Radial bins
+        :param properties p: List of properties 
+        :return: Mass weighted radial distribution of a property
+
+        Example::
+            
+            >>> snap.getProperty({
+            >>>     'name':'HistSphere','center':[0.5,0.5,0.5],'bins':np.linspace(0,0.5,50),
+            >>>     'p':['X_HP','Temperature']
+            >>> })
+            
+            {'X_HP': [0.234, 0.64, 0.3,...],
+             'Temperature': [1234.3, 3435.23, 9454.23,...]}
+        """
         region = self.getProperty({
             'name':'RegionSphere','center':prop['center'],'radius':prop['bins'][-1],'ptype':ptype,
             'p':['Indexes',{'name':'Masses','ptype':ptype},{'name':'Radius2','center':prop['center']}]
@@ -104,7 +118,7 @@ class propComplex(propComplexRegion,propComplexSlice,propComplexProj):
     def prop_FractionVolume(self,ids,ptype,**prop):
         """Get a volume fraction of a property in some region
         
-        :param prop p: A property or list of properties 
+        :param properties p: List of properties
         :param float lt: Select cells with properties larger than this value
         :param float st: Select cells with properties smaller than this value
         :return: Volume fraction within the selected region

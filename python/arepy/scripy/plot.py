@@ -3,6 +3,14 @@ import numpy as np
 
 class plot:
     """General class of a plot
+    
+    :var arepy.files.collection grps: Groups object
+    :var arepy.plot.figure fig: Figure object
+    :var arepy.data.table tab: Table object
+
+    .. note::
+        
+        Note that class variables 'grps', 'fig' and 'tab' are accessible only in the 'plot()' function
     """
     def __init__(self,action,proj,dirName,fileName=None,*args):
         self.proj = proj                      # project object
@@ -161,6 +169,10 @@ class plot:
         :param int fig: Number of processors used for figure plotting
         :param int kdt: Number of processors used by a KDTree algorithm
         :param int snap: Number of processors used to read a multi-file snapshot
+        
+        Example::
+            
+            self.setProcessors( fig=apy.numCpu )
         """
         self.nproc = {
             'fig':  fig,
@@ -174,6 +186,19 @@ class plot:
         :param list[str] names: Table column names
         :param list[tuple] options: Table rows
         :param dict opt: Additional group options
+
+        This function sets to the class a variable
+        
+            self.grps
+
+        that contains all the group information.
+        
+        Example::
+            
+            self.setGroups(['names','sim','snaps'],[
+                ( 'hydroHelium', 18, 30 ),
+                ( 'hydroOnly',   21, 30 ),
+            ])
         """
         nopt = {
             'dirCache': self.proj.dirResults+'/'+self.dirPlot+'/cache',
@@ -183,18 +208,26 @@ class plot:
         nopt.update(opt)
         self.grps = apy.files.collection(names=names,options=options,**nopt)
 
-    # Add a new figure to the list of plots
     def setFigure(self,ncol,nrow,nfig,movie=False,show=False,debug=False,plot=True,**opt):
-        """Figure settings
+        """Set a new figure
         
         :param int ncol: Number of collumns
         :param int nrow: Number of rows
         :param int nfig: Number of figures
+        :param float sRow: Size of the subplot rows on the figure (figsize)
+        :param float sCol: Size of the subplot cols on the figure (figsize)
         :param bool movie: Create a movie from all figures
         :param bool show: Display figures at the end of the plotting
         :param bool debug: Save figures into a debug folder
         :param bool plot: Plot figures
-        :param dict opt: Additional figure options
+        :param dict gridspec: Gridspec options
+        :param dict tickparam: Parameters of the axis ticks and their labels
+        :param list[str] group: List of grouped axis elements in case of several subplots
+
+        Example::
+            
+            self.setFigure(2,1,1,show=True,sCol=4,sRow=2, gridspec={'hspace':0.1}, group=['xlabel'],
+                           tickparam={'axis':'both','direction':'in','top':True,'right':True})
         """
         nopt = {
             'debug':      np.any([debug,self.debug]),
@@ -216,9 +249,8 @@ class plot:
             'opt':nopt,
         }
 
-    # Add new table to the list of plots
     def setTable(self,show=False,debug=False,**opt):
-        """Table settings
+        """Set a new table
 
         :param bool show: Display table at the end of the calculation
         :param bool debug: Save table into a debug folder

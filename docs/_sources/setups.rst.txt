@@ -1,6 +1,9 @@
 Simulation setup
 ****************
 
+.. contents:: Contents
+   :local:
+
 Setup class
 ^^^^^^^^^^^
 

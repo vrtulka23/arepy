@@ -7,8 +7,7 @@ Welcome to arepy's documentation!
 =================================
 
 .. toctree::
-   :maxdepth: 2
-   :numbered:
+   :maxdepth: 6
 
    intro
    scripy

@@ -1,9 +1,11 @@
 Project management (scripy)
 ***************************
 
+.. contents:: Contents
+   :local:
+
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
    setups
    plots

@@ -37,6 +37,16 @@ class group(apy.data.groups.group, groupsMethods):
 # Overload item class #
 #######################
 class item(apy.data.groups.item):
+    """Snapshot item
+    
+    :var apy.files.simulation sim: Simulation
+    :var apy.files.units units: Units 
+    :var int snap: Default snapshot number
+    :var apy.coord.transf transf: Transformations
+    
+    This class holds all information about a particular snapshot that should be analyzed
+    """
+
     def __init__(self,index,groupName,opt,sim,snap):
         super().__init__(index,groupName,opt)
         self.sim = sim
@@ -46,25 +56,41 @@ class item(apy.data.groups.item):
 
     # Set coordinate transformations
     def setTransf(self, **opt):
+        """Set transformations"""
         self.transf = apy.coord.transf(**opt)   
 
     # snapshot file
     def getSnapshot(self,snap=None,**opt):
+        """Get a snapshot object
+        
+        :param int snap: If not specified the default snapshot number of this item is used
+        """
         if snap is None:
             snap = self.snap
         return self.sim.getSnapshot(snap,**opt)
 
     # sink file
     def getSink(self,snap=None,**opt):
+        """Get a sink particle snapshot object
+
+        :param int snap: If not specified the default snapshot number of this item is used
+        """
         if snap is None:
             snap = self.snap
         return self.sim.getSink(snap,**opt)
 
     # image file
     def getImage(self,imProp,imType,snap=None,**opt):
+        """Get an image object
+        
+        :param str imProp: Image property
+        :param str imType: Image type (slice/proj)
+        :param int snap: If not specified the default snapshot number of this item is used
+        """
         if snap is None:
             snap = self.snap
         return self.sim.getImage(snap,imProp,imType,**opt)
 
     def getParameters(self):
+        """Get a parameter file object of the simulation"""
         return self.sim.getParameters()

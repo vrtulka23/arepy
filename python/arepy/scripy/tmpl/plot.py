@@ -19,7 +19,7 @@ class {{namePlot}}(apy.scripy.plot):
 #        super().init()
 #
 
-        self.setProcessors( fig=38, kdt=1, snap=1 )
+        self.setProcessors( fig=apy.numCpu, kdt=1, snap=1 )
         self.setGroups(['names','sim','snaps'],[
             ( '103', 103, range(63,184) ),
             ( '104', 104, range(0,96) ),

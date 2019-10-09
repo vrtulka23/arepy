@@ -172,7 +172,11 @@ class propSgchem1:
 
     # Polytropic index
     def prop_Gamma(self,ids,ptype,**prop):
-        if self.hasDataset('Gamma',ptype):
+        """Polytropic index
+        
+        :return: If value of Gamma is not present in a snapshot this returns a standard value of Gamma=5/3
+        """
+        if self.hasSnapData('Gamma',ptype):
             return self.getSnapData('Gamma',ptype,ids)
         else:
             return apy.const.gamma    

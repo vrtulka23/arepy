@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>3.1.2.2. Complex properties &#8212; arepy 1.0 documentation</title>
+    <title>Complex properties &#8212; arepy 1.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="3.2. Sink snapshots" href="sink.html" />
-    <link rel="prev" title="3.1.2.1. Simple properties" href="propSimpleList.html" /> 
+    <link rel="next" title="Sink snapshots" href="sink.html" />
+    <link rel="prev" title="Simple properties" href="propSimpleList.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,14 +27,14 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="sink.html" title="3.2. Sink snapshots"
+          <a href="sink.html" title="Sink snapshots"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="propSimpleList.html" title="3.1.2.1. Simple properties"
+          <a href="propSimpleList.html" title="Simple properties"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="arepy.html" >3. Reading simulation data (arepy)</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="snap.html" accesskey="U">3.1. Snapshot</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="arepy.html" >Simulation data (arepy)</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="snap.html" accesskey="U">Snapshot</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -44,7 +44,19 @@
           <div class="body" role="main">
             
   <div class="section" id="complex-properties">
-<h1>3.1.2.2. Complex properties<a class="headerlink" href="#complex-properties" title="Permalink to this headline">¶</a></h1>
+<h1>Complex properties<a class="headerlink" href="#complex-properties" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#property-functions" id="id1">Property functions</a></p></li>
+<li><p><a class="reference internal" href="#various" id="id2">Various</a></p></li>
+<li><p><a class="reference internal" href="#regions" id="id3">Regions</a></p></li>
+<li><p><a class="reference internal" href="#slices" id="id4">Slices</a></p></li>
+<li><p><a class="reference internal" href="#projections" id="id5">Projections</a></p></li>
+</ul>
+</div>
+<div class="section" id="property-functions">
+<h2><a class="toc-backref" href="#id1">Property functions</a><a class="headerlink" href="#property-functions" title="Permalink to this headline">¶</a></h2>
 <p>Complex properties can make use of all properties and combine them to more complex functions and data reduction.</p>
 <p>Every property called &lt;NAME&gt; is defined as:</p>
 <dl class="function">
@@ -61,9 +73,10 @@
 </dl>
 </dd></dl>
 
-<p>wIn the class descriptions below we will list only additional parameters included in the <em>prop</em> dictionary.</p>
+<p>In the class descriptions below we will list only additional parameters included in the <em>prop</em> dictionary.</p>
+</div>
 <div class="section" id="various">
-<h2>3.1.2.2.1. Various<a class="headerlink" href="#various" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id2">Various</a><a class="headerlink" href="#various" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.snap.propComplex">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propComplex</code><a class="headerlink" href="#arepy.files.snap.propComplex" title="Permalink to this definition">¶</a></dt>
@@ -108,7 +121,29 @@
 <dl class="method">
 <dt id="arepy.files.snap.propComplex.prop_HistSphere">
 <code class="sig-name descname">prop_HistSphere</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propComplex.prop_HistSphere" title="Permalink to this definition">¶</a></dt>
-<dd><p>Radial histogram of a property within a spherical region</p>
+<dd><p>Mass weighted radial histogram of a property within a spherical region</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>center</strong> (<em>[</em><em>float</em><em>]</em><em>*3</em>) – Center of the sphere</p></li>
+<li><p><strong>bins</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – Radial bins</p></li>
+<li><p><strong>p</strong> (<em>properties</em>) – List of properties</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Mass weighted radial distribution of a property</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">snap</span><span class="o">.</span><span class="n">getProperty</span><span class="p">({</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;HistSphere&#39;</span><span class="p">,</span><span class="s1">&#39;center&#39;</span><span class="p">:[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span><span class="s1">&#39;bins&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;p&#39;</span><span class="p">:[</span><span class="s1">&#39;X_HP&#39;</span><span class="p">,</span><span class="s1">&#39;Temperature&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">})</span>
+
+<span class="go">{&#39;X_HP&#39;: [0.234, 0.64, 0.3,...],</span>
+<span class="go"> &#39;Temperature&#39;: [1234.3, 3435.23, 9454.23,...]}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -124,7 +159,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>p</strong> (<em>prop</em>) – A property or list of properties</p></li>
+<li><p><strong>p</strong> (<em>properties</em>) – List of properties</p></li>
 <li><p><strong>lt</strong> (<em>float</em>) – Select cells with properties larger than this value</p></li>
 <li><p><strong>st</strong> (<em>float</em>) – Select cells with properties smaller than this value</p></li>
 </ul>
@@ -159,7 +194,7 @@
 
 </div>
 <div class="section" id="regions">
-<h2>3.1.2.2.2. Regions<a class="headerlink" href="#regions" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">Regions</a><a class="headerlink" href="#regions" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.snap.propComplexRegion">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propComplexRegion</code><a class="headerlink" href="#arepy.files.snap.propComplexRegion" title="Permalink to this definition">¶</a></dt>
@@ -204,7 +239,7 @@
 
 </div>
 <div class="section" id="slices">
-<h2>3.1.2.2.3. Slices<a class="headerlink" href="#slices" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Slices</a><a class="headerlink" href="#slices" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.snap.propComplexSlice">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propComplexSlice</code><a class="headerlink" href="#arepy.files.snap.propComplexSlice" title="Permalink to this definition">¶</a></dt>
@@ -255,7 +290,7 @@
 
 </div>
 <div class="section" id="projections">
-<h2>3.1.2.2.4. Projections<a class="headerlink" href="#projections" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">Projections</a><a class="headerlink" href="#projections" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.snap.propComplexProj">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propComplexProj</code><a class="headerlink" href="#arepy.files.snap.propComplexProj" title="Permalink to this definition">¶</a></dt>
@@ -279,21 +314,22 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">3.1.2.2. Complex properties</a><ul>
-<li><a class="reference internal" href="#various">3.1.2.2.1. Various</a></li>
-<li><a class="reference internal" href="#regions">3.1.2.2.2. Regions</a></li>
-<li><a class="reference internal" href="#slices">3.1.2.2.3. Slices</a></li>
-<li><a class="reference internal" href="#projections">3.1.2.2.4. Projections</a></li>
+<li><a class="reference internal" href="#">Complex properties</a><ul>
+<li><a class="reference internal" href="#property-functions">Property functions</a></li>
+<li><a class="reference internal" href="#various">Various</a></li>
+<li><a class="reference internal" href="#regions">Regions</a></li>
+<li><a class="reference internal" href="#slices">Slices</a></li>
+<li><a class="reference internal" href="#projections">Projections</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="propSimpleList.html"
-                        title="previous chapter">3.1.2.1. Simple properties</a></p>
+                        title="previous chapter">Simple properties</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="sink.html"
-                        title="next chapter">3.2. Sink snapshots</a></p>
+                        title="next chapter">Sink snapshots</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -325,14 +361,14 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="sink.html" title="3.2. Sink snapshots"
+          <a href="sink.html" title="Sink snapshots"
              >next</a> |</li>
         <li class="right" >
-          <a href="propSimpleList.html" title="3.1.2.1. Simple properties"
+          <a href="propSimpleList.html" title="Simple properties"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="arepy.html" >3. Reading simulation data (arepy)</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="snap.html" >3.1. Snapshot</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="arepy.html" >Simulation data (arepy)</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="snap.html" >Snapshot</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

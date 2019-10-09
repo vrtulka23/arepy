@@ -1,6 +1,9 @@
 Snapshot
 ********
 
+.. contents:: Contents
+   :local:
+
 Snapshot class
 ^^^^^^^^^^^^^^
 

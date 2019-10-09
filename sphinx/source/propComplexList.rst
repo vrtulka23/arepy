@@ -1,6 +1,12 @@
 Complex properties
 ******************
 
+.. contents:: Contents
+   :local:
+
+Property functions
+^^^^^^^^^^^^^^^^^^
+
 Complex properties can make use of all properties and combine them to more complex functions and data reduction. 
 
 Every property called <NAME> is defined as:
@@ -11,7 +17,7 @@ Every property called <NAME> is defined as:
     :param int ptype: Particle type
     :param dict prop: Dictionary with additional properties
     
-wIn the class descriptions below we will list only additional parameters included in the *prop* dictionary.
+In the class descriptions below we will list only additional parameters included in the *prop* dictionary.
 
 Various
 ^^^^^^^

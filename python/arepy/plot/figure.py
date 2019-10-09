@@ -4,6 +4,14 @@ from arepy.plot.plot import *
 import os
 
 class figure:
+    """Figure class
+
+    :param int nrows: Number of subplot rows
+    :param int ncols: Number of subplot columns
+    :param int nfigs: Number of figures
+
+    :param str fileFormat: Format of the output file (png/pdf)
+    """
 
     def __init__(self, nrows=1, ncols=1, nfigs=1, **opt):
         

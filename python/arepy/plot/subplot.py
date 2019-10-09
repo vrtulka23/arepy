@@ -152,6 +152,12 @@ class subplot:
                                      'width':width,'height':height,'kwargs':opt})
 
     def addText(self, text, loc, bgcolor=None, twinx=False, padding=None, **nopt):
+        """Add text to the figure
+        
+        :param src text: Text string
+        :param str loc: Location of the text on the plot
+        :param (float)*2 padding: Padding of the text (horizontal,vertical)
+        """
         opt = {'color':'black', 'fontsize': 8}
         opt.update(nopt)
         self.canvas['other'].append({'draw':'text','twinx':twinx,'loc':loc,'text':text,

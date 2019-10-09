@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>3.1.2.1. Simple properties &#8212; arepy 1.0 documentation</title>
+    <title>Simple properties &#8212; arepy 1.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -14,8 +14,8 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="3.1.2.2. Complex properties" href="propComplexList.html" />
-    <link rel="prev" title="3.1. Snapshot" href="snap.html" /> 
+    <link rel="next" title="Complex properties" href="propComplexList.html" />
+    <link rel="prev" title="Snapshot" href="snap.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,14 +27,14 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="propComplexList.html" title="3.1.2.2. Complex properties"
+          <a href="propComplexList.html" title="Complex properties"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="snap.html" title="3.1. Snapshot"
+          <a href="snap.html" title="Snapshot"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="arepy.html" >3. Reading simulation data (arepy)</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="snap.html" accesskey="U">3.1. Snapshot</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="arepy.html" >Simulation data (arepy)</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="snap.html" accesskey="U">Snapshot</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -44,7 +44,22 @@
           <div class="body" role="main">
             
   <div class="section" id="simple-properties">
-<h1>3.1.2.1. Simple properties<a class="headerlink" href="#simple-properties" title="Permalink to this headline">¶</a></h1>
+<h1>Simple properties<a class="headerlink" href="#simple-properties" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#property-functions" id="id1">Property functions</a></p></li>
+<li><p><a class="reference internal" href="#basic-properties" id="id2">Basic properties</a></p></li>
+<li><p><a class="reference internal" href="#basic-selectors" id="id3">Basic selectors</a></p></li>
+<li><p><a class="reference internal" href="#basic-mathematical-functions" id="id4">Basic mathematical functions</a></p></li>
+<li><p><a class="reference internal" href="#basic-statistical-functions" id="id5">Basic statistical functions</a></p></li>
+<li><p><a class="reference internal" href="#sgchem-properties" id="id6">SGChem properties</a></p></li>
+<li><p><a class="reference internal" href="#sink-particle-properties" id="id7">Sink particle properties</a></p></li>
+<li><p><a class="reference internal" href="#sink-particle-selectors" id="id8">Sink particle selectors</a></p></li>
+</ul>
+</div>
+<div class="section" id="property-functions">
+<h2><a class="toc-backref" href="#id1">Property functions</a><a class="headerlink" href="#property-functions" title="Permalink to this headline">¶</a></h2>
 <p>Simple properties are directly taken or derived from the snapshot properties.</p>
 <p>Every property called &lt;NAME&gt; is defined as:</p>
 <dl class="function">
@@ -62,8 +77,9 @@
 </dd></dl>
 
 <p>In the class descriptions below we will list only additional parameters included in the <em>prop</em> dictionary.</p>
+</div>
 <div class="section" id="basic-properties">
-<h2>3.1.2.1.1. Basic properties<a class="headerlink" href="#basic-properties" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id2">Basic properties</a><a class="headerlink" href="#basic-properties" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.snap.propSimple">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propSimple</code><a class="headerlink" href="#arepy.files.snap.propSimple" title="Permalink to this definition">¶</a></dt>
@@ -294,7 +310,7 @@
 
 </div>
 <div class="section" id="basic-selectors">
-<h2>3.1.2.1.2. Basic selectors<a class="headerlink" href="#basic-selectors" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id3">Basic selectors</a><a class="headerlink" href="#basic-selectors" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.snap.propSimpleSelect">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propSimpleSelect</code><a class="headerlink" href="#arepy.files.snap.propSimpleSelect" title="Permalink to this definition">¶</a></dt>
@@ -416,7 +432,7 @@
 
 </div>
 <div class="section" id="basic-mathematical-functions">
-<h2>3.1.2.1.3. Basic mathematical functions<a class="headerlink" href="#basic-mathematical-functions" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id4">Basic mathematical functions</a><a class="headerlink" href="#basic-mathematical-functions" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.snap.propSimpleMath">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propSimpleMath</code><a class="headerlink" href="#arepy.files.snap.propSimpleMath" title="Permalink to this definition">¶</a></dt>
@@ -456,7 +472,7 @@
 
 </div>
 <div class="section" id="basic-statistical-functions">
-<h2>3.1.2.1.4. Basic statistical functions<a class="headerlink" href="#basic-statistical-functions" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id5">Basic statistical functions</a><a class="headerlink" href="#basic-statistical-functions" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.snap.propSimpleStat">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propSimpleStat</code><a class="headerlink" href="#arepy.files.snap.propSimpleStat" title="Permalink to this definition">¶</a></dt>
@@ -508,7 +524,7 @@
 
 </div>
 <div class="section" id="sgchem-properties">
-<h2>3.1.2.1.5. SGChem properties<a class="headerlink" href="#sgchem-properties" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">SGChem properties</a><a class="headerlink" href="#sgchem-properties" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.snap.propSgchem1">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propSgchem1</code><a class="headerlink" href="#arepy.files.snap.propSgchem1" title="Permalink to this definition">¶</a></dt>
@@ -570,11 +586,22 @@
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="arepy.files.snap.propSgchem1.prop_Gamma">
+<code class="sig-name descname">prop_Gamma</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.propSgchem1.prop_Gamma" title="Permalink to this definition">¶</a></dt>
+<dd><p>Polytropic index</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>If value of Gamma is not present in a snapshot this returns a standard value of Gamma=5/3</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
 <div class="section" id="sink-particle-properties">
-<h2>3.1.2.1.6. Sink particle properties<a class="headerlink" href="#sink-particle-properties" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id7">Sink particle properties</a><a class="headerlink" href="#sink-particle-properties" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.snap.propSink">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propSink</code><a class="headerlink" href="#arepy.files.snap.propSink" title="Permalink to this definition">¶</a></dt>
@@ -656,7 +683,7 @@ It is possible to call sink snapshot properties when particle type is set to pty
 
 </div>
 <div class="section" id="sink-particle-selectors">
-<h2>3.1.2.1.7. Sink particle selectors<a class="headerlink" href="#sink-particle-selectors" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id8">Sink particle selectors</a><a class="headerlink" href="#sink-particle-selectors" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.snap.propSinkSelect">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.files.snap.</code><code class="sig-name descname">propSinkSelect</code><a class="headerlink" href="#arepy.files.snap.propSinkSelect" title="Permalink to this definition">¶</a></dt>
@@ -692,24 +719,25 @@ It is possible to call sink snapshot properties when particle type is set to pty
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">3.1.2.1. Simple properties</a><ul>
-<li><a class="reference internal" href="#basic-properties">3.1.2.1.1. Basic properties</a></li>
-<li><a class="reference internal" href="#basic-selectors">3.1.2.1.2. Basic selectors</a></li>
-<li><a class="reference internal" href="#basic-mathematical-functions">3.1.2.1.3. Basic mathematical functions</a></li>
-<li><a class="reference internal" href="#basic-statistical-functions">3.1.2.1.4. Basic statistical functions</a></li>
-<li><a class="reference internal" href="#sgchem-properties">3.1.2.1.5. SGChem properties</a></li>
-<li><a class="reference internal" href="#sink-particle-properties">3.1.2.1.6. Sink particle properties</a></li>
-<li><a class="reference internal" href="#sink-particle-selectors">3.1.2.1.7. Sink particle selectors</a></li>
+<li><a class="reference internal" href="#">Simple properties</a><ul>
+<li><a class="reference internal" href="#property-functions">Property functions</a></li>
+<li><a class="reference internal" href="#basic-properties">Basic properties</a></li>
+<li><a class="reference internal" href="#basic-selectors">Basic selectors</a></li>
+<li><a class="reference internal" href="#basic-mathematical-functions">Basic mathematical functions</a></li>
+<li><a class="reference internal" href="#basic-statistical-functions">Basic statistical functions</a></li>
+<li><a class="reference internal" href="#sgchem-properties">SGChem properties</a></li>
+<li><a class="reference internal" href="#sink-particle-properties">Sink particle properties</a></li>
+<li><a class="reference internal" href="#sink-particle-selectors">Sink particle selectors</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="snap.html"
-                        title="previous chapter">3.1. Snapshot</a></p>
+                        title="previous chapter">Snapshot</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="propComplexList.html"
-                        title="next chapter">3.1.2.2. Complex properties</a></p>
+                        title="next chapter">Complex properties</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -741,14 +769,14 @@ It is possible to call sink snapshot properties when particle type is set to pty
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="propComplexList.html" title="3.1.2.2. Complex properties"
+          <a href="propComplexList.html" title="Complex properties"
              >next</a> |</li>
         <li class="right" >
-          <a href="snap.html" title="3.1. Snapshot"
+          <a href="snap.html" title="Snapshot"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="arepy.html" >3. Reading simulation data (arepy)</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="snap.html" >3.1. Snapshot</a> &#187;</li> 
+          <li class="nav-item nav-item-1"><a href="arepy.html" >Simulation data (arepy)</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="snap.html" >Snapshot</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
