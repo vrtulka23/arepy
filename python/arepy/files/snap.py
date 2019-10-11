@@ -10,11 +10,11 @@ from arepy.files.properties import *    # Property list class
 from arepy.files.glueClass import *     # Parent class for property glues
 from arepy.files.glueSimple import *    # Simple property glues
 
-# Load properties
-import arepy.files.prop as pclass
+# Import property classes
+import arepy.files.prop as pc
 
 # Snapshot class
-class snap(pclass.complex):
+class snap(pc.complex):
     """Snapshot class
 
     :param str fileName: Path to the snapshot file
@@ -254,6 +254,24 @@ class snap(pclass.complex):
             {'Masses': [23.43, 34.23, 12.0, ...],
              'Velocities': [[23.34,26.6,834.3], [35.23, 22.0, 340,2], ...]}
         
+        9) Note that some properties return return a subset of values::
+
+            >>> snap.getProperty({
+            >>>     'name':'RegionSphere', 'center': [0.5]*3, 'radius': 0.5,
+            >>>     'p': ['Masses','ParticleIDs']
+            >>> })
+                                                                                                                        
+            {'Masses': [23.43, 34.23, 12.0, ...],                                                                                                           
+             'ParticleIDs': [13, 35, 22, ...]}         
+            
+            >>> snap.getProperty([
+            >>>     'Velocities'
+            >>>     {'name':'RegionSphere', 'center': [0.5]*3, 'radius': 0.5, 'p': ['Masses','ParticleIDs']},
+            >>> )
+                                                                                                                        
+            {'RegionSphere': {'Masses': [23.43, 34.23, 12.0, ...],
+                              'ParticleIDs': [13, 35, 22, ...]},
+             'Velocities': [[23.34,26.6,834.3], [35.23, 22.0, 340,2], ...]}   
         """
         # Convert to array if needed
         aProps = apy.files.properties(props,ptype=ptype)
@@ -293,16 +311,13 @@ class snap(pclass.complex):
 # It needs to be a global function if we want to use it on parallel cores
 def getProperty(opt,properties,ids=None,ptype=0):
 
-    # Snapshot properties
-    import arepy.files.prop as pc       # Import property classes
-
     # Construct a property class according to the chemistry type
-    classes = (pclass.simple, pclass.main)
+    classes = (pc.simple, pc.main)
     if opt['chem']['type']=='sgchem1':
-        classes = (pclass.sgchem1,) + classes
+        classes = (pc.sgchem1,) + classes
     if opt['sinkOpt'] is not None:
-        classes = (pclass.sink,) + classes
-    propList = type("propClass", classes, {})
+        classes = (pc.sink,) + classes
+    propList = type("main", classes, {})
         
     # Calculate properties and return values
     with propList(opt) as sp:

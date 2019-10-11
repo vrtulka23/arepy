@@ -22,23 +22,23 @@ In the class descriptions below we will list only additional parameters included
 Various
 ^^^^^^^
 
-.. autoclass:: arepy.files.snap.propComplex
+.. autoclass:: arepy.files.snap.prop.complex
    :members:
 
 Regions
 ^^^^^^^
 
-.. autoclass:: arepy.files.snap.propComplexRegion
+.. autoclass:: arepy.files.snap.prop.complexRegion
    :members:
 
 Slices
 ^^^^^^
 
-.. autoclass:: arepy.files.snap.propComplexSlice
+.. autoclass:: arepy.files.snap.prop.complexSlice
    :members:
 
 Projections
 ^^^^^^^^^^^
 
-.. autoclass:: arepy.files.snap.propComplexProj
+.. autoclass:: arepy.files.snap.prop.complexProj
    :members:

@@ -1,12 +1,11 @@
 import numpy as np
 import arepy as apy
 
-from arepy.files.prop.complexRegion import *
-from arepy.files.prop.complexSlice import *
-from arepy.files.prop.complexProj import *
+# Import property classes
+import arepy.files.prop as pc
 
 # This part calculates complex properties from simple properties
-class complex(complexRegion,complexSlice,complexProj):
+class complex(pc.complexRegion,pc.complexSlice,pc.complexProj):
     """Complex properties"""
 
     def prop_MassCenter(self,ids,ptype,**prop):

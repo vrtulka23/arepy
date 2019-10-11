@@ -22,42 +22,42 @@ In the class descriptions below we will list only additional parameters included
 Basic properties
 ^^^^^^^^^^^^^^^^
 
-.. autoclass:: arepy.files.snap.propSimple
+.. autoclass:: arepy.files.snap.prop.simple
    :members:
 
 Basic selectors
 ^^^^^^^^^^^^^^^
 
-.. autoclass:: arepy.files.snap.propSimpleSelect
+.. autoclass:: arepy.files.snap.prop.simpleSelect
    :members:
 
 Basic mathematical functions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: arepy.files.snap.propSimpleMath
+.. autoclass:: arepy.files.snap.prop.simpleMath
    :members:
 
 Basic statistical functions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: arepy.files.snap.propSimpleStat
+.. autoclass:: arepy.files.snap.prop.simpleStat
    :members:
 
 SGChem properties
 ^^^^^^^^^^^^^^^^^
 
-.. autoclass:: arepy.files.snap.propSgchem1
+.. autoclass:: arepy.files.snap.prop.sgchem1
    :members:
 
 
 Sink particle properties
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: arepy.files.snap.propSink
+.. autoclass:: arepy.files.snap.prop.sink
    :members:
 
 Sink particle selectors
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-.. autoclass:: arepy.files.snap.propSinkSelect
+.. autoclass:: arepy.files.snap.prop.sinkSelect
    :members:

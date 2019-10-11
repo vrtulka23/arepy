@@ -7,8 +7,11 @@ import numpy as np
 
 class dictTab:
     """Dictionary table
-    
-    :param list[str] keys: Table header (keys)
+
+    :var list[dict] or dict[dict] items: List of items
+    :var int size: Size of the list
+    :var list[str] keys: Column names (keys)
+    :param list[str] keys: Column names (keys)
     :param items: List of table rows (values)
     :key items: list[tuple] or dict[dict]
     :return: Object of self
@@ -24,6 +27,7 @@ class dictTab:
            >>>     ('X_H2',     '$X_\mathrm{H_2}$','lin'),
            >>>     ('Mass',     'M ($M_\odot$)',   'log'),
            >>> ])
+           >>> props.items
     
            [{'key':'X_H2', 'label':'$X_\mathrm{H_2}$', 'scale':'lin'}
             {'key':'Mass', 'label':'M ($M_\odot$)', 'scale':'log'}]
@@ -34,6 +38,7 @@ class dictTab:
            >>>     "item1": ('X_H2',     '$X_\mathrm{H_2}$','lin'),
            >>>     "item2": ('Mass',     'M ($M_\odot$)',   'log'),
            >>> })
+           >>> props.items
     
            {"item1": {'key':'X_H2', 'label':'$X_\mathrm{H_2}$', 'scale':'lin'}
             "item2": {'key':'Mass', 'label':'M ($M_\odot$)', 'scale':'log'}}
