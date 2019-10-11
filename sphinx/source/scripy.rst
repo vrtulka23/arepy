@@ -6,6 +6,7 @@ Project management (scripy)
 
 .. toctree::
    :maxdepth: 2
-
+	      
+   projects
    setups
    plots

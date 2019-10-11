@@ -2,7 +2,7 @@ import numpy as np
 import arepy as apy
 import h5py as hp
 
-class propSimpleSelect:
+class simpleSelect:
     """Simple selections
 
     These function return selection indexes according to different selection criteria.

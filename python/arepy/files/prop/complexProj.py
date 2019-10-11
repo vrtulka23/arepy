@@ -1,7 +1,7 @@
 import numpy as np
 import arepy as apy
 
-class propComplexProj:
+class complexProj:
     """Projection image of a property"""
 
     def prop_BoxProjCube(self,ids,ptype,**prop):

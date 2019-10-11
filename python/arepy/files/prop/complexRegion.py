@@ -1,7 +1,7 @@
 import numpy as np
 import arepy as apy
 
-class propComplexRegion:
+class complexRegion:
     """Select particle values within a given region"""
 
     def _propRegion(self,ids,ptype,**prop):

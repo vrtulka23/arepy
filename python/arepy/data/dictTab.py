@@ -6,6 +6,40 @@ import numpy as np
 #  [key],{'':(val),'':(val),'':(val)} -> {'':{dict},'':{dict},'':{dict}]
 
 class dictTab:
+    """Dictionary table
+    
+    :param list[str] keys: Table header (keys)
+    :param items: List of table rows (values)
+    :key items: list[tuple] or dict[dict]
+    :return: Object of self
+
+    This purely cosmetic function converts tabulated parameters 
+    into a list of dictionaries. It makes the code a bit neater and more readable
+
+    Examples:
+    
+    1) Return a list::
+           
+           >>> props = apy.data.dictTab(['key','label','scale'],[
+           >>>     ('X_H2',     '$X_\mathrm{H_2}$','lin'),
+           >>>     ('Mass',     'M ($M_\odot$)',   'log'),
+           >>> ])
+    
+           [{'key':'X_H2', 'label':'$X_\mathrm{H_2}$', 'scale':'lin'}
+            {'key':'Mass', 'label':'M ($M_\odot$)', 'scale':'log'}]
+
+    2) Return a dictionary::
+           
+           >>> props = apy.data.dictTab(['key','label','scale'],{
+           >>>     "item1": ('X_H2',     '$X_\mathrm{H_2}$','lin'),
+           >>>     "item2": ('Mass',     'M ($M_\odot$)',   'log'),
+           >>> })
+    
+           {"item1": {'key':'X_H2', 'label':'$X_\mathrm{H_2}$', 'scale':'lin'}
+            "item2": {'key':'Mass', 'label':'M ($M_\odot$)', 'scale':'log'}}
+
+    """
+    
     def __init__(self,keys,items=None):
         self.items = None
         self.size = 0
@@ -34,6 +68,10 @@ class dictTab:
 
     # add new items
     def addItems(self, items):
+        """Add rows to the table
+
+        :param touple items: Table row (dictionary values)
+        """
         if isinstance(items,dict):
             if self.items is None: self.items = {}
             for name,item in items.items():
@@ -46,7 +84,6 @@ class dictTab:
                 self.items.append({key:item[k] for k,key in enumerate(self.keys)})
                 self.size += 1            
 
-    # return keys and values of the items
     def getKeys(self):
         return list(self.items.keys())
     def getValues(self):
@@ -55,10 +92,18 @@ class dictTab:
         else:
             return self.items
 
-    # return value of a column
     def getColumn(self,col):
+        """Get column from a table
+
+        :param str col: A dictionary key to select
+        :return list: List of values selected by a key
+        """
         return [item[col] for item in self.items]
     
-    # return a correlation array
     def correlate(self):
+        """Return a correlation of the items
+
+        :return: Data correlation list
+        :rtype: :class:`arepy.data.correlate`
+        """
         return apy.data.correlate(self.items)

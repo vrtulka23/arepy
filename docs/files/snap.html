@@ -5,35 +5,36 @@
   <head>
     <meta charset="utf-8" />
     <title>Snapshot &#8212; arepy 1.0 documentation</title>
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Simple properties" href="propSimpleList.html" />
-    <link rel="prev" title="Simulation data (arepy)" href="arepy.html" /> 
+    <link rel="prev" title="Simulation class" href="simulation.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
+          <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
+          <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="propSimpleList.html" title="Simple properties"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="arepy.html" title="Simulation data (arepy)"
+          <a href="simulation.html" title="Simulation class"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="arepy.html" accesskey="U">Simulation data (arepy)</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" accesskey="U">Simulation data framework (arepy)</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -203,8 +204,99 @@ The following example will select masses of the gas particles, but velocities of
 <h2><a class="toc-backref" href="#id2">Properties class</a><a class="headerlink" href="#properties-class" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.properties">
-<em class="property">class </em><code class="sig-prename descclassname">arepy.files.</code><code class="sig-name descname">properties</code><span class="sig-paren">(</span><em class="sig-param">props=None</em>, <em class="sig-param">ptype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.properties" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">class </em><code class="sig-prename descclassname">arepy.files.</code><code class="sig-name descname">properties</code><span class="sig-paren">(</span><em class="sig-param">props=None</em>, <em class="sig-param">ptype=0</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of snapshot properties</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>props</strong> – Single property or list of properties</p></li>
+<li><p><strong>ptype</strong> (<em>int</em>) – Default particle type</p></li>
+</ul>
+</dd>
+<dt class="field-even">Key props</dt>
+<dd class="field-even"><p>prop or list[prop]</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="arepy.files.properties.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">props</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.properties.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new property to the list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>props</strong> – Single property or list of properties</p>
+</dd>
+<dt class="field-even">Key props</dt>
+<dd class="field-even"><p>prop or list[prop]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.properties.getData">
+<code class="sig-name descname">getData</code><span class="sig-paren">(</span><em class="sig-param">dictionary=False</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.properties.getData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get properties as a list or dictionary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dictionary</strong> (<em>bool</em>) – Return single property in a dictionary</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Property list or a dictionary</p>
+</dd>
+<dt class="field-odd">Rkey</dt>
+<dd class="field-odd"><p>list or dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.properties.getWithout">
+<code class="sig-name descname">getWithout</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">values</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.properties.getWithout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get properties with some specific key/values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>str</em>) – Property setting</p></li>
+<li><p><strong>key</strong> – Values to keep</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keys key</dt>
+<dd class="field-even"><p>list[str] or str</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>New object of self without some properties</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.properties.getComplex">
+<code class="sig-name descname">getComplex</code><span class="sig-paren">(</span><em class="sig-param">add=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.properties.getComplex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select complex properties</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>add</strong> (<em>prop</em>) – New properties to add</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>New object only with complex properties</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.properties.getSimple">
+<code class="sig-name descname">getSimple</code><span class="sig-paren">(</span><em class="sig-param">add=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.properties.getSimple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select simple properties</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>add</strong> (<em>prop</em>) – New Properties to add</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>New object only with simple properties</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
 
 </div>
 <div class="section" id="list-of-properties">
@@ -242,7 +334,7 @@ The following example will select masses of the gas particles, but velocities of
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Snapshot</a><ul>
 <li><a class="reference internal" href="#snapshot-class">Snapshot class</a></li>
@@ -253,22 +345,22 @@ The following example will select masses of the gas particles, but velocities of
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="arepy.html"
-                        title="previous chapter">Simulation data (arepy)</a></p>
+  <p class="topless"><a href="simulation.html"
+                        title="previous chapter">Simulation class</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="propSimpleList.html"
                         title="next chapter">Simple properties</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/snap.rst.txt"
+      <li><a href="../_sources/files/snap.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
+    <form class="search" action="../search.html" method="get">
       <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
@@ -283,19 +375,19 @@ The following example will select masses of the gas particles, but velocities of
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
+          <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
+          <a href="../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
           <a href="propSimpleList.html" title="Simple properties"
              >next</a> |</li>
         <li class="right" >
-          <a href="arepy.html" title="Simulation data (arepy)"
+          <a href="simulation.html" title="Simulation class"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="arepy.html" >Simulation data (arepy)</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" >Simulation data framework (arepy)</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

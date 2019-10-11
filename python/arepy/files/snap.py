@@ -6,19 +6,15 @@ import os
 # Property list
 from arepy.files.properties import *    # Property list class
 
-# Snapshot properties
-from arepy.files.propClass import *     # Parent class for simple properties
-from arepy.files.propSimple import *    # Simple properties
-from arepy.files.propSgchem1 import *   # SGChem specific properties
-from arepy.files.propComplex import *   # Complex properties
-from arepy.files.propSink import *      # Properties from a sink file
-
 # Property glues
 from arepy.files.glueClass import *     # Parent class for property glues
 from arepy.files.glueSimple import *    # Simple property glues
 
+# Load properties
+import arepy.files.prop as pclass
+
 # Snapshot class
-class snap(propComplex):
+class snap(pclass.complex):
     """Snapshot class
 
     :param str fileName: Path to the snapshot file
@@ -293,17 +289,19 @@ class snap(propComplex):
         # !! do not wrap np.array() around, because we want to return native array dtypes
         return aProps.getData(dictionary=dictionary)
 
-
 # This function calculates (simple) properties
 # It needs to be a global function if we want to use it on parallel cores
 def getProperty(opt,properties,ids=None,ptype=0):
 
+    # Snapshot properties
+    import arepy.files.prop as pc       # Import property classes
+
     # Construct a property class according to the chemistry type
-    classes = (propSimple, propClass)
+    classes = (pclass.simple, pclass.main)
     if opt['chem']['type']=='sgchem1':
-        classes = (propSgchem1,) + classes
+        classes = (pclass.sgchem1,) + classes
     if opt['sinkOpt'] is not None:
-        classes = (propSink,) + classes
+        classes = (pclass.sink,) + classes
     propList = type("propClass", classes, {})
         
     # Calculate properties and return values

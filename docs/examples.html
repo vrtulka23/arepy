@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Example project &#8212; arepy 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Dictionary table" href="data/dictTab.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="data/dictTab.html" title="Dictionary table"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="example-project">
+<h1>Example project<a class="headerlink" href="#example-project" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#new-project" id="id1">New project</a></p></li>
+<li><p><a class="reference internal" href="#new-simulation-setup" id="id2">New simulation setup</a></p></li>
+</ul>
+</div>
+<p>In this small tutorial we will show following:</p>
+<ul class="simple">
+<li><p>Setup a new project called “example”</p></li>
+<li><p>Create initial conditions for a H2 region expansion test using Arepo’s MESHRELAX</p></li>
+<li><p>Run the simulations</p></li>
+<li><p>Analyze data and create several plots and tables</p></li>
+</ul>
+<div class="section" id="new-project">
+<h2><a class="toc-backref" href="#id1">New project</a><a class="headerlink" href="#new-project" title="Permalink to this headline">¶</a></h2>
+<p>First of all we need to setup a new project:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apy --init-project example
+</pre></div>
+</div>
+<p>The above command will create a new project directory and a project class where you will store all general simulation settings:</p>
+<div class="line-block">
+<div class="line"><strong>./python/scripy/example</strong></div>
+<div class="line"><strong>./python/scripy/example/__init__.py</strong>.</div>
+</div>
+<p>Newly created project is now a standard Python module that can be in principle imported from any Python script.
+However, we will use it only indirectly in the following scripts.
+For more description of the project class refer to <a class="reference internal" href="projects.html#arepy.scripy.project" title="arepy.scripy.project"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.scripy.project</span></code></a>.</p>
+<p>Before we procede to the next step please set in the <strong>__init__.py</strong> file your prefered simulation directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">dirSim</span> <span class="o">=</span> <span class="s2">&quot;/my/simulation/directory&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="new-simulation-setup">
+<h2><a class="toc-backref" href="#id2">New simulation setup</a><a class="headerlink" href="#new-simulation-setup" title="Permalink to this headline">¶</a></h2>
+<p>In this part we will create initial condition to test a Stromgren sphere.</p>
+<p>As you may have noticed in the previous step we also preset a first simulation.
+Lets modify its default settings to something like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">sims</span><span class="p">[</span><span class="s1">&#39;001&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;example&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;setup&#39;</span><span class="p">:</span><span class="s1">&#39;stromgren&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;job&#39;</span><span class="p">:{</span><span class="s1">&#39;nodes&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;proc&#39;</span><span class="p">:</span><span class="mi">16</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">:</span><span class="s1">&#39;1:00:00&#39;</span><span class="p">,</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;standard&#39;</span><span class="p">},</span>
+    <span class="s1">&#39;units&#39;</span><span class="p">:{</span><span class="s1">&#39;length&#39;</span><span class="p">:</span><span class="n">apy</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">pc</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">:</span><span class="n">apy</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">yr</span><span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Here you may notice that the simulation ‘001’ with name ‘example’ is initialized by setup ‘stromgren’.
+Therefore, lets go to our simulation directory and create a new setup:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /my/simulation/directory
+apy --init-setup stromgren
+</pre></div>
+</div>
+<p>The above script will create several new files:</p>
+<div class="line-block">
+<div class="line"><strong>./python/scripy/example/setups</strong></div>
+<div class="line"><strong>./python/scripy/example/setups/__init__.py</strong></div>
+<div class="line"><strong>./python/scripy/example/setups/stromgren</strong></div>
+<div class="line"><strong>./python/scripy/example/setups/stromgren/__init__.py</strong></div>
+</div>
+<p>The most important is the last file, because it contains all the setup directives for the simulation.
+For more description of the setup class refer to <a class="reference internal" href="setups.html#arepy.scripy.setup" title="arepy.scripy.setup"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.scripy.setup</span></code></a>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Example project</a><ul>
+<li><a class="reference internal" href="#new-project">New project</a></li>
+<li><a class="reference internal" href="#new-simulation-setup">New simulation setup</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="data/dictTab.html"
+                        title="previous chapter">Dictionary table</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/examples.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="data/dictTab.html" title="Dictionary table"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Ondrej Jaura.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>

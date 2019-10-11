@@ -12,6 +12,8 @@ Welcome to arepy's documentation!
    intro
    scripy
    arepy
+   examples
+  
 
 Indices and tables
 ==================

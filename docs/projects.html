@@ -1,0 +1,299 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Projects &#8212; arepy 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Simulation setup" href="setups.html" />
+    <link rel="prev" title="Project management (scripy)" href="scripy.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="setups.html" title="Simulation setup"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="scripy.html" title="Project management (scripy)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="scripy.html" accesskey="U">Project management (scripy)</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="projects">
+<h1>Projects<a class="headerlink" href="#projects" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#project-class" id="id1">Project class</a></p></li>
+</ul>
+</div>
+<div class="section" id="project-class">
+<h2><a class="toc-backref" href="#id1">Project class</a><a class="headerlink" href="#project-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="arepy.scripy.project">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.scripy.</code><code class="sig-name descname">project</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dirSim</strong> (<em>str</em>) – Absolute path to the simulation directory</p></li>
+<li><p><strong>sims</strong> (<em>dict</em>) – Set of basic simulation settings</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The simulation directory path has to be always specified. It is used
+by the bash script in the run.sh file to check whether the current directory
+belongs to some project.</p>
+</div>
+<dl class="method">
+<dt id="arepy.scripy.project.init">
+<code class="sig-name descname">init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.project.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initial settings of a project</p>
+<p>This method should be overloaded by any derived project classes
+and it should consist following two settings:</p>
+<ol class="arabic simple">
+<li><p>A path to the simulation data.</p></li>
+<li><p>Basic settings of the simulations</p></li>
+</ol>
+<p>A minimalistic setting will look like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simulation directory of a project</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">dirSim</span> <span class="o">=</span> <span class="s2">&quot;/simulation/directory&quot;</span>
+
+<span class="c1"># Setup of a new simulation</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">sims</span><span class="p">[</span><span class="s1">&#39;001&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;dir&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirSim</span><span class="o">+</span><span class="s1">&#39;/subdirectory&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;first&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;setup&#39;</span><span class="p">:</span><span class="s1">&#39;first&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;job&#39;</span><span class="p">:{</span><span class="s1">&#39;nodes&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;proc&#39;</span><span class="p">:</span><span class="mi">40</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">:</span><span class="s1">&#39;1:00:00&#39;</span><span class="p">,</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;fat&#39;</span><span class="p">},</span>
+    <span class="s1">&#39;units&#39;</span><span class="p">:{</span><span class="s1">&#39;length&#39;</span><span class="p">:</span><span class="n">apy</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">pc</span><span class="p">,</span><span class="s1">&#39;time&#39;</span><span class="p">:</span><span class="n">apy</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">yr</span><span class="p">},</span>
+    <span class="s1">&#39;opt&#39;</span><span class="p">:{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.project.getUnits">
+<code class="sig-name descname">getUnits</code><span class="sig-paren">(</span><em class="sig-param">simID</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.project.getUnits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get units of a simulation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>simID</strong> (<em>int</em>) – Simulation ID</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Units</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.units</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.project.getJob">
+<code class="sig-name descname">getJob</code><span class="sig-paren">(</span><em class="sig-param">simID</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.project.getJob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get job settings of a simulation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>simID</strong> (<em>int</em>) – Simulation ID</p>
+</dd>
+<dt class="field-even">Return dict</dt>
+<dd class="field-even"><p>A dictionary with job settings</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.project.getSimulation">
+<code class="sig-name descname">getSimulation</code><span class="sig-paren">(</span><em class="sig-param">simID</em>, <em class="sig-param">**nopt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.project.getSimulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get simulation object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>simID</strong> (<em>int</em>) – Simulation ID</p></li>
+<li><p><strong>nopt</strong> (<em>dict</em>) – Simulation options</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Simulation object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="files/simulation.html#arepy.files.simulation" title="arepy.files.simulation"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.simulation</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.project.getSetting">
+<code class="sig-name descname">getSetting</code><span class="sig-paren">(</span><em class="sig-param">simID</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.project.getSetting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get simulation settings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>simID</strong> (<em>int</em>) – Simulation ID</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of the setting</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return dict</dt>
+<dd class="field-even"><p>Simulation settings</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.project.initProj">
+<code class="sig-name descname">initProj</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.project.initProj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialization of a new scripy project</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the project in a format: [a-zA-Z0-9]+</p>
+</dd>
+</dl>
+<p>This method can be triggered via command line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apy --init-project myproject
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.project.initSetup">
+<code class="sig-name descname">initSetup</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.project.initSetup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialization of a new scripy setup</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the setup in a format: [a-zA-Z0-9]+</p>
+</dd>
+</dl>
+<p>This method can be triggered via command line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apy --init-setup mysetup
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.project.initPlot">
+<code class="sig-name descname">initPlot</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.project.initPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialization of a new scripy plot</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the plot in a format: [a-zA-Z0-9]+</p>
+</dd>
+</dl>
+<p>This method can be triggered via command line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apy --init-plot myplot
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.scripy.project.initScript">
+<code class="sig-name descname">initScript</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.scripy.project.initScript" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialization of a new scripy script</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the script in a format: [a-zA-Z0-9]+</p>
+</dd>
+</dl>
+<p>This method can be triggered via command line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apy --init-script myscript
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Projects</a><ul>
+<li><a class="reference internal" href="#project-class">Project class</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="scripy.html"
+                        title="previous chapter">Project management (scripy)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="setups.html"
+                        title="next chapter">Simulation setup</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/projects.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="setups.html" title="Simulation setup"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="scripy.html" title="Project management (scripy)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="scripy.html" >Project management (scripy)</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Ondrej Jaura.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>

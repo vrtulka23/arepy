@@ -2,11 +2,11 @@ import numpy as np
 import arepy as apy
 import h5py as hp
 
-from arepy.files.propSimpleSelect import *
-from arepy.files.propSimpleMath import *
-from arepy.files.propSimpleStat import *
+from arepy.files.prop.simpleSelect import *
+from arepy.files.prop.simpleMath import *
+from arepy.files.prop.simpleStat import *
 
-class propSimple(propSimpleSelect,propSimpleMath,propSimpleStat):
+class simple(simpleSelect,simpleMath,simpleStat):
     """Simple properties
 
     Properties in this class can be extracted directly from the Arepo snapshot.
@@ -143,20 +143,47 @@ class propSimple(propSimpleSelect,propSimpleMath,propSimpleStat):
         
     # size of the velocity tangent component
     def prop_VelocityRadial(self,ids,ptype,**prop):            
-        """Radial component of the velocities"""
+        """Radial component of the velocities
+
+        :param [float]*3 center: Point from which the velocity component is calculated
+        :return [float]*3: Radial velocity vector
+        
+        Calculation of the component is taken from Wikipedia_.
+
+        .. _Wikipedia: https://en.wikipedia.org/wiki/Tangential_and_normal_components
+
+        
+        """
         rad = self.prop_Coordinates(ids,ptype,**prop) - prop['center']          # translated origin
         norm = np.linalg.norm(rad,axis=1)[:,None]
         nhat = np.where(norm>0,rad/norm,np.zeros_like(rad)) # unit radial vector
-        # taken from https://en.wikipedia.org/wiki/Tangential_and_normal_components
         return np.multiply(self.prop_Velocities(ids,ptype,**prop),nhat).sum(1)  # element-wise dot product (v.n_hat)
 
     # voronoi cell volume
     def prop_CellVolume(self,ids,ptype,**prop): 
-        """Particle cell Volume"""
+        """Particle cell Volume
+
+        :return float: Cell volume
+        
+        Volume of the cell is calculated from its mass and density:
+
+        .. math::
+            
+            V = \\frac{M}{\\rho}
+        """
         return self.prop_Masses(ids,ptype,**prop) / self.prop_Density(ids,ptype,**prop)
         
     # cell radius when assumed a spherical shape
     def prop_CellRadius(self,ids,ptype,**prop): 
-        """Particle cell mean radius"""
+        """Particle cell mean radius
+        
+        :return float: Mean cell radius
+
+        Cell radius is only approximated from the cell volume:
+
+        .. math::
+
+            r = \\left( \\frac{3V}{4\\pi} \\right)^{1/3}
+        """
         volume = self.prop_CellVolume(ids,ptype,**prop)
         return ((volume*3)/(4*np.pi))**(1./3.)

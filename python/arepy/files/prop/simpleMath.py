@@ -2,7 +2,7 @@ import numpy as np
 import arepy as apy
 import h5py as hp
 
-class propSimpleMath:
+class simpleMath:
     """Simple mathematical operation
 
     The properties in this class perform simple mathematical operations with the snapshot data

@@ -1,7 +1,7 @@
 import numpy as np
 import arepy as apy
 
-class propComplexSlice:
+class complexSlice:
     """Box slices"""
 
     def _propBoxSlice(self,prop,grid,ids,ptype):

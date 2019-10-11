@@ -2,7 +2,7 @@ import numpy as np
 import arepy as apy
 import h5py as hp
 
-class propClass:
+class main:
 
     def __init__(self,opt):
         # Update default options
@@ -86,5 +86,3 @@ class propClass:
             sinkIds = self.fileSink.getValues('ID')
             self.idsSink = np.nonzero(snapIds[:, None] == sinkIds)[1]
         return self.fileSink.getValues(name)[self.idsSink]
-
-            

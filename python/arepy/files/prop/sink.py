@@ -1,9 +1,7 @@
 import numpy as np
 import arepy as apy
 
-from arepy.files.propSinkSelect import *
-
-class propSink(propSinkSelect):
+class sink:
     """Properties of the sink particle file
 
     Propertis in this class are extracted from the sink particle snapshot files.

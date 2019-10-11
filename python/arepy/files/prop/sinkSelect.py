@@ -1,7 +1,7 @@
 import numpy as np
 import arepy as apy
 
-class propSinkSelect:
+class sinkSelect:
     """Sink particle selectors
 
     Selector function specific for the sink particle properties only accessible in the sink particle snapshot.

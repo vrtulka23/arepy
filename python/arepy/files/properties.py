@@ -1,12 +1,18 @@
 import arepy as apy
 import numpy as np
 
-# Initialize a property list with a correct format
 class properties:
-    def __init__(self,props=None,ptype=None):
+    """List of snapshot properties
+    
+    :param props: Single property or list of properties
+    :param int ptype: Default particle type
+    :key props: prop or list[prop]
+    """
+
+    def __init__(self,props=None,ptype=0):
         self.items = []         # list of items
         self.size = 0           # number of items
-        self.ptype = 0 if ptype is None else ptype # particle type
+        self.ptype = ptype      # particle type
 
         self.data = {}          # dictionary for data collecting
         self.current = 0        # iterator pointer
@@ -19,8 +25,12 @@ class properties:
             else:                                 # set new properties
                 self.add(props)
 
-    # add new properties into the list
     def add(self,props):
+        """Add a new property to the list
+        
+        :param props: Single property or list of properties
+        :key props: prop or list[prop]
+        """
         items = [props] if isinstance(props,(str,dict)) else props
         for i,item in enumerate(items):
             if isinstance(item,str):          # convert to dictionary if string
@@ -61,28 +71,46 @@ class properties:
     def setData(self, key, data):
         self.data[key] = data
     def getData(self, dictionary=False):
+        """Get properties as a list or dictionary
+        
+        :param bool dictionary: Return single property in a dictionary
+        :return: Property list or a dictionary
+        :rkey: list or dict
+        """
         if len(self.data.values())>1 or dictionary:
             return self.data
         else:
             return list(self.data.values())[0]        
 
-    # return a new object of self without some properties
     def getWithout(self,key,values):
+        """Get properties with some specific key/values
+        
+        :param str key: Property setting
+        :param key: Values to keep
+        :keys key: list[str] or str
+        :return: New object of self without some properties
+        """
         if not isinstance(values,list):
             values = [values]
         props = [item for i,item in enumerate(self.items) if item[key] not in values]
         return properties(props)
 
-    # return a new object only with complex properties
     def getComplex(self,add=None):
+        """Select complex properties
+        
+        :param prop add: New properties to add
+        :return: New object only with complex properties
+        """
         props = properties([item for item in self.items if item['complex']])
         if add: props.add(add)
         return props
 
-    # return a new object only with simple properties
     def getSimple(self,add=None):
+        """Select simple properties
+
+        :param prop add: New Properties to add
+        :return: New object only with simple properties
+        """
         props = properties([item for item in self.items if not item['complex']])
         if add: props.add(add)
         return props
-
-    # return a new object of self with some new properties

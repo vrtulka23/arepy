@@ -1,23 +1,26 @@
-Simulation data (arepy)
-***********************
+Simulation data framework (arepy)
+*********************************
 
 .. contents:: Contents
    :local:
 
-Simulation files
+
+SImulation files
 ^^^^^^^^^^^^^^^^
 
 .. toctree::
    :maxdepth: 2
 
-   snap
-   sink
-   groups
+   files/simulation
+   files/snap
+   files/sink
+   files/groups
 
-Simulation class
-^^^^^^^^^^^^^^^^
+Data manipulation
+^^^^^^^^^^^^^^^^^
 
-A set of initial and output files that belong to a single simulation can be handled using the following class and its methods:
+.. toctree::
+   :maxdepth: 2
 
-.. autoclass:: arepy.files.simulation
-   :members:
+   data/dictTab
+

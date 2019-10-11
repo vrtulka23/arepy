@@ -2,7 +2,7 @@ import numpy as np
 import arepy as apy
 import h5py as hp
 
-class propSgchem1:
+class sgchem1:
     """SGChem properties
 
     Chemistry specific properties that can be used only with the primordial chemistry module SGChem.

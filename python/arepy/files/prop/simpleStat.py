@@ -2,7 +2,7 @@ import numpy as np
 import arepy as apy
 import h5py as hp
 
-class propSimpleStat:
+class simpleStat:
     """Simple statistics
 
     The properties in this class perform simple statistical operations on the snapshot data.
