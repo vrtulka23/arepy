@@ -1,3 +1,6 @@
+# import properties
+import arepy.files.prop
+
 # simulations and snapshot groups
 from arepy.files.simulation import *    # Single simulation
 
@@ -18,4 +21,3 @@ from arepy.files.runsh import *         # Create a run.sh shell script
 from arepy.files.groups import *        # Group/s of Arepo snapshots
 from arepy.files.ics import *           # Create ICs from the grid or from the snapshot
 from arepy.files.cut import *           # Create a time/space cut from a simulation snapshot 
-

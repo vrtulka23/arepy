@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>1. Introduction to the ArePy &#8212; arepy 1.0 documentation</title>
+    <title>Introduction to the arepy &#8212; arepy 1.0 documentation</title>
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -12,6 +12,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Project management (scripy)" href="scripy.html" />
@@ -23,9 +24,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
         <li class="right" >
           <a href="scripy.html" title="Project management (scripy)"
              accesskey="N">next</a> |</li>
@@ -41,39 +39,39 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="module-arepy">
-<span id="introduction-to-the-arepy"></span><h1>Introduction to the ArePy<a class="headerlink" href="#module-arepy" title="Permalink to this headline">¶</a></h1>
-<p>Python module ArePy</p>
-<p>ArePy is an open-source Analyzing tool for Arepo simulation data. 
-The main module is written in Python, but some parts are also written in bash.</p>
-<dl class="class">
-<dt id="arepy.showLeap">
-<em class="property">class </em><code class="sig-prename descclassname">arepy.</code><code class="sig-name descname">showLeap</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.showLeap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Time measuring function</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>name: name of a timer</p>
-</dd>
-</dl>
-<p>This class is mainly used to calculate the loading times of the imported modules and libraries.
-However, it can be used also in other parts of the code.</p>
-<dl class="method">
-<dt id="arepy.showLeap.show">
-<code class="sig-name descname">show</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.showLeap.show" title="Permalink to this definition">¶</a></dt>
-<dd><p>Show time of the particular timer</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>name: name of a timer</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="arepy.showLeap.end">
-<code class="sig-name descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.showLeap.end" title="Permalink to this definition">¶</a></dt>
-<dd><p>End the timer</p>
-</dd></dl>
-
-</dd></dl>
-
+  <div class="section" id="introduction-to-the-arepy">
+<h1>Introduction to the arepy<a class="headerlink" href="#introduction-to-the-arepy" title="Permalink to this headline">¶</a></h1>
+<p><em>arepy</em> is a Python module that can be used to analyse Arepo output files and snapshots.</p>
+<p>It is primarily written in Python (v3.7+), but some parts are written in BASH.</p>
+<p>This module requires by default following python modules:</p>
+<ul class="simple">
+<li><p><em>numpy</em></p></li>
+<li><p><em>scipy</em></p></li>
+<li><p><em>h5py</em></p></li>
+<li><p><em>matplotlib</em></p></li>
+<li><p><em>multiprocessing</em></p></li>
+</ul>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Installation of the <em>arepy</em> is very simple!
+Go to the main <em>arepy</em> directory that you cloned from this website and run the installation BASH script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> <span class="nv">$HOME</span>/path/to/arepy
+sh install.sh
+</pre></div>
+</div>
+<p>The installation script will ask you to include <em>python/</em> directory into your local $PYTHONPATH and also to create an alias for the <em>arepy</em> bash script <em>shell/run.sh</em>.</p>
+<p>After this the <em>arepy</em> python module can be included in any python script and you will be also able to use <em>arepy</em> shell scripts from your terminal.</p>
+<p>In the next step you will have to choose system settings. You can either choose existing settings by inputing one of the system names in <em>shell/systems/{SYSTEM_NAME}.sh</em> or create a new one by putting your own name.</p>
+<p>Arepo source code can be either stored directly in the arepy main directory <em>/path/to/arepy/arepo/(source code)</em>, or you can set your own path to the <em>shell/system.sh</em> as:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">DIR_AREPO</span><span class="o">=</span>/my/path/to/arepo
+</pre></div>
+</div>
+</div>
+<div class="section" id="licensing-and-contribution">
+<h2>Licensing and contribution<a class="headerlink" href="#licensing-and-contribution" title="Permalink to this headline">¶</a></h2>
+<p>Everybody is welcomed to use this code for private or research purpouse in terms of its license.
+Contributions to the code should be consulted with the author.</p>
+</div>
 </div>
 
 
@@ -82,6 +80,15 @@ However, it can be used also in other parts of the code.</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction to the arepy</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#licensing-and-contribution">Licensing and contribution</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
                         title="previous chapter">Welcome to arepy’s documentation!</a></p>
@@ -115,9 +122,6 @@ However, it can be used also in other parts of the code.</p>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
         <li class="right" >
           <a href="scripy.html" title="Project management (scripy)"
              >next</a> |</li>

@@ -42,7 +42,7 @@ class properties:
 
             # decide whether the property is simple or complex
             item['complex'] = False
-            if hasattr(apy.files.prop.complex,'prop_'+item['name']):
+            if hasattr(apy.files.snap,'prop_'+item['name']):
                 item['complex'] = True 
 
             self.items.append(item)

@@ -12,6 +12,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Example project" href="../examples.html" />
@@ -23,9 +24,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
         <li class="right" >
           <a href="../examples.html" title="Example project"
              accesskey="N">next</a> |</li>
@@ -44,6 +42,101 @@
             
   <div class="section" id="dictionary-table">
 <h1>Dictionary table<a class="headerlink" href="#dictionary-table" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="arepy.data.dictTab">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.data.</code><code class="sig-name descname">dictTab</code><span class="sig-paren">(</span><em class="sig-param">keys</em>, <em class="sig-param">items=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.data.dictTab" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>or dict</strong><strong>[</strong><strong>dict</strong><strong>] </strong><strong>items</strong> (<em>list</em><em>[</em><em>dict</em><em>]</em>) – List of items</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – Size of the list</p></li>
+<li><p><strong>keys</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Column names (keys)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>keys</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Column names (keys)</p></li>
+<li><p><strong>items</strong> – List of table rows (values)</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Key items</dt>
+<dd class="field-odd"><p>list[tuple] or dict[dict]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Object of self</p>
+</dd>
+</dl>
+<p>This purely cosmetic function converts tabulated parameters 
+into a list of dictionaries. It makes the code a bit neater and more readable</p>
+<p>Examples:</p>
+<ol class="arabic">
+<li><p>Return a list:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">props</span> <span class="o">=</span> <span class="n">apy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dictTab</span><span class="p">([</span><span class="s1">&#39;key&#39;</span><span class="p">,</span><span class="s1">&#39;label&#39;</span><span class="p">,</span><span class="s1">&#39;scale&#39;</span><span class="p">],[</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">(</span><span class="s1">&#39;X_H2&#39;</span><span class="p">,</span>     <span class="s1">&#39;$X_\mathrm</span><span class="si">{H_2}</span><span class="s1">$&#39;</span><span class="p">,</span><span class="s1">&#39;lin&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">(</span><span class="s1">&#39;Mass&#39;</span><span class="p">,</span>     <span class="s1">&#39;M ($M_\odot$)&#39;</span><span class="p">,</span>   <span class="s1">&#39;log&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">props</span><span class="o">.</span><span class="n">items</span>
+
+<span class="go">[{&#39;key&#39;:&#39;X_H2&#39;, &#39;label&#39;:&#39;$X_\mathrm{H_2}$&#39;, &#39;scale&#39;:&#39;lin&#39;}</span>
+<span class="go"> {&#39;key&#39;:&#39;Mass&#39;, &#39;label&#39;:&#39;M ($M_\odot$)&#39;, &#39;scale&#39;:&#39;log&#39;}]</span>
+</pre></div>
+</div>
+</li>
+<li><p>Return a dictionary:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">props</span> <span class="o">=</span> <span class="n">apy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dictTab</span><span class="p">([</span><span class="s1">&#39;key&#39;</span><span class="p">,</span><span class="s1">&#39;label&#39;</span><span class="p">,</span><span class="s1">&#39;scale&#39;</span><span class="p">],{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;item1&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;X_H2&#39;</span><span class="p">,</span>     <span class="s1">&#39;$X_\mathrm</span><span class="si">{H_2}</span><span class="s1">$&#39;</span><span class="p">,</span><span class="s1">&#39;lin&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;item2&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Mass&#39;</span><span class="p">,</span>     <span class="s1">&#39;M ($M_\odot$)&#39;</span><span class="p">,</span>   <span class="s1">&#39;log&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">props</span><span class="o">.</span><span class="n">items</span>
+
+<span class="go">{&quot;item1&quot;: {&#39;key&#39;:&#39;X_H2&#39;, &#39;label&#39;:&#39;$X_\mathrm{H_2}$&#39;, &#39;scale&#39;:&#39;lin&#39;}</span>
+<span class="go"> &quot;item2&quot;: {&#39;key&#39;:&#39;Mass&#39;, &#39;label&#39;:&#39;M ($M_\odot$)&#39;, &#39;scale&#39;:&#39;log&#39;}}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<dl class="method">
+<dt id="arepy.data.dictTab.addItems">
+<code class="sig-name descname">addItems</code><span class="sig-paren">(</span><em class="sig-param">items</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.data.dictTab.addItems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add rows to the table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>items</strong> (<em>touple</em>) – Table row (dictionary values)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.data.dictTab.getColumn">
+<code class="sig-name descname">getColumn</code><span class="sig-paren">(</span><em class="sig-param">col</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.data.dictTab.getColumn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get column from a table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>col</strong> (<em>str</em>) – A dictionary key to select</p>
+</dd>
+<dt class="field-even">Return list</dt>
+<dd class="field-even"><p>List of values selected by a key</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.data.dictTab.correlate">
+<code class="sig-name descname">correlate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.data.dictTab.correlate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a correlation of the items</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Data correlation list</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.data.correlate</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -85,9 +178,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
         <li class="right" >
           <a href="../examples.html" title="Example project"
              >next</a> |</li>

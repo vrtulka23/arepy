@@ -2,9 +2,7 @@ import numpy as np
 import arepy as apy
 import h5py as hp
 
-class simple(apy.files.prop.simpleSelect,
-             apy.files.prop.simpleMath,
-             apy.files.prop.simpleStat):
+class simple: 
     """Simple properties
 
     Properties in this class can be extracted directly from the Arepo snapshot.

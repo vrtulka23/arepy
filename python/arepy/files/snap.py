@@ -14,7 +14,10 @@ from arepy.files.glueSimple import *    # Simple property glues
 import arepy.files.prop as pc
 
 # Snapshot class
-class snap(pc.complex):
+class snap(pc.complex,
+           pc.complexRegion,
+           pc.complexSlice,
+           pc.complexProj):
     """Snapshot class
 
     :param str fileName: Path to the snapshot file
@@ -254,7 +257,7 @@ class snap(pc.complex):
             {'Masses': [23.43, 34.23, 12.0, ...],
              'Velocities': [[23.34,26.6,834.3], [35.23, 22.0, 340,2], ...]}
         
-        9) Note that some properties return return a subset of values::
+        9) Note that some properties return subsets of values::
 
             >>> snap.getProperty({
             >>>     'name':'RegionSphere', 'center': [0.5]*3, 'radius': 0.5,
@@ -265,8 +268,9 @@ class snap(pc.complex):
              'ParticleIDs': [13, 35, 22, ...]}         
             
             >>> snap.getProperty([
-            >>>     'Velocities'
-            >>>     {'name':'RegionSphere', 'center': [0.5]*3, 'radius': 0.5, 'p': ['Masses','ParticleIDs']},
+            >>>     'Velocities',
+            >>>     {'name':'RegionSphere', 'center': [0.5]*3, 'radius': 0.5, 
+            >>>      'p': ['Masses','ParticleIDs']},
             >>> )
                                                                                                                         
             {'RegionSphere': {'Masses': [23.43, 34.23, 12.0, ...],
@@ -312,11 +316,22 @@ class snap(pc.complex):
 def getProperty(opt,properties,ids=None,ptype=0):
 
     # Construct a property class according to the chemistry type
-    classes = (pc.simple, pc.main)
+    classes = (
+        pc.simple, 
+        pc.simpleStat, 
+        pc.simpleSelect, 
+        pc.simpleMath, 
+        pc.main
+    )
     if opt['chem']['type']=='sgchem1':
-        classes = (pc.sgchem1,) + classes
+        classes = (
+            pc.sgchem1,
+        ) + classes
     if opt['sinkOpt'] is not None:
-        classes = (pc.sink,) + classes
+        classes = (
+            pc.sink,
+            pc.sinkSelect
+        ) + classes
     propList = type("main", classes, {})
         
     # Calculate properties and return values
