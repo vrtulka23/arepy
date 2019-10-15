@@ -1,11 +1,5 @@
-Sink snapshots
-**************
-
-.. contents:: Contents
-   :local:
-
 Sink snapshot class
-^^^^^^^^^^^^^^^^^^^
+*******************
 
 Data stored in sink snapshot binaries can be easily obtained using the following class:
 

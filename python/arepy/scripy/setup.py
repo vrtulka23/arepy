@@ -76,7 +76,7 @@ class setup:
 
         # Prepare and copy simulation parts that depend on the parameter file
         if any(i in [None,'ics','sources','olist'] for i in self.simPart):
-            self.sim.initParamNames()        
+            self.sim._initParamNames()        
         if any(i in [None,'ics'] for i in self.simPart):
             apy.shell.printc('- initial conditions: '+self.sim.fileIcs)
             self.setupIcs(self.sim.fileIcs)

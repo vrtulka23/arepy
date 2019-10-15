@@ -4,6 +4,17 @@ import re
 from subprocess import call
 
 class runsh():
+    """Job settings class
+
+    This class reads, modifies and saves files with arepy job settings
+
+    :param str fileName: Name of a file with job settings that should be opened
+    :param bool show: Print out an opened job settings file
+    :param bool notes: Read also comments after the parameters
+
+    :var params: List of parameters
+    :var groups: List of parameter groups
+    """
     def __enter__(self):
         return self
 
@@ -36,6 +47,14 @@ class runsh():
             self.read(fileName,show=show,notes=notes)
 
     def parse(self, rmGroups=[], rmParams=[], cmGroups=[], cmParams=[]):
+        """Parse the job settings as a string
+        
+        :param list[str] rmGroups: List of parameter groups that should be removed
+        :param list[str] rmParams: List of parameters that should be removed
+        :param list[str] cmGroups: List of parameter groups that should be commented
+        :param list[str] cmParams: List of parameters that should be commented
+        :return str: A parsed list of settings
+        """
         output = ''
         for group in self.groups:
             if group['name'] in rmGroups: continue
@@ -83,6 +102,14 @@ class runsh():
     '''
 
     def write(self,fileName,rmGroups=[],rmParams=[],cmGroups=[],cmParams=[]):
+        """Save job settings into a file
+        
+        :param str fileName: Name of a new file with job settings
+        :param list[str] rmGroups: List of parameter groups that should be removed
+        :param list[str] rmParams: List of parameters that should be removed
+        :param list[str] cmGroups: List of parameter groups that should be commented
+        :param list[str] cmParams: List of parameters that should be commented
+        """
         output = "#!/bin/bash \n\n"
         output += self.parse(rmGroups=rmGroups,rmParams=rmParams,cmGroups=cmGroups,cmParams=cmParams)
         with open(fileName,'w') as f:
@@ -90,6 +117,12 @@ class runsh():
             call(['chmod','+x',fileName])
 
     def setValue(self,param,value=None,note=None):
+        """Set a parameter value
+        
+        :param str param: Parameter name
+        :param value: New value of a parameter
+        :param str note: Comment to include after the parameter
+        """
         if isinstance(param,dict):
             for p,v in param.items():
                 self._setValue(p,v)
@@ -120,4 +153,9 @@ class runsh():
             self.params[param]['note'] = note
 
     def getValue(self,param):
+        """Get a parameter value
+        
+        :param str param: Parameter name
+        :return: Parameter value
+        """
         return self.params[param]['value'] if value in self.params[param] else None

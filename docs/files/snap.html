@@ -75,6 +75,21 @@ it can be called within any Python script as follwos:</p>
 </pre></div>
 </div>
 <dl class="method">
+<dt id="arepy.files.snap.setHeader">
+<code class="sig-name descname">setHeader</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">value=None</em>, <em class="sig-param">s=0</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.setHeader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set header values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the header parameter</p></li>
+<li><p><strong>value</strong> – Value of the header parameter</p></li>
+<li><p><strong>s</strong> (<em>int</em>) – Index of a partial snapshot file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="arepy.files.snap.getHeader">
 <code class="sig-name descname">getHeader</code><span class="sig-paren">(</span><em class="sig-param">names=None</em>, <em class="sig-param">s=0</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.getHeader" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get header properties</p>
@@ -82,11 +97,28 @@ it can be called within any Python script as follwos:</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>names</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of header properties.</p></li>
-<li><p><strong>s</strong> (<em>int</em>) – Index of the partial snapshot file.</p></li>
+<li><p><strong>s</strong> (<em>int</em>) – Index of a partial snapshot file.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Property values</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.snap.setProperty">
+<code class="sig-name descname">setProperty</code><span class="sig-paren">(</span><em class="sig-param">ptype</em>, <em class="sig-param">name</em>, <em class="sig-param">data</em>, <em class="sig-param">ids=None</em>, <em class="sig-param">s=0</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.setProperty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a particle property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ptype</strong> (<em>int</em>) – Particle type</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of the parameter</p></li>
+<li><p><strong>data</strong> – Dataset of the parameter</p></li>
+<li><p><strong>ids</strong> (<em>list</em><em>[</em><em>bool</em><em>]</em>) – Particle selector list</p></li>
+<li><p><strong>s</strong> (<em>int</em>) – Index of a partial snapshot file.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

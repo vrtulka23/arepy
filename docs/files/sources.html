@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Source list class &#8212; arepy 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Dictionary table" href="../data/dictTab.html" />
+    <link rel="prev" title="Job settings class (runsh)" href="runsh.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../data/dictTab.html" title="Dictionary table"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="runsh.html" title="Job settings class (runsh)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" accesskey="U">Simulation data framework (arepy)</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="source-list-class">
+<h1>Source list class<a class="headerlink" href="#source-list-class" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="arepy.files.sources">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.files.</code><code class="sig-name descname">sources</code><span class="sig-paren">(</span><em class="sig-param">fileName=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.sources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Source list class</p>
+<p>This class reads, modifies and saves files with SPRAI sources</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fileName</strong> (<em>str</em>) – Name of a source file</p>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>nSources</strong> (<em>int</em>) – Number of sources</p></li>
+<li><p><strong>nFreq</strong> (<em>int</em>) – Number of spectral power</p></li>
+<li><p><strong>nSigma</strong> (<em>int</em>) – Number of reaction cross-sections</p></li>
+<li><p><strong>nEnergy</strong> (<em>int</em>) – Number of photon excessive energies</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="arepy.files.sources.addSource">
+<code class="sig-name descname">addSource</code><span class="sig-paren">(</span><em class="sig-param">coord</em>, <em class="sig-param">sed</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.sources.addSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add sources to the list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coord</strong> (<em>list</em><em>[</em><em>[</em><em>float</em><em>]</em><em>*3</em><em>]</em>) – A list of source coordinates</p></li>
+<li><p><strong>sed</strong> (<em>list</em><em>[</em><em>[</em><em>float</em><em>]</em><em>*nFreq</em><em>]</em>) – A list of source spectral power (ph/s)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.sources.addCrossSections">
+<code class="sig-name descname">addCrossSections</code><span class="sig-paren">(</span><em class="sig-param">sigma</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.sources.addCrossSections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add cross-sections</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sigma</strong> (<em>[</em><em>float</em><em>]</em><em>*nSigma</em>) – List of cross-sections</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.sources.addEnergies">
+<code class="sig-name descname">addEnergies</code><span class="sig-paren">(</span><em class="sig-param">energy</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.sources.addEnergies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add excessive energies</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>energy</strong> (<em>[</em><em>float</em><em>]</em><em>*nEnergy</em>) – List of excessive energies</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.sources.read">
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param">fileName</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.sources.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a source file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fileName</strong> (<em>str</em>) – Path to a source file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.sources.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">fileName</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.sources.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save a new source file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fileName</strong> (<em>str</em>) – Path to a new source file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.sources.show">
+<code class="sig-name descname">show</code><span class="sig-paren">(</span><em class="sig-param">limit=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.sources.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print out source file values to the terminal</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>limit</strong> (<em>int</em>) – Maximum number of sources to show</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="runsh.html"
+                        title="previous chapter">Job settings class (runsh)</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../data/dictTab.html"
+                        title="next chapter">Dictionary table</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/files/sources.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../data/dictTab.html" title="Dictionary table"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="runsh.html" title="Job settings class (runsh)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" >Simulation data framework (arepy)</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Ondrej Jaura.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Parameter file class &#8212; arepy 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Configuration file class" href="config.html" />
+    <link rel="prev" title="Sink snapshot class" href="sink.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="config.html" title="Configuration file class"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="sink.html" title="Sink snapshot class"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" accesskey="U">Simulation data framework (arepy)</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="parameter-file-class">
+<h1>Parameter file class<a class="headerlink" href="#parameter-file-class" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="arepy.files.param">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.files.</code><code class="sig-name descname">param</code><span class="sig-paren">(</span><em class="sig-param">fileName=None</em>, <em class="sig-param">show=False</em>, <em class="sig-param">notes=False</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.param" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameter file class</p>
+<p>This class reads, modifies and saves Arepo parameter files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fileName</strong> (<em>str</em>) – Name of a parameter file that should be opened</p></li>
+<li><p><strong>show</strong> (<em>bool</em>) – Print out an opened parameter file</p></li>
+<li><p><strong>notes</strong> (<em>bool</em>) – Read also comments after the parameters</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>params</strong> – List of parameters</p></li>
+<li><p><strong>groups</strong> – List of parameter groups</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="arepy.files.param.parse">
+<code class="sig-name descname">parse</code><span class="sig-paren">(</span><em class="sig-param">rmGroups=[]</em>, <em class="sig-param">rmParams=[]</em>, <em class="sig-param">cmGroups=[]</em>, <em class="sig-param">cmParams=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.param.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a parameter file as a string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rmGroups</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of parameter groups that should be removed</p></li>
+<li><p><strong>rmParams</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of parameters that should be removed</p></li>
+<li><p><strong>cmGroups</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of parameter groups that should be commented</p></li>
+<li><p><strong>cmParams</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of parameters that should be commented</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return str</dt>
+<dd class="field-even"><p>A parsed list of parameters</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.param.read">
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param">fileName</em>, <em class="sig-param">show=False</em>, <em class="sig-param">notes=False</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.param.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a configuration file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fileName</strong> (<em>str</em>) – path to a parameter file</p></li>
+<li><p><strong>show</strong> (<em>bool</em>) – Print all parameters to the console</p></li>
+<li><p><strong>notes</strong> (<em>bool</em>) – Read also comments behind parameters</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.param.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">fileName</em>, <em class="sig-param">rmGroups=[]</em>, <em class="sig-param">rmParams=[]</em>, <em class="sig-param">cmGroups=[]</em>, <em class="sig-param">cmParams=[]</em>, <em class="sig-param">meshrelax=False</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.param.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save a parameter file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fileName</strong> (<em>str</em>) – Name of a new parameter file</p></li>
+<li><p><strong>rmGroups</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of parameter groups that should be removed</p></li>
+<li><p><strong>rmParams</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of parameters that should be removed</p></li>
+<li><p><strong>cmGroups</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of parameter groups that should be commented</p></li>
+<li><p><strong>cmParams</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of parameters that should be commented</p></li>
+<li><p><strong>meshrelax</strong> (<em>bool</em>) – Set MESHRELAX parameters</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.param.setValue">
+<code class="sig-name descname">setValue</code><span class="sig-paren">(</span><em class="sig-param">param</em>, <em class="sig-param">value=None</em>, <em class="sig-param">note=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.param.setValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a parameter value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>param</strong> (<em>str</em>) – Parameter name</p></li>
+<li><p><strong>value</strong> – New value of a parameter</p></li>
+<li><p><strong>note</strong> (<em>str</em>) – Comment to include after the parameter</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.param.getValue">
+<code class="sig-name descname">getValue</code><span class="sig-paren">(</span><em class="sig-param">names</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.param.getValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a parameter value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>param</strong> (<em>str</em>) – Parameter name</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Parameter value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.param.formatValue">
+<code class="sig-name descname">formatValue</code><span class="sig-paren">(</span><em class="sig-param">param</em>, <em class="sig-param">value=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.param.formatValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a parameter value in its standard format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>param</strong> (<em>str</em>) – Parameter name</p></li>
+<li><p><strong>value</strong> – If set, the function will format this value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Formated parameter value</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="sink.html"
+                        title="previous chapter">Sink snapshot class</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="config.html"
+                        title="next chapter">Configuration file class</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/files/param.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="config.html" title="Configuration file class"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="sink.html" title="Sink snapshot class"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" >Simulation data framework (arepy)</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Ondrej Jaura.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>

@@ -8,6 +8,7 @@ SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = source
 BUILDDIR      = build
 DOCSDIR       = ../docs
+DATADIR       = ./data
 
 # Put it first so that "make" without argument is like "make help".
 help:
@@ -20,5 +21,6 @@ help:
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 	rm -fr $(DOCSDIR)/*
-	touch $(DOCSDIR)/.nojekyll
 	mv $(BUILDDIR)/html/* $(DOCSDIR)/
+	cp -r $(DATADIR) $(DOCSDIR)/
+	touch $(DOCSDIR)/.nojekyll

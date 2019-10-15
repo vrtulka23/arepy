@@ -1,7 +1,7 @@
 import arepy as apy
 import numpy as np
 import h5py as hp
-import os
+import os, sys
 
 # Cache data into a numpy file or load from already existing numpy file
 '''
@@ -23,7 +23,11 @@ ValueError: could not broadcast input array from shape (2,2) into shape (2)
 '''
 
 def _cacheLoad(cacheFile):
-    data = np.load(cacheFile)
+    v = sys.version_info
+    if v.major>=3 and v.minor>=7 and v.micro>=3:
+        data = np.load(cacheFile, allow_pickle=True)
+    else:
+        data = np.load(cacheFile)
     return data.item() if data.size==1 else data
 def cache( data, cacheName, cacheDir=None, reCache=False, args=[], update=False ):
 

@@ -3,6 +3,17 @@ import arepy as apy
 import re
 
 class config():
+    """Configuration file class
+
+    This class reads, modifies and saves Arepo configuration files
+
+    :param str fileName: Name of a configuration file that should be opened
+    :param bool show: Print out an opened configuration file
+    :param bool notes: Read also comments after the parameters
+
+    :var params: List of parameters
+    :var groups: List of parameter groups
+    """
     def __enter__(self):
         return self
 
@@ -949,6 +960,14 @@ class config():
             self.read(fileName,show=show,notes=notes)
 
     def parse(self, rmGroups=[], rmParams=[], cmGroups=[], cmParams=[]):
+        """Parse a configuration file as a string
+        
+        :param list[str] rmGroups: List of parameter groups that should be removed
+        :param list[str] rmParams: List of parameters that should be removed
+        :param list[str] cmGroups: List of parameter groups that should be commented
+        :param list[str] cmParams: List of parameters that should be commented
+        :return str: A parsed configuration list
+        """
         output = ''
         for group in self.groups:
             if group['id'] in rmGroups: continue
@@ -972,6 +991,12 @@ class config():
         return output
         
     def read(self,fileName,show=False,notes=False):
+        """Read a configuration file
+
+        :param str fileName: path to a parameter file
+        :param bool show: Print all parameters to the console
+        :param bool notes: Read also comments behind parameters
+        """
         self.fileName = fileName
         with open(fileName,'r') as f:
             content = f.read()
@@ -987,6 +1012,15 @@ class config():
             print( self.parse() )
 
     def write(self,fileName,rmGroups=[],rmParams=[],cmGroups=[],cmParams=[],meshrelax=False):
+        """Save a configuration file
+        
+        :param str fileName: Name of a new parameter file
+        :param list[str] rmGroups: List of parameter groups that should be removed
+        :param list[str] rmParams: List of parameters that should be removed
+        :param list[str] cmGroups: List of parameter groups that should be commented
+        :param list[str] cmParams: List of parameters that should be commented
+        :param bool meshrelax: Set MESHRELAX parameters
+        """
         if meshrelax:
             self.setValue('MESHRELAX',True)    # set meshrelax
             rmGroups.extend([10])              # remove normal images
@@ -1028,6 +1062,12 @@ class config():
         if note is not None and note!='':
             self.params[param]['note'] = note
     def setValue(self,param,value=None,note=None):
+        """Set a parameter value
+        
+        :param str param: Parameter name
+        :param value: New value of a parameter
+        :param str note: Comment to include after the parameter
+        """
         if isinstance(param,dict):
             for p,v in param.items():
                 self._setValue(p,v)
@@ -1037,15 +1077,23 @@ class config():
     def _getValue(self,param):
         return self.params[param]['value']
     def getValue(self,param):
+        """Get a parameter value
+        
+        :param str param: Parameter name
+        :return: Parameter value
+        """
         if isinstance(param,(str,int,float)):
             return self._getValue(param)
         else:
             return [ self._getValue(value) for value in param ]
 
-    def getDtype(self,param):
-        return self.params[param]['dtype']
-
     def formatValue(self,param,value=None):
+        """Return a parameter value in its standard format
+        
+        :param str param: Parameter name
+        :param value: If set, the function will format this value
+        :return: Formated parameter value
+        """
         if value is None:
             value = self.params[param]['value']
         if self.params[param]['dtype']=='e':
@@ -1054,6 +1102,14 @@ class config():
             return False
         else:
             return self.params[param]['format']%value
+
+    def getDtype(self,param):
+        """Get a parameter datatype
+        
+        :param str param: Parameter name
+        :return: Parameter value
+        """
+        return self.params[param]['dtype']
 
 def configCompare(fname,gname):
     f = apy.files.config(fname)

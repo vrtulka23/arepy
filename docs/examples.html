@@ -15,7 +15,7 @@
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Dictionary table" href="data/dictTab.html" /> 
+    <link rel="prev" title="Progress bar class" href="shell/progressBar.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -24,7 +24,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="data/dictTab.html" title="Dictionary table"
+          <a href="shell/progressBar.html" title="Progress bar class"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li> 
       </ul>
@@ -42,12 +42,13 @@
 <ul class="simple">
 <li><p><a class="reference internal" href="#new-project" id="id1">New project</a></p></li>
 <li><p><a class="reference internal" href="#new-simulation-setup" id="id2">New simulation setup</a></p></li>
+<li><p><a class="reference internal" href="#simple-initial-conditions" id="id3">Simple initial conditions</a></p></li>
 </ul>
 </div>
 <p>In this small tutorial we will show following:</p>
 <ul class="simple">
 <li><p>Setup a new project called “example”</p></li>
-<li><p>Create initial conditions for a H2 region expansion test using Arepo’s MESHRELAX</p></li>
+<li><p>Create initial conditions for a H2 region expansion</p></li>
 <li><p>Run the simulations</p></li>
 <li><p>Analyze data and create several plots and tables</p></li>
 </ul>
@@ -59,8 +60,8 @@
 </div>
 <p>The above command will create a new project directory and a project class where you will store all general simulation settings:</p>
 <div class="line-block">
-<div class="line"><strong>./python/scripy/example</strong></div>
-<div class="line"><strong>./python/scripy/example/__init__.py</strong>.</div>
+<div class="line"><strong>./python/scripy/example</strong> (project directory)</div>
+<div class="line"><strong>./python/scripy/example/__init__.py</strong>. (project class)</div>
 </div>
 <p>Newly created project is now a standard Python module that can be in principle imported from any Python script.
 However, we will use it only indirectly in the following scripts.
@@ -73,7 +74,7 @@ For more description of the project class refer to <a class="reference internal"
 <div class="section" id="new-simulation-setup">
 <h2><a class="toc-backref" href="#id2">New simulation setup</a><a class="headerlink" href="#new-simulation-setup" title="Permalink to this headline">¶</a></h2>
 <p>In this part we will create initial condition to test a Stromgren sphere.</p>
-<p>As you may have noticed in the previous step we also preset a first simulation.
+<p>As you may have noticed in the previous step the project class includes a first simulation.
 Lets modify its default settings to something like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">sims</span><span class="p">[</span><span class="s1">&#39;001&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;example&#39;</span><span class="p">,</span>
@@ -93,11 +94,123 @@ apy --init-setup stromgren
 <div class="line-block">
 <div class="line"><strong>./python/scripy/example/setups</strong></div>
 <div class="line"><strong>./python/scripy/example/setups/__init__.py</strong></div>
-<div class="line"><strong>./python/scripy/example/setups/stromgren</strong></div>
-<div class="line"><strong>./python/scripy/example/setups/stromgren/__init__.py</strong></div>
+<div class="line"><strong>./python/scripy/example/setups/stromgren</strong> (setup directory)</div>
+<div class="line"><strong>./python/scripy/example/setups/stromgren/__init__.py</strong> (setup class)</div>
 </div>
-<p>The most important is the last file, because it contains all the setup directives for the simulation.
+<p>The most important is the last file, because it contains all the setup directives for the simulation.</p>
+</div>
+<div class="section" id="simple-initial-conditions">
+<h2><a class="toc-backref" href="#id3">Simple initial conditions</a><a class="headerlink" href="#simple-initial-conditions" title="Permalink to this headline">¶</a></h2>
+<p>In order to make simple initial conditions for our HII region we can modify the setup class, that we created in the previous step.
 For more description of the setup class refer to <a class="reference internal" href="setups.html#arepy.scripy.setup" title="arepy.scripy.setup"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.scripy.setup</span></code></a>.</p>
+<p>First, we will set the resolution of a desired grid:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;nRes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">64</span>
+</pre></div>
+</div>
+<p>Download this configuration file (<a class="reference external" href="data/Config.sh">Config.sh</a>) and copy it to the setup directory.
+We will use a class <a class="reference internal" href="files/config.html#arepy.files.config" title="arepy.files.config"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.config</span></code></a> to read the configuration file from the setup directory, modify and save it to the simulation directory.
+All the parameters are already preset, so we will use it as it is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setupConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fileName</span><span class="p">,</span><span class="n">defValues</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">apy</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dirSetup</span><span class="o">+</span><span class="s1">&#39;/Config.sh&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">defValues</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Do the same with the parameter file (<a class="reference external" href="data/param.txt">param.txt</a>) and update the corresponding setup function.
+In this case we will use a class <a class="reference internal" href="files/param.html#arepy.files.param" title="arepy.files.param"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.param</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setupParam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fileName</span><span class="p">,</span><span class="n">defValues</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">apy</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">param</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dirSetup</span><span class="o">+</span><span class="s1">&#39;/param.txt&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">defValues</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Optionally you can add also a run script that is used to store job parameters.
+For this refer to the class <a class="reference internal" href="files/runsh.html#arepy.files.runsh" title="arepy.files.runsh"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.runsh</span></code></a> and modify the setup scirpt as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setupRun</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fileName</span><span class="p">,</span><span class="n">defValues</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">apy</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">runsh</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">defValues</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The simulation will have only a one ideal source (with emission of 1e50 photons per second) in the center (coordinates [0.5,0.5,0.5]) of the box.
+We can easily setup a corresponding file with sources using the class <a class="reference internal" href="files/sources.html#arepy.files.sources" title="arepy.files.sources"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.sources</span></code></a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setupSources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fileName</span><span class="p">):</span>
+    <span class="n">coord</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">]</span>              <span class="c1"># in code units (BoxSize=1)</span>
+    <span class="n">sed</span> <span class="o">=</span> <span class="p">[</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1e50</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span> <span class="p">]</span> <span class="c1"># in photons per second</span>
+    <span class="k">with</span> <span class="n">apy</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">sources</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">addSource</span><span class="p">(</span><span class="n">coord</span><span class="p">,</span><span class="n">sed</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we have to create file with initial conditions and particle grid using the class <a class="reference internal" href="files/snap.html#arepy.files.snap" title="arepy.files.snap"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.snap</span></code></a>.
+The corresponding part in the setup will look like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setupIcs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fileIcs</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">apy</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">snap</span><span class="p">(</span><span class="n">fileIcs</span><span class="p">,</span><span class="n">fmode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+
+        <span class="c1"># set a file header</span>
+        <span class="n">ngas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;nRes&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">3</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">setHeader</span><span class="p">({</span>
+            <span class="s1">&#39;NumPart_ThisFile&#39;</span><span class="p">:</span>         <span class="p">[</span><span class="n">ngas</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+            <span class="s1">&#39;NumPart_Total&#39;</span><span class="p">:</span>            <span class="p">[</span><span class="n">ngas</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+            <span class="s1">&#39;NumPart_Total_HighWord&#39;</span><span class="p">:</span>   <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">6</span><span class="p">,</span>
+            <span class="s1">&#39;MassTable&#39;</span><span class="p">:</span>                <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="mi">6</span><span class="p">,</span>
+            <span class="s1">&#39;Redshift&#39;</span><span class="p">:</span>                 <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s1">&#39;BoxSize&#39;</span><span class="p">:</span>                  <span class="mf">1.0</span><span class="p">,</span>
+            <span class="s1">&#39;NumFilesPerSnapshot&#39;</span><span class="p">:</span>      <span class="mi">1</span><span class="p">,</span>
+            <span class="s1">&#39;Omega0&#39;</span><span class="p">:</span>                   <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s1">&#39;OmegaLambda&#39;</span><span class="p">:</span>              <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s1">&#39;OmegaBaryon&#39;</span><span class="p">:</span>              <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s1">&#39;HubbleParam&#39;</span><span class="p">:</span>              <span class="mf">1.0</span><span class="p">,</span>
+            <span class="s1">&#39;Flag_Sfr&#39;</span><span class="p">:</span>                 <span class="mi">0</span><span class="p">,</span>
+            <span class="s1">&#39;Flag_Cooling&#39;</span><span class="p">:</span>             <span class="mi">0</span><span class="p">,</span>
+            <span class="s1">&#39;Flag_StellarAge&#39;</span><span class="p">:</span>          <span class="mi">0</span><span class="p">,</span>
+            <span class="s1">&#39;Flag_Metals&#39;</span><span class="p">:</span>              <span class="mi">0</span><span class="p">,</span>
+            <span class="s1">&#39;Flag_Feedback&#39;</span><span class="p">:</span>            <span class="mi">0</span><span class="p">,</span>
+            <span class="s1">&#39;Flag_DoublePrecision&#39;</span><span class="p">:</span>     <span class="mi">1</span><span class="p">,</span>
+            <span class="s1">&#39;Composition_vector_length&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+            <span class="s1">&#39;UnitLength_in_cm&#39;</span><span class="p">:</span>         <span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">[</span><span class="s1">&#39;length&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;UnitMass_in_g&#39;</span><span class="p">:</span>            <span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">[</span><span class="s1">&#39;mass&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;UnitVelocity_in_cm_per_s&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">[</span><span class="s1">&#39;velocity&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;Time&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+        <span class="p">})</span>
+
+        <span class="c1"># set cell properties</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">apy</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">gridCube</span><span class="p">(</span>
+            <span class="p">[</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;nRes&#39;</span><span class="p">]</span> <span class="p">]</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span>       <span class="c1"># number of bins in each direction</span>
+            <span class="n">points</span><span class="o">=</span><span class="s1">&#39;centers&#39;</span><span class="p">,</span>             <span class="c1"># get centers of the grid cubes</span>
+            <span class="n">scatter</span><span class="o">=</span><span class="mf">0.2</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">[</span><span class="s1">&#39;nRes&#39;</span><span class="p">],</span> <span class="c1"># add an artificial scatter</span>
+        <span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">setProperty</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Coordinates&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grid</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">setProperty</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Masses&#39;</span><span class="p">,</span>      <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">ngas</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">setProperty</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Velocities&#39;</span><span class="p">,</span>  <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ngas</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">setProperty</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;ParticleIDs&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="o">+</span><span class="n">ngas</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint32</span><span class="p">)</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>Remove other uncesessary functiona and save the setup file.
+Now we are ready to create the simulation directory with all its files.
+This step is also very easy, the simulation can be created using the following call in the command line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>apy --setup <span class="m">001</span>
+</pre></div>
+</div>
+<p>Here we use the simulation name ‘001’ that was used with settings in the project class.</p>
+<p>The above command will create following files in your simulation directory:</p>
+<ul class="simple">
+<li><p><strong>001_example</strong></p></li>
+<li><p><strong>001_example/Config.sh</strong></p></li>
+<li><p><strong>001_example/ics_32.hdf5</strong></p></li>
+<li><p><strong>001_example/output</strong></p></li>
+<li><p><strong>001_example/param.txt</strong></p></li>
+<li><p><strong>001_example/rad_sources.bin</strong></p></li>
+<li><p><strong>001_example/run.sh</strong></p></li>
+</ul>
+<p>It is also possible to update only selected parts of the setup, by adding some extra arguments to the call above:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">code</span><span class="p">::</span> <span class="n">bash</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p>apy –setup 001 param config</p>
+</div></blockquote>
 </div>
 </div>
 
@@ -112,13 +225,14 @@ For more description of the setup class refer to <a class="reference internal" h
 <li><a class="reference internal" href="#">Example project</a><ul>
 <li><a class="reference internal" href="#new-project">New project</a></li>
 <li><a class="reference internal" href="#new-simulation-setup">New simulation setup</a></li>
+<li><a class="reference internal" href="#simple-initial-conditions">Simple initial conditions</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="data/dictTab.html"
-                        title="previous chapter">Dictionary table</a></p>
+  <p class="topless"><a href="shell/progressBar.html"
+                        title="previous chapter">Progress bar class</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -147,7 +261,7 @@ For more description of the setup class refer to <a class="reference internal" h
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="data/dictTab.html" title="Dictionary table"
+          <a href="shell/progressBar.html" title="Progress bar class"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">arepy 1.0 documentation</a> &#187;</li> 
       </ul>

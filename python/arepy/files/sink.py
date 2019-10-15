@@ -163,6 +163,15 @@ class sink():
         :param int limit:       Restrict number of returned data
         :param bool dictionary: Return single properties also in a dictionary
         :return:                Data of a single property or an dictionary of multiple properties
+
+        Example of use::
+
+            >>> import arepy as apy
+            >>> 
+            >>> with apy.files.sink.getSink() as f:
+            >>>     sn.getValues(['Mass','Pos','ID'])
+        
+        
         """
         if order is not None:
             self.order(order,reverse=reverse)

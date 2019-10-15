@@ -3,6 +3,17 @@ import arepy as apy
 import numpy as np
 
 class param():
+    """Parameter file class
+
+    This class reads, modifies and saves Arepo parameter files
+
+    :param str fileName: Name of a parameter file that should be opened
+    :param bool show: Print out an opened parameter file
+    :param bool notes: Read also comments after the parameters
+
+    :var params: List of parameters
+    :var groups: List of parameter groups
+    """
     def __enter__(self):
         return self
 
@@ -251,6 +262,14 @@ class param():
             self.read(fileName,show=show,notes=notes)
 
     def parse(self, rmGroups=[], rmParams=[], cmGroups=[], cmParams=[]):
+        """Parse a parameter file as a string
+        
+        :param list[str] rmGroups: List of parameter groups that should be removed
+        :param list[str] rmParams: List of parameters that should be removed
+        :param list[str] cmGroups: List of parameter groups that should be commented
+        :param list[str] cmParams: List of parameters that should be commented
+        :return str: A parsed list of parameters
+        """
         output = ''
         for group in self.groups:
             if group['id'] in rmGroups: continue
@@ -278,6 +297,12 @@ class param():
         return output
 
     def read(self,fileName,show=False,notes=False):
+        """Read a configuration file
+
+        :param str fileName: path to a parameter file
+        :param bool show: Print all parameters to the console
+        :param bool notes: Read also comments behind parameters
+        """
         with open(fileName,'r') as f:
             content = f.read()
         lines = content.split("\n")
@@ -295,6 +320,15 @@ class param():
             print( self.parse() )
 
     def write(self,fileName,rmGroups=[],rmParams=[],cmGroups=[],cmParams=[],meshrelax=False):
+        """Save a parameter file
+        
+        :param str fileName: Name of a new parameter file
+        :param list[str] rmGroups: List of parameter groups that should be removed
+        :param list[str] rmParams: List of parameters that should be removed
+        :param list[str] cmGroups: List of parameter groups that should be commented
+        :param list[str] cmParams: List of parameters that should be commented
+        :param bool meshrelax: Set MESHRELAX parameters
+        """
         if meshrelax:
             rmGroups.extend([28])  # remove image settings
         output = self.parse(rmGroups=rmGroups,rmParams=rmParams,cmGroups=cmGroups,cmParams=cmParams)
@@ -328,6 +362,12 @@ class param():
         if note!=None and note!='':
             self.params[param]['note'] = note
     def setValue(self,param,value=None,note=None):
+        """Set a parameter value
+        
+        :param str param: Parameter name
+        :param value: New value of a parameter
+        :param str note: Comment to include after the parameter
+        """
         if isinstance(param,dict):
             for p,v in param.items():
                 self._setValue(p,v)
@@ -335,6 +375,11 @@ class param():
             self._setValue(param,value,note)
     
     def getValue(self,names):
+        """Get a parameter value
+        
+        :param str param: Parameter name
+        :return: Parameter value
+        """
         allNames = [names] if isinstance(names,str) else names
         data = []
         for name in allNames:
@@ -342,6 +387,12 @@ class param():
         return data[0] if isinstance(names,str) else data        
 
     def formatValue(self,param,value=None):
+        """Return a parameter value in its standard format
+        
+        :param str param: Parameter name
+        :param value: If set, the function will format this value
+        :return: Formated parameter value
+        """
         if value is None:
             value = self.getValue(param)
         return '' if value is None else self.params[param]['format']%value

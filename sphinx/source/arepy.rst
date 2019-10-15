@@ -13,8 +13,12 @@ SImulation files
 
    files/simulation
    files/snap
-   files/sink
    files/groups
+   files/sink
+   files/param
+   files/config
+   files/runsh
+   files/sources
 
 Data manipulation
 ^^^^^^^^^^^^^^^^^
@@ -24,3 +28,10 @@ Data manipulation
 
    data/dictTab
 
+Shell commands
+^^^^^^^^^^^^^^
+
+.. toctree::
+   :maxdepth: 2
+	      
+   shell/progressBar

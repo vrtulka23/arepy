@@ -101,6 +101,12 @@ class snap(pc.complex,
             else:
                 f['Header'].attrs.create(name,value)
     def setHeader(self,name,value=None,s=0):
+        """Set header values
+
+        :param str name: Name of the header parameter
+        :param value: Value of the header parameter
+        :param int s: Index of a partial snapshot file. 
+        """
         if isinstance(name,dict):
             for n,v in name.items():
                 self._setHeader(n,v,s=s)
@@ -112,7 +118,7 @@ class snap(pc.complex,
         """Get header properties
         
         :param list[str] names: List of header properties.
-        :param int s: Index of the partial snapshot file.
+        :param int s: Index of a partial snapshot file.
         :return: Property values
         """
         if names is None:
@@ -145,6 +151,14 @@ class snap(pc.complex,
         return apy.units(oldUnits=units,newUnits=newUnits)
 
     def setProperty(self,ptype,name,data,ids=None,s=0):
+        """Set a particle property
+
+        :param int ptype: Particle type
+        :param str name: Name of the parameter
+        :param data: Dataset of the parameter
+        :param list[bool] ids: Particle selector list
+        :param int s: Index of a partial snapshot file.
+        """
         fileName = self.sfileName[s]
         with hp.File(fileName,'r+') as f:
             pt = 'PartType%d'%ptype

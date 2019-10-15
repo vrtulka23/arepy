@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Sink snapshots &#8212; arepy 1.0 documentation</title>
+    <title>Sink snapshot class &#8212; arepy 1.0 documentation</title>
     <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -15,8 +15,8 @@
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Groups" href="groups.html" />
-    <link rel="prev" title="Complex properties" href="propComplexList.html" /> 
+    <link rel="next" title="Parameter file class" href="param.html" />
+    <link rel="prev" title="Groups" href="groups.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -25,10 +25,10 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="groups.html" title="Groups"
+          <a href="param.html" title="Parameter file class"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="propComplexList.html" title="Complex properties"
+          <a href="groups.html" title="Groups"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../arepy.html" accesskey="U">Simulation data framework (arepy)</a> &#187;</li> 
@@ -40,16 +40,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="sink-snapshots">
-<h1>Sink snapshots<a class="headerlink" href="#sink-snapshots" title="Permalink to this headline">¶</a></h1>
-<div class="contents local topic" id="contents">
-<p class="topic-title first">Contents</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#sink-snapshot-class" id="id1">Sink snapshot class</a></p></li>
-</ul>
-</div>
-<div class="section" id="sink-snapshot-class">
-<h2><a class="toc-backref" href="#id1">Sink snapshot class</a><a class="headerlink" href="#sink-snapshot-class" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="sink-snapshot-class">
+<h1>Sink snapshot class<a class="headerlink" href="#sink-snapshot-class" title="Permalink to this headline">¶</a></h1>
 <p>Data stored in sink snapshot binaries can be easily obtained using the following class:</p>
 <dl class="class">
 <dt id="arepy.files.sink">
@@ -88,11 +80,17 @@
 <dd class="field-even"><p>Data of a single property or an dictionary of multiple properties</p>
 </dd>
 </dl>
-</dd></dl>
-
-</dd></dl>
-
+<p>Example of use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">arepy</span> <span class="k">as</span> <span class="nn">apy</span>
+<span class="gp">&gt;&gt;&gt; </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">apy</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">sink</span><span class="o">.</span><span class="n">getSink</span><span class="p">()</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">sn</span><span class="o">.</span><span class="n">getValues</span><span class="p">([</span><span class="s1">&#39;Mass&#39;</span><span class="p">,</span><span class="s1">&#39;Pos&#39;</span><span class="p">,</span><span class="s1">&#39;ID&#39;</span><span class="p">])</span>
+</pre></div>
 </div>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -101,20 +99,12 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Sink snapshots</a><ul>
-<li><a class="reference internal" href="#sink-snapshot-class">Sink snapshot class</a></li>
-</ul>
-</li>
-</ul>
-
   <h4>Previous topic</h4>
-  <p class="topless"><a href="propComplexList.html"
-                        title="previous chapter">Complex properties</a></p>
-  <h4>Next topic</h4>
   <p class="topless"><a href="groups.html"
-                        title="next chapter">Groups</a></p>
+                        title="previous chapter">Groups</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="param.html"
+                        title="next chapter">Parameter file class</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -143,10 +133,10 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="groups.html" title="Groups"
+          <a href="param.html" title="Parameter file class"
              >next</a> |</li>
         <li class="right" >
-          <a href="propComplexList.html" title="Complex properties"
+          <a href="groups.html" title="Groups"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../arepy.html" >Simulation data framework (arepy)</a> &#187;</li> 

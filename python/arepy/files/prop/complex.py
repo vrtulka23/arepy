@@ -122,13 +122,16 @@ class complex:
         volume = self.getProperty('CellVolume',ids=ids,ptype=ptype)
         volTot = np.sum(volume)
         properties = apy.files.properties(prop['p'])
-        data = self.getProperty(properties,ids=ids,ptype=ptype)
-        ids = np.ones((len(volume)), dtype=bool) #[True]*len(volume)
-        if 'lt' in prop: # larger than
-            ids = (ids & (data>prop['lt']))
-        if 'st' in prop: # smaller than
-            ids = (ids & (data<prop['st']))
-        return np.sum(volume[ids])/volTot            
+        data = self.getProperty(properties,ids=ids,ptype=ptype,dictionary=True)
+        for pp in properties:
+            key = pp['key']
+            ids = np.ones((len(volume)), dtype=bool) #[True]*len(volume)
+            if 'lt' in prop: # larger than
+                ids = (ids & (data[key]>prop['lt']))
+            if 'st' in prop: # smaller than
+                ids = (ids & (data[key]<prop['st']))
+            properties.setData(key, np.sum(volume[ids])/volTot )
+        return properties.getData()
 
     def prop_FractionMass(self,ids,ptype,**prop):
         """Get mass fraction of some element

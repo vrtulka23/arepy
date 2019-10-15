@@ -6,6 +6,9 @@ import numpy as np
 #################################
 
 class groupsMethods:
+    """Group methods class
+
+    """
 
     ##################################
     # Common transformation routines #

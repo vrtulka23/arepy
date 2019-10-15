@@ -6,6 +6,11 @@ from arepy.files.groupsMethods import *
 # Overload collection class #
 #############################
 class collection(apy.data.groups.collection):
+    """Collection of groups
+    
+    :param list[str] names: List of group names
+    :param list[dict] options: List of group settings
+    """
     def __init__(self,names=None,options=None,**opt):
         super().__init__(names=names,options=options,**opt)
 
@@ -16,6 +21,11 @@ class collection(apy.data.groups.collection):
 # Overload group class #
 ########################
 class group(apy.data.groups.group, groupsMethods):
+    """Snapshot group
+
+    :param int sim: Simulation ID
+    :param list[int] snaps: Snapshot number or list of numbers
+    """
     def __init__(self,sim=None,snaps=None,**opt):
         super().__init__(**opt)
 
