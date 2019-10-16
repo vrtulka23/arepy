@@ -243,9 +243,9 @@ class plot:
             'ncol':ncol,
             'nrow':nrow,
             'nfig':nfig,
-            'movie':movie,
-            'show':show,
             'plot':plot,
+            'movie':movie if plot else False,
+            'show':show if plot else False,
             'opt':nopt,
         }
 

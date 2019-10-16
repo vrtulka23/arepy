@@ -103,7 +103,7 @@ class gridFieldXY(gridSquareXY):
 
 class gridHealpix(grid):
     def _setCoordinates(self,zfill=None): 
-        import healpix as hp
+        import healpy as hp
         nside = self.bins[0]
         npix = hp.nside2npix(nside)
         coord = np.zeros((npix,3))
@@ -175,7 +175,7 @@ class gridLineRZ(gridDisc):
     def _setCoordinates(self,xfill=None,yfill=None):
         coord, shape = super()._setCoordinates()
         self.parts = self.parts+[len(self.xi[1])]  # update particle offset
-        self.split = np.cumsum(self.parts[:-1])    # update particle slit indexes
+        self.split = np.cumsum(self.parts[:-1])    # update particle split indexes
         zcoord = [[xfill,yfill,z] for z in self.xi[1]]        
         return np.concatenate((coord,zcoord),axis=0), [shape[0]+len(zcoord)]
 
@@ -183,3 +183,23 @@ class gridLineRZ(gridDisc):
         parts = np.split(data, self.split)
         rline = np.array([np.mean(parts[i]) for i in range(0,len(parts)-1)])
         return rline, parts[-1]
+
+# lines from a comon center using healpix
+class gridRays(grid):
+    def _setCoordinates(self,nside=4):
+        import healpy as hp
+        npix = hp.nside2npix(nside) # number of healpix pixels
+        coord = np.zeros((npix,3))  
+        for i in range(npix):
+            coord[i,:] = hp.pix2vec(nside,i)
+        nradii = len(self.xi[0])
+        rays = np.zeros((nradii,npix,3))
+        for b,radius in enumerate(self.xi[0]):
+            rays[b] = coord*radius
+        rays = np.vstack(rays)
+        self.parts = [npix]*nradii                 # updata particle offset
+        self.split = np.cumsum(self.parts[:-1])    # update particle split indexes
+        return rays, [len(rays)]
+
+    def reshapeData(self,data):
+        return np.split(data, self.split).T

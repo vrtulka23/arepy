@@ -2,23 +2,21 @@ import arepy as apy
 import numpy as np
 
 class {{namePlot}}(apy.scripy.plot):
-    def init(self):
+    def settings(self):
         self.opt['simOpt'] = {
             'initUnitsNew': {'length':apy.const.au},
             'initImages':True,
             'initSinks':True,
             'initSnap': True,
         }
-
+    
 #import arepy as apy
 #import numpy as np
 #from scripy.{{nameProject}}.plots.{{namePlot}} import {{namePlot}}
 #
 #class boxIonization({{namePlot}}):
-#    def init(self):        
-#        super().init()
-#
 
+    def init(self):
         self.setProcessors( fig=apy.numCpu, kdt=1, snap=1 )
         self.setGroups(['names','sim','snaps'],[
             ( '103', 103, range(63,184) ),
