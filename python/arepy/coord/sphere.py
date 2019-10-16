@@ -2,6 +2,23 @@ import arepy as apy
 import numpy as np
 
 class sphere:
+    """Spherical region
+
+    :param [float]*3 center: Center of a sphere
+    :param float radius: Radius of a sphere
+    :var [float]*3 center: Center of a sphere
+    :var float radius: Radius of a sphere
+
+    Example of use::
+        
+        >>> import arepy as apy
+        >>> region = apy.coord.sphere([0.5,0.5,0.5],0.3)
+        >>> region.show()
+        
+        Sphere class
+        Center: [0.5,0.5,0.5]
+        Radius: 0.3
+    """
     def __enter__(self):
         return self
 
@@ -12,16 +29,24 @@ class sphere:
         self.name = 'sphere'
         self.setRegion(center=args[0],radius=args[1])
 
-    # get a box around the sphere
     def getOuterBox(self):
+        """Get outer box
+
+        :return: Region of the outer box
+        :rtype: :class:`arepy.coord.box`
+        """
         return apy.coord.box(self.center,self.radius*2)
 
-    # get a box inside the sphere
     def getInnerBox(self):
+        """Get inner box
+
+        :return: Region of the inner box
+        :rtype: :class:`arepy.coord.box`
+        """
         return apy.coord.box(self.center,self.radius*2/np.sqrt(3))
 
-    # print sphere settings
     def show(self):
+        """Print out region settings"""
         print("Sphere class")
         print("Center:",self.center)
         print("Radius:",self.radius)    

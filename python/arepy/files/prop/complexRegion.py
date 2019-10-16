@@ -16,7 +16,20 @@ class complexRegion:
             return self.getProperty(prop, ids=ids, ptype=ptype) 
 
     def prop_RegionSphere(self,ids,ptype,**prop):
-        """Select properties within a sphere region"""
+        """Select properties within a sphere region
+
+        :param transf: Coordinate transformation
+        :type transf: :class:`arepy.coord.transf`
+        :param p: List of properties
+        :type p: :class:`arepy.files.properties`
+        :param [float]*3 center: Center of the sphere
+        :param float radius: Radius of the sphere
+        :return: Particle properties within the region
+
+        .. note:
+        
+            If transformation is given, parameters 'center' and 'radius' will be ignored
+        """
         prop['name'] = 'SelectSphere'
         if 'transf' in prop:
             prop['center'] = prop['transf']['select']['region'].center
@@ -24,29 +37,66 @@ class complexRegion:
         return self._propRegion(ids,ptype,**prop)
 
     def prop_RegionBox(self,ids,ptype,**prop):
-        """Select properties within a box region"""
+        """Select properties within a box region
+
+        :param transf: Coordinate transformation
+        :type transf: :class:`arepy.coord.transf`
+        :param p: List of properties
+        :type p: :class:`arepy.files.properties`
+        :param [float]*6 center: Box limits
+        :return: Particle properties within the region
+
+        .. note:
+        
+            If transformation is given, parameter 'box' will be ignored
+        """
         prop['name'] = 'SelectBox'
         if 'transf' in prop:
             prop['box'] = prop['transf']['select']['region'].limits
         return self._propRegion(ids,ptype,**prop)
 
-    def prop_RegionIds(self,ids,ptype,**prop):             # ids = ParticleIDs    (standard snapshots)
-        """Select properties of particles with IDs"""
+    def prop_RegionIds(self,ids,ptype,**prop):           
+        """Select properties of particles with IDs
+        
+        :param list[int] pids: One or more particle IDs
+        :param p: List of properties
+        :type p: :class:`arepy.files.properties`
+        :return: Particle properties within the region
+        """
         prop['name'] = 'SelectIds'
         return self._propRegion(ids,ptype,**prop)
 
-    def prop_RegionFormationOrder(self,ids,ptype,**prop):  # ids = FormationOrder (sink snapshots)
-        """Select properties of sink particles with formation order IDs"""
+    def prop_RegionFormationOrder(self,ids,ptype,**prop):
+        """Select properties of sink particles with formation order IDs
+
+        :param list[int] pids: One or more particle IDs
+        :param p: List of properties
+        :type p: :class:`arepy.files.properties`
+        :return: Particle properties within the region
+        """
         prop['name'] = 'SelectFormationOrder'
         return self._propRegion(ids,ptype,**prop)
 
     def prop_RegionPoints(self,ids,ptype,**prop):
-        """Select property values at some coordinates"""
+        """Select property values at some coordinates
+
+        :param list[int] pids: One or more sink formation order IDs
+        :param p: List of properties
+        :type p: :class:`arepy.files.properties`
+        :return: Particle properties within the region
+        """
         prop['name'] = 'SelectPoints'
         return self._propRegion(ids,ptype,**prop)
 
     def prop_RegionCone(self,ids,ptype,**prop):
-        """Select property values within a given cone region"""
+        """Select property values within a given cone region
+        
+        :param transf: Coordinate transformation
+        :type transf: :class:`arepy.coord.transf`
+        :param p: List of properties
+        :type p: :class:`arepy.files.properties`
+        :return: Particle properties within the region
+        """
         # select a spherical region
         transf = prop['transf']
         region = self.getProperty({

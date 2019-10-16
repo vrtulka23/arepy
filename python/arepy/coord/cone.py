@@ -2,6 +2,27 @@ import arepy as apy
 import numpy as np
 
 class cone:
+    """Conical region
+
+    :param [float]*3 center: Center of a cone
+    :param float radius: Radius of a cone
+    :param float theta: Openning angle of a cone (radians)
+    :var [float]*3 center: Center of a cone
+    :var float radius: Radius of a cone
+    :var float theta: Openning angle of a cone (radians)
+
+    Example of use::
+        
+        >>> import arepy as apy
+        >>> import numpy as np
+        >>> region = apy.coord.cone([0.5,0.5,0.5], 0.3, np.pi/4)
+        >>> region.show()
+        
+        Cone class
+        Center: [0.5,0.5,0.5]
+        Radius: 0.3
+        Theta: 0.785398
+    """
     def __enter__(self):
         return self
 
@@ -12,16 +33,24 @@ class cone:
         self.name = 'cone'
         self.setRegion(center=args[0],radius=args[1],theta=args[2])
 
-    # get a box around the original sphere
     def getOuterBox(self):
+        """Get outer box
+
+        :return: Region of the outer box
+        :rtype: :class:`arepy.coord.box`
+        """
         return apy.coord.box(self.center,self.radius*2)
 
-    # get a box inside the original sphere
     def getInnerBox(self):
+        """Get inner box
+
+        :return: Region of the inner box
+        :rtype: :class:`arepy.coord.box`
+        """
         return apy.coord.box(self.center,self.radius*2/np.sqrt(3))
 
-    # show cone settings
     def show(self):
+        """Print out region settings"""
         print("Cone class")
         print("Center:",self.center)
         print("Radius:",self.radius)

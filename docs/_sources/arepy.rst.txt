@@ -28,6 +28,17 @@ Data manipulation
 
    data/dictTab
 
+Coordinate manipulation
+^^^^^^^^^^^^^^^^^^^^^^^
+
+.. toctree::
+   :maxdepth: 2
+
+   coord/transf
+   coord/box
+   coord/sphere
+   coord/cone
+
 Shell commands
 ^^^^^^^^^^^^^^
 

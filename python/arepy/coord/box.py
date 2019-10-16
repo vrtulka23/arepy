@@ -2,6 +2,36 @@ import arepy as apy
 import numpy as np
 
 class box:
+    """Box region
+
+    :param [float]*3 center: Center of the box
+    :param float size: Size or sizes of the box
+    :type size: float or [float]*3
+    :param [float]*6 limits: Box limits
+    :var [float]*3 center: Center of a box
+    :var float size: Size of a box
+    :var [float]*6 limits: Box limits
+    
+    One can either set a center and size of the box, or only box limits.
+    The other from the two settings will be automatically calculated::
+
+        >>> import arepy as apy
+        >>> region = apy.coord.box([0.5,0.5,0.5], 0.3)
+        >>> region.show()
+        
+        Box class
+        Center: [0.5,0.5,0.5]
+        Size: [0.3,0.3,0.3]
+        Limits: [0.2,0.8,0.2,0.8,0.2,0.8]
+        
+        >>> region = apy.coord.box([0.2,0.8,0.2,0.8,0.2,0.8])
+        >>> region.show()
+
+        Box class                                                                                                                                           
+        Center: [0.5,0.5,0.5]
+        Size: [0.3,0.3,0.3]
+        Limits: [0.2,0.8,0.2,0.8,0.2,0.8] 
+    """
     def __enter__(self):
         return self
 
@@ -15,23 +45,30 @@ class box:
         else:
             self.setRegion(limits=args[0])
 
-    # get a sphere around the box
     def getOuterSphere(self):
+        """Get outer sphere
+
+        :return: Region of the outer sphere
+        :rtype: :class:`arepy.coord.sphere`
+        """
         radius = np.linalg.norm(self.size)*0.5
         return apy.coord.sphere(self.center,radius)
 
-    # get a sphere inside the box
     def getInnerSphere(self):
+        """Get inner sphere
+
+        :return: Region of the inner sphere
+        :rtype: :class:`arepy.coord.sphere`
+        """
         radius = np.min(self.size)*0.5
         return apy.coord.sphere(self.center,radius)
 
-    # show box settings
     def show(self):
+        """Print out region settings"""
         print("Box class")
         print("Center:",self.center)
         print("Size:",self.size)
         print("Limits:",self.limits)
-
 
     ##########################
     # Transformation routines

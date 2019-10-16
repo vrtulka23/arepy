@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Spherical region &#8212; arepy 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Conical region" href="cone.html" />
+    <link rel="prev" title="Box region" href="box.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="cone.html" title="Conical region"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="box.html" title="Box region"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" accesskey="U">Simulation data framework (arepy)</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="spherical-region">
+<h1>Spherical region<a class="headerlink" href="#spherical-region" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="arepy.coord.sphere">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.coord.</code><code class="sig-name descname">sphere</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.sphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spherical region</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>center</strong> (<em>[</em><em>float</em><em>]</em><em>*3</em>) – Center of a sphere</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – Radius of a sphere</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>center</strong> (<em>[</em><em>float</em><em>]</em><em>*3</em>) – Center of a sphere</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – Radius of a sphere</p></li>
+</ul>
+</dd>
+</dl>
+<p>Example of use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">arepy</span> <span class="k">as</span> <span class="nn">apy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">region</span> <span class="o">=</span> <span class="n">apy</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">sphere</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">region</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="go">Sphere class</span>
+<span class="go">Center: [0.5,0.5,0.5]</span>
+<span class="go">Radius: 0.3</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="arepy.coord.sphere.getOuterBox">
+<code class="sig-name descname">getOuterBox</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.sphere.getOuterBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get outer box</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Region of the outer box</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="box.html#arepy.coord.box" title="arepy.coord.box"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.box</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.sphere.getInnerBox">
+<code class="sig-name descname">getInnerBox</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.sphere.getInnerBox" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get inner box</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Region of the inner box</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="box.html#arepy.coord.box" title="arepy.coord.box"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.box</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.sphere.show">
+<code class="sig-name descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.sphere.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print out region settings</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="box.html"
+                        title="previous chapter">Box region</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="cone.html"
+                        title="next chapter">Conical region</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/coord/sphere.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="cone.html" title="Conical region"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="box.html" title="Box region"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" >Simulation data framework (arepy)</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Ondrej Jaura.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>

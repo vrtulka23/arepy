@@ -1,0 +1,278 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Coordinate transformation &#8212; arepy 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Box region" href="box.html" />
+    <link rel="prev" title="Dictionary table" href="../data/dictTab.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="box.html" title="Box region"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../data/dictTab.html" title="Dictionary table"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" accesskey="U">Simulation data framework (arepy)</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="coordinate-transformation">
+<h1>Coordinate transformation<a class="headerlink" href="#coordinate-transformation" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="arepy.coord.transf">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.coord.</code><code class="sig-name descname">transf</code><span class="sig-paren">(</span><em class="sig-param">show=False</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.transf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coordinate transformations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>show</strong> (<em>bool</em>) – Print out transformation information</p></li>
+<li><p><strong>region</strong> (<a class="reference internal" href="box.html#arepy.coord.box" title="arepy.coord.box"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.box</span></code></a> or <a class="reference internal" href="sphere.html#arepy.coord.sphere" title="arepy.coord.sphere"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.sphere</span></code></a> or <a class="reference internal" href="cone.html#arepy.coord.cone" title="arepy.coord.cone"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.cone</span></code></a>) – Coordinate region</p></li>
+<li><p><strong>origin</strong> (<em>[</em><em>float</em><em>]</em><em>*3</em>) – New coordinate origin</p></li>
+<li><p><strong>align</strong> (<em>[</em><em>float</em><em>]</em><em>*3</em>) – Vector of a new z-axis</p></li>
+<li><p><strong>flip</strong> (<em>[</em><em>int</em><em>]</em>) – New order of the axis</p></li>
+<li><p><strong>rotate</strong> (<em>[</em><em>float</em><em>]</em>) – Euler rotation angles</p></li>
+</ul>
+</dd>
+</dl>
+<p>There is a standard sequence of transformations that can be used during the initialization of this class:</p>
+<ol class="arabic simple">
+<li><p><strong>select</strong> - Select an initial spherical region from coordinates</p></li>
+<li><p><strong>translate</strong> - Set a new origin of the selected coordinates (e.g. center of the sphere)</p></li>
+<li><p><strong>align</strong> - Align the z-axis with some given vector (e.g. angular momentum)</p></li>
+<li><p><strong>flip</strong> - Flip axes (e.g. exchange y and z axes)</p></li>
+<li><p><strong>rotate</strong> - Add some additional rotation to the region</p></li>
+<li><p><strong>crop</strong> - Select a final region shape (e.g. box)</p></li>
+</ol>
+<p>A simple initialization will look like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">arepy</span> <span class="k">as</span> <span class="nn">apy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">transf</span> <span class="o">=</span> <span class="n">apy</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">transf</span><span class="p">(</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">apy</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">box</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.8</span><span class="p">]),</span>
+    <span class="n">origin</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span>
+    <span class="n">align</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span>
+    <span class="n">flip</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">rotate</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">5</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>However, it is always possible to set an arbitrary list of transformations:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">transf</span> <span class="o">=</span> <span class="n">apy</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">transf</span><span class="p">()</span>
+<span class="n">transf</span><span class="o">.</span><span class="n">addSelection</span><span class="p">(</span><span class="s1">&#39;sphere&#39;</span><span class="p">,</span> <span class="n">apy</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">sphere</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.2</span><span class="p">],</span><span class="mf">0.8</span><span class="p">)</span> <span class="p">)</span>
+<span class="n">transf</span><span class="o">.</span><span class="n">addTranslation</span><span class="p">(</span><span class="s1">&#39;shift&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.2</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="arepy.coord.transf.convert">
+<code class="sig-name descname">convert</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">coord</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.transf.convert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform selected transformations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em> or </em><em>list</em><em>[</em><em>str</em><em>]</em>) – Name or names of the transformations</p></li>
+<li><p><strong>coord</strong> (<em>list</em><em>[</em><em>[</em><em>float</em><em>]</em><em>*len</em><em>(</em><em>dims</em><em>)</em><em>]</em>) – List of coordinates/vectors</p></li>
+<li><p><strong>dims</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – Dimensions of the vectors (default is [0,1,2])</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Transformed coordinates</p>
+</dd>
+</dl>
+<p>Initialized transformations can be applied on the set of coordinates:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">coord</span> <span class="o">=</span> <span class="n">transf</span><span class="o">.</span><span class="n">convert</span><span class="p">([</span><span class="s1">&#39;select&#39;</span><span class="p">,</span><span class="s1">&#39;flip&#39;</span><span class="p">,</span><span class="s1">&#39;crop&#39;</span><span class="p">],</span> <span class="n">coord</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It is also possible to convert vectors with an arbitrary set of dimensions.
+In the following case we are transforming the limits of a box region, where the vector dimensions
+are [x,x,y,y,z,z]:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">limits</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.8</span><span class="p">]</span>
+<span class="n">limits</span> <span class="o">=</span> <span class="n">transf</span><span class="o">.</span><span class="n">convert</span><span class="p">([</span><span class="s1">&#39;select&#39;</span><span class="p">,</span><span class="s1">&#39;flip&#39;</span><span class="p">,</span><span class="s1">&#39;crop&#39;</span><span class="p">],</span> <span class="n">limits</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.transf.select">
+<code class="sig-name descname">select</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.transf.select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select data corresponding to the coordinate region</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the region transformation</p></li>
+<li><p><strong>data</strong> – Data with the same length as the initial array with the coordinates</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Data selected for the particles within the region</p>
+</dd>
+</dl>
+<p>This function is used in the case when we have an additional dataset that corresponds to the
+coordinates (e.g. masses of the particles) and we want to additionally select its corresponding values:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">masses</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">coord</span> <span class="o">=</span> <span class="n">transf</span><span class="o">.</span><span class="n">convert</span><span class="p">([</span><span class="s1">&#39;select&#39;</span><span class="p">,</span><span class="s1">&#39;flip&#39;</span><span class="p">,</span><span class="s1">&#39;crop&#39;</span><span class="p">],</span> <span class="n">coord</span><span class="p">)</span>
+<span class="n">masses</span> <span class="o">=</span> <span class="n">transf</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;crop&#39;</span><span class="p">,</span><span class="n">masses</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.transf.addSelection">
+<code class="sig-name descname">addSelection</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.transf.addSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add selection</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the transformation</p></li>
+<li><p><strong>region</strong> (<a class="reference internal" href="box.html#arepy.coord.box" title="arepy.coord.box"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.box</span></code></a> or <a class="reference internal" href="sphere.html#arepy.coord.sphere" title="arepy.coord.sphere"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.sphere</span></code></a> or <a class="reference internal" href="cone.html#arepy.coord.cone" title="arepy.coord.cone"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.cone</span></code></a>) – Coordinate region</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.transf.addTranslation">
+<code class="sig-name descname">addTranslation</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">origin</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.transf.addTranslation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a translation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the transformation</p></li>
+<li><p><strong>origin</strong> (<em>[</em><em>float</em><em>]</em><em>*3</em>) – Coordinates of the new origin</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.transf.addAlignment">
+<code class="sig-name descname">addAlignment</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">vector</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.transf.addAlignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an alignment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the transformation</p></li>
+<li><p><strong>vector</strong> (<em>[</em><em>float</em><em>]</em><em>*3</em>) – Vector of a new z-axis</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.transf.addRotation">
+<code class="sig-name descname">addRotation</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">angles</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.transf.addRotation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a rotation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the transformation</p></li>
+<li><p><strong>angles</strong> (<em>[</em><em>float</em><em>]</em>) – Euler rotation angles</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.transf.addFlip">
+<code class="sig-name descname">addFlip</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">axes</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.transf.addFlip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flip axes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the transformation</p></li>
+<li><p><strong>axes</strong> (<em>[</em><em>int</em><em>]</em><em>*3</em>) – New order of the axes</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.transf.show">
+<code class="sig-name descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.transf.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print out all transformation into the command line</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../data/dictTab.html"
+                        title="previous chapter">Dictionary table</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="box.html"
+                        title="next chapter">Box region</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/coord/transf.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="box.html" title="Box region"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../data/dictTab.html" title="Dictionary table"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" >Simulation data framework (arepy)</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Ondrej Jaura.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>

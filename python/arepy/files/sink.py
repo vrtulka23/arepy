@@ -166,11 +166,10 @@ class sink():
 
         Example of use::
 
-            >>> import arepy as apy
-            >>> 
-            >>> with apy.files.sink.getSink() as f:
-            >>>     sn.getValues(['Mass','Pos','ID'])
+            >>> sink.getValues(['Mass','ID'])
         
+            {'Mass': [23.43, 234.34, 234.56,...],
+             'ID': [234, 346, 236,...]}
         
         """
         if order is not None:

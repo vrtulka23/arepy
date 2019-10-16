@@ -85,7 +85,7 @@
 <dd><p>Get mass center of a gas</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>transf</strong> (<em>arepy.coord.transf</em>) – Coordinate transformation</p>
+<dd class="field-odd"><p><strong>transf</strong> (<a class="reference internal" href="../coord/transf.html#arepy.coord.transf" title="arepy.coord.transf"><em>arepy.coord.transf</em></a>) – Coordinate transformation</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Mass center of the gas</p>
@@ -201,36 +201,105 @@
 <dt id="arepy.files.prop.complexRegion.prop_RegionSphere">
 <code class="sig-name descname">prop_RegionSphere</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.prop.complexRegion.prop_RegionSphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select properties within a sphere region</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transf</strong> (<a class="reference internal" href="../coord/transf.html#arepy.coord.transf" title="arepy.coord.transf"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.transf</span></code></a>) – Coordinate transformation</p></li>
+<li><p><strong>p</strong> (<a class="reference internal" href="snap.html#arepy.files.properties" title="arepy.files.properties"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.properties</span></code></a>) – List of properties</p></li>
+<li><p><strong>center</strong> (<em>[</em><em>float</em><em>]</em><em>*3</em>) – Center of the sphere</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – Radius of the sphere</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Particle properties within the region</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="arepy.files.prop.complexRegion.prop_RegionBox">
 <code class="sig-name descname">prop_RegionBox</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.prop.complexRegion.prop_RegionBox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select properties within a box region</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transf</strong> (<a class="reference internal" href="../coord/transf.html#arepy.coord.transf" title="arepy.coord.transf"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.transf</span></code></a>) – Coordinate transformation</p></li>
+<li><p><strong>p</strong> (<a class="reference internal" href="snap.html#arepy.files.properties" title="arepy.files.properties"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.properties</span></code></a>) – List of properties</p></li>
+<li><p><strong>center</strong> (<em>[</em><em>float</em><em>]</em><em>*6</em>) – Box limits</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Particle properties within the region</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="arepy.files.prop.complexRegion.prop_RegionIds">
 <code class="sig-name descname">prop_RegionIds</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.prop.complexRegion.prop_RegionIds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select properties of particles with IDs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pids</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – One or more particle IDs</p></li>
+<li><p><strong>p</strong> (<a class="reference internal" href="snap.html#arepy.files.properties" title="arepy.files.properties"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.properties</span></code></a>) – List of properties</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Particle properties within the region</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="arepy.files.prop.complexRegion.prop_RegionFormationOrder">
 <code class="sig-name descname">prop_RegionFormationOrder</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.prop.complexRegion.prop_RegionFormationOrder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select properties of sink particles with formation order IDs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pids</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – One or more particle IDs</p></li>
+<li><p><strong>p</strong> (<a class="reference internal" href="snap.html#arepy.files.properties" title="arepy.files.properties"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.properties</span></code></a>) – List of properties</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Particle properties within the region</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="arepy.files.prop.complexRegion.prop_RegionPoints">
 <code class="sig-name descname">prop_RegionPoints</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.prop.complexRegion.prop_RegionPoints" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select property values at some coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pids</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – One or more sink formation order IDs</p></li>
+<li><p><strong>p</strong> (<a class="reference internal" href="snap.html#arepy.files.properties" title="arepy.files.properties"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.properties</span></code></a>) – List of properties</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Particle properties within the region</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="arepy.files.prop.complexRegion.prop_RegionCone">
 <code class="sig-name descname">prop_RegionCone</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.prop.complexRegion.prop_RegionCone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select property values within a given cone region</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>transf</strong> (<a class="reference internal" href="../coord/transf.html#arepy.coord.transf" title="arepy.coord.transf"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.transf</span></code></a>) – Coordinate transformation</p></li>
+<li><p><strong>p</strong> (<a class="reference internal" href="snap.html#arepy.files.properties" title="arepy.files.properties"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.properties</span></code></a>) – List of properties</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Particle properties within the region</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

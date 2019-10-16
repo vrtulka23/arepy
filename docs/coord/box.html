@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Box region &#8212; arepy 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Spherical region" href="sphere.html" />
+    <link rel="prev" title="Coordinate transformation" href="transf.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="sphere.html" title="Spherical region"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="transf.html" title="Coordinate transformation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" accesskey="U">Simulation data framework (arepy)</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="box-region">
+<h1>Box region<a class="headerlink" href="#box-region" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="arepy.coord.box">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.coord.</code><code class="sig-name descname">box</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Box region</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>center</strong> (<em>[</em><em>float</em><em>]</em><em>*3</em>) – Center of the box</p></li>
+<li><p><strong>size</strong> (<em>float</em><em> or </em><em>[</em><em>float</em><em>]</em><em>*3</em>) – Size or sizes of the box</p></li>
+<li><p><strong>limits</strong> (<em>[</em><em>float</em><em>]</em><em>*6</em>) – Box limits</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>center</strong> (<em>[</em><em>float</em><em>]</em><em>*3</em>) – Center of a box</p></li>
+<li><p><strong>size</strong> (<em>float</em>) – Size of a box</p></li>
+<li><p><strong>limits</strong> (<em>[</em><em>float</em><em>]</em><em>*6</em>) – Box limits</p></li>
+</ul>
+</dd>
+</dl>
+<p>One can either set a center and size of the box, or only box limits.
+The other from the two settings will be automatically calculated:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">arepy</span> <span class="k">as</span> <span class="nn">apy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">region</span> <span class="o">=</span> <span class="n">apy</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">box</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span> <span class="mf">0.3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">region</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="go">Box class</span>
+<span class="go">Center: [0.5,0.5,0.5]</span>
+<span class="go">Size: [0.3,0.3,0.3]</span>
+<span class="go">Limits: [0.2,0.8,0.2,0.8,0.2,0.8]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">region</span> <span class="o">=</span> <span class="n">apy</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">box</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.8</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">region</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="go">Box class                                                                                                                                           </span>
+<span class="go">Center: [0.5,0.5,0.5]</span>
+<span class="go">Size: [0.3,0.3,0.3]</span>
+<span class="go">Limits: [0.2,0.8,0.2,0.8,0.2,0.8] </span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="arepy.coord.box.getOuterSphere">
+<code class="sig-name descname">getOuterSphere</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.box.getOuterSphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get outer sphere</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Region of the outer sphere</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="sphere.html#arepy.coord.sphere" title="arepy.coord.sphere"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.sphere</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.box.getInnerSphere">
+<code class="sig-name descname">getInnerSphere</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.box.getInnerSphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get inner sphere</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Region of the inner sphere</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="sphere.html#arepy.coord.sphere" title="arepy.coord.sphere"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.sphere</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.box.show">
+<code class="sig-name descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.box.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print out region settings</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="transf.html"
+                        title="previous chapter">Coordinate transformation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="sphere.html"
+                        title="next chapter">Spherical region</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/coord/box.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="sphere.html" title="Spherical region"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="transf.html" title="Coordinate transformation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" >Simulation data framework (arepy)</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Ondrej Jaura.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>
