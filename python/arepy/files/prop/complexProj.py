@@ -59,20 +59,20 @@ class complexProj:
         
         # return final data
         for p,pp in enumerate(properties):
-            massColumn = grid.data['mass'].sum(axis=2)
+            masscolumn = grid.data['mass'].sum(axis=2)
             if pp['name']=='Masses':
-                projection = massColumn
+                projection = masscolumn
             elif pp['name']=='Density':
                 box = transf['crop']['region'].limits
                 area = (box[1]-box[0])*(box[3]-box[2])
-                projection = massColumn / area * prop['bins']**2
+                projection = masscolumn / area * prop['bins']**2
             else:
                 ppk = pp['key'] 
                 grid.addAtPix(ppk, pix, data[ppk]*region['Masses'])
                 unitFullPP = grid.data[ppk][pixFull]/numPix
                 grid.data[ppk][pixFull] = unitFullPP
                 grid.data[ppk][pixEmpty] = unitFullPP[ngbFull]
-                projection = grid.data[ppk].sum(axis=2) / massColumn
+                projection = grid.data[ppk].sum(axis=2) / masscolumn
             properties.setData(pp['key'],projection)
             
         return properties.getData()

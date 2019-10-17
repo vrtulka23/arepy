@@ -1,6 +1,7 @@
 import matplotlib as mpl; mpl.use('agg')
 import matplotlib.pyplot as plt
 import mpl_toolkits.axes_grid1 as axesgrid
+from mpl_toolkits.mplot3d import Axes3D
 import arepy as apy
 import numpy as np
 
@@ -15,12 +16,15 @@ def plotSubplot(ax,opt,canvas,fid=0):
     # hide axis if it is not used
     if canvas['empty']:
         return hideAxis()
+
+    spIndex, spRow, spCol, spXYZ = canvas['subplot']
     
     axProp = canvas['axis']
     if 'xlim' in axProp: xlim = axProp['xlim'][fid] if np.ndim(axProp['xlim'])>1 else axProp['xlim']
     if 'ylim' in axProp: ylim = axProp['ylim'][fid] if np.ndim(axProp['ylim'])>1 else axProp['ylim']
+    if spXYZ:
+        if 'zlim' in axProp: zlim = axProp['zlim'][fid] if np.ndim(axProp['zlim'])>1 else axProp['zlim']
 
-    spIndex, spRow, spCol = canvas['subplot']
 
     fontsize = 8   # default font size
     twinx = None   # twin axis flag
@@ -42,8 +46,6 @@ def plotSubplot(ax,opt,canvas,fid=0):
             
         # Draw x/y line continuous function
         if d['draw']=='plot':
-            #xvals = d['x'][fid] if np.ndim(d['x'])>1 else d['x']
-            #yvals = d['y'][fid] if np.ndim(d['y'])>1 else d['y']
             xvals = d['x'] if np.isscalar(d['x'][0]) else d['x'][fid]
             yvals = d['y'] if np.isscalar(d['y'][0]) else d['y'][fid]
             li = drawax.plot(xvals,yvals,**d['kwargs'])
@@ -54,7 +56,6 @@ def plotSubplot(ax,opt,canvas,fid=0):
         if d['draw']=='step':
             xvals = d['x'] if np.isscalar(d['x'][0]) else d['x'][fid]
             yvals = d['y'] if np.isscalar(d['y'][0]) else d['y'][fid]
-            #yvals = d['y'][fid] if np.array(d['y']).ndim>1 else d['y']
             li = drawax.plot(xvals,yvals, drawstyle='steps', **d['kwargs'])
             if 'label' in d['kwargs']:
                 handles.append(li[0]) # for some reason this is a list of objects
@@ -65,11 +66,12 @@ def plotSubplot(ax,opt,canvas,fid=0):
             else: xvals = d['x'] if np.isscalar(d['x'][0]) else d['x'][fid]
             if np.isscalar(d['y']): yvals=d['y']
             else: yvals = d['y'] if np.isscalar(d['y'][0]) else d['y'][fid]
-            if d['z'] is None:
-                li = drawax.scatter(xvals,yvals,**d['opt'])
-            else:
-                zvals = d['z'] if np.isscalar(d['z'][0]) else d['z'][fid]
+            if spXYZ:
+                if np.isscalar(d['z']): zvals=d['z']
+                else: zvals = d['z'] if np.isscalar(d['z'][0]) else d['z'][fid]
                 li = drawax.scatter(xvals,yvals,zvals,**d['opt'])
+            else:
+                li = drawax.scatter(xvals,yvals,**d['opt'])
             if 'label' in d['opt']:
                 handles.append(li)
 
@@ -224,6 +226,8 @@ def plotSubplot(ax,opt,canvas,fid=0):
         ax.set_xlabel( axProp['xlabel'], fontsize=fontsize )
     if 'ylabel' in axProp:
         ax.set_ylabel( axProp['ylabel'], fontsize=fontsize )
+    if 'zlabel' in axProp:
+        ax.set_zlabel( axProp['zlabel'], fontsize=fontsize )
 
     # group axis labels
     if 'group' in axProp:
@@ -240,8 +244,9 @@ def plotSubplot(ax,opt,canvas,fid=0):
                 #ax.set_yticklabels([])  # this does not work with gridspec
                 plt.setp( ax.get_yticklabels(), visible=False)  # this works also with gridspec
                 
-    if 'xlim' in axProp:   ax.set_xlim( xlim )
+    if 'xlim' in axProp:   ax.set_xlim( xlim )  
     if 'ylim' in axProp:   ax.set_ylim( ylim )
+    if spXYZ and 'zlim' in axProp:   ax.set_zlim( zlim )
     if 'xscale' in axProp and axProp['xscale'] in ['log','symlog']: ax.set_xscale( axProp['xscale'] )
     if 'yscale' in axProp and axProp['yscale'] in ['log','symlog']: ax.set_yscale( axProp['yscale'] )
 
@@ -288,6 +293,7 @@ def plotFigure(f,opt,canvas):
                 axis = canvas[index]['axis']
                 if 'projection' in axis and axis['projection'] is not None:
                     apy.shell.exit('Projection needs to be implemented for the axesgrid (plot.py)')
+
     elif opt['imagegrid'] is not None:
         fig = plt.figure(figsize=opt['figSize'])
         if 'nrows_ncols' not in opt['imagegrid']:
@@ -301,6 +307,7 @@ def plotFigure(f,opt,canvas):
                 axis = canvas[index]['axis']
                 if 'projection' in axis and axis['projection'] is not None:
                     apy.shell.exit('Projection needs to be implemented for the axesgrid (plot.py)')        
+
     elif opt['gridspec'] is not None:
         # Create a figure using gridspec to get a tight layout
         fig = plt.figure(figsize=opt['figSize'])
@@ -315,6 +322,7 @@ def plotFigure(f,opt,canvas):
                 axis = canvas[index]['axis']
                 if 'projection' in axis and axis['projection'] is not None:
                     apy.shell.exit('Projection needs to be implemented for the gridspec (plot.py)')
+
     else:
         # Create a figure and plot all subplots
         fig = plt.figure(figsize=opt['figSize'])
@@ -322,11 +330,12 @@ def plotFigure(f,opt,canvas):
         for r in range(opt['nrows']):
             for c in range(opt['ncols']):
                 index = r*opt['ncols']+c
-                projection = canvas[index]['axis']['projection']
-                axs.append( fig.add_subplot(opt['nrows'],opt['ncols'],index+1, projection=projection) )
+                projection = '3d' if canvas[index]['subplot'][3] else None
+                figure = fig.add_subplot(opt['nrows'],opt['ncols'],index+1, projection=projection)
+                axs.append( figure )
 
     for canv in canvas:
-        spIndex, spRows, spCols = canv['subplot']
+        spIndex, spRows, spCols, spXYZ = canv['subplot']
         plotSubplot(axs[spIndex],opt,canv,f)
         
     if opt['gridspec'] is None and opt['axesgrid'] is None:

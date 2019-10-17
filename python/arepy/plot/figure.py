@@ -27,8 +27,8 @@ class figure:
             'dirName':    None,
             'fileName':   'figOverview', 
             'timeStamp':  apy.util.timeStamp(),
-            'sRow':       3.0, 
-            'sCol':       3.5,
+            'srow':       3.0, 
+            'scol':       3.5,
             'nproc':      1,
             'gridspec':   None,                  # use GridSpec axes
             'axesgrid':   None,                  # use AxesGrid
@@ -69,20 +69,37 @@ class figure:
             self.norms.norms[normID][k] = v
 
     # select subplot by row and col
+    def setSubplot(self, row=0, col=0, xyz=False, **opt):
+        """Set subplot options
+        
+        :param int row: Row of the subplot
+        :param int col: Column of the subplot
+        """
+        i = self.getIndex(row,col)
+        self.subplot[i].setOption(**opt)        
+        if xyz:
+            self.subplot[i].xyz = True
+            self.subplot[i].canvas['subplot'][3] = True
+
+    def getSubplot(self, row=0, col=0, xyz=False, **opt):
+        """Get subplot
+        
+        :param int row: Row of the subplot
+        :param int col: Column of the subplot
+        :return: Subplot object
+        :rkey: :class:`arepy.plot.subplot`
+        """
+        i = self.getIndex(row,col)
+        if opt or xyz: self.setSubplot(row,col,xyz,**opt)
+        self.subplot[i].canvas['empty'] = False
+        return self.subplot[i]
+
     def getIndex(self, row=0, col=0):
         if row>=self.nrows:
             apy.shell.exit('Cannot plot row %d out of %d (figure.py)'%(row+1,self.nrows))
         if col>=self.ncols:
             apy.shell.exit('Cannot plot column %d out of %d (figure.py)'%(col+1,self.ncols))
         return row*self.ncols+col
-    def setSubplot(self, row=0, col=0, **opt):
-        i = self.getIndex(row,col)
-        self.subplot[i].setOption(**opt)        
-    def getSubplot(self, row=0, col=0, **opt):
-        i = self.getIndex(row,col)
-        if opt: self.setSubplot(row,col,**opt)
-        self.subplot[i].canvas['empty'] = False
-        return self.subplot[i]
         
     # plot all figures and save the corresponding files
     def plot(self):
@@ -101,7 +118,7 @@ class figure:
             'nrows':      self.nrows,
             'ncols':      self.ncols,
             'nfigs':      self.nfigs,
-            'figSize':    (self.ncols*self.opt['sCol'], self.nrows*self.opt['sRow']),
+            'figSize':    (self.ncols*self.opt['scol'], self.nrows*self.opt['srow']),
             'fileName':   self.fileFigure+'%03d.'+self.opt['fileFormat'],
             'dirResults': self.dirResults,
             'gridspec':   self.opt['gridspec'],

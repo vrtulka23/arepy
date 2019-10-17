@@ -214,8 +214,8 @@ class plot:
         :param int ncol: Number of collumns
         :param int nrow: Number of rows
         :param int nfig: Number of figures
-        :param float sRow: Size of the subplot rows on the figure (figsize)
-        :param float sCol: Size of the subplot cols on the figure (figsize)
+        :param float srow: Size of the subplot rows on the figure (figsize)
+        :param float scol: Size of the subplot cols on the figure (figsize)
         :param bool movie: Create a movie from all figures
         :param bool show: Display figures at the end of the plotting
         :param bool debug: Save figures into a debug folder
@@ -226,7 +226,7 @@ class plot:
 
         Example::
             
-            self.setFigure(2,1,1,show=True,sCol=4,sRow=2, gridspec={'hspace':0.1}, group=['xlabel'],
+            self.setFigure(2,1,1,show=True,scol=4,srow=2, gridspec={'hspace':0.1}, group=['xlabel'],
                            tickparam={'axis':'both','direction':'in','top':True,'right':True})
         """
         nopt = {

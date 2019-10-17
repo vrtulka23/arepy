@@ -8,7 +8,7 @@ grid = apy.coord.gridSquareXY([200,200],[0.4, 1.3, 4.3, 8.3])
 '''
 
 class grid:
-    def __init__(self,bins,extent=None,points='centers',scatter=None,**opt):
+    def __init__(self,bins=0,extent=None,points='centers',scatter=None,**opt):
         self.bins = [bins] if np.isscalar(bins) else bins
         self.nbins = [(b if np.isscalar(b) else len(b)) for b in self.bins]
         self.ndim = len(self.bins)
@@ -102,14 +102,15 @@ class gridFieldXY(gridSquareXY):
         return data
 
 class gridHealpix(grid):
-    def _setCoordinates(self,zfill=None): 
+    """Create a point grid from a healpix sphere pixels
+    """
+    def _setCoordinates(self,nside=4,radius=1): 
         import healpy as hp
-        nside = self.bins[0]
         npix = hp.nside2npix(nside)
         coord = np.zeros((npix,3))
         for i in range(npix):
             coord[i,:] = hp.pix2vec(nside,i)
-        coord *= self.extent[0][1]
+        coord *= radius
         return coord, [npix]
 
     def reshapeData(self,data):
@@ -119,6 +120,8 @@ class gridHealpix(grid):
         return np.where(data==-np.inf,np.nan,data)
 
 class gridDisc(grid):
+    """Create a disk grid with from concentric circles
+    """
     # Different parts of the disk can be located using offsets in 'self.parts'
     def __init__(self,bins,extent=None,points='edges',scatter=None,**opt):
         super().__init__(bins,extent,points,scatter,**opt)
@@ -138,7 +141,7 @@ class gridDisc(grid):
                 coord.append([rb*np.cos(ab),rb*np.sin(ab),0])
         self._setScatter(coord)
         self.split = np.cumsum(self.parts[:-1])    # particle split indexes
-        return coord, [len(coord)]
+        return np.array(coord), [len(coord)]
 
     def reshapeData(self,data):
         return np.split(data, self.split)
@@ -186,6 +189,7 @@ class gridLineRZ(gridDisc):
 
 # lines from a comon center using healpix
 class gridRays(grid):
+    """Create a grid of rays using healpix"""
     def _setCoordinates(self,nside=4):
         import healpy as hp
         npix = hp.nside2npix(nside) # number of healpix pixels

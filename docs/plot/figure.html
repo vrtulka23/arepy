@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Figure &#8212; arepy 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Subplots" href="subplot.html" />
+    <link rel="prev" title="Conical region" href="../coord/cone.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="subplot.html" title="Subplots"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../coord/cone.html" title="Conical region"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" accesskey="U">Simulation data framework (arepy)</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="figure">
+<h1>Figure<a class="headerlink" href="#figure" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="arepy.plot.figure">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.plot.</code><code class="sig-name descname">figure</code><span class="sig-paren">(</span><em class="sig-param">nrows=1</em>, <em class="sig-param">ncols=1</em>, <em class="sig-param">nfigs=1</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.figure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Figure class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nrows</strong> (<em>int</em>) – Number of subplot rows</p></li>
+<li><p><strong>ncols</strong> (<em>int</em>) – Number of subplot columns</p></li>
+<li><p><strong>nfigs</strong> (<em>int</em>) – Number of figures</p></li>
+<li><p><strong>fileFormat</strong> (<em>str</em>) – Format of the output file (png/pdf)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="arepy.plot.figure.setSubplot">
+<code class="sig-name descname">setSubplot</code><span class="sig-paren">(</span><em class="sig-param">row=0</em>, <em class="sig-param">col=0</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.figure.setSubplot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set subplot options</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<em>int</em>) – Row of the subplot</p></li>
+<li><p><strong>col</strong> (<em>int</em>) – Column of the subplot</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.plot.figure.getSubplot">
+<code class="sig-name descname">getSubplot</code><span class="sig-paren">(</span><em class="sig-param">row=0</em>, <em class="sig-param">col=0</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.figure.getSubplot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get subplot</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<em>int</em>) – Row of the subplot</p></li>
+<li><p><strong>col</strong> (<em>int</em>) – Column of the subplot</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Subplot object</p>
+</dd>
+<dt class="field-odd">Rkey</dt>
+<dd class="field-odd"><p><a class="reference internal" href="subplot.html#arepy.plot.subplot" title="arepy.plot.subplot"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.plot.subplot</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../coord/cone.html"
+                        title="previous chapter">Conical region</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="subplot.html"
+                        title="next chapter">Subplots</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/plot/figure.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="subplot.html" title="Subplots"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../coord/cone.html" title="Conical region"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" >Simulation data framework (arepy)</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Ondrej Jaura.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>

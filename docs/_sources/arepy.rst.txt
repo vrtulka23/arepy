@@ -39,6 +39,16 @@ Coordinate manipulation
    coord/sphere
    coord/cone
 
+Plotting figures
+^^^^^^^^^^^^^^^^
+
+.. toctree::
+   :maxdepth: 2
+      
+   plot/figure
+   plot/subplot
+
+
 Shell commands
 ^^^^^^^^^^^^^^
 

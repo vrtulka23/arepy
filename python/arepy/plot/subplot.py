@@ -3,19 +3,32 @@ import arepy as apy
 import copy
 
 class subplot:
+    """Subplot of a figure
+    
+    :param int figure: Figure number
+    :param int row: Subplot row
+    :param int col: Subplot column
+    :param bool xyz: Use 3D axes
+
+    .. note:
+        
+        3D axes works just with a standard matplotlib subplot class.
+        It is not possible to use it for 'gridspec', 'imagescpec' or 'axesgrid' plotting classes.
+    """
     # Initialize the subplot
-    def __init__(self, figure, row, col, **opt):
+    def __init__(self, figure, row, col, xyz=False, **opt):
         self.figure = figure                  # parent figure class
         self.row = row                        # row on the grid
         self.col = col                        # column on the grid
         self.index = row*figure.ncols+col     # subplot index
+        self.xyz = xyz
         
         # set options and canvas
         self.opt = figure.opt.copy()  
         self.opt.update(opt)
 
         self.canvas = {
-            'subplot': [self.index,self.row,self.col],      # subplot properties
+            'subplot': [self.index,self.row,self.col,self.xyz],      # subplot properties
             'empty': True,      # is canvas empty
             'image': None,      # main image on the figure
             'colorbar': None,   # colorbar of the image
@@ -30,7 +43,6 @@ class subplot:
                 'xscale': 'lin',        # x axis scale
                 'yscale': 'lin',        # y axis scale
                 'tscale': 'lin',        # twin y axis scale
-                'projection': None,     # 3d projection
             },
         }
         rc = '%d%d'%(self.row,self.col)
@@ -43,6 +55,7 @@ class subplot:
 
     # Setting options
     def setOption(self,**args):
+        """Set an option"""
         for key,value in args.items():
             self.opt[key] = value
 
@@ -64,28 +77,57 @@ class subplot:
                     
     # Add unique objects to the canvas
 
-    # Note: frameon=False
     def setLegend(self, handles=None, labels=None, **nopt):
+        """Set a legend
+        
+        :param list handles: List of axis object handles (optional)
+        :param list[str] labels: Labels
+        """
         if 'loc' in nopt and isinstance(nopt['loc'],str):
             nopt['loc'] = nopt['loc'].replace('bottom','lower').replace('top','upper')
         self.canvas['legend'] = {'draw':'legend','handles':handles,'labels':labels,'nopt':nopt}
 
-    # Example: sp.setLegendLS([':','--'],['foo','bar'])
-    # Note: frameon=False
     def setLegendLS(self, linestyles, labels, color='black', **nopt):
+        """Set a line-style legend
+        
+        :param list[str] linestyle: A set of matplotlib line styles
+        :param list[str] labels: Line style labels
+
+        Example::
+            
+            sp.setLegendLS([':','--'],['foo','bar'])
+        """
         if 'loc' in nopt and isinstance(nopt['loc'],str):
             nopt['loc'] = nopt['loc'].replace('bottom','lower').replace('top','upper')
         self.canvas['legendLS'] = {'draw':'legendLS','ls':linestyles,'labels':labels,'color':color,'nopt':nopt}
 
-    # Example: sp.setLegendM(['s','^'],['foo','bar'])
-    # Note: frameon=False
     def setLegendM(self, markers, labels, color='black', **nopt):
+        """Set a marker legend
+
+        :param list[str] markers: A set of matplotlib markers
+        :param list[str] labels: A set of marker labels
+        
+        Example::
+            
+            sp.setLegendM(['s','^'],['foo','bar'])
+        """
         if 'loc' in nopt and isinstance(nopt['loc'],str):
             nopt['loc'] = nopt['loc'].replace('bottom','lower').replace('top','upper')
         self.canvas['legendM'] = {'draw':'legendM','markers':markers,'labels':labels,'color':color,'nopt':nopt}
 
     def setImage(self, data, extent=(0,1,0,1), norm=None, normType='lin', normLim=None,
                  xnorm=None, ynorm=None, **kwargs):
+        """Set an image
+        
+        A thin wrapper around the matplotlib imshow class, that additionally sets the image normalization.
+
+        :param [[float]*Y]*X data: Image pixel data on an x and y axis 
+        :param tuple[float] extent: Extent of the x and y axis
+        :param str norm: Name of the image normalization.
+        :param str normType: Type of the norm: 'lin' or 'log'
+        :param str xnorm: Name of the x-axis normalization
+        :param str ynorm: Name of the y-axis normalization
+        """
         xextent = extent[:,:2] if np.ndim(extent)>1 else extent[:2]
         yextent = extent[:,2:] if np.ndim(extent)>1 else extent[2:]
         self.setNorm(xdata=xextent,ydata=yextent,zdata=data,
@@ -96,6 +138,7 @@ class subplot:
                                 'extent':extent,'kwargs':kwargs}
 
     def setColorbar(self, location='right', label=None):
+        """Set a colorbar"""
         self.canvas['colorbar'] = {'location':location,'label':label}
 
     def setColorbarNA(self, pos, **nopt):
@@ -103,49 +146,57 @@ class subplot:
         
         Example::
             
-            >>> grp.setColorbarNA(pos=(1.0,0.2,0.01,0.6),label='Mass (g)')
+            grp.setColorbarNA(pos=(1.0,0.2,0.01,0.6),label='Mass (g)')
         """
         opt = {'location':'right','label':None}
         opt.update(nopt)
         self.canvas['colorbarNA'] = {'pos':pos,**opt}
         
     def addPlot(self, x, y, twinx=False, xnorm=None, ynorm=None, **nopt):
+        """Add a plot to the canvas"""
         self.setNorm(xdata=x,ydata=y,xname=xnorm,yname=ynorm,twinx=twinx)
         opt = {'lw': 1}
         opt.update(nopt)
         self.canvas['other'].append({'draw':'plot','twinx':twinx,'x':x,'y':y,'kwargs':opt})
 
     def addStep(self, x, y, twinx=False, xnorm=None, ynorm=None, **nopt):
+        """Add a step plot to the canvas"""
         self.setNorm(xdata=x,ydata=y,xname=xnorm,yname=ynorm,twinx=twinx)
         opt = {'lw': 1}
         opt.update(nopt)
         self.canvas['other'].append({'draw':'step','twinx':twinx,'x':x,'y':y,'kwargs':opt})
 
     def addScatter(self, *coord, xnorm=None, ynorm=None,**nopt):
+        """Add a scatter to the canvas"""
         opt = {} # default 'c':'black' will disable 'facecolor' and 'edgecolor' !!!
         opt.update(nopt)
         self.setNorm(xdata=coord[0],ydata=coord[1],xname=xnorm,yname=ynorm)
-        x,y,z = coord if self.opt['projection']=='3d' else (coord[0],coord[1],None)
+        x,y,z = coord if self.canvas['subplot'][3] else (coord[0],coord[1],None)
         self.canvas['other'].append({'draw':'scatter','twinx':False,'x':x,'y':y,'z':z,'opt':opt})
         
     def addQuiver(self, *coord, **nopt):
+        """Add quivers to the canvas"""
         self.canvas['other'].append({'draw':'quiver','twinx':False,'coord':coord,'kwargs':nopt})
 
     def addBar(self, x, y, twinx=False, **nopt):
+        """Add a barplot to the canvas"""
         self.canvas['other'].append({'draw':'bar','twinx':twinx,'x':x,'y':y,'kwargs':nopt})
 
     def addLine(self, axis, pos, twinx=False, **nopt):
+        """Add a line to the plot"""
         opt = {'color':'grey', 'ls':'-', 'label':'', 'lw': 1}
         opt.update(nopt)
         self.canvas['other'].append({'draw':'line','twinx':twinx,'pos':pos,'axis':axis,'kwargs':opt})
         
     def addCircle(self, center, radius, twinx=False, **nopt):        
+        """Add a circle to the plot"""
         opt = {'color':'black'}
         opt.update(nopt)
         self.canvas['other'].append({'draw':'circle','twinx':twinx,'center':center,
                                      'radius':radius,'kwargs':opt})
         
     def addRectangle(self, xy, width, height, **nopt):
+        """Add a rectangle to the plot"""
         opt = {'color':'grey'}
         opt.update(nopt)
         self.canvas['other'].append({'draw':'rectangle','twinx':False,'xy':xy,
@@ -177,7 +228,7 @@ class subplot:
         figs = range(self.figure.nfigs)
 
         # add all axis options
-        axOpt = ['title','xlabel','ylabel','xlim','ylim','xscale','yscale',
+        axOpt = ['title','xlabel','ylabel','zlabel','xlim','ylim','zlim','xscale','yscale',
                  'tlabel','tlim','tscale','group','xflip','xpos','ypos','projection',
                  'xticklabels','yticklabels','xtickparam','ytickparam','tickparam','xysame',
                  'xtickformat']

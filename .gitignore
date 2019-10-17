@@ -13,6 +13,7 @@ private/*
 
 results/*
 !results/.gitkeep
+!results/debug/grids
 
 .submitlog
 shell/run.system.sh

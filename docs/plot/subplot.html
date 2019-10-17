@@ -1,0 +1,270 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Subplots &#8212; arepy 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Progress bar class" href="../shell/progressBar.html" />
+    <link rel="prev" title="Figure" href="figure.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../shell/progressBar.html" title="Progress bar class"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="figure.html" title="Figure"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" accesskey="U">Simulation data framework (arepy)</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="subplots">
+<h1>Subplots<a class="headerlink" href="#subplots" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="arepy.plot.subplot">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.plot.</code><code class="sig-name descname">subplot</code><span class="sig-paren">(</span><em class="sig-param">figure</em>, <em class="sig-param">row</em>, <em class="sig-param">col</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subplot of a figure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>figure</strong> (<em>int</em>) – Figure number</p></li>
+<li><p><strong>row</strong> (<em>int</em>) – Subplot row</p></li>
+<li><p><strong>col</strong> (<em>int</em>) – Subplot column</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="arepy.plot.subplot.setOption">
+<code class="sig-name descname">setOption</code><span class="sig-paren">(</span><em class="sig-param">**args</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot.setOption" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set an option</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.plot.subplot.setLegend">
+<code class="sig-name descname">setLegend</code><span class="sig-paren">(</span><em class="sig-param">handles=None</em>, <em class="sig-param">labels=None</em>, <em class="sig-param">**nopt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot.setLegend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a legend</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>handles</strong> (<em>list</em>) – List of axis object handles (optional)</p></li>
+<li><p><strong>labels</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Labels</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.plot.subplot.setLegendLS">
+<code class="sig-name descname">setLegendLS</code><span class="sig-paren">(</span><em class="sig-param">linestyles</em>, <em class="sig-param">labels</em>, <em class="sig-param">color='black'</em>, <em class="sig-param">**nopt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot.setLegendLS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a line-style legend</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>linestyle</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – A set of matplotlib line styles</p></li>
+<li><p><strong>labels</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Line style labels</p></li>
+</ul>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sp</span><span class="o">.</span><span class="n">setLegendLS</span><span class="p">([</span><span class="s1">&#39;:&#39;</span><span class="p">,</span><span class="s1">&#39;--&#39;</span><span class="p">],[</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span><span class="s1">&#39;bar&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.plot.subplot.setLegendM">
+<code class="sig-name descname">setLegendM</code><span class="sig-paren">(</span><em class="sig-param">markers</em>, <em class="sig-param">labels</em>, <em class="sig-param">color='black'</em>, <em class="sig-param">**nopt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot.setLegendM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a marker legend</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>markers</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – A set of matplotlib markers</p></li>
+<li><p><strong>labels</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – A set of marker labels</p></li>
+</ul>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sp</span><span class="o">.</span><span class="n">setLegendM</span><span class="p">([</span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="s1">&#39;^&#39;</span><span class="p">],[</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span><span class="s1">&#39;bar&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.plot.subplot.setImage">
+<code class="sig-name descname">setImage</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">extent=(0</em>, <em class="sig-param">1</em>, <em class="sig-param">0</em>, <em class="sig-param">1)</em>, <em class="sig-param">norm=None</em>, <em class="sig-param">normType='lin'</em>, <em class="sig-param">normLim=None</em>, <em class="sig-param">xnorm=None</em>, <em class="sig-param">ynorm=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot.setImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set an image</p>
+<p>A thin wrapper around the matplotlib imshow class, that additionally sets the image normalization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>[</em><em>[</em><em>float</em><em>]</em><em>*Y</em><em>]</em><em>*X</em>) – Image pixel data on an x and y axis</p></li>
+<li><p><strong>extent</strong> (<em>tuple</em><em>[</em><em>float</em><em>]</em>) – Extent of the x and y axis</p></li>
+<li><p><strong>norm</strong> (<em>str</em>) – Name of the image normalization.</p></li>
+<li><p><strong>normType</strong> (<em>str</em>) – Type of the norm: ‘lin’ or ‘log’</p></li>
+<li><p><strong>xnorm</strong> (<em>str</em>) – Name of the x-axis normalization</p></li>
+<li><p><strong>ynorm</strong> (<em>str</em>) – Name of the y-axis normalization</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.plot.subplot.setColorbar">
+<code class="sig-name descname">setColorbar</code><span class="sig-paren">(</span><em class="sig-param">location='right'</em>, <em class="sig-param">label=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot.setColorbar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a colorbar</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.plot.subplot.setColorbarNA">
+<code class="sig-name descname">setColorbarNA</code><span class="sig-paren">(</span><em class="sig-param">pos</em>, <em class="sig-param">**nopt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot.setColorbarNA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a colorbar on arbitrary position</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">grp</span><span class="o">.</span><span class="n">setColorbarNA</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.01</span><span class="p">,</span><span class="mf">0.6</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Mass (g)&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.plot.subplot.addPlot">
+<code class="sig-name descname">addPlot</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">twinx=False</em>, <em class="sig-param">xnorm=None</em>, <em class="sig-param">ynorm=None</em>, <em class="sig-param">**nopt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot.addPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a plot to the canvas</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.plot.subplot.addStep">
+<code class="sig-name descname">addStep</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">twinx=False</em>, <em class="sig-param">xnorm=None</em>, <em class="sig-param">ynorm=None</em>, <em class="sig-param">**nopt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot.addStep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a step plot to the canvas</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.plot.subplot.addScatter">
+<code class="sig-name descname">addScatter</code><span class="sig-paren">(</span><em class="sig-param">*coord</em>, <em class="sig-param">xnorm=None</em>, <em class="sig-param">ynorm=None</em>, <em class="sig-param">**nopt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot.addScatter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a scatter to the canvas</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.plot.subplot.addQuiver">
+<code class="sig-name descname">addQuiver</code><span class="sig-paren">(</span><em class="sig-param">*coord</em>, <em class="sig-param">**nopt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot.addQuiver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add quivers to the canvas</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.plot.subplot.addBar">
+<code class="sig-name descname">addBar</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">twinx=False</em>, <em class="sig-param">**nopt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot.addBar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a barplot to the canvas</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.plot.subplot.addLine">
+<code class="sig-name descname">addLine</code><span class="sig-paren">(</span><em class="sig-param">axis</em>, <em class="sig-param">pos</em>, <em class="sig-param">twinx=False</em>, <em class="sig-param">**nopt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot.addLine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a line to the plot</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.plot.subplot.addCircle">
+<code class="sig-name descname">addCircle</code><span class="sig-paren">(</span><em class="sig-param">center</em>, <em class="sig-param">radius</em>, <em class="sig-param">twinx=False</em>, <em class="sig-param">**nopt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot.addCircle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a circle to the plot</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.plot.subplot.addRectangle">
+<code class="sig-name descname">addRectangle</code><span class="sig-paren">(</span><em class="sig-param">xy</em>, <em class="sig-param">width</em>, <em class="sig-param">height</em>, <em class="sig-param">**nopt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot.addRectangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a rectangle to the plot</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.plot.subplot.addText">
+<code class="sig-name descname">addText</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">loc</em>, <em class="sig-param">bgcolor=None</em>, <em class="sig-param">twinx=False</em>, <em class="sig-param">padding=None</em>, <em class="sig-param">**nopt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot.addText" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add text to the figure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>src</em>) – Text string</p></li>
+<li><p><strong>loc</strong> (<em>str</em>) – Location of the text on the plot</p></li>
+<li><p><strong>padding</strong> (<em>(</em><em>float</em><em>)</em><em>*2</em>) – Padding of the text (horizontal,vertical)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="figure.html"
+                        title="previous chapter">Figure</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../shell/progressBar.html"
+                        title="next chapter">Progress bar class</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/plot/subplot.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../shell/progressBar.html" title="Progress bar class"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="figure.html" title="Figure"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" >Simulation data framework (arepy)</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Ondrej Jaura.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>

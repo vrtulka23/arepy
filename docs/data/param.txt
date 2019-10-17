@@ -1,174 +1,188 @@
-%---- Relevant files
-InitCondFile                             ics_32
-OutputDir                                output
-SnapshotFileBase                         snap
+
+%----  Relevant files 
+InitCondFile        ***
+OutputDir           output
+SnapshotFileBase    snap
+OutputListFilename  output/Outputlist.txt
 
 %---- File formats
-ICFormat                                 3
-SnapFormat                               3
+ICFormat           3
+SnapFormat         3 
 
 %---- CPU-time limits
-TimeLimitCPU                             180000
-CpuTimeBetRestartFile                    7200.0
-ResubmitCommand                          0
-ResubmitOn                               0
-CoolingOn                                0
-StarformationOn                          0
+TimeLimitCPU              180000  % in seconds
+CpuTimeBetRestartFile     7200    % in seconds
 
-%---- Memory allocation
-MaxMemSize                               3400.0
+%----- Memory alloction
+MaxMemSize      3400
 
-%---- Charactertics of the run / type & accuracy of time integration
-PeriodicBoundariesOn                     1
-ComovingIntegrationOn                    0
-TimeBegin                                0.0000
-TimeMax                                  32.0000
-TypeOfTimestepCriterion                  0
-ErrTolIntAccuracy                        0.012000
-CourantFac                               0.150000
-MaxSizeTimestep                          1.000e-01
-MinSizeTimestep                          1.000e-08
+%---- Caracteristics of run
+TimeBegin           0.0
+TimeMax	            32.0
+
+%---- Basic code options that set the type of simulation
+ComovingIntegrationOn    0 
+
+%---- Cosmological parameters (from Planck paper XVI, table 2, Planck + lensing column)
+Omega0	              0.0
+OmegaLambda           0.0
+OmegaBaryon           0.0
+HubbleParam           1.0
+BoxSize               1.0
 
 %---- Output frequency and output paramaters
-OutputListOn                             0
-OutputListFilename                       output/Outputlist.txt
-TimeOfFirstSnapshot                      0.00e+00
-TimeBetSnapshot                          1.00e+00
-TimeBetStatistics                        1.00e+00
-NumFilesPerSnapshot                      1
-NumFilesWrittenInParallel                1
+OutputListOn              0 
+TimeBetSnapshot           1e-0
+TimeOfFirstSnapshot       0.0
+TimeBetStatistics         1e-0
+NumFilesPerSnapshot       1
+NumFilesWrittenInParallel 1
 
-%---- Cosmological parameters
-Omega0                                   0.000000
-OmegaLambda                              0.000000
-OmegaBaryon                              0.000000
-HubbleParam                              1.000000
-BoxSize                                  1.000000
-
-%---- System of units
-UnitLength_in_cm                         4.319949e+22   % cm
-UnitMass_in_g                            1.989000e+33   % g
-UnitVelocity_in_cm_per_s                 1.368909e+09   % cm/s
-GravityConstantInternal                  0
+%---- Accuracy of time integration
+ErrTolIntAccuracy        0.012 
+CourantFac               0.15
+MaxSizeTimestep          ***
+MinSizeTimestep          1.0e-8 
 
 %---- Treatment of empty space and temperature limits
-InitGasTemp                              100.000000
-MinEgySpec                               0.000000
-MinGasTemp                               0.000000
-MinimumDensityOnStartUp                  0.000000
-LimitUBelowThisDensity                   0
-LimitUBelowCertainDensityToThisValue     0
+InitGasTemp                           ***
+MinEgySpec                            0.0
 
 %---- Tree algorithm, force accuracy, domain update frequency
-TypeOfOpeningCriterion                   0
-ErrTolTheta                              0.000000
-ErrTolForceAcc                           0.002500
+TypeOfOpeningCriterion                0
+ErrTolTheta                           0
+ErrTolForceAcc                        0.0025
+MultipleDomains                       8 
+TopNodeFactor                         5
+ActivePartFracForNewDomainDecomp      0.01
 
-%---- Computational efficiency parameter
-MultipleDomains                          8
-TopNodeFactor                            5
-ActivePartFracForNewDomainDecomp         0.010000
+%---- Initial density estimate
+DesNumNgb              32
+MaxNumNgbDeviation     1 
 
-%---- SPH PARMETERS / Initial density estimate
-DesNumNgb                                32
-MaxNumNgbDeviation                       1
+%---- System of units
+UnitLength_in_cm         ***
+UnitMass_in_g            ***
+UnitVelocity_in_cm_per_s ***
+GravityConstantInternal  0
 
 %---- Gravitational softening lengths
-GasSoftFactor                            1.00
+SofteningComovingType0 0.005
+SofteningComovingType1 0.005
+SofteningComovingType2 0.005
+SofteningComovingType3 0.005
+SofteningComovingType4 0.005
+SofteningComovingType5 0.005
 
-%---- Plummer-equivalent gravitational softening length [code units]
-SofteningComovingType0                   5.000000e-03
-SofteningComovingType1                   5.000000e-03
-SofteningComovingType2                   5.000000e-03
-SofteningComovingType3                   5.000000e-03
-SofteningComovingType4                   5.000000e-03
-SofteningComovingType5                   5.000000e-03
+SofteningMaxPhysType0  0.005
+SofteningMaxPhysType1  0.005
+SofteningMaxPhysType2  0.005
+SofteningMaxPhysType3  0.005
+SofteningMaxPhysType4  0.005
+SofteningMaxPhysType5  0.005
 
-%---- If Comoving integration switched on, then this is the physical softening length
-SofteningMaxPhysType0                    5.000000e-03
-SofteningMaxPhysType1                    5.000000e-03
-SofteningMaxPhysType2                    5.000000e-03
-SofteningMaxPhysType3                    5.000000e-03
-SofteningMaxPhysType4                    5.000000e-03
-SofteningMaxPhysType5                    5.000000e-03
+ResubmitCommand    0
+ResubmitOn         0
+CoolingOn          0
+StarformationOn    0
+TypeOfTimestepCriterion 0
+MinGasTemp         0
+MinimumDensityOnStartUp 0
+%CellShapingFactor   1.0
+CellShapingSpeed    1.0
 
-%---- Assignment of particular softening lengths to arepo particle types
-SofteningTypeOfPartType0                 0
-SofteningTypeOfPartType1                 1
-SofteningTypeOfPartType2                 2
-SofteningTypeOfPartType3                 3
-SofteningTypeOfPartType4                 4
-SofteningTypeOfPartType5                 5
+SofteningTypeOfPartType0  0
+SofteningTypeOfPartType1  1
+SofteningTypeOfPartType2  2
+SofteningTypeOfPartType3  3
+SofteningTypeOfPartType4  4
+SofteningTypeOfPartType5  5
 
-%---- Mesh regularisation & refinement
-CellMaxAngleFactor                       1.000000
-CellShapingSpeed                         1.000000
-ReferenceGasPartMass                     2.068945e+03
-TargetGasMassFactor                      1.000000
-RefinementCriterion                      11
-DerefinementCriterion                    11
+PeriodicBoundariesOn      1
+LimitUBelowThisDensity    0
+LimitUBelowCertainDensityToThisValue  0
+GasSoftFactor             1.0
 
-%---- SGChem - chemistry options (Clark et al 2011 ApJ)
-SGChemInitH2Abund                        2.000e-06
-SGChemInitHPAbund                        1.000e-05
-SGChemInitDIIAbund                       2.600e-09
-SGChemInitHDAbund                        0.000e+00
-SGChemInitHeIIIAbund                     0.000e+00
+CellMaxAngleFactor     1                   
+ReferenceGasPartMass   ***                 # mass above/below refinement in internal units (M_sol)
+TargetGasMassFactor    1
+RefinementCriterion    11		   # values are in src/criterion_derifinement.c
+DerefinementCriterion  11                  # values are	in src/criterion_derifinement.c
 
-%---- SGChem - for networks 5 & 13
-SGChemInitCPAbund                        0.000e+00
-SGChemInitCOAbund                        0.000e+00
+%---- SimpleX settings
+UnitPhotons_per_s        1e48              % average photon emission per second
+MinNumPhotons            1e-5              % minimum number of photons that can be radiatively transfered
+TestSrcFile              rad_sources.bin   % radiation sources
 
-%---- SGChem - for Nelson and Langer 99
-SGChemInitCHxAbund                       0.000e+00
-SGChemInitOHxAbund                       0.000e+00
-SGChemInitHCOPAbund                      0.000e+00
-SGChemInitHePAbund                       0.000e+00
-SGChemInitMPAbund                        0.000e+00
+%---- SGChem settings
+% Chemistry Options
+SGChemInitH2Abund       2.0e-6
+SGChemInitHPAbund       1.0e-5
 
-%---- SGChem - elemental abundances
-CarbAbund                                0.000000e+00
-OxyAbund                                 0.000000e+00
-MAbund                                   0.000000e+00
-ZAtom                                    0.000000e+00
-AtomicCoolOption                         2
-DeutAbund                                2.600000e-05
-H2OpacityOption                          0
+% For networks 5 & 13
+SGChemInitCPAbund       0.0
+SGChemInitCOAbund       0.0
 
-%---- SGChem - dust properties
-InitDustTemp                             0.000000
-UVFieldStrength                          0.000000e+00
-DustToGasRatio                           0.000000e+00
-CosmicRayIonRate                         0.000000e+00
-InitRedshift                             0.000000
-ExternalDustExtinction                   0.000000
+% For Nelson and Langer 99
+SGChemInitCHxAbund      0.
+SGChemInitOHxAbund      0.
+SGChemInitHCOPAbund     0.
+SGChemInitHePAbund      0.
+SGChemInitMPAbund       0.
 
-%---- SGChem - strenght of H2 formation heating
-H2FormEx                                 0.000000
-H2FormKin                                0.000000
+SGChemInitDIIAbund      2.6e-9
+SGChemInitHDAbund       0.
+%SGChemInitHeIIAbund    0.
+SGChemInitHeIIIAbund    0.
 
-%---- Photochemistry
-PhotoApprox                              6
-ISRFOption                               1
-SGChemConstInitAbundances                1
-LWBGType                                 0
-LWBGStartRedsh                           0
+H2OpacityOption  0 
+
+% Elemental abundances
+CarbAbund               0.0  %1.4e-4
+OxyAbund                0.0  %3.2e-4
+MAbund                  0.0  %1.0e-7
+ZAtom                   0.0 
+
+AtomicCoolOption        2
+
+DeutAbund               2.6e-5
+
+% Dust properties
+InitDustTemp      0
+UVFieldStrength   0.0  %strength of UV field in units of J21 at Lyman-limit     % (present day!) UV field strength in units of Habing field
+DustToGasRatio    0.0   %1.0     %dust to gas ratio in units of local (i.e. Z = Z_sun) value
+CosmicRayIonRate  0.0
+
+InitRedshift      0.0
+
+ExternalDustExtinction   0.0  %Visual magnitudes of dust extinction contributed by gas outside of simulation volume:
+
+% Strength of H2 formation heating
+H2FormEx     0 %0.84
+H2FormKin    0 %0.12
+
+% Photochemistry
+PhotoApprox    6  % 0==optically thin, 6==Treecol 
+ISRFOption     1  % 1 == Mathis et al (1983), 2 == Black (1994)
+
+SGChemConstInitAbundances 1
+LWBGType                  0
+LWBGStartRedsh            0
 
 %---- Slice Image
-PicXpixels                               1000
-PicYpixels                               1000
-PicXaxis                                 0
-PicYaxis                                 1
-PicZaxis                                 2
-PicXmin                                  0.00000e+00
-PicXmax                                  1.00000e+00
-PicYmin                                  0.00000e+00
-PicYmax                                  1.00000e+00
-PicZmin                                  5.00000e-01
-PicZmax                                  1.00000e+00
+PicXpixels 1000
+PicYpixels 1000
+PicXaxis   0
+PicYaxis   1
+PicZaxis   2
 
-%---- SimpleX radiation transport
-UnitPhotons_per_s                        5.000e+48   % ph/s
-MinNumPhotons                            1.000e-05
-TestSrcFile                              rad_sources.bin
+PicXmin    0
+PicXmax    1
+PicYmin    0
+PicYmax    1
+PicZmin    0.5
+PicZmax    1
+        
+%---- Add Background Grid
 
+%GridSize   32
