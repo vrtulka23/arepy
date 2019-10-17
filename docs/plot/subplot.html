@@ -44,7 +44,7 @@
 <h1>Subplots<a class="headerlink" href="#subplots" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="arepy.plot.subplot">
-<em class="property">class </em><code class="sig-prename descclassname">arepy.plot.</code><code class="sig-name descname">subplot</code><span class="sig-paren">(</span><em class="sig-param">figure</em>, <em class="sig-param">row</em>, <em class="sig-param">col</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">arepy.plot.</code><code class="sig-name descname">subplot</code><span class="sig-paren">(</span><em class="sig-param">figure</em>, <em class="sig-param">row</em>, <em class="sig-param">col</em>, <em class="sig-param">xyz=False</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Subplot of a figure</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -52,6 +52,7 @@
 <li><p><strong>figure</strong> (<em>int</em>) – Figure number</p></li>
 <li><p><strong>row</strong> (<em>int</em>) – Subplot row</p></li>
 <li><p><strong>col</strong> (<em>int</em>) – Subplot column</p></li>
+<li><p><strong>xyz</strong> (<em>bool</em>) – Use 3D axes</p></li>
 </ul>
 </dd>
 </dl>
@@ -141,7 +142,7 @@
 <code class="sig-name descname">setColorbarNA</code><span class="sig-paren">(</span><em class="sig-param">pos</em>, <em class="sig-param">**nopt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.plot.subplot.setColorbarNA" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot a colorbar on arbitrary position</p>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">grp</span><span class="o">.</span><span class="n">setColorbarNA</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.01</span><span class="p">,</span><span class="mf">0.6</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Mass (g)&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">grp</span><span class="o">.</span><span class="n">setColorbarNA</span><span class="p">(</span><span class="n">pos</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.01</span><span class="p">,</span><span class="mf">0.6</span><span class="p">),</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Mass (g)&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>

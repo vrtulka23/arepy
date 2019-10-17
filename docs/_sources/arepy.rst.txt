@@ -38,6 +38,7 @@ Coordinate manipulation
    coord/box
    coord/sphere
    coord/cone
+   coord/grid
 
 Plotting figures
 ^^^^^^^^^^^^^^^^

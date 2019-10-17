@@ -1,12 +1,6 @@
 import arepy as apy
 import numpy as np
 
-'''
-Example:
-
-grid = apy.coord.gridSquareXY([200,200],[0.4, 1.3, 4.3, 8.3])
-'''
-
 class grid:
     def __init__(self,bins=0,extent=None,points='centers',scatter=None,**opt):
         self.bins = [bins] if np.isscalar(bins) else bins
@@ -103,6 +97,8 @@ class gridFieldXY(gridSquareXY):
 
 class gridHealpix(grid):
     """Create a point grid from a healpix sphere pixels
+
+    .. image:: ../../../results/examples/grids/healpix/debug/healpix000.png
     """
     def _setCoordinates(self,nside=4,radius=1): 
         import healpy as hp
@@ -121,6 +117,8 @@ class gridHealpix(grid):
 
 class gridDisc(grid):
     """Create a disk grid with from concentric circles
+
+    .. image:: ../../../results/examples/grids/disc/debug/disc000.png
     """
     # Different parts of the disk can be located using offsets in 'self.parts'
     def __init__(self,bins,extent=None,points='edges',scatter=None,**opt):
@@ -189,7 +187,14 @@ class gridLineRZ(gridDisc):
 
 # lines from a comon center using healpix
 class gridRays(grid):
-    """Create a grid of rays using healpix"""
+    """Create a grid of rays using healpix
+
+    .. image:: ../../../results/examples/grids/rays/debug/rays000.png
+    
+    View the `source code`_ of the plot
+
+    .. _`source code`: ../python/scripy/examples/plots/grids/ray.py
+    """
     def _setCoordinates(self,nside=4):
         import healpy as hp
         npix = hp.nside2npix(nside) # number of healpix pixels

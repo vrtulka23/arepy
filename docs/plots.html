@@ -263,8 +263,8 @@ A simple plotting routine could look like:</p>
 <li><p><strong>ncol</strong> (<em>int</em>) – Number of collumns</p></li>
 <li><p><strong>nrow</strong> (<em>int</em>) – Number of rows</p></li>
 <li><p><strong>nfig</strong> (<em>int</em>) – Number of figures</p></li>
-<li><p><strong>sRow</strong> (<em>float</em>) – Size of the subplot rows on the figure (figsize)</p></li>
-<li><p><strong>sCol</strong> (<em>float</em>) – Size of the subplot cols on the figure (figsize)</p></li>
+<li><p><strong>srow</strong> (<em>float</em>) – Size of the subplot rows on the figure (figsize)</p></li>
+<li><p><strong>scol</strong> (<em>float</em>) – Size of the subplot cols on the figure (figsize)</p></li>
 <li><p><strong>movie</strong> (<em>bool</em>) – Create a movie from all figures</p></li>
 <li><p><strong>show</strong> (<em>bool</em>) – Display figures at the end of the plotting</p></li>
 <li><p><strong>debug</strong> (<em>bool</em>) – Save figures into a debug folder</p></li>
@@ -276,7 +276,7 @@ A simple plotting routine could look like:</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">setFigure</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">sCol</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">sRow</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">gridspec</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;hspace&#39;</span><span class="p">:</span><span class="mf">0.1</span><span class="p">},</span> <span class="n">group</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;xlabel&#39;</span><span class="p">],</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">setFigure</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">scol</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">srow</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">gridspec</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;hspace&#39;</span><span class="p">:</span><span class="mf">0.1</span><span class="p">},</span> <span class="n">group</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;xlabel&#39;</span><span class="p">],</span>
                <span class="n">tickparam</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;axis&#39;</span><span class="p">:</span><span class="s1">&#39;both&#39;</span><span class="p">,</span><span class="s1">&#39;direction&#39;</span><span class="p">:</span><span class="s1">&#39;in&#39;</span><span class="p">,</span><span class="s1">&#39;top&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span><span class="s1">&#39;right&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">})</span>
 </pre></div>
 </div>

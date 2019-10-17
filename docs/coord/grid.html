@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Grid of coordinates &#8212; arepy 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Figure" href="../plot/figure.html" />
+    <link rel="prev" title="Conical region" href="cone.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../plot/figure.html" title="Figure"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="cone.html" title="Conical region"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" accesskey="U">Simulation data framework (arepy)</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="grid-of-coordinates">
+<h1>Grid of coordinates<a class="headerlink" href="#grid-of-coordinates" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="arepy.coord.grid">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.coord.</code><code class="sig-name descname">grid</code><span class="sig-paren">(</span><em class="sig-param">bins=0</em>, <em class="sig-param">extent=None</em>, <em class="sig-param">points='centers'</em>, <em class="sig-param">scatter=None</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.grid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="arepy.coord.gridDisc">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.coord.</code><code class="sig-name descname">gridDisc</code><span class="sig-paren">(</span><em class="sig-param">bins</em>, <em class="sig-param">extent=None</em>, <em class="sig-param">points='edges'</em>, <em class="sig-param">scatter=None</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.gridDisc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a disk grid with from concentric circles</p>
+<img alt="../_images/disc000.png" src="../_images/disc000.png" />
+</dd></dl>
+
+<dl class="class">
+<dt id="arepy.coord.gridHealpix">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.coord.</code><code class="sig-name descname">gridHealpix</code><span class="sig-paren">(</span><em class="sig-param">bins=0</em>, <em class="sig-param">extent=None</em>, <em class="sig-param">points='centers'</em>, <em class="sig-param">scatter=None</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.gridHealpix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a point grid from a healpix sphere pixels</p>
+<img alt="../_images/healpix000.png" src="../_images/healpix000.png" />
+</dd></dl>
+
+<dl class="class">
+<dt id="arepy.coord.gridRays">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.coord.</code><code class="sig-name descname">gridRays</code><span class="sig-paren">(</span><em class="sig-param">bins=0</em>, <em class="sig-param">extent=None</em>, <em class="sig-param">points='centers'</em>, <em class="sig-param">scatter=None</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.gridRays" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a grid of rays using healpix</p>
+<img alt="../_images/rays000.png" src="../_images/rays000.png" />
+<p>View the <a class="reference external" href="../python/scripy/examples/plots/grids/ray.py">source code</a> of the plot</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="cone.html"
+                        title="previous chapter">Conical region</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../plot/figure.html"
+                        title="next chapter">Figure</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/coord/grid.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../plot/figure.html" title="Figure"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="cone.html" title="Conical region"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" >Simulation data framework (arepy)</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Ondrej Jaura.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>
