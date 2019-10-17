@@ -99,6 +99,10 @@ class gridHealpix(grid):
     """Create a point grid from a healpix sphere pixels
 
     .. image:: ../../../results/examples/grids/healpix/debug/healpix000.png
+
+    View the source code of the `healpix grid`_ plot
+
+    .. _`healpix grid`: ../../python/scripy/examples/plots/grids/healpix.py
     """
     def _setCoordinates(self,nside=4,radius=1): 
         import healpy as hp
@@ -119,6 +123,10 @@ class gridDisc(grid):
     """Create a disk grid with from concentric circles
 
     .. image:: ../../../results/examples/grids/disc/debug/disc000.png
+
+    View the source code of the `disk grid`_ plot
+
+    .. _`disk grid`: ../../python/scripy/examples/plots/grids/disc.py
     """
     # Different parts of the disk can be located using offsets in 'self.parts'
     def __init__(self,bins,extent=None,points='edges',scatter=None,**opt):
@@ -191,9 +199,9 @@ class gridRays(grid):
 
     .. image:: ../../../results/examples/grids/rays/debug/rays000.png
     
-    View the `source code`_ of the plot
+    View the source code of the `ray grid`_ plot
 
-    .. _`source code`: ../python/scripy/examples/plots/grids/ray.py
+    .. _`ray grid`: ../../python/scripy/examples/plots/grids/rays.py
     """
     def _setCoordinates(self,nside=4):
         import healpy as hp
