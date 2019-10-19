@@ -73,7 +73,7 @@ class transf:
             self.addRotation('rotate', opt['rotate'])
         # post-select
         if 'region' in opt:
-            self.addSelection('crop', region=region)
+            self.addSelection('crop', region=region.getBox() )
                 
         # print out the settings for debugging
         if show:

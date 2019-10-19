@@ -72,16 +72,16 @@ class simpleSelect:
     def prop_SelectPoints(self,ids,ptype,**prop):
         """Select cells closest to the given points
 
-        :param list[[float]*3] grid: List of grid points
+        :param list[[float]*3] coord: List of coordinates
         :return: Selection indexes of the selected particles
         :rtype: list[int]
         """
         from scipy.spatial import cKDTree
         coord = self.prop_Coordinates(ids,ptype,**prop)
-        grid = prop['grid']
+        grid = prop['coord']
         kdt = cKDTree(coord)
         dist,ids = kdt.query(grid)
-        return [ dist, ids ]
+        return ids
 
     def prop_Indexes(self,ids,ptype,**prop):
         """Get current selector indexes

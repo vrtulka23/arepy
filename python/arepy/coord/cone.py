@@ -64,6 +64,9 @@ class cone:
     def getSphere(self):
         return apy.coord.sphere(self.center,self.radius)
 
+    def getBox(self):
+        return self.getInnerBox()
+
     # select coordinates within the cone
     def selectCoordinates(self,coord):
         x,y,z = (coord-opt['center']).T

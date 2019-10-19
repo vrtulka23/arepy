@@ -57,7 +57,10 @@ class sphere:
 
     # get sphere
     def getSphere(self):
-        return self
+        return apy.coord.sphere(self.center,self.radius)
+
+    def getBox(self):
+        return self.getInnerBox()
 
     # select coordinates within the sphere
     def selectCoordinates(self,coord):

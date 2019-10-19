@@ -39,6 +39,12 @@ class grid:
 # Grid Volumes
 ###########################
 class gridCube(grid):
+    """Create a point grid with a shape of a cube
+
+    .. image:: ../../../results/examples/grids/cube/debug/cube000.png
+
+    Download the :download:`source code <../../../python/scripy/examples/plots/grids/cube.py>` of the plot.
+    """
     def _setCoordinates(self):
         self.xxi = np.meshgrid(*self.xi)
         # ordered as: x*ny*nz + y*nz + z
@@ -78,6 +84,12 @@ class gridCube(grid):
 # Grid Surfaces
 ###########################
 class gridSquareXY(grid):
+    """Create a point grid in a form of a square on the X/Y plane
+
+    .. image:: ../../../results/examples/grids/squarexy/debug/squarexy000.png
+
+    Download the :download:`source code <../../../python/scripy/examples/plots/grids/squarexy.py>` of the plot.
+    """
     def _setCoordinates(self,zfill=None):
         self.xxi = np.meshgrid(*self.xi)
         # ordered as: x*ny + y
@@ -86,7 +98,7 @@ class gridSquareXY(grid):
         # flat list of coordinates
         if zfill is not None:
             coord = [[x,y,zfill] for (x,y) in coord]
-        return coord, self.nbins
+        return np.array(coord), self.nbins
 
     def reshapeData(self,data):
         return data.reshape(self.nbins)
@@ -100,9 +112,7 @@ class gridHealpix(grid):
 
     .. image:: ../../../results/examples/grids/healpix/debug/healpix000.png
 
-    View the source code of the `healpix grid`_ plot
-
-    .. _`healpix grid`: ../../python/scripy/examples/plots/grids/healpix.py
+    Download the :download:`source code <../../../python/scripy/examples/plots/grids/healpix.py>` of the plot.
     """
     def _setCoordinates(self,nside=4,radius=1): 
         import healpy as hp
@@ -120,13 +130,11 @@ class gridHealpix(grid):
         return np.where(data==-np.inf,np.nan,data)
 
 class gridDisc(grid):
-    """Create a disk grid with from concentric circles
+    """Create a disc grid with from concentric circles
 
     .. image:: ../../../results/examples/grids/disc/debug/disc000.png
 
-    View the source code of the `disk grid`_ plot
-
-    .. _`disk grid`: ../../python/scripy/examples/plots/grids/disc.py
+    Download the :download:`source code <../../../python/scripy/examples/plots/grids/disc.py>` of the plot.
     """
     # Different parts of the disk can be located using offsets in 'self.parts'
     def __init__(self,bins,extent=None,points='edges',scatter=None,**opt):
@@ -199,24 +207,26 @@ class gridRays(grid):
 
     .. image:: ../../../results/examples/grids/rays/debug/rays000.png
     
-    View the source code of the `ray grid`_ plot
-
-    .. _`ray grid`: ../../python/scripy/examples/plots/grids/rays.py
+    Download the :download:`source code <../../../python/scripy/examples/plots/grids/rays.py>` of the plot.
     """
     def _setCoordinates(self,nside=4):
         import healpy as hp
-        npix = hp.nside2npix(nside) # number of healpix pixels
-        coord = np.zeros((npix,3))  
-        for i in range(npix):
+        self.npix = hp.nside2npix(nside)           # number of healpix pixels
+        coord = np.zeros((self.npix,3))  
+        for i in range(self.npix):
             coord[i,:] = hp.pix2vec(nside,i)
         nradii = len(self.xi[0])
-        rays = np.zeros((nradii,npix,3))
+        rays = np.zeros((nradii,self.npix,3))
         for b,radius in enumerate(self.xi[0]):
             rays[b] = coord*radius
         rays = np.vstack(rays)
-        self.parts = [npix]*nradii                 # updata particle offset
+        self.parts = [self.npix]*nradii            # updata particle offset
         self.split = np.cumsum(self.parts[:-1])    # update particle split indexes
         return rays, [len(rays)]
 
     def reshapeData(self,data):
-        return np.split(data, self.split).T
+        """Reshape data
+
+        Reshapes data into the shape (npix,nbins)
+        """
+        return data.reshape((self.bins[0],self.npix)).T

@@ -78,6 +78,9 @@ class box:
     def getSphere(self):
         return self.getOuterSphere()
 
+    def getBox(self):
+        return self
+
     # select coordinates inside of the box
     def selectCoordinates(self,coord):
         x,y,z = coord.T

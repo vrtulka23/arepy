@@ -4,6 +4,12 @@ Grid of coordinates
 .. autoclass:: arepy.coord.grid
    :members:
 
+.. autoclass:: arepy.coord.gridCube
+   :members:
+
+.. autoclass:: arepy.coord.gridSquareXY
+   :members:
+
 .. autoclass:: arepy.coord.gridDisc
    :members:
 

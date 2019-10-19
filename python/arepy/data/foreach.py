@@ -65,9 +65,12 @@ def _foreach(fn,args,nproc,label,append,udata=None):
                 data[key] = udata[key] + data[key]
             else:
                 data[key] = np.concatenate((udata[key],data[key]),axis=0)
-
+    
     # return appropriate format
-    return data if ncols>1 else list(data.values())[0] 
+    if ncols>1 and nargs==1:
+        return {key:value[0] for key,value in data.items()}
+    else:
+        return data if nargs>1 else list(data.values())[0] 
 def foreach(fn,args,nproc=1,label='',append=False,dirCache=None,update=False):
     # cache data if dirCache is set
     if dirCache:
@@ -75,4 +78,5 @@ def foreach(fn,args,nproc=1,label='',append=False,dirCache=None,update=False):
         nameCache = fn.__name__+'_'+label if label else fn.__name__
         return apy.data.cache( _foreach, nameCache, cacheDir=dirCache, args=[fn,args,nproc,label,append], update=update)
     else:
-        return _foreach(fn,args,nproc,label,append)
+        data = _foreach(fn,args,nproc,label,append)
+        return data

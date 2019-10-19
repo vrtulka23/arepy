@@ -69,7 +69,7 @@ class complexRegion:
     def prop_RegionFormationOrder(self,ids,ptype,**prop):
         """Select properties of sink particles with formation order IDs
 
-        :param list[int] pids: One or more particle IDs
+        :param list[int] forder: One or more particle IDs
         :param p: List of properties
         :type p: :class:`arepy.files.properties`
         :return: Particle properties within the region
@@ -80,10 +80,10 @@ class complexRegion:
     def prop_RegionPoints(self,ids,ptype,**prop):
         """Select property values at some coordinates
 
-        :param list[int] pids: One or more sink formation order IDs
+        :param list[[float]*3] coord: List of coordinates
         :param p: List of properties
         :type p: :class:`arepy.files.properties`
-        :return: Particle properties within the region
+        :return: Properties of the closest particles to the points
         """
         prop['name'] = 'SelectPoints'
         return self._propRegion(ids,ptype,**prop)

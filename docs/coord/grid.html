@@ -48,11 +48,27 @@
 <dd></dd></dl>
 
 <dl class="class">
+<dt id="arepy.coord.gridCube">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.coord.</code><code class="sig-name descname">gridCube</code><span class="sig-paren">(</span><em class="sig-param">bins=0</em>, <em class="sig-param">extent=None</em>, <em class="sig-param">points='centers'</em>, <em class="sig-param">scatter=None</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.gridCube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a point grid with a shape of a cube</p>
+<img alt="../_images/cube000.png" src="../_images/cube000.png" />
+<p>Download the <a class="reference download internal" download="" href="../_downloads/635c223b87af8405f5b4292ebeada797/cube.py"><code class="xref download docutils literal notranslate"><span class="pre">source</span> <span class="pre">code</span></code></a> of the plot.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="arepy.coord.gridSquareXY">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.coord.</code><code class="sig-name descname">gridSquareXY</code><span class="sig-paren">(</span><em class="sig-param">bins=0</em>, <em class="sig-param">extent=None</em>, <em class="sig-param">points='centers'</em>, <em class="sig-param">scatter=None</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.gridSquareXY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a point grid in a form of a square on the X/Y plane</p>
+<img alt="../_images/squarexy000.png" src="../_images/squarexy000.png" />
+<p>Download the <a class="reference download internal" download="" href="../_downloads/32fa6b295540900934fc642613ed7b0b/squarexy.py"><code class="xref download docutils literal notranslate"><span class="pre">source</span> <span class="pre">code</span></code></a> of the plot.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="arepy.coord.gridDisc">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.coord.</code><code class="sig-name descname">gridDisc</code><span class="sig-paren">(</span><em class="sig-param">bins</em>, <em class="sig-param">extent=None</em>, <em class="sig-param">points='edges'</em>, <em class="sig-param">scatter=None</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.gridDisc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a disk grid with from concentric circles</p>
+<dd><p>Create a disc grid with from concentric circles</p>
 <img alt="../_images/disc000.png" src="../_images/disc000.png" />
-<p>View the source code of the <a class="reference external" href="../../python/scripy/examples/plots/grids/disc.py">disk grid</a> plot</p>
+<p>Download the <a class="reference download internal" download="" href="../_downloads/777ebed03c6dbc30d2b608c29de5b4fd/disc.py"><code class="xref download docutils literal notranslate"><span class="pre">source</span> <span class="pre">code</span></code></a> of the plot.</p>
 </dd></dl>
 
 <dl class="class">
@@ -60,7 +76,7 @@
 <em class="property">class </em><code class="sig-prename descclassname">arepy.coord.</code><code class="sig-name descname">gridHealpix</code><span class="sig-paren">(</span><em class="sig-param">bins=0</em>, <em class="sig-param">extent=None</em>, <em class="sig-param">points='centers'</em>, <em class="sig-param">scatter=None</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.gridHealpix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a point grid from a healpix sphere pixels</p>
 <img alt="../_images/healpix000.png" src="../_images/healpix000.png" />
-<p>View the source code of the <a class="reference external" href="../../python/scripy/examples/plots/grids/healpix.py">healpix grid</a> plot</p>
+<p>Download the <a class="reference download internal" download="" href="../_downloads/93e099823daf563fe3d63e5e158cc67f/healpix.py"><code class="xref download docutils literal notranslate"><span class="pre">source</span> <span class="pre">code</span></code></a> of the plot.</p>
 </dd></dl>
 
 <dl class="class">
@@ -68,7 +84,14 @@
 <em class="property">class </em><code class="sig-prename descclassname">arepy.coord.</code><code class="sig-name descname">gridRays</code><span class="sig-paren">(</span><em class="sig-param">bins=0</em>, <em class="sig-param">extent=None</em>, <em class="sig-param">points='centers'</em>, <em class="sig-param">scatter=None</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.gridRays" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a grid of rays using healpix</p>
 <img alt="../_images/rays000.png" src="../_images/rays000.png" />
-<p>View the source code of the <a class="reference external" href="../../python/scripy/examples/plots/grids/rays.py">ray grid</a> plot</p>
+<p>Download the <a class="reference download internal" download="" href="../_downloads/b913f02ac7fd6b843581ee4b83973f67/rays.py"><code class="xref download docutils literal notranslate"><span class="pre">source</span> <span class="pre">code</span></code></a> of the plot.</p>
+<dl class="method">
+<dt id="arepy.coord.gridRays.reshapeData">
+<code class="sig-name descname">reshapeData</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.gridRays.reshapeData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reshape data</p>
+<p>Reshapes data into the shape (npix,nbins)</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
