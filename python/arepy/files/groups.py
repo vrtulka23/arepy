@@ -49,10 +49,13 @@ class group(apy.data.groups.group, groupsMethods):
 class item(apy.data.groups.item):
     """Snapshot item
     
-    :var apy.files.simulation sim: Simulation
-    :var apy.files.units units: Units 
+    :var sim: Simulation
+    :var units: Units 
     :var int snap: Default snapshot number
-    :var apy.coord.transf transf: Transformations
+    :var transf: Transformations
+    :vartype sim: :class:`arepy.files.simulation`
+    :vartype units: :class:`arepy.files.units`
+    :vartype transf: :class:`arepy.coord.transf`
     
     This class holds all information about a particular snapshot that should be analyzed
     """

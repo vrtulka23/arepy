@@ -46,8 +46,13 @@
 <p class="topic-title first">Contents</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#collection" id="id2">Collection</a></p></li>
-<li><p><a class="reference internal" href="#id1" id="id3">Groups</a></p></li>
-<li><p><a class="reference internal" href="#item" id="id4">Item</a></p></li>
+<li><p><a class="reference internal" href="#id1" id="id3">Groups</a></p>
+<ul>
+<li><p><a class="reference internal" href="#group-methods" id="id4">Group methods</a></p></li>
+<li><p><a class="reference internal" href="#group-transformations" id="id5">Group transformations</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#item" id="id6">Item</a></p></li>
 </ul>
 </div>
 <div class="section" id="collection">
@@ -83,9 +88,192 @@
 </dl>
 </dd></dl>
 
+<div class="section" id="group-methods">
+<h3><a class="toc-backref" href="#id4">Group methods</a><a class="headerlink" href="#group-methods" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="arepy.files.groups.groupsMethods">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.files.groups.</code><code class="sig-name descname">groupsMethods</code><a class="headerlink" href="#arepy.files.groups.groupsMethods" title="Permalink to this definition">¶</a></dt>
+<dd><p>Group methods class</p>
+<dl class="method">
+<dt id="arepy.files.groups.groupsMethods.setTransf">
+<code class="sig-name descname">setTransf</code><span class="sig-paren">(</span><em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.setTransf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set coordinate transformations for every item</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsMethods.getTransf">
+<code class="sig-name descname">getTransf</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">args</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.getTransf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get transformation parameters from a particle</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of a transformation</p></li>
+<li><p><strong>args</strong> – Settings of a transformation</p></li>
+<li><p><strong>opt</strong> – Settings of the <code class="xref py py-meth docutils literal notranslate"><span class="pre">arepy.data.group.foreach()</span></code></p></li>
+</ul>
+</dd>
+</dl>
+<p>Transformations are calculated in <code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.groupsTransf</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsMethods.useTransf">
+<code class="sig-name descname">useTransf</code><span class="sig-paren">(</span><em class="sig-param">transf</em>, <em class="sig-param">use=True</em>, <em class="sig-param">add={}</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.useTransf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use transformation values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsMethods.getPropertyRange">
+<code class="sig-name descname">getPropertyRange</code><span class="sig-paren">(</span><em class="sig-param">prop</em>, <em class="sig-param">scale='lin'</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.getPropertyRange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate a range of properties</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsMethods.getSinkProps">
+<code class="sig-name descname">getSinkProps</code><span class="sig-paren">(</span><em class="sig-param">props</em>, <em class="sig-param">select=None</em>, <em class="sig-param">cache=None</em>, <em class="sig-param">update=True</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.getSinkProps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a list of sink particles with their properties in each snapshot</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsMethods.setImage">
+<code class="sig-name descname">setImage</code><span class="sig-paren">(</span><em class="sig-param">sp</em>, <em class="sig-param">prop</em>, <em class="sig-param">imgType</em>, <em class="sig-param">norm=None</em>, <em class="sig-param">normType=None</em>, <em class="sig-param">cmap=None</em>, <em class="sig-param">multiply=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.setImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set Arepo image</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsMethods.setProjection">
+<code class="sig-name descname">setProjection</code><span class="sig-paren">(</span><em class="sig-param">sp</em>, <em class="sig-param">prop</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.setProjection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a projection image of a snapshot property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sp</strong> (<a class="reference internal" href="../plot/subplot.html#arepy.plot.subplot" title="arepy.plot.subplot"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.plot.subplot</span></code></a>) – Subplot of a figure</p></li>
+<li><p><strong>prop</strong> (<em>str</em>) – A snapshot property</p></li>
+<li><p><strong>bins</strong> (<em>int</em>) – Number of pixels (bins) per dimension</p></li>
+<li><p><strong>cache</strong> (<em>bool</em>) – Name of the results cache</p></li>
+<li><p><strong>nproc</strong> (<em>int</em>) – Number of processors per projection</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – Number of processors per KDTree</p></li>
+</ul>
+</dd>
+</dl>
+<p>Parameter ‘imgopt’ is a dictionary of options that are passed to <a class="reference internal" href="../plot/subplot.html#arepy.plot.subplot.setImage" title="arepy.plot.subplot.setImage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">arepy.plot.subplot.setImage()</span></code></a>, 
+together with the image ‘data’ and ‘extent’.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsMethods.setSlice">
+<code class="sig-name descname">setSlice</code><span class="sig-paren">(</span><em class="sig-param">sp</em>, <em class="sig-param">prop</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.setSlice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a slice image of a snapshot property</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sp</strong> (<a class="reference internal" href="../plot/subplot.html#arepy.plot.subplot" title="arepy.plot.subplot"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.plot.subplot</span></code></a>) – Subplot of a figure</p></li>
+<li><p><strong>prop</strong> (<em>str</em>) – A snapshot property</p></li>
+<li><p><strong>bins</strong> (<em>int</em>) – Number of pixels (bins) per dimension</p></li>
+<li><p><strong>cache</strong> (<em>bool</em>) – Name of the results cache</p></li>
+<li><p><strong>nproc</strong> (<em>int</em>) – Number of processors per projection</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – Number of processors per KDTree</p></li>
+</ul>
+</dd>
+</dl>
+<p>Parameter ‘imgopt’ is a dictionary of options that are passed to <a class="reference internal" href="../plot/subplot.html#arepy.plot.subplot.setImage" title="arepy.plot.subplot.setImage"><code class="xref py py-meth docutils literal notranslate"><span class="pre">arepy.plot.subplot.setImage()</span></code></a>, 
+together with the image ‘data’ and ‘extent’.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsMethods.setField">
+<code class="sig-name descname">setField</code><span class="sig-paren">(</span><em class="sig-param">sp</em>, <em class="sig-param">prop</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.setField" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a quiver field map on the image</p>
+<p>This function is used to display a vector field on the top of an image.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsMethods.setSnapStamp">
+<code class="sig-name descname">setSnapStamp</code><span class="sig-paren">(</span><em class="sig-param">sp</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.setSnapStamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show snapshot number in plots</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsMethods.addTimes">
+<code class="sig-name descname">addTimes</code><span class="sig-paren">(</span><em class="sig-param">sp</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.addTimes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show snapshot time in plots</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsMethods.addRedshifts">
+<code class="sig-name descname">addRedshifts</code><span class="sig-paren">(</span><em class="sig-param">sp</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.addRedshifts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show snapshot redshifts in plots</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsMethods.addSnapNums">
+<code class="sig-name descname">addSnapNums</code><span class="sig-paren">(</span><em class="sig-param">sp</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.addSnapNums" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show snapshot numbers in plots</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsMethods.addParticles">
+<code class="sig-name descname">addParticles</code><span class="sig-paren">(</span><em class="sig-param">sp</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.addParticles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show particle location on the image</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsMethods.addCoordSystem">
+<code class="sig-name descname">addCoordSystem</code><span class="sig-paren">(</span><em class="sig-param">sp</em>, <em class="sig-param">info=False</em>, <em class="sig-param">vector=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.addCoordSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show coordinate system on the plot</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsMethods.addHist2D">
+<code class="sig-name descname">addHist2D</code><span class="sig-paren">(</span><em class="sig-param">sp</em>, <em class="sig-param">xprop</em>, <em class="sig-param">yprop</em>, <em class="sig-param">bins</em>, <em class="sig-param">norm=None</em>, <em class="sig-param">normType='lin'</em>, <em class="sig-param">xscale='lin'</em>, <em class="sig-param">yscale='lin'</em>, <em class="sig-param">cmap=None</em>, <em class="sig-param">aspect='auto'</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.addHist2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a 2D property histogram</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="group-transformations">
+<h3><a class="toc-backref" href="#id5">Group transformations</a><a class="headerlink" href="#group-transformations" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="arepy.files.groups.groupsTransf">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.files.groups.</code><code class="sig-name descname">groupsTransf</code><span class="sig-paren">(</span><em class="sig-param">item</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsTransf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Group transformation class</p>
+<dl class="method">
+<dt id="arepy.files.groups.groupsTransf.transf_SinkFormationOrder">
+<code class="sig-name descname">transf_SinkFormationOrder</code><span class="sig-paren">(</span><em class="sig-param">lrad</em>, <em class="sig-param">forder</em>, <em class="sig-param">size=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsTransf.transf_SinkFormationOrder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get trasformation from a sink particle ID</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsTransf.transf_SinkID">
+<code class="sig-name descname">transf_SinkID</code><span class="sig-paren">(</span><em class="sig-param">lrad</em>, <em class="sig-param">ids</em>, <em class="sig-param">size=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsTransf.transf_SinkID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get trasformation from a sink particle ID</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsTransf.transf_MainSink">
+<code class="sig-name descname">transf_MainSink</code><span class="sig-paren">(</span><em class="sig-param">lrad</em>, <em class="sig-param">size=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsTransf.transf_MainSink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get transformation from the position of the main sink particle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsTransf.transf_BoxSize">
+<code class="sig-name descname">transf_BoxSize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsTransf.transf_BoxSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get transformation from the BoxSize value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.groups.groupsTransf.transf_ArepoImage">
+<code class="sig-name descname">transf_ArepoImage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsTransf.transf_ArepoImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get transformation from the Arepo image settings in parameter file</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 <div class="section" id="item">
-<h2><a class="toc-backref" href="#id4">Item</a><a class="headerlink" href="#item" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">Item</a><a class="headerlink" href="#item" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="arepy.files.groups.item">
 <em class="property">class </em><code class="sig-prename descclassname">arepy.files.groups.</code><code class="sig-name descname">item</code><span class="sig-paren">(</span><em class="sig-param">index</em>, <em class="sig-param">groupName</em>, <em class="sig-param">opt</em>, <em class="sig-param">sim</em>, <em class="sig-param">snap</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.item" title="Permalink to this definition">¶</a></dt>
@@ -93,10 +281,10 @@
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sim</strong> (<em>apy.files.simulation</em>) – Simulation</p></li>
-<li><p><strong>units</strong> (<em>apy.files.units</em>) – Units</p></li>
+<li><p><strong>sim</strong> (<a class="reference internal" href="simulation.html#arepy.files.simulation" title="arepy.files.simulation"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.simulation</span></code></a>) – Simulation</p></li>
+<li><p><strong>units</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.units</span></code>) – Units</p></li>
 <li><p><a class="reference internal" href="snap.html#arepy.files.snap" title="arepy.files.snap"><strong>snap</strong></a> (<em>int</em>) – Default snapshot number</p></li>
-<li><p><a class="reference internal" href="../coord/transf.html#arepy.coord.transf" title="arepy.coord.transf"><strong>transf</strong></a> (<em>apy.coord.transf</em>) – Transformations</p></li>
+<li><p><a class="reference internal" href="../coord/transf.html#arepy.coord.transf" title="arepy.coord.transf"><strong>transf</strong></a> (<a class="reference internal" href="../coord/transf.html#arepy.coord.transf" title="arepy.coord.transf"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.transf</span></code></a>) – Transformations</p></li>
 </ul>
 </dd>
 </dl>
@@ -165,7 +353,11 @@
   <ul>
 <li><a class="reference internal" href="#">Groups</a><ul>
 <li><a class="reference internal" href="#collection">Collection</a></li>
-<li><a class="reference internal" href="#id1">Groups</a></li>
+<li><a class="reference internal" href="#id1">Groups</a><ul>
+<li><a class="reference internal" href="#group-methods">Group methods</a></li>
+<li><a class="reference internal" href="#group-transformations">Group transformations</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#item">Item</a></li>
 </ul>
 </li>

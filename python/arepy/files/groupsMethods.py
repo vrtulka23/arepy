@@ -1,5 +1,6 @@
 import arepy as apy
 import numpy as np
+from arepy.files.groupsTransf import *
 
 #################################
 # Common data reduction methods #
@@ -14,8 +15,9 @@ class groupsMethods:
     # Common transformation routines #
     ##################################
         
-    # Set coordinate transformations for every item
     def setTransf(self,**opt):
+        """Set coordinate transformations for every item
+        """
         for item in self.items:
             nopt = {}
             for k,v in opt.items():
@@ -25,13 +27,20 @@ class groupsMethods:
                     nopt[k] = v[item.index] if np.ndim(v)>1 else v
             item.setTransf(**nopt)
 
-    # Get transformation parameters from a particle
     def getTransf(self,name,args,**opt):        
+        """Get transformation parameters from a particle
+        
+        :param str name: Name of a transformation
+        :param args: Settings of a transformation
+        :param opt: Settings of the :meth:`arepy.data.group.foreach`
+
+        Transformations are calculated in :class:`arepy.files.groupsTransf`.
+        """
         return self.foreach(getTransf,args=[name,args],**opt)
 
-
-    # Use transformation values
     def useTransf(self,transf,use=True,add={}):
+        """Use transformation values
+        """
         opt = {}
         if isinstance(use,list):
             for key in use:
@@ -48,6 +57,8 @@ class groupsMethods:
     ##################################
 
     def getPropertyRange(self, prop, scale='lin'):
+        """Calculate a range of properties
+        """
         ranges = np.zeros((self.size,2))
         pb = apy.shell.pb(vmax=self.size,label='Calculating range (%s)'%(prop))
         for item in self.items:
@@ -64,8 +75,9 @@ class groupsMethods:
         pb.close()
         return np.sum(ranges,axis=0)
 
-    # Create a list of sink particles with their properties in each snapshot
     def getSinkProps(self,props,select=None,cache=None,update=True):
+        """Create a list of sink particles with their properties in each snapshot
+        """
         # get properties
         props = [props] if isinstance(props,str) else props
         if 'FormationOrder' not in props: props.append('FormationOrder')
@@ -94,7 +106,9 @@ class groupsMethods:
     ######################################
 
     # Plot Arepo image
-    def setImage(self, axis, prop, imgType, norm=None, normType=None, cmap=None, multiply=None):
+    def setImage(self, sp, prop, imgType, norm=None, normType=None, cmap=None, multiply=None):
+        """Set Arepo image
+        """
         for item in self.items:
             if 'boxSize' not in item.sim.optImages:
                 apy.shell.exit("No 'boxSize' option for simulation %d (groups.py)"%item.index)
@@ -107,35 +121,60 @@ class groupsMethods:
         norm = 'img_%s_%s'%(prop,imgType) if norm is None else norm
         if multiply is not None: 
             data['im'] *= multiply
-        axis.setImage(data=data['im'],extent=data['extent'],norm=norm,normType=normType,cmap=cmap)
+        sp.setImage(data=data['im'],extent=data['extent'],norm=norm,normType=normType,cmap=cmap)
 
     # Add rendering of the box projection/slice
-    def _renderImage(self, axis, prop, imgType, norm=None, normType=None, cmap=None, 
-                     bins=200, cache=False, nproc=None, n_jobs=None, xnorm=None, ynorm=None, aspect='equal'):
+    def _renderImage(self, sp, prop, imgType, 
+                     bins=200, cache=False, nproc=None, n_jobs=None, **imgopt):
+        #             norm=None, normType=None,  cmap=None, 
+        #             xnorm=None, ynorm=None, aspect='equal'):
         n_jobs = self.opt['n_jobs'] if n_jobs is None else n_jobs
         prop = apy.files.properties(prop)
         proj = self.foreach(renderImage,args=[imgType,prop,bins,n_jobs],
                             cache=cache, nproc=nproc)
-        if isinstance(axis,list):
-            for i in range(len(axis)):
+        if isinstance(sp,list):
+            for i in range(len(sp)):
                 data = proj[prop[i]['name']]
-                n = norm[i] if isinstance(norm,list) else norm
-                nt = normType[i] if isinstance(normType,list) else normType
-                c = cmap[i] if isinstance(cmap,list) else cmap
-                axis[i].setImage(data=data, extent=proj['extent'], 
-                                 norm=n, normType=nt, cmap=c, 
-                                 xnorm=xnorm, ynorm=ynorm, aspect=aspect)
+                newimgopt = imgopt.copy()
+                newimgopt['norm']     = imgopt['norm'][i]     if isinstance(imgopt['norm'],list)     else imgopt['norm']
+                newimgopt['normType'] = imgopt['normType'][i] if isinstance(imgopt['normType'],list) else imgopt['normType']
+                newimgopt['cmap']     = imgopt['cmap'][i]     if isinstance(imgopt['cmap'],list)     else imgopt['cmap']
+                sp[i].setImage(data=data, extent=proj['extent'], **newimgopt)
         else:
-            axis.setImage(data=proj['data'],extent=proj['extent'], 
-                          norm=norm, normType=normType, cmap=cmap, 
-                          xnorm=xnorm, ynorm=ynorm, aspect=aspect)
-    def setProjection(self, axis, prop, **opt):
-        self._renderImage(axis, prop, 'BoxProjCube', **opt)
-    def setSlice(self, axis, prop, **opt):
-        self._renderImage(axis, prop, 'BoxSquareXY', **opt)
+            sp.setImage(data=proj['data'],extent=proj['extent'], **imgopt)
+    def setProjection(self, sp, prop, **opt):
+        """Create a projection image of a snapshot property
+
+        :param sp: Subplot of a figure
+        :type sp: :class:`arepy.plot.subplot`
+        :param str prop: A snapshot property
+        :param int bins: Number of pixels (bins) per dimension
+        :param bool cache: Name of the results cache
+        :param int nproc: Number of processors per projection
+        :param int n_jobs: Number of processors per KDTree
+        
+        Parameter 'imgopt' is a dictionary of options that are passed to :meth:`arepy.plot.subplot.setImage`, 
+        together with the image 'data' and 'extent'.
+        """
+        self._renderImage(sp, prop, 'BoxProjCube', **opt)
+    def setSlice(self, sp, prop, **opt):
+        """Create a slice image of a snapshot property
+
+        :param sp: Subplot of a figure
+        :type sp: :class:`arepy.plot.subplot`
+        :param str prop: A snapshot property
+        :param int bins: Number of pixels (bins) per dimension
+        :param bool cache: Name of the results cache
+        :param int nproc: Number of processors per projection
+        :param int n_jobs: Number of processors per KDTree
+        
+        Parameter 'imgopt' is a dictionary of options that are passed to :meth:`arepy.plot.subplot.setImage`, 
+        together with the image 'data' and 'extent'.
+        """
+        self._renderImage(sp, prop, 'BoxSquareXY', **opt)
 
     # Add rendering of the box slice field
-    def _renderField(self, axis, prop, bins=200, cache=False, nproc=None, n_jobs=None, xnorm=None, ynorm=None):
+    def _renderField(self, sp, prop, bins=200, cache=False, nproc=None, n_jobs=None, xnorm=None, ynorm=None):
         n_jobs = self.opt['n_jobs'] if n_jobs is None else n_jobs
         prop = apy.files.properties(prop)
         prop.add('Coordinates')
@@ -143,48 +182,55 @@ class groupsMethods:
                             cache=cache, nproc=nproc)
         field = proj[prop[0]['name']]
         coord = proj['Coordinates']
-        axis.addQuiver(coord[:,:,0], coord[:,:,1], field[:,:,0], field[:,:,1])
-        '''
-        if isinstance(axis,list):
-            for i in range(len(axis)):
-                data = proj[prop[i]['name']]
-                axis[i].addQuiver(data=data, extent=proj['extent'], 
-                                  xnorm=xnorm, ynorm=ynorm)
-        else:
-            axis.addQuiver(data=proj['data'],extent=proj['extent'], 
-                          xnorm=xnorm, ynorm=ynorm)
-        '''
-    def setField(self, axis, prop, **opt):
-        self._renderField(axis, prop, **opt)
+        sp.addQuiver(coord[:,:,0], coord[:,:,1], field[:,:,0], field[:,:,1])
+        #if isinstance(sp,list):
+        #    for i in range(len(sp)):
+        #        data = proj[prop[i]['name']]
+        #        sp[i].addQuiver(data=data, extent=proj['extent'], 
+        #                          xnorm=xnorm, ynorm=ynorm)
+        #else:
+        #    sp.addQuiver(data=proj['data'],extent=proj['extent'], 
+        #                  xnorm=xnorm, ynorm=ynorm)
+    def setField(self, sp, prop, **opt):
+        """Set a quiver field map on the image
+        
+        This function is used to display a vector field on the top of an image.
+        """
+        self._renderField(sp, prop, **opt)
 
-    # Show simulation id stamp
-    def setSnapStamp(self, axis, *args, **kwargs):
+    def setSnapStamp(self, sp, *args, **kwargs):
+        """Show snapshot number in plots
+        """
         text = self.foreach(setSnapStamp)
-        axis.addText(text,*args,**kwargs)
+        sp.addText(text,*args,**kwargs)
 
-    # Add times to the plot
-    def addTimes(self, axis, **opt):
+    def addTimes(self, sp, **opt):
+        """Show snapshot time in plots
+        """
         values = self.foreach(addTimes)
         nopt = {'loc':'top left'}
         nopt.update(opt)
-        axis.addText(values,**nopt)
+        sp.addText(values,**nopt)
 
-    # Add redshift to the plot
-    def addRedshifts(self, axis, **opt):
+    def addRedshifts(self, sp, **opt):
+        """Show snapshot redshifts in plots
+        """
         values = self.foreach(addRedshifts)
         nopt = {'loc':'top left'}
         nopt.update(opt)
-        axis.addText(values,**nopt)
+        sp.addText(values,**nopt)
 
-    # Add snapshot number to the plot
-    def addSnapNums(self, axis, **opt):
+    def addSnapNums(self, sp, **opt):
+        """Show snapshot numbers in plots
+        """
         values = self.foreach(addSnapNums)      
         nopt = {'loc':'top left'}
         nopt.update(opt)
-        axis.addText(values,**nopt)    
+        sp.addText(values,**nopt)    
 
-    # Add particle scatter plot
-    def addParticles(self, axis, ptype, **opt):
+    def addParticles(self, sp, ptype, **opt):
+        """Show particle location on the image
+        """
         coords = self.foreach(addParticles,append=True,args=[ptype])
         x,y=[],[]
         for coord in coords:
@@ -192,18 +238,19 @@ class groupsMethods:
             y.append([] if coord is None else coord[:,1])
         nopt = {'s':20,'marker':'+','c':'black','edgecolors':None,'linewidths':1}
         nopt.update(opt)
-        if isinstance(axis,list):
-            for i in range(len(axis)):
-                axis[i].addScatter(x,y,**nopt)
+        if isinstance(sp,list):
+            for i in range(len(sp)):
+                sp[i].addScatter(x,y,**nopt)
         else:
-            axis.addScatter(x,y,**nopt)
+            sp.addScatter(x,y,**nopt)
 
-    # Add coordinate system with axes and angles
-    def addCoordSystem(self, axis, info=False, vector=None):
+    def addCoordSystem(self, sp, info=False, vector=None):
+        """Show coordinate system on the plot
+        """
         colors = ['red','blue','gold','black']
         data = self.foreach(addCoordSystem,args=[vector])
         for i in range(len(data['u'][0])):
-            axis.addQuiver(0,0,data['u'][:,i],data['v'][:,i],color=colors[i],pivot='tail',angles='xy',
+            sp.addQuiver(0,0,data['u'][:,i],data['v'][:,i],color=colors[i],pivot='tail',angles='xy',
                            scale=1,scale_units='xy',alpha=data['alpha'][:,i])        
         if info:   # print information about rotations
             info = []
@@ -216,11 +263,12 @@ class groupsMethods:
                 if 'rotate' in item.transf.items:
                     text += "%.1f,%.1f,%.1f = R\n"%tuple(item.transf['rotate']['angles'])
                 info.append( text[:-1] )
-            axis.addText(info,loc='bottom right',fontsize=6)
+            sp.addText(info,loc='bottom right',fontsize=6)
 
-    # Create a 2D property histogram
-    def addHist2D(self, axis, xprop, yprop, bins, norm=None, normType='lin',
+    def addHist2D(self, sp, xprop, yprop, bins, norm=None, normType='lin',
                        xscale='lin', yscale='lin', cmap=None, aspect='auto'):
+        """Create a 2D property histogram
+        """
         if isinstance(bins,int): bins = [bins,bins]
         if isinstance(bins[0],int):
             xr = self.getPropertyRange(xprop, xscale)
@@ -241,7 +289,7 @@ class groupsMethods:
         if yscale=='log': yext = np.log10(yext)
         extent = [xext[0],xext[1], yext[0],yext[1]]
         norm = 'hist_%s_%s'%(xprop,yprop) if norm is None else norm
-        axis.setImage(data=allData,extent=extent,norm=norm,normType=normType,cmap=cmap,aspect=aspect)
+        sp.setImage(data=allData,extent=extent,norm=norm,normType=normType,cmap=cmap,aspect=aspect)
 
     '''
     # Interpolate snapshots according to their times
@@ -272,7 +320,6 @@ class groupsMethods:
 
 # Get a transformation by name
 def getTransf(item,name,args):
-    from arepy.files.groupsTransf import groupsTransf
     with groupsTransf(item) as tr:
         return tr.getTransf(name,args)
 

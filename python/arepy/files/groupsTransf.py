@@ -6,6 +6,8 @@ import arepy as apy
 ##########################################################
 
 class groupsTransf:
+    """Group transformation class
+    """
 
     def __init__(self,item):
         self.item = item
@@ -37,8 +39,9 @@ class groupsTransf:
             transf['region'] = apy.coord.sphere(center,radius)
         return transf
 
-    # Get trasformation from a sink particle ID
     def transf_SinkFormationOrder(self,lrad,forder,size=None):
+        """Get trasformation from a sink particle ID
+        """
         snap = self.item.getSnapshot()
         if isinstance(forder,str):
             forder = self.item.opt[forder] 
@@ -52,8 +55,9 @@ class groupsTransf:
         else:
             return self.empty1
 
-    # Get trasformation from a sink particle ID
     def transf_SinkID(self,lrad,ids,size=None):
+        """Get trasformation from a sink particle ID
+        """
         snap = self.item.getSnapshot()
         sid = self.item.opt[ids] if isinstance(ids,str) else ids[self.item.index]
         data = snap.getProperty({'name':'RegionIds','ptype':5,'pids':sid,'p':[
@@ -65,8 +69,9 @@ class groupsTransf:
         else:
             return self.empty1
 
-    # Get transformation from the position of the main sink particle
     def transf_MainSink(self,lrad,size=None):
+        """Get transformation from the position of the main sink particle
+        """
         snap = self.item.getSnapshot()
         data = snap.getProperty([
             {'name':'Coordinates','ptype':5},
@@ -78,8 +83,9 @@ class groupsTransf:
         else:
             return self.empty1
 
-    # Get transformation from the BoxSize value
     def transf_BoxSize(self):
+        """Get transformation from the BoxSize value
+        """
         snap = self.item.getSnapshot()
         size = snap.getHeader('BoxSize')
         return {
@@ -88,8 +94,9 @@ class groupsTransf:
             'box':    [0,BoxSize,0,BoxSize,0,BoxSize],
         }
 
-    # Get transformation from the Arepo image settings in parameter file
     def transf_ArepoImage(self):
+        """Get transformation from the Arepo image settings in parameter file
+        """
         param = self.item.getParam()
         return {
             'box': param.getProperty(['PicXmin','PicXmax','PicYmin','PicYmax','PicZmin','PicZmax'])
