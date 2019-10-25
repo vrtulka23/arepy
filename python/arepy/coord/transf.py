@@ -50,10 +50,10 @@ class transf:
 
     def __init__(self,show=False,**opt):
         self.items = {}   # list of added transformations    
-
+        
         # pre select coordinates
         if 'region' in opt:
-            region = copy.copy(opt['region']) # copy the object before applying changes
+            region = opt['region'].getCopy()
             self.addSelection('select', region=region.getSphere() )
         # translate coordinates
         if 'origin' in opt:
@@ -83,7 +83,10 @@ class transf:
                     print('   ',k,v)    
 
     def __getitem__(self, name):
-        return self.items[name]
+        if name in self.items:
+            return self.items[name]
+        else:
+            apy.shell.exit("A transformation called '%s' is not defined. (transf.py)"%name)
 
     def _rotEuler(self,coord,angles):
         # Formalism: https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions

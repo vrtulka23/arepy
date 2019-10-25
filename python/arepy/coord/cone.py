@@ -18,10 +18,7 @@ class cone:
         >>> region = apy.coord.cone([0.5,0.5,0.5], 0.3, np.pi/4)
         >>> region.show()
         
-        Cone class
-        Center: [0.5,0.5,0.5]
-        Radius: 0.3
-        Theta: 0.785398
+        Cone: center [0.5,0.5,0.5] radius 0.3 theta 0.785398
     """
     def __enter__(self):
         return self
@@ -51,16 +48,25 @@ class cone:
 
     def show(self):
         """Print out region settings"""
-        print("Cone class")
-        print("Center:",self.center)
-        print("Radius:",self.radius)
-        print("Theta:", self.theta)
+        print("Cone: center",self.center,"radius",self.radius,"theta",self.theta)
+
+    def getCopy(self):
+        """Get copy of self"""
+        return apy.coord.cone(self.center,self.radius,self.theta)        
+
+    def setRegion(self,**args):
+        """Set region variables"""
+        if 'center' in args:
+            self.center = np.array(args['center'][:],dtype=np.float32)
+        if 'radius' in args:
+            self.radius = args['radius']
+        if 'theta' in args:
+            self.theta = args['theta']
         
     ##########################
     # Transformation routines
     ##########################
 
-    # get a sphere around the cone
     def getSphere(self):
         return apy.coord.sphere(self.center,self.radius)
 
@@ -79,15 +85,6 @@ class cone:
             return ids, coord[ids]  # selector returns 2D array even though it was 1D before
         else:
             return ids, None if ids is False else coord
-
-    # update settings
-    def setRegion(self,**args):
-        if 'center' in args:
-            self.center = np.array(args['center'],dtype=np.float32)
-        if 'radius' in args:
-            self.radius = args['radius']
-        if 'theta' in args:
-            self.theta = args['theta']
 
     # common transformations
     def setTranslation(self,origin):  # origin coordinates e.g: [0.5,0.5,0.5]

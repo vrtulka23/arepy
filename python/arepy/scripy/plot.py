@@ -30,7 +30,7 @@ class plot:
         self.dirPlot = self.dirName+'/'+self.fileName              # path to the file directory
 
         self.nproc = {
-            'fig': 1,                         # number of processors to use for figures
+            'fig': apy.numCpu,                # number of processors to use for figures
             'kdt': 1,                         # number of processors to use for KDTree
             'snap': 1,                        # number of processors to use for snapshot
         }
@@ -175,9 +175,9 @@ class plot:
             self.setProcessors( fig=apy.numCpu )
         """
         self.nproc = {
-            'fig':  fig,
-            'kdt':  kdt,
-            'snap': snap
+            'fig':  int(fig),
+            'kdt':  int(kdt),
+            'snap': int(snap),
         }
 
     def setGroups(self,names,options,**opt):

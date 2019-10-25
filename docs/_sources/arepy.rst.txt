@@ -27,6 +27,7 @@ Data manipulation
    :maxdepth: 2
 
    data/dictTab
+   data/groups
 
 Coordinate manipulation
 ^^^^^^^^^^^^^^^^^^^^^^^

@@ -27,10 +27,7 @@ class box:
         >>> region = apy.coord.box([0.2,0.8,0.2,0.8,0.2,0.8])
         >>> region.show()
 
-        Box class                                                                                                                                           
-        Center: [0.5,0.5,0.5]
-        Size: [0.3,0.3,0.3]
-        Limits: [0.2,0.8,0.2,0.8,0.2,0.8] 
+        Box class: center [0.5,0.5,0.5] size [0.3,0.3,0.3] limits [0.2,0.8,0.2,0.8,0.2,0.8] 
     """
     def __enter__(self):
         return self
@@ -65,10 +62,27 @@ class box:
 
     def show(self):
         """Print out region settings"""
-        print("Box class")
-        print("Center:",self.center)
-        print("Size:",self.size)
-        print("Limits:",self.limits)
+        print("Box: center",self.center,"size",self.size,"limits",self.limits)
+
+    def getCopy(self):
+        """Get copy of self"""
+        return apy.coord.box(self.limits)        
+
+    def setRegion(self,**args):
+        """Set region settings"""
+        if 'limits' in args: # input parameter are box limits
+            self.limits = np.array(args['limits'][:],dtype=np.float32)
+            self.center = (self.limits[::2]+self.limits[1::2]) / 2
+            self.size = (self.limits[1::2]-self.limits[::2])
+        else:                # input parameter is box center and side sizes
+            if 'center' in args:
+                self.center = np.array(args['center'][:],dtype=np.float32)
+            if 'size' in args:
+                if np.isscalar(args['size']): 
+                    self.size = np.full(3,args['size'],dtype=np.float32) 
+                else:
+                    self.size = np.array(args['size'][:],dtype=np.float32)
+            self.limits = np.reshape([self.center-self.size/2,self.center+self.size/2],6,order='F')
 
     ##########################
     # Transformation routines
@@ -79,7 +93,8 @@ class box:
         return self.getOuterSphere()
 
     def getBox(self):
-        return self
+        # do not ever return "self", because it is a pointer!!!
+        return self.getCopy()
 
     # select coordinates inside of the box
     def selectCoordinates(self,coord):
@@ -88,22 +103,6 @@ class box:
                (self.limits[2]<y) & (y<self.limits[3]) &\
                (self.limits[4]<z) & (z<self.limits[5])
         return ids, coord[ids]
-
-    # update settings
-    def setRegion(self,**args):
-        if 'limits' in args: # input parameter are box limits
-            self.limits = np.array(args['limits'],dtype=np.float32)
-            self.center = (self.limits[::2]+self.limits[1::2]) / 2
-            self.size = (self.limits[1::2]-self.limits[::2])
-        else:                # input parameter is box center and side sizes
-            if 'center' in args:
-                self.center = np.array(args['center'],dtype=np.float32)
-            if 'size' in args:
-                if np.isscalar(args['size']): 
-                    self.size = np.full(3,args['size'],dtype=np.float32) 
-                else:
-                    self.size = np.array(args['size'],dtype=np.float32)
-            self.limits = np.reshape([self.center-self.size/2,self.center+self.size/2],6,order='F')
 
     # common transformation
     def setTranslation(self,origin):  # origin coordinates e.g: [0.5,0.5,0.5]

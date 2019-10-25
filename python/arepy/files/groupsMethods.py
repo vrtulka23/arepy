@@ -8,7 +8,6 @@ from arepy.files.groupsTransf import *
 
 class groupsMethods:
     """Group methods class
-
     """
 
     ##################################
@@ -34,7 +33,7 @@ class groupsMethods:
         :param args: Settings of a transformation
         :param opt: Settings of the :meth:`arepy.data.group.foreach`
 
-        Transformations are calculated in :class:`arepy.files.groupsTransf`.
+        Transformations are calculated in :class:`arepy.files.groups.groupsTransf`.
         """
         return self.foreach(getTransf,args=[name,args],**opt)
 
@@ -138,7 +137,8 @@ class groupsMethods:
                 newimgopt = imgopt.copy()
                 newimgopt['norm']     = imgopt['norm'][i]     if isinstance(imgopt['norm'],list)     else imgopt['norm']
                 newimgopt['normType'] = imgopt['normType'][i] if isinstance(imgopt['normType'],list) else imgopt['normType']
-                newimgopt['cmap']     = imgopt['cmap'][i]     if isinstance(imgopt['cmap'],list)     else imgopt['cmap']
+                if 'cmap' in imgopt:
+                    newimgopt['cmap']     = imgopt['cmap'][i]     if isinstance(imgopt['cmap'],list)     else imgopt['cmap']
                 sp[i].setImage(data=data, extent=proj['extent'], **newimgopt)
         else:
             sp.setImage(data=proj['data'],extent=proj['extent'], **imgopt)

@@ -15,9 +15,7 @@ class sphere:
         >>> region = apy.coord.sphere([0.5,0.5,0.5],0.3)
         >>> region.show()
         
-        Sphere class
-        Center: [0.5,0.5,0.5]
-        Radius: 0.3
+        Sphere class: center [0.5,0.5,0.5] radius 0.3
     """
     def __enter__(self):
         return self
@@ -29,35 +27,53 @@ class sphere:
         self.name = 'sphere'
         self.setRegion(center=args[0],radius=args[1])
 
-    def getOuterBox(self):
+    def getOuterBox(self,center=None,size=None):
         """Get outer box
 
+        :param [float]*3 center: New box center
+        :param float size: New box size
         :return: Region of the outer box
         :rtype: :class:`arepy.coord.box`
         """
-        return apy.coord.box(self.center,self.radius*2)
+        if center is None: center = self.center
+        if size is None: size = self.radius*2
+        return apy.coord.box(center,size)
 
-    def getInnerBox(self):
+    def getInnerBox(self,center=None,size=None):
         """Get inner box
 
+        :param [float]*3 center: New box center
+        :param float size: New box size
         :return: Region of the inner box
         :rtype: :class:`arepy.coord.box`
         """
-        return apy.coord.box(self.center,self.radius*2/np.sqrt(3))
+        if center is None: center = self.center
+        if size is None: size = self.radius*2/np.sqrt(3)
+        return apy.coord.box(center,size)
 
     def show(self):
         """Print out region settings"""
-        print("Sphere class")
-        print("Center:",self.center)
-        print("Radius:",self.radius)    
+        print("Sphere: center",self.center,"radius",self.radius)
         
+    def getCopy(self):
+        """Get copy of self"""
+        return apy.coord.sphere(self.center,self.radius)        
+
+    def setRegion(self,**args):
+        """Set region settings"""
+        if 'center' in args:
+            self.center = np.array(args['center'][:],dtype=np.float32)
+        if 'radius' in args:
+            self.radius = args['radius']
+
     ##########################
     # Transformation routines
     ##########################
 
     # get sphere
     def getSphere(self):
-        return apy.coord.sphere(self.center,self.radius)
+        # do not ever return "self", because it is a pointer!!!
+        return self.getCopy()
 
     def getBox(self):
         return self.getInnerBox()
@@ -71,12 +87,6 @@ class sphere:
         else:
             return ids, None if ids is False else coord
 
-    # update settings
-    def setRegion(self,**args):
-        if 'center' in args:
-            self.center = np.array(args['center'],dtype=np.float32)
-        if 'radius' in args:
-            self.radius = args['radius']
 
     # common transformations
     def setTranslation(self,origin):  # origin coordinates e.g: [0.5,0.5,0.5]

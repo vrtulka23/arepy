@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Groups &#8212; arepy 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Coordinate transformation" href="../coord/transf.html" />
+    <link rel="prev" title="Dictionary table" href="dictTab.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../coord/transf.html" title="Coordinate transformation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="dictTab.html" title="Dictionary table"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" accesskey="U">Simulation data framework (arepy)</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="groups">
+<h1>Groups<a class="headerlink" href="#groups" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#collection" id="id2">Collection</a></p></li>
+<li><p><a class="reference internal" href="#id1" id="id3">Groups</a></p></li>
+<li><p><a class="reference internal" href="#item" id="id4">Item</a></p></li>
+</ul>
+</div>
+<div class="section" id="collection">
+<h2><a class="toc-backref" href="#id2">Collection</a><a class="headerlink" href="#collection" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="arepy.data.collection">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.data.</code><code class="sig-name descname">collection</code><span class="sig-paren">(</span><em class="sig-param">names=None</em>, <em class="sig-param">options=None</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.data.collection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collection of groups</p>
+</dd></dl>
+
+</div>
+<div class="section" id="id1">
+<h2><a class="toc-backref" href="#id3">Groups</a><a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="arepy.data.group">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.data.</code><code class="sig-name descname">group</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.data.group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Group of items</p>
+<dl class="method">
+<dt id="arepy.data.group.foreach">
+<code class="sig-name descname">foreach</code><span class="sig-paren">(</span><em class="sig-param">fn</em>, <em class="sig-param">args=[]</em>, <em class="sig-param">cache=None</em>, <em class="sig-param">update=False</em>, <em class="sig-param">nproc=None</em>, <em class="sig-param">append=False</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.data.group.foreach" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parallelized for-each-item loop</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="item">
+<h2><a class="toc-backref" href="#id4">Item</a><a class="headerlink" href="#item" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="arepy.data.item">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.data.</code><code class="sig-name descname">item</code><span class="sig-paren">(</span><em class="sig-param">itemIndex</em>, <em class="sig-param">groupName</em>, <em class="sig-param">opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.data.item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Item of a group</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Groups</a><ul>
+<li><a class="reference internal" href="#collection">Collection</a></li>
+<li><a class="reference internal" href="#id1">Groups</a></li>
+<li><a class="reference internal" href="#item">Item</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="dictTab.html"
+                        title="previous chapter">Dictionary table</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../coord/transf.html"
+                        title="next chapter">Coordinate transformation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/data/groups.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../coord/transf.html" title="Coordinate transformation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="dictTab.html" title="Dictionary table"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">arepy 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../arepy.html" >Simulation data framework (arepy)</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Ondrej Jaura.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>

@@ -25,6 +25,8 @@ class group(apy.data.groups.group, groupsMethods):
 
     :param int sim: Simulation ID
     :param list[int] snaps: Snapshot number or list of numbers
+
+    This class inherits both a general group class :class:`arepy.data.group` and extra group methods from :class:`arepy.files.groups.groupsMethods`.
     """
     def __init__(self,sim=None,snaps=None,**opt):
         super().__init__(**opt)
@@ -37,6 +39,13 @@ class group(apy.data.groups.group, groupsMethods):
         return item(self.size,self.name,opt,sim,snap)
 
     def addSnapshot(self,sim,snaps,opt=None):
+        """Add snapshots to thegroup
+        
+        :param sim: simulation or list of simulations
+        :type sim: :class:`arepy.files.simulation`
+        :param int snaps: snapshot number or list of numbers
+        :param dict opt: item options
+        """
         snaps = [int(snaps)] if np.isscalar(snaps) else [int(s) for s in snaps]
         if opt is None or isinstance(opt,dict):
             opt = [opt]*len(snaps) 

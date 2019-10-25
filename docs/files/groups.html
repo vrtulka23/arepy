@@ -86,6 +86,22 @@
 </ul>
 </dd>
 </dl>
+<p>This class inherits both a general group class <a class="reference internal" href="../data/groups.html#arepy.data.group" title="arepy.data.group"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.data.group</span></code></a> and extra group methods from <a class="reference internal" href="#arepy.files.groups.groupsMethods" title="arepy.files.groups.groupsMethods"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.groups.groupsMethods</span></code></a>.</p>
+<dl class="method">
+<dt id="arepy.files.groups.group.addSnapshot">
+<code class="sig-name descname">addSnapshot</code><span class="sig-paren">(</span><em class="sig-param">sim</em>, <em class="sig-param">snaps</em>, <em class="sig-param">opt=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.group.addSnapshot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add snapshots to thegroup</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sim</strong> (<a class="reference internal" href="simulation.html#arepy.files.simulation" title="arepy.files.simulation"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.simulation</span></code></a>) – simulation or list of simulations</p></li>
+<li><p><strong>snaps</strong> (<em>int</em>) – snapshot number or list of numbers</p></li>
+<li><p><strong>opt</strong> (<em>dict</em>) – item options</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <div class="section" id="group-methods">
@@ -109,11 +125,11 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – Name of a transformation</p></li>
 <li><p><strong>args</strong> – Settings of a transformation</p></li>
-<li><p><strong>opt</strong> – Settings of the <code class="xref py py-meth docutils literal notranslate"><span class="pre">arepy.data.group.foreach()</span></code></p></li>
+<li><p><strong>opt</strong> – Settings of the <a class="reference internal" href="../data/groups.html#arepy.data.group.foreach" title="arepy.data.group.foreach"><code class="xref py py-meth docutils literal notranslate"><span class="pre">arepy.data.group.foreach()</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
-<p>Transformations are calculated in <code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.groupsTransf</span></code>.</p>
+<p>Transformations are calculated in <a class="reference internal" href="#arepy.files.groups.groupsTransf" title="arepy.files.groups.groupsTransf"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.files.groups.groupsTransf</span></code></a>.</p>
 </dd></dl>
 
 <dl class="method">

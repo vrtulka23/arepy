@@ -178,6 +178,8 @@ def plotSubplot(ax,opt,canvas,fid=0):
                 norm = mpl.colors.LogNorm(vmin=image['norm'][1],vmax=image['norm'][2])
             elif image['normType'] in ['lin',None]:
                 norm = mpl.colors.Normalize(vmin=image['norm'][0],vmax=image['norm'][2])
+            else:
+                apy.shell.exit("Normalization type '%s' is not defined (plot.py)"%image['normType'])
             extent = image['extent'][fid] if np.ndim(image['extent'])>1 else image['extent']
             im = ax.imshow( data.T, origin='lower', norm=norm, extent=extent, **image['kwargs'] )
 

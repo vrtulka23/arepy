@@ -1,10 +1,8 @@
 import numpy as np
 import arepy as apy
 
-####################
-# Collection class #
-####################
 class collection:
+    """Collection of groups"""
     def __init__(self,names=None,options=None,**opt):
         self.items = {}        # list of groups
         self.order =  []        # ordered list of group names, because dict.keys() is not ordered
@@ -89,11 +87,9 @@ class collection:
         return self.data[fn.__name__]        
         '''
         
-###############
-# Group class #
-###############
 class group:
-    # object initialization
+    """Group of items"""
+
     def __init__(self,*args,**opt):
         self.index = None        # group index
         self.name = ''           # group name
@@ -144,6 +140,8 @@ class group:
             self._setOptions(opt,values)
         
     def foreach(self,fn,args=[],cache=None,update=False,nproc=None,append=False):
+        """Parallelized for-each-item loop
+        """
         nproc = self.opt['nproc'] if nproc is None else nproc
         cache = self.opt['cache'] if cache is None else cache
         arguments = [[item]+args for item in self.items]
@@ -153,10 +151,8 @@ class group:
                                                   dirCache=dirCache,update=update)
         return self.data[fn.__name__]        
 
-##############
-# Item class #
-##############
 class item:
+    """Item of a group"""
     def __init__(self,itemIndex,groupName,opt):
         self.index = itemIndex
         self.groupName = groupName
