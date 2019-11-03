@@ -16,9 +16,12 @@ if [ "$nd" -gt "0" ]; then
     for pdir in $(ls -d $DIR_PYTHON_SCRIPY/*)
     do
 	pname=$(basename $pdir)
-	if [ -f $pdir/__init__.py ]; then
-	    psim=$(grep -o '".*"' $pdir/__init__.py | sed 's/"//g')
-	    if [[ $DIR_PWD == "$psim"* ]]; then
+	fileInit=$pdir/__init__.py
+	if [ -f $fileInit ]; then
+	    # read the init file of the project and strip all comments
+	    initsim=$(grep -o ^[^#]* $fileInit)
+	    # check path of a current directory is used
+	    if [[ "$initsim" == *"$DIR_PWD"* ]]; then 
 		PROJECT_NAME="$pname"
 		DIR_PROJECT="$pdir"
 	    fi
