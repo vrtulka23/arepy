@@ -46,7 +46,6 @@ class complex:
         else:
             return [np.nan]*3
 
-    # Example: {'name':'AngularMomentum','center':[0.5,0.5,0.5],'radius':0.5}
     def prop_AngularMomentum(self,ids,ptype,**prop):
         """Get angular momentum around some point
         
@@ -54,14 +53,48 @@ class complex:
         :param float radius: Radius of a sphere
         :return: Angular momentum vector
         :rtype: [float]*3
+
+        Example::
+        
+            >>> snap.getProperty({'name':'AngularMomentum','center':[0.5,0.5,0.5],'radius':0.5})
+            
+            [2.4, 3.6, 1.]
         """
         region = self.getProperty({
             'name':'RegionSphere','center':prop['center'],'radius':prop['radius'],
             'p': ['Coordinates','Masses','Velocities']
         },ids=ids,ptype=ptype)
-        m, (x,y,z), (vx,vy,vz) = region['Masses'], (region['Coordinates']-prop['center']).T, region['Velocities'].T
-        Lx,Ly,Lz = np.sum([ m*(y*vz-z*vy), m*(z*vx-x*vz), m*(x*vy-y*vx) ],axis=1) # total angular momentum
-        return [Lx,Ly,Lz]
+        if len(region['Masses'])>0:
+            m, (x,y,z), (vx,vy,vz) = region['Masses'], (region['Coordinates']-prop['center']).T, region['Velocities'].T
+            Lx,Ly,Lz = np.sum([ m*(y*vz-z*vy), m*(z*vx-x*vz), m*(x*vy-y*vx) ],axis=1) # total angular momentum
+            return [Lx,Ly,Lz]
+        else:
+            apy.shell.warn("No particles found within the angular momentum region (complex.py)")
+            return [0.,0.,0.]
+
+    def prop_SelectionRadius(self,ids,ptype,**prop):
+        """Calculate the smallest selection radius
+
+        :param [float]*3 center: Center of a spherical region
+        :param float radius: Radius of a spherical region
+
+        The selection radius is a distance of the furthers cell from the center
+        whose spherical radius could possibly intersect the volume of the region.
+        """        
+
+        '''
+        data = self.getProperty([
+            {'name':'Radius2','center':prop['center']}, 
+            'CellRadius'
+        ])
+        # Take all cells that might possibly intersect the volume of the region
+        # An arbitrary factor 'pi' is there to account for possible ellypticity of cells
+        ids = data['Radius2'] < (prop['radius']+np.pi*data['CellRadius'])**2
+
+        return np.sqrt(data['Radius2'][ids].max()) 
+        '''
+        r2 = self.getProperty({'name':'Radius2','center':prop['center']})
+        return (np.sqrt(r2.min()) + 2*prop['radius'])*1.0001
 
     #######################
     # Histograms
@@ -102,7 +135,7 @@ class complex:
     # Example: {'name':'HistBox','center':[0.5,0.5,0.5],'size':1,'w':'Masses','bins':200}
     def prop_HistBox(self,ids,ptype,**prop):
         """Two dimensional histogram of a property within a selected box region"""
-        box = apy.coord.box(prop['size'],prop['center'])
+        box = apy.coord.regionBox(prop['size'],prop['center'])
         bins = [ np.linspace(box[0],box[1],prop['bins']), np.linspace(box[0],box[1],prop['bins']) ]         
         properties = apy.files.properties(['Coordinates',prop['w']])
         data = self.getProperty({'name':'RegionBox','box':box,'p':properties},ids=ids,ptype=ptype)

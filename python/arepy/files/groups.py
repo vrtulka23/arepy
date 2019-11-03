@@ -79,7 +79,7 @@ class item(apy.data.groups.item):
     # Set coordinate transformations
     def setTransf(self, **opt):
         """Set transformations"""
-        self.transf = apy.coord.transf(**opt)   
+        self.transf = apy.coord.transf(**opt)
 
     # snapshot file
     def getSnapshot(self,snap=None,**opt):

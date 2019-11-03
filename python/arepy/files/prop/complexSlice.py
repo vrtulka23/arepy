@@ -13,17 +13,21 @@ class complexSlice:
             'p':['Indexes','Coordinates']},
         ids=ids,ptype=ptype)
         
-        # perform coordinate transformations
-        coord = transf.convert(['translate','align','flip','rotate','crop'],region['Coordinates'])
+        # Coordinate transformations
+        # We do not crop our selection here, because sometimes the closest cells to the grid 
+        # can be actually outside of the crop region
+        coord = transf.convert(['translate','align','flip','rotate'],region['Coordinates'])
         points = grid.coords
             
         # find s nearest neighbors to each grid point
         properties = apy.files.properties(prop['w'])
         if len(coord)>0:
+            # find the closest cells to the points
             kdt = spatial.cKDTree(coord)
-            n_jobs = prop['n_jobs'] if 'n_jobs' in prop else 1
-            dist,pix = kdt.query(points,n_jobs=n_jobs)
-
+            dist,pix = kdt.query(
+                points,
+                n_jobs = prop['n_jobs'] if 'n_jobs' in prop else 1
+            )
             # select property
             load = properties.getWithout('name',['Coordinates','Bins'])
             pps = self.getProperty(load,ids=region['Indexes'],ptype=ptype,dictionary=True)
@@ -33,7 +37,7 @@ class complexSlice:
                 elif pp['name']=='Bins':
                     properties.setData(pp['key'], grid.xi )
                 else:
-                    ppSelected = transf.select('crop',pps[pp['key']])
+                    ppSelected = pps[pp['key']]
                     reshaped = grid.reshapeData(ppSelected[pix])
                     if pp['name'] in ['Velocities']:  # flip field components if necessary
                         reshaped = transf.convert(['align','flip','rotate'],reshaped)

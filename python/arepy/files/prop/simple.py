@@ -133,7 +133,12 @@ class simple:
 
     # quadrate of the radius from a given center
     def prop_Radius2(self,ids,ptype,**prop):                   
-        """Square of a particle radius from a given center"""
+        """Square of a particle radius from a given center
+
+        :param [int,int,int] center: Center point coordinates
+        :return: Square of a radius from the center
+        :rtype: list[int]
+        """
         coord = self.prop_Coordinates(ids,ptype,**prop) - prop['center']
         return coord[:,0]**2 + coord[:,1]**2 + coord[:,2]**2
         

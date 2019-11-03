@@ -1,7 +1,7 @@
 import arepy as apy
 import numpy as np
 
-class cone:
+class regionCone:
     """Conical region
 
     :param [float]*3 center: Center of a cone
@@ -15,7 +15,7 @@ class cone:
         
         >>> import arepy as apy
         >>> import numpy as np
-        >>> region = apy.coord.cone([0.5,0.5,0.5], 0.3, np.pi/4)
+        >>> region = apy.coord.regionCone([0.5,0.5,0.5], 0.3, np.pi/4)
         >>> region.show()
         
         Cone: center [0.5,0.5,0.5] radius 0.3 theta 0.785398
@@ -26,33 +26,16 @@ class cone:
     def __exit__(self, type, value, traceback):
         True
     
-    def __init__(self,*args):
+    def __init__(self,*args,srad=None):
         self.name = 'cone'
-        self.setRegion(center=args[0],radius=args[1],theta=args[2])
-
-    def getOuterBox(self):
-        """Get outer box
-
-        :return: Region of the outer box
-        :rtype: :class:`arepy.coord.box`
-        """
-        return apy.coord.box(self.center,self.radius*2)
-
-    def getInnerBox(self):
-        """Get inner box
-
-        :return: Region of the inner box
-        :rtype: :class:`arepy.coord.box`
-        """
-        return apy.coord.box(self.center,self.radius*2/np.sqrt(3))
+        self.setRegion(center=args[0],radius=args[1],theta=args[2],srad=srad)
 
     def show(self):
         """Print out region settings"""
-        print("Cone: center",self.center,"radius",self.radius,"theta",self.theta)
-
-    def getCopy(self):
-        """Get copy of self"""
-        return apy.coord.cone(self.center,self.radius,self.theta)        
+        print("Cone: center",self.center,
+              "radius",self.radius,
+              "theta",self.theta,
+              "srad",self.srad)
 
     def setRegion(self,**args):
         """Set region variables"""
@@ -62,19 +45,24 @@ class cone:
             self.radius = args['radius']
         if 'theta' in args:
             self.theta = args['theta']
-        
+        if 'srad' in args:
+            self.srad = args['srad']
+                
     ##########################
     # Transformation routines
     ##########################
 
-    def getSphere(self):
-        return apy.coord.sphere(self.center,self.radius)
+    def getSelection(self):
+        """Get a selection region"""
+        radius = self.radius if self.srad is None else self.srad
+        return apy.coord.regionSphere(self.center,radius)
 
-    def getBox(self):
-        return self.getInnerBox()
+    def getCopy(self):
+        """Get copy of self"""
+        return apy.coord.regionCone(self.center,self.radius,self.theta,srad=self.srad)        
 
-    # select coordinates within the cone
     def selectCoordinates(self,coord):
+        """Select coordinates within the region"""
         x,y,z = (coord-opt['center']).T
         theta = np.arccos( z / np.sqrt(x*x + y*y + z*z) )   # inclination 
         if (opt['theta']>0):  # around z-axis
@@ -86,8 +74,11 @@ class cone:
         else:
             return ids, None if ids is False else coord
 
-    # common transformations
-    def setTranslation(self,origin):  # origin coordinates e.g: [0.5,0.5,0.5]
+    def setTranslation(self,origin):
+        """Apply translation on the region"""
         self.setRegion(center=self.center-origin)
-    def setFlip(self,flip):           # axes order e.g: [0,2,1]
-        return
+
+    def setFlip(self,flip):
+        """Flip the region"""
+        self.setRegion(center=self.center[flip])
+

@@ -1,7 +1,7 @@
 import arepy as apy
 import numpy as np
 
-class box:
+class regionBox:
     """Box region
 
     :param [float]*3 center: Center of the box
@@ -16,7 +16,7 @@ class box:
     The other from the two settings will be automatically calculated::
 
         >>> import arepy as apy
-        >>> region = apy.coord.box([0.5,0.5,0.5], 0.3)
+        >>> region = apy.coord.regionBox([0.5,0.5,0.5], 0.3)
         >>> region.show()
         
         Box class
@@ -24,7 +24,7 @@ class box:
         Size: [0.3,0.3,0.3]
         Limits: [0.2,0.8,0.2,0.8,0.2,0.8]
         
-        >>> region = apy.coord.box([0.2,0.8,0.2,0.8,0.2,0.8])
+        >>> region = apy.coord.regionBox([0.2,0.8,0.2,0.8,0.2,0.8])
         >>> region.show()
 
         Box class: center [0.5,0.5,0.5] size [0.3,0.3,0.3] limits [0.2,0.8,0.2,0.8,0.2,0.8] 
@@ -35,38 +35,35 @@ class box:
     def __exit__(self, type, value, traceback):
         True
     
-    def __init__(self,*args):
+    def __init__(self,*args,srad=None):
         self.name = 'box'
         if len(args)==2:
-            self.setRegion(center=args[0],size=args[1])
+            self.setRegion(center=args[0],size=args[1],srad=srad)
         else:
-            self.setRegion(limits=args[0])
-
+            self.setRegion(limits=args[0],srad=srad)
+    
     def getOuterSphere(self):
         """Get outer sphere
 
         :return: Region of the outer sphere
-        :rtype: :class:`arepy.coord.sphere`
+        :rtype: :class:`arepy.coord.regionSphere`
         """
-        radius = np.linalg.norm(self.size)*0.5
-        return apy.coord.sphere(self.center,radius)
+        return apy.coord.regionSphere(self.center,self.radiusOuter,srad=self.srad)
 
     def getInnerSphere(self):
         """Get inner sphere
 
         :return: Region of the inner sphere
-        :rtype: :class:`arepy.coord.sphere`
+        :rtype: :class:`arepy.coord.regionSphere`
         """
-        radius = np.min(self.size)*0.5
-        return apy.coord.sphere(self.center,radius)
+        return apy.coord.regionSphere(self.center,self.radiusInner,srad=self.srad)
 
     def show(self):
         """Print out region settings"""
-        print("Box: center",self.center,"size",self.size,"limits",self.limits)
-
-    def getCopy(self):
-        """Get copy of self"""
-        return apy.coord.box(self.limits)        
+        print("Box: center",self.center,
+              "size",self.size,
+              "limits",self.limits,
+              "srad",self.srad)
 
     def setRegion(self,**args):
         """Set region settings"""
@@ -83,31 +80,38 @@ class box:
                 else:
                     self.size = np.array(args['size'][:],dtype=np.float32)
             self.limits = np.reshape([self.center-self.size/2,self.center+self.size/2],6,order='F')
+        self.radiusOuter = np.linalg.norm(self.size)*0.5
+        self.radiusInner = np.min(self.size)*0.5
+        if 'srad' in args:
+            self.srad = args['srad']
 
     ##########################
     # Transformation routines
     ##########################
     
-    # return sphere around the box
-    def getSphere(self):
-        return self.getOuterSphere()
+    def getSelection(self):
+        """Get a selection region"""
+        radius = self.radiusOuter if self.srad is None else self.srad
+        return apy.coord.regionSphere(self.center,radius)
 
-    def getBox(self):
-        # do not ever return "self", because it is a pointer!!!
-        return self.getCopy()
+    def getCopy(self):
+        """Get copy of self"""
+        return apy.coord.regionBox(self.limits,srad=self.srad)        
 
-    # select coordinates inside of the box
     def selectCoordinates(self,coord):
+        """Select coordinates within the region"""
         x,y,z = coord.T
         ids =  (self.limits[0]<x) & (x<self.limits[1]) &\
                (self.limits[2]<y) & (y<self.limits[3]) &\
                (self.limits[4]<z) & (z<self.limits[5])
         return ids, coord[ids]
 
-    # common transformation
-    def setTranslation(self,origin):  # origin coordinates e.g: [0.5,0.5,0.5]
+    def setTranslation(self,origin):
+        """Applate translation on the region"""
         self.setRegion(limits=self.limits-origin[[0,0,1,1,2,2]])
-    def setFlip(self,flip):           # axes order e.g: [0,2,1]
+        
+    def setFlip(self,flip):
+        """Flip the region"""
         limits = np.reshape(self.limits,(2,3),order='F')
         limits = limits.T[flip].T
         limits = np.reshape(limits,(6,),order='F')

@@ -26,16 +26,15 @@ class groupsMethods:
                     nopt[k] = v[item.index] if np.ndim(v)>1 else v
             item.setTransf(**nopt)
 
-    def getTransf(self,name,args,**opt):        
+    def getTransf(self,args,**opt):        
         """Get transformation parameters from a particle
         
-        :param str name: Name of a transformation
         :param args: Settings of a transformation
         :param opt: Settings of the :meth:`arepy.data.group.foreach`
 
         Transformations are calculated in :class:`arepy.files.groups.groupsTransf`.
         """
-        return self.foreach(getTransf,args=[name,args],**opt)
+        return self.foreach(getTransf,args=[args],**opt)
 
     def useTransf(self,transf,use=True,add={}):
         """Use transformation values
@@ -111,7 +110,7 @@ class groupsMethods:
         for item in self.items:
             if 'boxSize' not in item.sim.optImages:
                 apy.shell.exit("No 'boxSize' option for simulation %d (groups.py)"%item.index)
-            region = apy.coord.box(item.sim.optImages['boxSize'])
+            region = apy.coord.regionBox(item.sim.optImages['boxSize'])
             item.setTransf(region=region,origin=region.center)
         data = self.foreach(setImage,args=[prop,imgType])
         logNormsProps = ['density','rih','ndens']
@@ -319,9 +318,9 @@ class groupsMethods:
 ############################################
 
 # Get a transformation by name
-def getTransf(item,name,args):
+def getTransf(item,args):
     with groupsTransf(item) as tr:
-        return tr.getTransf(name,args)
+        return tr.getTransf(args)
 
 # Get sink properties
 def getSinkProps(item,props,select):

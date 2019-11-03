@@ -7,7 +7,7 @@ class transf:
 
     :param bool show: Print out transformation information
     :param region: Coordinate region
-    :type region: :class:`arepy.coord.box` or :class:`arepy.coord.sphere` or :class:`arepy.coord.cone`
+    :type region: :class:`arepy.coord.regionBox` or :class:`arepy.coord.regionSphere` or :class:`arepy.coord.regionCone`
     :param [float]*3 origin: New coordinate origin
     :param [float]*3 align: Vector of a new z-axis
     :param [int] flip: New order of the axis
@@ -28,7 +28,7 @@ class transf:
         import numpy as np
         
         transf = apy.coord.transf(
-            region = apy.coord.box([0.2,0.8,0.2,0.8,0.2,0.8]),
+            region = apy.coord.regionBox([0.2,0.8,0.2,0.8,0.2,0.8]),
             origin = [0.5,0.5,0.5],
             align = [0.3,0.5,0.0],
             flip = [0,2,1],
@@ -38,7 +38,7 @@ class transf:
     However, it is always possible to set an arbitrary list of transformations::
         
         transf = apy.coord.transf()
-        transf.addSelection('sphere', apy.coord.sphere([0.2,0.8,0.2],0.8) )
+        transf.addSelection('sphere', apy.coord.regionSphere([0.2,0.8,0.2],0.8) )
         transf.addTranslation('shift', [0.2,0.8,0.2])
     """
     
@@ -54,7 +54,7 @@ class transf:
         # pre select coordinates
         if 'region' in opt:
             region = opt['region'].getCopy()
-            self.addSelection('select', region=region.getSphere() )
+            self.addSelection('select', region=region.getSelection() )
         # translate coordinates
         if 'origin' in opt:
             self.addTranslation('translate', opt['origin'])
@@ -73,7 +73,10 @@ class transf:
             self.addRotation('rotate', opt['rotate'])
         # post-select
         if 'region' in opt:
-            self.addSelection('crop', region=region.getBox() )
+            # crop region (keep coordinates inside)
+            self.addSelection('crop', region=region.getCopy(), invert=False ) 
+            # cut region (keep coordinates outside)
+            self.addSelection('cut',  region=region.getCopy(), invert=True )  
                 
         # print out the settings for debugging
         if show:
@@ -126,7 +129,14 @@ class transf:
             else:
                 coord = self._rotEuler(coord,opt['angles'])
         elif ttype=='selection':     # select coordinates from a region
-            self.items[name]['ids'], coord = opt['region'].selectCoordinates(coord)
+            if 'invert' in opt and opt['invert'] is True:  
+                # invert selection (coordinates outside the region)
+                ids,coord2 = opt['region'].selectCoordinates(coord)
+                self.items[name]['ids'] = np.invert(ids)
+                coord = coord[ self.items[name]['ids'] ]
+            else:                                          
+                # normal selection (coordinates within the region)
+                self.items[name]['ids'], coord = opt['region'].selectCoordinates(coord)
         elif ttype=='flip':
             coord = coord.T[opt['axes']].T
         return coord
@@ -185,7 +195,7 @@ class transf:
 
         :param str name: Name of the transformation
         :param region: Coordinate region
-        :type region: :class:`arepy.coord.box` or :class:`arepy.coord.sphere` or :class:`arepy.coord.cone`
+        :type region: :class:`arepy.coord.regionBox` or :class:`arepy.coord.regionSphere` or :class:`arepy.coord.regionCone`
         """
         opt['type'] = 'selection'
         self.items[name] = opt

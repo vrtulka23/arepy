@@ -11,19 +11,19 @@ append   - force list appending instead of numpy preformated arrays
 dirCache - if set, cache will be produced in this directory
 '''
 
-def _foreach(fn,args,nproc,label,append,udata=None):
-    if udata: # read new data only
-        nudata = len(list(udata.values())[0]) if isinstance(udata,dict) else len(udata)
-        args = args[nudata:]
-        if len(args)==0: # return if there are no new items
-            return udata
+def _foreach(fn,args,nproc,label,append,dataPrev=None):
+    numDataAll = len(args)     # number of all data
+    numDataOld = 0             # number of previous data
+    if dataPrev:               # read new data only
+        numDataOld = len(list(dataPrev.values())[0]) if isinstance(dataPrev,dict) else len(dataPrev)
+        args = args[numDataOld:]
+        if len(args)==0:       # return if there are no new items
+            return dataPrev
+    numDataNew = len(args)     # number of new data
 
-    nargs = len(args)  # number of arguments
-    append = append    # force to use appending into the list instead of formating numpy arrays
-
-    # use one or more cores to compute results usin function 'fn'
+    # use one or more cores to compute results of function 'fn'
     label = fn.__name__+' '+label if label else fn.__name__
-    pb = apy.shell.pb(vmax=nargs,label=label) 
+    pb = apy.shell.pb(vmax=numDataNew,label=label) 
     if nproc>1:
         results = apy.util.parallelPool(fn,args,pbar=pb,nproc=nproc)
     else:
@@ -33,44 +33,45 @@ def _foreach(fn,args,nproc,label,append,udata=None):
             pb.increase()
     pb.close()
 
-    # rearrange data from the all results
-    adtypes = (str,apy.coord.box,apy.coord.sphere,apy.coord.cone)
-    data = {}
-    for index in range(nargs):
+    # rearrange data from all results
+    adtypes = (str,apy.coord.regionBox,apy.coord.regionSphere,apy.coord.regionCone)
+    dataNew = {}
+    for index in range(numDataNew):
         result = results[index]
         keys   = list(result.keys())   if isinstance(result,dict) else ['data']
         values = list(result.values()) if isinstance(result,dict) else [result]
-        ncols = len(values)
+        numColumns = len(values)
         for c,key in enumerate(keys):
             if append or isinstance(values[c],adtypes):
                 if index==0:
-                    data[key] = []
-                data[key].append(values[c])
+                    dataNew[key] = []
+                dataNew[key].append(values[c])
             else:
                 part = np.array(values[c])
                 if index==0:
-                    emptydata = np.zeros( (nargs,)+part.shape, dtype=part.dtype)
-                    data[key] = emptydata
+                    emptydata = np.zeros( (numDataNew,)+part.shape, dtype=part.dtype)
+                    dataNew[key] = emptydata
                 #if (data[key][index].shape!=part.shape):
                 #    msg = "Length of partial '%s' data %d differs from collector array %d (foreach.py)"
                 #    apy.shell.exit( msg%(key,len(part),len(data[key][index])) )
-                data[key][index] = part
+                dataNew[key][index] = part
 
-    if udata: # combine cached and new data
-        keys   = list(udata.keys())   if isinstance(udata,dict) else ['data']
-        values = list(udata.values()) if isinstance(udata,dict) else [udata]
-        ncols = len(values)
+    if dataPrev: # combine cached and new data
+        keys   = list(dataPrev.keys())   if isinstance(dataPrev,dict) else ['data']
+        values = list(dataPrev.values()) if isinstance(dataPrev,dict) else [dataPrev]
+        numColumns = len(values)
         for c,key in enumerate(keys):
             if append or isinstance(values[c],str):
-                data[key] = udata[key] + data[key]
+                dataNew[key] = dataPrev[key] + dataNew[key]
             else:
-                data[key] = np.concatenate((udata[key],data[key]),axis=0)
-    
+                dataNew[key] = np.concatenate((dataPrev[key],dataNew[key]),axis=0)
+
     # return appropriate format
-    if ncols>1 and nargs==1:
-        return {key:value[0] for key,value in data.items()}
+    if numColumns>1 and numDataAll==1: 
+        return {key:value[0] for key,value in dataNew.items()}
     else:
-        return data if nargs>1 else list(data.values())[0] 
+        return dataNew if numDataAll>1 else list(dataNew.values())[0] 
+
 def foreach(fn,args,nproc=1,label='',append=False,dirCache=None,update=False):
     # cache data if dirCache is set
     if dirCache:
