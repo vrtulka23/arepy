@@ -70,10 +70,10 @@ class ics:
     def write(self,fileName,**opt):
         apy.shell.printc('Writing to: '+fileName)
         with apy.files.snap(fileName,fmode='w',**opt) as sf:                
-            sf.setProperty(0,'Coordinates',  self.coords)
-            sf.setProperty(0,'Masses',       self.masses)
-            sf.setProperty(0,'Velocities',   self.velocities)
-            sf.setProperty(0,'ParticleIDs',  self.ids)            
+            sf.setProperty('Coordinates',  self.coords)
+            sf.setProperty('Masses',       self.masses)
+            sf.setProperty('Velocities',   self.velocities)
+            sf.setProperty('ParticleIDs',  self.ids)            
             sf.setHeader({
                 'NumPart_ThisFile':          [self.nGas,0,0,0,0,0],
                 'NumPart_Total':             [self.nGas,0,0,0,0,0],

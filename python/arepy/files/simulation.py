@@ -6,8 +6,9 @@ from subprocess import call
 class simulation:
     """Simulation class
     
-    :param str dirSim:         Path to a simulation directory.
-    :param str name:           Name of a simulation.
+    :param str dirSim:         Path to a simulation directory
+    :param str name:           Name of a simulation
+    :param int sid:            Simulation ID
     :param str fileNameParam:  Name of a parameter file
     :param str fileNameConfig: Name of a configuration file
     :param str fileNameIcs':   Name of a file with initial conditions
@@ -33,7 +34,7 @@ class simulation:
     def __exit__(self, type, value, tb):
         return
 
-    def __init__(self, dirSim='.', name='', **opt):
+    def __init__(self, dirSim='.', name='', sid=None, **opt):
         # update default options
         self.opt = {
             'fileNameParam': 'param.txt',
@@ -56,6 +57,7 @@ class simulation:
         # set initial parameters
         self.dirSim = dirSim
         self.name = name
+        self.sid = sid
 
         if 'nproc' not in self.opt:
             self.opt['nproc'] = self.opt['nsub']

@@ -12,21 +12,18 @@ class complexProj:
         else:
             transf = prop['transf']
             region = self.getProperty({
-                'name':'RegionSphere','transf':transf, 
+                'name':'RegionSphere',
+                'center': transf['select']['region'].center,
+                'radius': transf['select']['region'].radius,
                 'p':['Indexes','Coordinates','Masses','CellVolume']
             }, ids=ids,ptype=ptype)
             
             # perform coordinate transformations
-            coordOutside = transf.convert(['translate','align','flip','rotate','cut'],region['Coordinates'])
             coordInside = transf.convert(['translate','align','flip','rotate','crop'],region['Coordinates'])
-            massOutside = transf.select('cut',region['Masses'])
             massInside = transf.select('crop',region['Masses'])
-            volumeOutside = transf.select('cut',region['CellVolume'])
-            numInside = len(massInside)
-            numOutside = len(massOutside)
 
         # load and crop projected properties
-        properties = apy.files.properties(prop['w'])
+        properties = apy.files.properties(prop['p'])
         load = properties.getWithout('name',['Masses','Density'])
         if len(load)>0:
             data = self.getProperty(load, ids=region['Indexes'], ptype=ptype, dictionary=True)
@@ -53,31 +50,16 @@ class complexProj:
         numFull = pixFull.sum()
         
         # for each empty pixel find the closest full pixel
-        coordCombined = np.vstack((coordFull,coordOutside))
-        kdt = spatial.cKDTree(coordCombined)
+        kdt = spatial.cKDTree(coordFull)
         n_jobs = prop['n_jobs'] if 'n_jobs' in prop else 1
         dist,ngbFull = kdt.query(coordEmpty,n_jobs=n_jobs)
-        #ngbFull = np.where(ngbCombined<numFull, ngbCombined, numFull)
-        
-        #kdt = spatial.cKDTree(coordFull)
-        #n_jobs = prop['n_jobs'] if 'n_jobs' in prop else 1
-        #dist,ngbFull = kdt.query(coordEmpty,n_jobs=n_jobs)
 
         # redistribute masses from full to their neighbor empty pixels
-        numPix = np.full(numFull+numOutside,1,dtype=int)
+        numPix = np.full(numFull,1,dtype=int)
         np.add.at(numPix,ngbFull,1)
-        unitFullMass = np.append(
-            massFull/numPix[:numFull],
-            [0]*numOutside
-        )
-        grid.data['mass'][pixFull] = unitFullMass[:numFull]
+        unitFullMass = massFull/numPix
+        grid.data['mass'][pixFull] = unitFullMass
         grid.data['mass'][pixEmpty] = unitFullMass[ngbFull]
-
-        #numPix = np.full(numFull,1,dtype=int)
-        #np.add.at(numPix,ngbFull,1)
-        #unitFullMass = massFull/numPix
-        #grid.data['mass'][pixFull] = unitFullMass
-        #grid.data['mass'][pixEmpty] = unitFullMass[ngbFull]
         
         # return final data
         for p,pp in enumerate(properties):
@@ -91,13 +73,8 @@ class complexProj:
             else:
                 ppk = pp['key'] 
                 grid.addAtPix(ppk, pix, data[ppk]*massInside)
-                unitFullPP = np.append(
-                    grid.data[ppk][pixFull]/numPix[:numFull],
-                    [0]*numOutside
-                )
-                grid.data[ppk][pixFull] = unitFullPP[:numFull]
-                #unitFullPP = grid.data[ppk][pixFull]/numPix
-                #grid.data[ppk][pixFull] = unitFullPP
+                unitFullPP = grid.data[ppk][pixFull]/numPix
+                grid.data[ppk][pixFull] = unitFullPP
                 grid.data[ppk][pixEmpty] = unitFullPP[ngbFull]
                 projection = grid.data[ppk].sum(axis=2) / masscolumn
             properties.setData(pp['key'],projection)

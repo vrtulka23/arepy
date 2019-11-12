@@ -1,5 +1,5 @@
 # import properties
-import arepy.files.prop
+import arepy.files.prop              
 
 # simulations and snapshot groups
 from arepy.files.simulation import *    # Single simulation

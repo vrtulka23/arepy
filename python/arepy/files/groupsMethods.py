@@ -16,6 +16,12 @@ class groupsMethods:
         
     def setTransf(self,**opt):
         """Set coordinate transformations for every item
+
+        Example::
+            
+            center = [0.15,0.15,0.15]
+            region = apy.coord.regionBox(center,0.2)
+            grp.setTransf(region=region, origin=center)
         """
         for item in self.items:
             nopt = {}
@@ -403,7 +409,7 @@ def renderImage(item,imgType,prop,bins,n_jobs):
     snap = item.getSnapshot()
     if item.transf is None:
         apy.shell.exit('Picture rendering needs a transformation (groups.py)')
-    data = snap.getProperty({'name':imgType,'transf':item.transf,'w':prop,'bins':bins,'n_jobs':n_jobs})
+    data = snap.getProperty({'name':imgType,'transf':item.transf,'p':prop,'bins':bins,'n_jobs':n_jobs})
     if len(prop)==1:
         data = {'data': data}
     if 'Coordinates' in data:

@@ -19,9 +19,11 @@ if [ "$nd" -gt "0" ]; then
 	fileInit=$pdir/__init__.py
 	if [ -f $fileInit ]; then
 	    # read the init file of the project and strip all comments
-	    initsim=$(grep -o ^[^#]* $fileInit)
+	    initsim=$(grep -o ^[^#]* $fileInit | sed 's/wspop3//g')
+	    # select the path to the simulation directory
+	    [[ $initsim =~ dirSim.*=.*\"(.*)\" ]]
 	    # check path of a current directory is used
-	    if [[ "$initsim" == *"$DIR_PWD"* ]]; then 
+	    if [[ "$DIR_PWD" == "${BASH_REMATCH[1]}"* ]]; then 
 		PROJECT_NAME="$pname"
 		DIR_PROJECT="$pdir"
 	    fi

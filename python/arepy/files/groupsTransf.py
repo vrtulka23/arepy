@@ -80,9 +80,27 @@ class groupsTransf:
         """
         snap = self.item.getSnapshot()
         sid = self.item.opt[ids] if isinstance(ids,str) else ids[self.item.index]
-        data = snap.getProperty({'name':'RegionIds','pids':sid,'p':[
+        data = snap.getProperty({'name':'RegionIDs','pids':sid,'p':[
             'Coordinates','Masses'
         ]}, ptype=5)    
+        if len(data['Masses'])>0:
+            return self._diskTransf(data['Coordinates'][0],lrad,size,radius)
+        else:
+            return self.empty1
+
+    def transf_ParticleID(self,lrad,ids,size=None,radius=None,ptype=0):
+        """Get trasformation from a particle ID
+        """
+        snap = self.item.getSnapshot()
+        if isinstance(ids,str):
+            pid = self.item.opt[ids] 
+        elif np.isscalar(ids):
+            pid = ids
+        else:
+            pid = ids[self.item.index]
+        data = snap.getProperty({'name':'RegionIDs','pids':pid,'p':[
+            'Coordinates','Masses'
+        ]}, ptype=ptype)
         if len(data['Masses'])>0:
             return self._diskTransf(data['Coordinates'][0],lrad,size,radius)
         else:

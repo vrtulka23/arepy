@@ -108,7 +108,7 @@ class regionBox:
 
     def setTranslation(self,origin):
         """Applate translation on the region"""
-        self.setRegion(limits=self.limits-origin[[0,0,1,1,2,2]])
+        self.setRegion(limits=self.limits-np.array(origin)[[0,0,1,1,2,2]])
         
     def setFlip(self,flip):
         """Flip the region"""

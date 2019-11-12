@@ -55,7 +55,7 @@ class complexRegion:
             prop['box'] = prop['transf']['select']['region'].limits
         return self._propRegion(ids,ptype,**prop)
 
-    def prop_RegionIds(self,ids,ptype,**prop):           
+    def prop_RegionIDs(self,ids,ptype,**prop):           
         """Select properties of particles with IDs
         
         :param list[int] pids: One or more particle IDs

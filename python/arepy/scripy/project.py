@@ -106,7 +106,7 @@ class project:
         if 'sim' in settings:
             opt.update(settings['sim'])
         opt.update(nopt)
-        return apy.files.simulation( dirSim, name=settings['name'], **opt)
+        return apy.files.simulation( dirSim, name=settings['name'], sid=simID, **opt)
 
     def getSetting(self,simID,name):
         """Get simulation settings

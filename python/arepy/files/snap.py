@@ -150,23 +150,22 @@ class snap(pc.complex,
             units['a'] = values[4]
         return apy.units(oldUnits=units,newUnits=newUnits)
 
-    def setProperty(self,ptype,name,data,ids=None,s=0):
+    def setProperty(self,name,data,ids=None,ptype=0,s=0):
         """Set a particle property
 
-        :param int ptype: Particle type
         :param str name: Name of the parameter
         :param data: Dataset of the parameter
         :param list[bool] ids: Particle selector list
+        :param int ptype: Particle type
         :param int s: Index of a partial snapshot file.
         """
-        fileName = self.sfileName[s]
-        with hp.File(fileName,'r+') as f:
+        with hp.File(self.sfileName[s],'r+') as f:
             pt = 'PartType%d'%ptype
             if pt not in f:
                 f.create_group(pt)
             if name not in f[pt]:
                 f[pt].create_dataset(name,data=data)
-            if ids:
+            if ids is not None:
                 f[pt][name][ids] = data
             else:
                 if f[pt][name].shape!=data.shape:

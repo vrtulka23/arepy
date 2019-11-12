@@ -9,7 +9,9 @@ class complexSlice:
 
         transf = prop['transf']
         region = self.getProperty({
-            'name':'RegionSphere', 'transf': transf,
+            'name':'RegionSphere',
+            'center': transf['select']['region'].center,
+            'radius': transf['select']['region'].radius,
             'p':['Indexes','Coordinates']},
         ids=ids,ptype=ptype)
         
@@ -20,7 +22,7 @@ class complexSlice:
         points = grid.coords
             
         # find s nearest neighbors to each grid point
-        properties = apy.files.properties(prop['w'])
+        properties = apy.files.properties(prop['p'])
         if len(coord)>0:
             # find the closest cells to the points
             kdt = spatial.cKDTree(coord)
@@ -92,4 +94,13 @@ class complexSlice:
         """Find property values for a Healpix gird"""
         box = prop['transf']['crop']['region'].limits
         grid = apy.coord.gridHealpix(prop['bins'], box)
+        return self._propBoxSlice(prop,grid,ids,ptype)
+
+    def prop_BoxRays(self,ids,ptype,**prop):
+        """Find property values for a Healpix ray gird"""
+        grid = apy.coord.gridRays(
+            prop['bins'],
+            nside=prop['nside'],
+            extent=prop['extent'],
+        )
         return self._propBoxSlice(prop,grid,ids,ptype)
