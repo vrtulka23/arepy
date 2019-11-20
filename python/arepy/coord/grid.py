@@ -230,3 +230,42 @@ class gridRays(grid):
         Reshapes data into the shape (npix,nbins)
         """
         return data.reshape((self.bins[0],self.npix)).T
+
+# filled spherical grid using healpix
+class gridSphere(grid):
+    """Create a filled spherical grid using healpix
+
+    .. image:: ../../../results/examples/grids/sphere/debug/sphere000.png
+    
+    Download the :download:`source code <../../../python/scripy/examples/plots/grids/sphere.py>` of the plot.
+    """
+
+    def _getHealpix(self,nside):
+        import healpy as hp
+        for i in range(10):
+            print(i,hp.nside2npix(i))
+        self.npix = hp.nside2npix(nside)           # number of healpix pixels
+        coord = np.zeros((self.npix,3))  
+        for i in range(self.npix):
+            coord[i,:] = hp.pix2vec(nside,i)
+        return coord
+    
+    def _setCoordinates(self,nside=4):
+        vol = (4.*np.pi*self.xi[0]**3)/3. 
+
+        coord = self._getHealpix(nside)
+        nradii = len(self.xi[0])
+        rays = np.zeros((nradii,self.npix,3))
+        for b,radius in enumerate(self.xi[0]):
+            rays[b] = coord*radius
+        rays = np.vstack(rays)
+        self.parts = [self.npix]*nradii            # updata particle offset
+        self.split = np.cumsum(self.parts[:-1])    # update particle split indexes
+        return rays, [len(rays)]
+
+    def reshapeData(self,data):
+        """Reshape data
+
+        Reshapes data into the shape (npix,nbins)
+        """
+        return data.reshape((self.bins[0],self.npix)).T

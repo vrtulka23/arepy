@@ -86,7 +86,7 @@ class properties:
         """Get properties with some specific key/values
         
         :param str key: Property setting
-        :param key: Values to keep
+        :param values: Values to keep
         :keys key: list[str] or str
         :return: New object of self without some properties
         """
