@@ -27,7 +27,7 @@ if [ "$isPythonDir" == "0" ]; then
     echo -e "  ${RED}You need to include the following two lines in your .bashrc file:"
     echo ""
     echo "  export PYTHONPATH=\$PYTHONPATH:$DIR_PYTHON"
-    echo "  alias apy='sh $DIR_PWD/shell/run.sh'"
+    echo "  alias apy='bash $DIR_PWD/shell/run.sh'"
     echo ""
     echo -e "  ${RED}After that restart this installation script for further steps.${NC}"
     exit
@@ -35,7 +35,7 @@ else
     echo "  Settings saved to .bashrc:"
     echo ""
     echo "  export PYTHONPATH=\$PYTHONPATH:$DIR_PYTHON"
-    echo "  alias apy='sh $DIR_PWD/shell/run.sh'"
+    echo "  alias apy='bash $DIR_PWD/shell/run.sh'"
 fi
 echo ""
 
