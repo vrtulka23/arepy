@@ -339,14 +339,16 @@ class simulation:
         :return: List of snapshot numbers
         :rtype: list(int)
         """
-        snapFiles = glob.glob(self.fileSnap())
-        snapNums = np.zeros(len(snapFiles),dtype=int)
-        for s,snap in enumerate(snapFiles):
+        sfiles = glob.glob(self.fileSnap())
+        snums = np.full(len(sfiles),np.nan)
+        for s,snap in enumerate(sfiles):
             snap = os.path.basename(snap)
             pattern = self.fileNameSnap%"([0-9]+)"
             m = re.match(pattern, snap)
-            snapNums[s] = m.group(1)
-        return np.sort(snapNums)
+            if m is not None:
+                snums[s] = m.group(1)
+        snums = np.array(snums[~np.isnan(snums)],dtype=int)
+        return np.sort(snums)
 
     def hasSnapshot(self,snap):
         """Checks whether a snapshot exist

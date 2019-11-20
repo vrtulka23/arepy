@@ -120,7 +120,6 @@ class simple:
     # Derived properties
     ##########################
 
-    # radius from a given center
     def prop_Radius(self,ids,ptype,**prop):                    
         """Get radius distances from a given center point
 
@@ -131,7 +130,6 @@ class simple:
         coord = self.prop_Coordinates(ids,ptype,**prop) - prop['center']
         return np.linalg.norm(coord,axis=1)
 
-    # quadrate of the radius from a given center
     def prop_Radius2(self,ids,ptype,**prop):                   
         """Square of a particle radius from a given center
 
@@ -142,25 +140,37 @@ class simple:
         coord = self.prop_Coordinates(ids,ptype,**prop) - prop['center']
         return coord[:,0]**2 + coord[:,1]**2 + coord[:,2]**2
         
-    # size of the velocity tangent component
     def prop_VelocityRadial(self,ids,ptype,**prop):            
         """Radial component of the velocities
 
         :param [float]*3 center: Point from which the velocity component is calculated
-        :return [float]*3: Radial velocity vector
+        :return [float]*3: Radial velocity component size
         
         Calculation of the component is taken from Wikipedia_.
 
         .. _Wikipedia: https://en.wikipedia.org/wiki/Tangential_and_normal_components
 
-        
+        .. math::
+            
+            v_\perp = v . \hat{n}
+            
         """
         rad = self.prop_Coordinates(ids,ptype,**prop) - prop['center']          # translated origin
         norm = np.linalg.norm(rad,axis=1)[:,None]
         nhat = np.where(norm>0,rad/norm,np.zeros_like(rad)) # unit radial vector
         return np.multiply(self.prop_Velocities(ids,ptype,**prop),nhat).sum(1)  # element-wise dot product (v.n_hat)
 
-    # voronoi cell volume
+    def prop_VelocitySphere(self,ids,ptype,**prop):
+        """Cell velocitie vectors in spherical coordinates with respect to a center
+
+        :param [float]*3 center: Point from which the velocity components are calculated
+        :return [float]*2: Radial and tangential velocity components
+
+        Calculation of the components is take from Wikipedia_.        
+        """
+
+        return 
+
     def prop_CellVolume(self,ids,ptype,**prop): 
         """Particle cell Volume
 
@@ -174,7 +184,6 @@ class simple:
         """
         return self.prop_Masses(ids,ptype,**prop) / self.prop_Density(ids,ptype,**prop)
         
-    # cell radius when assumed a spherical shape
     def prop_CellRadius(self,ids,ptype,**prop): 
         """Particle cell mean radius
         

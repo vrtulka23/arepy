@@ -24,7 +24,7 @@ class project(apy.scripy.project):
             :lines: 29-34
         """
 
-        self.dirSim = apy.dirHome+"/wsexamples"
+        self.dirSim = "/home/hd/hd_hd/hd_wd148/wsexamples"
 
         self.sims['001'] = {
             'name':'hiiregion','setup':'emptybox',
