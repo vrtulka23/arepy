@@ -1,5 +1,5 @@
 Spherical region
 ****************
 
-.. autoclass:: arepy.coord.sphere
+.. autoclass:: arepy.coord.regionSphere
    :members:

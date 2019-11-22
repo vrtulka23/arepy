@@ -43,8 +43,8 @@
   <div class="section" id="conical-region">
 <h1>Conical region<a class="headerlink" href="#conical-region" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="arepy.coord.cone">
-<em class="property">class </em><code class="sig-prename descclassname">arepy.coord.</code><code class="sig-name descname">cone</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.cone" title="Permalink to this definition">¶</a></dt>
+<dt id="arepy.coord.regionCone">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.coord.</code><code class="sig-name descname">regionCone</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">srad=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.regionCone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Conical region</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -65,47 +65,52 @@
 <p>Example of use:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">arepy</span> <span class="k">as</span> <span class="nn">apy</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">region</span> <span class="o">=</span> <span class="n">apy</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">cone</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">region</span> <span class="o">=</span> <span class="n">apy</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">regionCone</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">region</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-<span class="go">Cone class</span>
-<span class="go">Center: [0.5,0.5,0.5]</span>
-<span class="go">Radius: 0.3</span>
-<span class="go">Theta: 0.785398</span>
+<span class="go">Cone: center [0.5,0.5,0.5] radius 0.3 theta 0.785398</span>
 </pre></div>
 </div>
 <dl class="method">
-<dt id="arepy.coord.cone.getOuterBox">
-<code class="sig-name descname">getOuterBox</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.cone.getOuterBox" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get outer box</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Region of the outer box</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="box.html#arepy.coord.box" title="arepy.coord.box"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.box</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="arepy.coord.cone.getInnerBox">
-<code class="sig-name descname">getInnerBox</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.cone.getInnerBox" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get inner box</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Region of the inner box</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="box.html#arepy.coord.box" title="arepy.coord.box"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.box</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="arepy.coord.cone.show">
-<code class="sig-name descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.cone.show" title="Permalink to this definition">¶</a></dt>
+<dt id="arepy.coord.regionCone.show">
+<code class="sig-name descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.regionCone.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print out region settings</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.regionCone.setRegion">
+<code class="sig-name descname">setRegion</code><span class="sig-paren">(</span><em class="sig-param">**args</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.regionCone.setRegion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set region variables</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.regionCone.getSelection">
+<code class="sig-name descname">getSelection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.regionCone.getSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a selection region</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.regionCone.getCopy">
+<code class="sig-name descname">getCopy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.regionCone.getCopy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get copy of self</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.regionCone.selectCoordinates">
+<code class="sig-name descname">selectCoordinates</code><span class="sig-paren">(</span><em class="sig-param">coord</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.regionCone.selectCoordinates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select coordinates within the region</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.regionCone.setTranslation">
+<code class="sig-name descname">setTranslation</code><span class="sig-paren">(</span><em class="sig-param">origin</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.regionCone.setTranslation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply translation on the region</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.regionCone.setFlip">
+<code class="sig-name descname">setFlip</code><span class="sig-paren">(</span><em class="sig-param">flip</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.regionCone.setFlip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flip the region</p>
 </dd></dl>
 
 </dd></dl>

@@ -1,5 +1,5 @@
 Box region
 **********
 
-.. autoclass:: arepy.coord.box
+.. autoclass:: arepy.coord.regionBox
    :members:

@@ -43,8 +43,8 @@
   <div class="section" id="spherical-region">
 <h1>Spherical region<a class="headerlink" href="#spherical-region" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="arepy.coord.sphere">
-<em class="property">class </em><code class="sig-prename descclassname">arepy.coord.</code><code class="sig-name descname">sphere</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.sphere" title="Permalink to this definition">¶</a></dt>
+<dt id="arepy.coord.regionSphere">
+<em class="property">class </em><code class="sig-prename descclassname">arepy.coord.</code><code class="sig-name descname">regionSphere</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">srad=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.regionSphere" title="Permalink to this definition">¶</a></dt>
 <dd><p>Spherical region</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -62,46 +62,92 @@
 </dl>
 <p>Example of use:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">arepy</span> <span class="k">as</span> <span class="nn">apy</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">region</span> <span class="o">=</span> <span class="n">apy</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">sphere</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">region</span> <span class="o">=</span> <span class="n">apy</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">regionSphere</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span><span class="mf">0.3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">region</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-<span class="go">Sphere class</span>
-<span class="go">Center: [0.5,0.5,0.5]</span>
-<span class="go">Radius: 0.3</span>
+<span class="go">Sphere class: center [0.5,0.5,0.5] radius 0.3</span>
 </pre></div>
 </div>
 <dl class="method">
-<dt id="arepy.coord.sphere.getOuterBox">
-<code class="sig-name descname">getOuterBox</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.sphere.getOuterBox" title="Permalink to this definition">¶</a></dt>
+<dt id="arepy.coord.regionSphere.getOuterBox">
+<code class="sig-name descname">getOuterBox</code><span class="sig-paren">(</span><em class="sig-param">center=None</em>, <em class="sig-param">size=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.regionSphere.getOuterBox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get outer box</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Region of the outer box</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>center</strong> (<em>[</em><em>float</em><em>]</em><em>*3</em>) – New box center</p></li>
+<li><p><strong>size</strong> (<em>float</em>) – New box size</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="box.html#arepy.coord.box" title="arepy.coord.box"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.box</span></code></a></p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Region of the outer box</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="box.html#arepy.coord.regionBox" title="arepy.coord.regionBox"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.regionBox</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="arepy.coord.sphere.getInnerBox">
-<code class="sig-name descname">getInnerBox</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.sphere.getInnerBox" title="Permalink to this definition">¶</a></dt>
+<dt id="arepy.coord.regionSphere.getInnerBox">
+<code class="sig-name descname">getInnerBox</code><span class="sig-paren">(</span><em class="sig-param">center=None</em>, <em class="sig-param">size=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.regionSphere.getInnerBox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get inner box</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Region of the inner box</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>center</strong> (<em>[</em><em>float</em><em>]</em><em>*3</em>) – New box center</p></li>
+<li><p><strong>size</strong> (<em>float</em>) – New box size</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="box.html#arepy.coord.box" title="arepy.coord.box"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.box</span></code></a></p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Region of the inner box</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="box.html#arepy.coord.regionBox" title="arepy.coord.regionBox"><code class="xref py py-class docutils literal notranslate"><span class="pre">arepy.coord.regionBox</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="arepy.coord.sphere.show">
-<code class="sig-name descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.sphere.show" title="Permalink to this definition">¶</a></dt>
+<dt id="arepy.coord.regionSphere.show">
+<code class="sig-name descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.regionSphere.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print out region settings</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.regionSphere.setRegion">
+<code class="sig-name descname">setRegion</code><span class="sig-paren">(</span><em class="sig-param">**args</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.regionSphere.setRegion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set region settings</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.regionSphere.getSelection">
+<code class="sig-name descname">getSelection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.regionSphere.getSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a selection region</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.regionSphere.getCopy">
+<code class="sig-name descname">getCopy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.regionSphere.getCopy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get copy of self</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.regionSphere.selectCoordinates">
+<code class="sig-name descname">selectCoordinates</code><span class="sig-paren">(</span><em class="sig-param">coord</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.regionSphere.selectCoordinates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select coordinates within the region</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.regionSphere.setTranslation">
+<code class="sig-name descname">setTranslation</code><span class="sig-paren">(</span><em class="sig-param">origin</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.regionSphere.setTranslation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply translation on the region</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.coord.regionSphere.setFlip">
+<code class="sig-name descname">setFlip</code><span class="sig-paren">(</span><em class="sig-param">flip</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.coord.regionSphere.setFlip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flip the region</p>
 </dd></dl>
 
 </dd></dl>

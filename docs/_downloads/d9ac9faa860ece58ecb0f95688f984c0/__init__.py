@@ -126,7 +126,7 @@ class setup(apy.scripy.setup):
                 points='centers',             # get centers of the grid cubes
                 scatter=0.2/self.opt['nRes'], # add an artificial scatter
             )
-            f.setProperty(0, 'Coordinates', np.array(grid.coords,dtype=np.float64) )
-            f.setProperty(0, 'Masses',      np.full(ngas,1,dtype=np.float64) )
-            f.setProperty(0, 'Velocities',  np.zeros((ngas,3),dtype=np.float64) )
-            f.setProperty(0, 'ParticleIDs', np.arange(1,1+ngas,dtype=np.uint32) )
+            f.setProperty('Coordinates', np.array(grid.coords,dtype=np.float64) )
+            f.setProperty('Masses',      np.full(ngas,1,dtype=np.float64) )
+            f.setProperty('Velocities',  np.zeros((ngas,3),dtype=np.float64) )
+            f.setProperty('ParticleIDs', np.arange(1,1+ngas,dtype=np.uint32) )

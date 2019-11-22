@@ -114,16 +114,21 @@
 <dt id="arepy.files.groups.groupsMethods.setTransf">
 <code class="sig-name descname">setTransf</code><span class="sig-paren">(</span><em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.setTransf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set coordinate transformations for every item</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.15</span><span class="p">,</span><span class="mf">0.15</span><span class="p">,</span><span class="mf">0.15</span><span class="p">]</span>
+<span class="n">region</span> <span class="o">=</span> <span class="n">apy</span><span class="o">.</span><span class="n">coord</span><span class="o">.</span><span class="n">regionBox</span><span class="p">(</span><span class="n">center</span><span class="p">,</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">grp</span><span class="o">.</span><span class="n">setTransf</span><span class="p">(</span><span class="n">region</span><span class="o">=</span><span class="n">region</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">center</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
 <dt id="arepy.files.groups.groupsMethods.getTransf">
-<code class="sig-name descname">getTransf</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">args</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.getTransf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getTransf</code><span class="sig-paren">(</span><em class="sig-param">args</em>, <em class="sig-param">**opt</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.getTransf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get transformation parameters from a particle</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – Name of a transformation</p></li>
 <li><p><strong>args</strong> – Settings of a transformation</p></li>
 <li><p><strong>opt</strong> – Settings of the <a class="reference internal" href="../data/groups.html#arepy.data.group.foreach" title="arepy.data.group.foreach"><code class="xref py py-meth docutils literal notranslate"><span class="pre">arepy.data.group.foreach()</span></code></a></p></li>
 </ul>
@@ -152,7 +157,7 @@
 
 <dl class="method">
 <dt id="arepy.files.groups.groupsMethods.setImage">
-<code class="sig-name descname">setImage</code><span class="sig-paren">(</span><em class="sig-param">sp</em>, <em class="sig-param">prop</em>, <em class="sig-param">imgType</em>, <em class="sig-param">norm=None</em>, <em class="sig-param">normType=None</em>, <em class="sig-param">cmap=None</em>, <em class="sig-param">multiply=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.setImage" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setImage</code><span class="sig-paren">(</span><em class="sig-param">sp</em>, <em class="sig-param">prop</em>, <em class="sig-param">imgType</em>, <em class="sig-param">norm=None</em>, <em class="sig-param">normType=None</em>, <em class="sig-param">cmap=None</em>, <em class="sig-param">multiply=None</em>, <em class="sig-param">clip=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsMethods.setImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set Arepo image</p>
 </dd></dl>
 
@@ -256,19 +261,30 @@ together with the image ‘data’ and ‘extent’.</p>
 <dd><p>Group transformation class</p>
 <dl class="method">
 <dt id="arepy.files.groups.groupsTransf.transf_SinkFormationOrder">
-<code class="sig-name descname">transf_SinkFormationOrder</code><span class="sig-paren">(</span><em class="sig-param">lrad</em>, <em class="sig-param">forder</em>, <em class="sig-param">size=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsTransf.transf_SinkFormationOrder" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transf_SinkFormationOrder</code><span class="sig-paren">(</span><em class="sig-param">lrad</em>, <em class="sig-param">forder</em>, <em class="sig-param">size=None</em>, <em class="sig-param">radius=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsTransf.transf_SinkFormationOrder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get trasformation from a sink particle ID</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>forder</strong> – string = item option key, int = formation order, list[int] = formation orders for each item</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="arepy.files.groups.groupsTransf.transf_SinkID">
-<code class="sig-name descname">transf_SinkID</code><span class="sig-paren">(</span><em class="sig-param">lrad</em>, <em class="sig-param">ids</em>, <em class="sig-param">size=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsTransf.transf_SinkID" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transf_SinkID</code><span class="sig-paren">(</span><em class="sig-param">lrad</em>, <em class="sig-param">ids</em>, <em class="sig-param">size=None</em>, <em class="sig-param">radius=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsTransf.transf_SinkID" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get trasformation from a sink particle ID</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="arepy.files.groups.groupsTransf.transf_ParticleID">
+<code class="sig-name descname">transf_ParticleID</code><span class="sig-paren">(</span><em class="sig-param">lrad</em>, <em class="sig-param">ids</em>, <em class="sig-param">size=None</em>, <em class="sig-param">radius=None</em>, <em class="sig-param">ptype=0</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsTransf.transf_ParticleID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get trasformation from a particle ID</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="arepy.files.groups.groupsTransf.transf_MainSink">
-<code class="sig-name descname">transf_MainSink</code><span class="sig-paren">(</span><em class="sig-param">lrad</em>, <em class="sig-param">size=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsTransf.transf_MainSink" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transf_MainSink</code><span class="sig-paren">(</span><em class="sig-param">lrad</em>, <em class="sig-param">size=None</em>, <em class="sig-param">radius=None</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.groups.groupsTransf.transf_MainSink" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get transformation from the position of the main sink particle</p>
 </dd></dl>
 

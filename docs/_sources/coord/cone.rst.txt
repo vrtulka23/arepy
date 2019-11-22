@@ -1,5 +1,5 @@
 Conical region
 **************
 
-.. autoclass:: arepy.coord.cone
+.. autoclass:: arepy.coord.regionCone
    :members:

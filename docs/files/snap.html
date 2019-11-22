@@ -108,15 +108,15 @@ it can be called within any Python script as follwos:</p>
 
 <dl class="method">
 <dt id="arepy.files.snap.setProperty">
-<code class="sig-name descname">setProperty</code><span class="sig-paren">(</span><em class="sig-param">ptype</em>, <em class="sig-param">name</em>, <em class="sig-param">data</em>, <em class="sig-param">ids=None</em>, <em class="sig-param">s=0</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.setProperty" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setProperty</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">data</em>, <em class="sig-param">ids=None</em>, <em class="sig-param">ptype=0</em>, <em class="sig-param">s=0</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.snap.setProperty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set a particle property</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ptype</strong> (<em>int</em>) – Particle type</p></li>
 <li><p><strong>name</strong> (<em>str</em>) – Name of the parameter</p></li>
 <li><p><strong>data</strong> – Dataset of the parameter</p></li>
 <li><p><strong>ids</strong> (<em>list</em><em>[</em><em>bool</em><em>]</em>) – Particle selector list</p></li>
+<li><p><strong>ptype</strong> (<em>int</em>) – Particle type</p></li>
 <li><p><strong>s</strong> (<em>int</em>) – Index of a partial snapshot file.</p></li>
 </ul>
 </dd>
@@ -306,7 +306,7 @@ The following example will select masses of the gas particles, but velocities of
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>key</strong> (<em>str</em>) – Property setting</p></li>
-<li><p><strong>key</strong> – Values to keep</p></li>
+<li><p><strong>values</strong> – Values to keep</p></li>
 </ul>
 </dd>
 <dt class="field-even">Keys key</dt>

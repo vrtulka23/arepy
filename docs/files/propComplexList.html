@@ -114,6 +114,28 @@
 <dd class="field-odd"><p>[float]*3</p>
 </dd>
 </dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">snap</span><span class="o">.</span><span class="n">getProperty</span><span class="p">({</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;AngularMomentum&#39;</span><span class="p">,</span><span class="s1">&#39;center&#39;</span><span class="p">:[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span><span class="s1">&#39;radius&#39;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">})</span>
+
+<span class="go">[2.4, 3.6, 1.]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.prop.complex.prop_SelectionRadius">
+<code class="sig-name descname">prop_SelectionRadius</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.prop.complex.prop_SelectionRadius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the smallest selection radius</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>center</strong> (<em>[</em><em>float</em><em>]</em><em>*3</em>) – Center of a spherical region</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – Radius of a spherical region</p></li>
+</ul>
+</dd>
+</dl>
+<p>The selection radius is a distance of the furthers cell from the center
+whose spherical radius could possibly intersect the volume of the region.</p>
 </dd></dl>
 
 <dl class="method">
@@ -235,8 +257,8 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="arepy.files.prop.complexRegion.prop_RegionIds">
-<code class="sig-name descname">prop_RegionIds</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.prop.complexRegion.prop_RegionIds" title="Permalink to this definition">¶</a></dt>
+<dt id="arepy.files.prop.complexRegion.prop_RegionIDs">
+<code class="sig-name descname">prop_RegionIDs</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.prop.complexRegion.prop_RegionIDs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select properties of particles with IDs</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -351,6 +373,12 @@
 <dt id="arepy.files.prop.complexSlice.prop_BoxHealpix">
 <code class="sig-name descname">prop_BoxHealpix</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.prop.complexSlice.prop_BoxHealpix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find property values for a Healpix gird</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.prop.complexSlice.prop_BoxRays">
+<code class="sig-name descname">prop_BoxRays</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.prop.complexSlice.prop_BoxRays" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find property values for a Healpix ray gird</p>
 </dd></dl>
 
 </dd></dl>

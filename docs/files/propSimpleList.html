@@ -284,6 +284,17 @@
 <dt id="arepy.files.prop.simple.prop_Radius2">
 <code class="sig-name descname">prop_Radius2</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.prop.simple.prop_Radius2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Square of a particle radius from a given center</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>center</strong> (<em>[</em><em>int</em><em>,</em><em>int</em><em>,</em><em>int</em><em>]</em>) – Center point coordinates</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Square of a radius from the center</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[int]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -295,10 +306,27 @@
 <dd class="field-odd"><p><strong>center</strong> (<em>[</em><em>float</em><em>]</em><em>*3</em>) – Point from which the velocity component is calculated</p>
 </dd>
 <dt class="field-even">Return [float]*3</dt>
-<dd class="field-even"><p>Radial velocity vector</p>
+<dd class="field-even"><p>Radial velocity component size</p>
 </dd>
 </dl>
 <p>Calculation of the component is taken from <a class="reference external" href="https://en.wikipedia.org/wiki/Tangential_and_normal_components">Wikipedia</a>.</p>
+<div class="math notranslate nohighlight">
+\[v_\perp = v . \hat{n}\]</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="arepy.files.prop.simple.prop_VelocitySphere">
+<code class="sig-name descname">prop_VelocitySphere</code><span class="sig-paren">(</span><em class="sig-param">ids</em>, <em class="sig-param">ptype</em>, <em class="sig-param">**prop</em><span class="sig-paren">)</span><a class="headerlink" href="#arepy.files.prop.simple.prop_VelocitySphere" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cell velocitie vectors in spherical coordinates with respect to a center</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>center</strong> (<em>[</em><em>float</em><em>]</em><em>*3</em>) – Point from which the velocity components are calculated</p>
+</dd>
+<dt class="field-even">Return [float]*2</dt>
+<dd class="field-even"><p>Radial and tangential velocity components</p>
+</dd>
+</dl>
+<p>Calculation of the components is take from <a class="reference external" href="https://en.wikipedia.org/wiki/Tangential_and_normal_components">Wikipedia</a>.</p>
 </dd></dl>
 
 <dl class="method">
