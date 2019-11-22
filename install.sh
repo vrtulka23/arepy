@@ -49,9 +49,7 @@ fileSystem=$DIR_PWD/shell/system.sh
 if [ -f $fileSystemTemplate ] && [ ! -f $fileSystem ]; then
     cp $fileSystemTemplate $fileSystem
 else
-    touch $fileSystem
-    echo "# In order to set a custom path to the Arepo uncomment and set the following variable:
-# DIR_AREPO=/my/path/to/arepo" > $fileSystem
+    cp $DIR_PWD/shell/systems/example.sh $fileSystem
 fi
 
 # Create submit log file

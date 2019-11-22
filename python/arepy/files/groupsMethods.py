@@ -124,9 +124,6 @@ class groupsMethods:
             normType = 'log' if prop in logNormsProps else 'lin'
         norm = 'img_%s_%s'%(prop,imgType) if norm is None else norm
         if multiply is not None: 
-            print(data['im'])
-            print(multiply)
-            print(data['im'].dtype, data['im'].shape, multiply)
             data['im'] = data['im'] * multiply
         if clip is not None:
             data['im'] = np.clip(data['im'],clip[0],clip[1])
@@ -400,7 +397,7 @@ def setSnapStamp(item):
 def setImage(item,prop,imgType):
     im,px,py = item.sim.getImage(item.snap,prop,imgType)
     if prop=='density':
-        im *= item.sim.units.conv['density']
+        im *= item.sim.units.conv['coldens'] # Arepo density images are in units g/cm^2
     box = item.transf['crop']['region'].limits
     return {
         'im':     im,

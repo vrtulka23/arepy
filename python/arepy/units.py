@@ -6,7 +6,7 @@ import os
 class units():
     def __init__(self,old=None,new=None):
 
-        self.names = ['mass','length','velocity','density','volume','energy','time','numdens','flux','pressure']
+        self.names = ['mass','length','velocity','density','coldens','volume','energy','time','numdens','flux','pressure']
         self.namesAll = self.names+['a','h']
 
         self.conv = {}
@@ -42,15 +42,17 @@ class units():
             self.old['velocity'] = self.old['length'] / self.old['time']
 
         # Setup derived units
-        if 'density' not in self.old:
+        if 'density' not in self.old:     # Volume density (g/cm^3)
             self.old["density"]    = self.old["mass"] / self.old["length"]**3
+        if 'coldens' not in self.old:     # Column density (g/cm^2)
+            self.old['coldens']    = self.old['mass'] / self.old['length']**2
         if 'volume' not in self.old:
             self.old['volume']     = self.old['length']**3
         if 'energy' not in self.old:
             self.old["energy"]     = self.old["velocity"]**2     # internal energy E/m=v^2=(m/s)^2
         if 'flux' not in self.old or self.old['flux'] is None:
             self.old['flux'] = 1.
-        if 'numdens' not in self.old:
+        if 'numdens' not in self.old:     # Number density (1/cm^3)
             self.old['numdens']    = 1./self.old['length']**3
         if 'pressure' not in self.old:
             self.old['pressure']   = 10*self.old['mass']/(self.old['length']*self.old['time']**2) # P=(gamma-1)*rho*u (Ba)
@@ -78,16 +80,18 @@ class units():
         if 'velocity' not in self.new:
             self.new['velocity']   = self.old['velocity']
 
-        if 'density' not in self.new:
+        if 'density' not in self.new:      # Volume density (g/cm^3)
             self.new["density"]    = self.new["mass"] / self.new["length"]**3
+        if 'coldens' not in self.new:      # Column density (g/cm^2)
+            self.new['coldens']    = self.new['mass'] / self.new['length']**2
         if 'volume' not in self.new:
             self.new['volume']     = self.new['length']**3
-        if 'energy' not in self.new:
-            self.new["energy"]     = self.new["velocity"]**2     # internal energy E/m=v^2=(m/s)^2
+        if 'energy' not in self.new:       # internal energy E/m=v^2=(m/s)^2
+            self.new["energy"]     = self.new["velocity"]**2     
         if 'time' not in self.new:
             self.new['time']       = self.new['length'] / self.new['velocity']
         
-        if 'numdens' not in self.new:
+        if 'numdens' not in self.new:      # Volume number density (1/cm^3)
             self.new['numdens']    = 1.    # we want this to stay in cm^-3
         if 'flux' not in self.new:
             self.new['flux']       = 1.    # we want to have always units of ph/s
@@ -103,11 +107,12 @@ class units():
             'length':   (self.old['a']/self.old['h']) / (self.new['a']/self.new['h']),
             'mass':     (1.0/self.old['h']) / (1.0/self.new['h']),
             'velocity': np.sqrt( self.old['a'] / self.new['a'] ),
-            'density':  (self.old['h']**2/self.old['a']**3) / (self.new['h']**2/self.new['a']**3),
+            'density':  (self.old['h']**2/self.old['a']**3) / (self.new['h']**2/self.new['a']**3), # Volume density (h^2/a^3)
+            'coldens':  (self.old['h']**1/self.old['a']**2) / (self.new['h']**1/self.new['a']**2), # Column density (h/a^2)
             'volume':   ((self.old['a']/self.old['h']) / (self.new['a']/self.new['h']))**3,
             'energy':   1.0,
             'time':     1.0,
-            'numdens':  (self.new['a']/self.new['h'])**3 / (self.old['a']/self.old['h'])**3,
+            'numdens':  (self.new['a']/self.new['h'])**3 / (self.old['a']/self.old['h'])**3, # Volume number density (a^3/h^3)
             'flux':     1.0,
             'pressure': (1.0/self.old['a']) / (1.0/self.new['a']),
             }
