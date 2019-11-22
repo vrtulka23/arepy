@@ -99,6 +99,12 @@ def plotSubplot(ax,opt,canvas,fid=0):
 
         # Draw a text field
         if d['draw']=='text':
+            """Add text to the subplot
+            
+            :param str loc: Position of the text on the axes
+            :param (float)*2 padding: Padding of the text from the border
+            :param str bgcolor: Background color of the 'bbox' around the thext
+            """
             if not isinstance(d['loc'],str):
                 x,y,ha,va = d['loc']
             elif ('xlim' in axProp) and ('ylim' in axProp):
@@ -207,7 +213,7 @@ def plotSubplot(ax,opt,canvas,fid=0):
             apy.shell.exit('Colorbar cannot find any image')
         cbar = fig.colorbar(im, cax=cbar_ax, orientation=orientation)
         if colorbar['label'] is not None:
-            cbar.set_label(colorbar['label'])
+            cbar.set_label(colorbar['label'],fontsize=fontsize)
         if colorbar['location']=='top':
             cbar.ax.xaxis.set_label_position('top') 
             cbar.ax.xaxis.set_ticks_position('top') 

@@ -38,7 +38,7 @@ def _foreach(fn,args,nproc,label,append,dataPrev=None):
     dataNew = {}
     for index in range(numDataNew):
         result = results[index]
-        keys   = list(result.keys())   if isinstance(result,dict) else ['data']
+        keys   = list(result.keys())   if isinstance(result,dict) else ['nokey']
         values = list(result.values()) if isinstance(result,dict) else [result]
         numColumns = len(values)
         for c,key in enumerate(keys):
@@ -57,7 +57,7 @@ def _foreach(fn,args,nproc,label,append,dataPrev=None):
                 dataNew[key][index] = part
 
     if dataPrev: # combine cached and new data
-        keys   = list(dataPrev.keys())   if isinstance(dataPrev,dict) else ['data']
+        keys   = list(dataPrev.keys())   if isinstance(dataPrev,dict) else ['nokey']
         values = list(dataPrev.values()) if isinstance(dataPrev,dict) else [dataPrev]
         numColumns = len(values)
         for c,key in enumerate(keys):
@@ -66,11 +66,15 @@ def _foreach(fn,args,nproc,label,append,dataPrev=None):
             else:
                 dataNew[key] = np.concatenate((dataPrev[key],dataNew[key]),axis=0)
 
-    # return appropriate format
-    if numColumns>1 and numDataAll==1: 
-        return {key:value[0] for key,value in dataNew.items()}
-    else:
-        return dataNew if numDataAll>1 else list(dataNew.values())[0] 
+    # transform to an appropriate format
+    if numDataAll==1: 
+        dataNew = {key:value[0] for key,value in dataNew.items()}
+    if numColumns==1:
+        if 'nokey' in dataNew:
+            dataNew = dataNew['nokey']
+            
+    # return data
+    return dataNew
 
 def foreach(fn,args,nproc=1,label='',append=False,dirCache=None,update=False):
     # cache data if dirCache is set

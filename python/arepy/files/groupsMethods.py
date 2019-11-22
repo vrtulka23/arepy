@@ -110,7 +110,7 @@ class groupsMethods:
     ######################################
 
     # Plot Arepo image
-    def setImage(self, sp, prop, imgType, norm=None, normType=None, cmap=None, multiply=None):
+    def setImage(self, sp, prop, imgType, norm=None, normType=None, cmap=None, multiply=None, clip=None):
         """Set Arepo image
         """
         for item in self.items:
@@ -124,7 +124,12 @@ class groupsMethods:
             normType = 'log' if prop in logNormsProps else 'lin'
         norm = 'img_%s_%s'%(prop,imgType) if norm is None else norm
         if multiply is not None: 
-            data['im'] *= multiply
+            print(data['im'])
+            print(multiply)
+            print(data['im'].dtype, data['im'].shape, multiply)
+            data['im'] = data['im'] * multiply
+        if clip is not None:
+            data['im'] = np.clip(data['im'],clip[0],clip[1])
         sp.setImage(data=data['im'],extent=data['extent'],norm=norm,normType=normType,cmap=cmap)
 
     # Add rendering of the box projection/slice
