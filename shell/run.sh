@@ -15,19 +15,22 @@ nd=$(ls -l $DIR_PYTHON_SCRIPY | grep ^d | wc -l)  # count number of projects
 if [ "$nd" -gt "0" ]; then
     for pdir in $(ls -d $DIR_PYTHON_SCRIPY/*)
     do
-	pname=$(basename $pdir)
-	fileInit=$pdir/__init__.py
-	if [ -f $fileInit ]; then
-	    # read the init file of the project and strip all comments
-	    initsim=$(grep -o ^[^#]* $fileInit)
-	    # select the path to the simulation directory
-	    [[ $initsim =~ dirSim.*=.*\"(.*)\" ]]
-	    # check path of a current directory is used
-	    if [[ "$DIR_PWD" == "${BASH_REMATCH[1]}"* ]]; then 
-		PROJECT_NAME="$pname"
-		DIR_PROJECT="$pdir"
-	    fi
-	fi
+        pname=$(basename $pdir)
+        fileInit=$pdir/__init__.py
+        if [ -f $fileInit ]; then
+            # read the init file of the project and strip all comments
+            initsim=$(grep -o ^[^#]* $fileInit)
+            # select the path to the simulation directory
+            [[ $initsim =~ dirSim.*=.*\"(.*)\" ]]
+            # Remove trailing slashes from match and expand tilde for home directory
+            eval dirSimMatch=${BASH_REMATCH[1]%/}
+            # check path of a current directory is used
+            if [[ "$DIR_PWD" == $dirSimMatch ]]; then 
+                PROJECT_NAME="$pname"
+                DIR_PROJECT="$pdir"
+                echo "Found project: $PROJECT_NAME"
+            fi
+        fi
     done
 fi
 
