@@ -376,7 +376,7 @@ results_sync()
     fi
 }
 
-refract()
+refact()
 {
     strFrom="${1}"
     strTo="${2}"
@@ -554,7 +554,7 @@ while [ "$1" != "" ]; do
 	--init-script )            shift; analyze init-script "$@"; break;;
 
 	--sync )                   results_sync ;;
-	--refract )                shift; refract "$@"; break;;
+	--refact )                 shift; refact "$@"; break;;
 
 	-i | --initialize )        initialize ;;
 	-d | --clean-dir )         clean_directory ;;

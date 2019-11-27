@@ -212,13 +212,15 @@ class gridRays(grid):
     def _setCoordinates(self,nside=4):
         import healpy as hp
         self.npix = hp.nside2npix(nside)           # number of healpix pixels
-        coord = np.zeros((self.npix,3))  
+        self.pix2vec = np.zeros((self.npix,3))  
+        self.pix2ang = np.zeros((self.npix,2))
         for i in range(self.npix):
-            coord[i,:] = hp.pix2vec(nside,i)
+            self.pix2vec[i,:] = hp.pix2vec(nside,i)
+            self.pix2ang[i,:] = hp.pix2ang(nside,i)
         nradii = len(self.xi[0])
         rays = np.zeros((nradii,self.npix,3))
         for b,radius in enumerate(self.xi[0]):
-            rays[b] = coord*radius
+            rays[b] = self.pix2vec*radius
         rays = np.vstack(rays)
         self.parts = [self.npix]*nradii            # updata particle offset
         self.split = np.cumsum(self.parts[:-1])    # update particle split indexes
