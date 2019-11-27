@@ -55,7 +55,7 @@ class simulation:
         }
 
         # set initial parameters
-        self.dirSim = dirSim
+        self.dirSim = os.path.expanduser(dirSim)
         self.name = name
         self.sid = sid
 
