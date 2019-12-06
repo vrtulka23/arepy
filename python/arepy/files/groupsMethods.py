@@ -110,15 +110,15 @@ class groupsMethods:
     ######################################
 
     # Plot Arepo image
-    def setImage(self, sp, prop, imgType, norm=None, normType=None, cmap=None, multiply=None, clip=None):
-        """Set Arepo image
+    def addImage(self, sp, prop, imgType, norm=None, normType=None, cmap=None, multiply=None, clip=None):
+        """Add an Arepo image
         """
         for item in self.items:
             if 'boxSize' not in item.sim.optImages:
                 apy.shell.exit("No 'boxSize' option for simulation %d (groups.py)"%item.index)
             region = apy.coord.regionBox(item.sim.optImages['boxSize'])
             item.setTransf(region=region,origin=region.center)
-        data = self.foreach(setImage,args=[prop,imgType])
+        data = self.foreach(addImage,args=[prop,imgType])
         logNormsProps = ['density','rih','ndens']
         if not normType:
             normType = 'log' if prop in logNormsProps else 'lin'
@@ -127,17 +127,17 @@ class groupsMethods:
             data['im'] = data['im'] * multiply
         if clip is not None:
             data['im'] = np.clip(data['im'],clip[0],clip[1])
-        sp.setImage(data=data['im'],extent=data['extent'],norm=norm,normType=normType,cmap=cmap)
+        sp.addImage(data=data['im'],extent=data['extent'],norm=norm,normType=normType,cmap=cmap)
 
     # Add rendering of the box projection/slice
-    def _renderImage(self, sp, prop, imgType, 
+    def _renderImage(self, sp, prop, imgType,
                      bins=200, cache=False, nproc=None, n_jobs=None, **imgopt):
         #             norm=None, normType=None,  cmap=None, 
         #             xnorm=None, ynorm=None, aspect='equal'):
         n_jobs = self.opt['n_jobs'] if n_jobs is None else n_jobs
         prop = apy.files.properties(prop)
         proj = self.foreach(renderImage,args=[imgType,prop,bins,n_jobs],
-                            cache=cache, nproc=nproc)
+                            cache=cache, nproc=nproc)            
         if isinstance(sp,list):
             for i in range(len(sp)):
                 data = proj[prop[i]['name']]
@@ -146,9 +146,10 @@ class groupsMethods:
                 newimgopt['normType'] = imgopt['normType'][i] if isinstance(imgopt['normType'],list) else imgopt['normType']
                 if 'cmap' in imgopt:
                     newimgopt['cmap']     = imgopt['cmap'][i]     if isinstance(imgopt['cmap'],list)     else imgopt['cmap']
-                sp[i].setImage(data=data, extent=proj['extent'], **newimgopt)
+                sp[i].addImage(data=data, extent=proj['extent'], **newimgopt)
         else:
-            sp.setImage(data=proj['data'],extent=proj['extent'], **imgopt)
+            sp.addImage(data=proj['data'], extent=proj['extent'], **imgopt)
+
     def setProjection(self, sp, prop, **opt):
         """Create a projection image of a snapshot property
 
@@ -160,7 +161,7 @@ class groupsMethods:
         :param int nproc: Number of processors per projection
         :param int n_jobs: Number of processors per KDTree
         
-        Parameter 'imgopt' is a dictionary of options that are passed to :meth:`arepy.plot.subplot.setImage`, 
+        Parameter 'imgopt' is a dictionary of options that are passed to :meth:`arepy.plot.subplot.addImage`, 
         together with the image 'data' and 'extent'.
         """
         self._renderImage(sp, prop, 'BoxProjCube', **opt)
@@ -175,7 +176,7 @@ class groupsMethods:
         :param int nproc: Number of processors per projection
         :param int n_jobs: Number of processors per KDTree
         
-        Parameter 'imgopt' is a dictionary of options that are passed to :meth:`arepy.plot.subplot.setImage`, 
+        Parameter 'imgopt' is a dictionary of options that are passed to :meth:`arepy.plot.subplot.addImage`, 
         together with the image 'data' and 'extent'.
         """
         self._renderImage(sp, prop, 'BoxSquareXY', **opt)
@@ -239,10 +240,11 @@ class groupsMethods:
         """Show particle location on the image
         """
         coords = self.foreach(addParticles,append=True,args=[ptype])
-        x,y=[],[]
-        for coord in coords:
-            x.append([] if coord is None else coord[:,0])
-            y.append([] if coord is None else coord[:,1])
+        if self.size>1:
+            x = np.array(coords)[:,:,0]
+            y = np.array(coords)[:,:,1]
+        else:
+            x,y,z = np.array(coords).T
         nopt = {'s':20,'marker':'+','c':'black','edgecolors':None,'linewidths':1}
         nopt.update(opt)
         if isinstance(sp,list):
@@ -296,7 +298,7 @@ class groupsMethods:
         if yscale=='log': yext = np.log10(yext)
         extent = [xext[0],xext[1], yext[0],yext[1]]
         norm = 'hist_%s_%s'%(xprop,yprop) if norm is None else norm
-        sp.setImage(data=allData,extent=extent,norm=norm,normType=normType,cmap=cmap,aspect=aspect)
+        sp.addImage(data=allData,extent=extent,norm=norm,normType=normType,cmap=cmap,aspect=aspect)
 
     '''
     # Interpolate snapshots according to their times
@@ -394,7 +396,7 @@ def setSnapStamp(item):
     return '%s/%03d'%(item.sim.name,item.snap)
         
 # Get arepo image
-def setImage(item,prop,imgType):
+def addImage(item,prop,imgType):
     im,px,py = item.sim.getImage(item.snap,prop,imgType)
     if prop=='density':
         im *= item.sim.units.conv['coldens'] # Arepo density images are in units g/cm^2

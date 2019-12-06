@@ -42,3 +42,8 @@ on_queue_list()
 {
     showq
 }
+
+on_load_python()
+{
+    conda activate py37
+}

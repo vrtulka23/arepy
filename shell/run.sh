@@ -356,7 +356,7 @@ queue_avail()
     if [ $(type -t on_queue_avail) ]; then
         on_queue_avail
     else
-	echo_red "Information not available..."
+	echo_red "Function 'on_queue_avail' is not implemented..."
     fi
 }
 queue_list()
@@ -365,7 +365,7 @@ queue_list()
     if [ $(type -t on_queue_list) ]; then
         on_queue_list
     else
-	echo_red "Information not available..."
+	echo_red "Function 'on_queue_list' is not implemented..."
     fi
 }
 
@@ -375,10 +375,11 @@ results_sync()
     if [ $(type -t on_results_sync) ]; then
         on_results_sync
     else
-	echo_red "No synchronization script available..."
+	echo_red "Function 'on_results_sync' is not implemented..."
     fi
 }
 
+# Search and replace strings in the python code
 refact()
 {
     strFrom="${1}"
@@ -409,6 +410,17 @@ refact()
 	echo -e "${YEL}No string was found${NC}"
     fi
 }
+
+load_python()
+{    
+    echo_green "Loading python:"
+    if [ $(type -t on_load_python) ]; then
+        on_load_python
+    else
+	echo_red "Function 'on_load_python' is not implemented..."
+    fi
+}
+
 
 # Run an interactive session
 inter_run()
@@ -558,6 +570,7 @@ while [ "$1" != "" ]; do
 
 	--sync )                   results_sync ;;
 	--refact )                 shift; refact "$@"; break;;
+	--python )                 shift; load_python "$@"; break;;
 
 	-i | --initialize )        initialize ;;
 	-d | --clean-dir )         clean_directory ;;

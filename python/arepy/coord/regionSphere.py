@@ -27,7 +27,7 @@ class regionSphere:
         self.name = 'sphere'
         self.setRegion(center=args[0],radius=args[1],srad=srad)
 
-    def getOuterBox(self,center=None,size=None):
+    def getOuterBox(self,center=None,size=None,srad=None):
         """Get outer box
 
         :param [float]*3 center: New box center
@@ -37,9 +37,10 @@ class regionSphere:
         """
         if center is None: center = self.center
         if size is None: size = self.radius*2
-        return apy.coord.regionBox(center,size,srad=self.srad)
+        if srad is None: srad = self.srad
+        return apy.coord.regionBox(center,size,srad=srad)
 
-    def getInnerBox(self,center=None,size=None):
+    def getInnerBox(self,center=None,size=None,srad=None):
         """Get inner box
 
         :param [float]*3 center: New box center
@@ -49,7 +50,8 @@ class regionSphere:
         """
         if center is None: center = self.center
         if size is None: size = self.radius*2/np.sqrt(3)
-        return apy.coord.regionBox(center,size,srad=self.srad)
+        if srad is None: srad = self.srad
+        return apy.coord.regionBox(center,size,srad=srad)
 
     def show(self):
         """Print out region settings"""

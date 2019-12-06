@@ -226,12 +226,15 @@ class gridRays(grid):
         self.split = np.cumsum(self.parts[:-1])    # update particle split indexes
         return rays, [len(rays)]
 
-    def reshapeData(self,data):
+    def reshapeData(self,data,dim=None):
         """Reshape data
 
         Reshapes data into the shape (npix,nbins)
         """
-        return data.reshape((self.bins[0],self.npix)).T
+        if dim is None:
+            return data.reshape((self.bins[0],self.npix)).T
+        else: # reshape with an additional dimension (e.g. for coordinates)
+            return data.reshape((self.bins[0],self.npix,dim)).T
 
 # filled spherical grid using healpix
 class gridSphere(grid):
@@ -265,9 +268,12 @@ class gridSphere(grid):
         self.split = np.cumsum(self.parts[:-1])    # update particle split indexes
         return rays, [len(rays)]
 
-    def reshapeData(self,data):
+    def reshapeData(self,data,dim=None):
         """Reshape data
 
         Reshapes data into the shape (npix,nbins)
         """
-        return data.reshape((self.bins[0],self.npix)).T
+        if dim is None:
+            return data.reshape((self.bins[0],self.npix)).T
+        else: # reshape with an additional dimension (e.g. for coordinates)
+            return data.reshape((self.bins[0],self.npix,dim)).T
