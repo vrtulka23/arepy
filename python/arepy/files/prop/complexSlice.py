@@ -35,7 +35,9 @@ class complexSlice:
             pps = self.getProperty(load,ids=region['Indexes'],ptype=ptype,dictionary=True)
             for pp in properties:
                 if pp['name']=='Coordinates':
-                    properties.setData(pp['key'], grid.reshapeData(points))
+                    properties.setData(pp['key'], grid.reshapeData(points,3))
+                elif pp['name']=='HealpixAngles':
+                    properties.setData(pp['key'], grid.pix2ang)
                 elif pp['name']=='Bins':
                     properties.setData(pp['key'], grid.xi )
                 else:

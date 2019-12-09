@@ -30,11 +30,13 @@ After this the *arepy* python module can be included in any python script and yo
 
 In the next step you will have to choose system settings. You can either choose existing settings by inputing one of the system names in *shell/systems/{SYSTEM_NAME}.sh* or create a new one by putting your own name.
 
-Arepo source code can be either stored directly in the arepy main directory */path/to/arepy/arepo/(source code)*, or you can set your own path to the *shell/system.sh* as:
+Arepo source code can be either stored directly in the arepy main directory */path/to/arepy/arepo/(source code)*, or you can set your own path in the *shell/system.sh* file as:
 
 .. code:: bash
 
     DIR_AREPO=/my/path/to/arepo
+
+More examples and settings could be found in file *shell/systems/examples.sh*.
 
 Licensing and contribution
 ^^^^^^^^^^^^^^^^^^^^^^^^^^

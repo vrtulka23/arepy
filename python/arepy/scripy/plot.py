@@ -105,7 +105,7 @@ class plot:
                 sp = self.fig.getSubplot(grp.index,0, xlabel='x',ylabel='y' )
         
                 # plot an image
-                grp.setImage(sp,'density','slice')
+                grp.addImage(sp,'density','slice')
         """
         return
     def _plot(self):

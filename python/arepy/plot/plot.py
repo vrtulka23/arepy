@@ -5,6 +5,10 @@ from mpl_toolkits.mplot3d import Axes3D
 import arepy as apy
 import numpy as np
 
+####################################
+# Compose a subplot
+####################################
+
 def plotSubplot(ax,opt,canvas,fid=0):
     fig = ax.figure
 
@@ -25,10 +29,14 @@ def plotSubplot(ax,opt,canvas,fid=0):
     if spXYZ:
         if 'zlim' in axProp: zlim = axProp['zlim'][fid] if np.ndim(axProp['zlim'])>1 else axProp['zlim']
 
+    ####################################
+    # Drawing objects on the axes
+    ####################################
 
     fontsize = 8   # default font size
     twinx = None   # twin axis flag
     handles = []   # collector of plot handles
+    images = []    # collector of image handles
     for d in canvas['other']:
         if d['twinx'] and twinx==None:
             twinx = ax.twinx()
@@ -130,7 +138,61 @@ def plotSubplot(ax,opt,canvas,fid=0):
             height = d['height'] if np.isscalar(d['height']) else d['height'][fid]
             shape = mpl.patches.Rectangle(xy,width,height,**d['kwargs'])
             drawax.add_patch(shape)
-        
+    
+        if d['draw']=='image':
+            data = d['data'][fid] if len(np.array(d['data']).shape)>2 else d['data']
+            if data!=[]:
+                if d['normType']=='log':
+                    if d['norm'][1]<=0:
+                        return hideAxis("\nWarning: Skipping image plots with zero/negative logarithmic norm!")
+                    norm = mpl.colors.LogNorm(vmin=d['norm'][1],vmax=d['norm'][2])
+                elif d['normType'] in ['lin',None]:
+                    norm = mpl.colors.Normalize(vmin=d['norm'][0],vmax=d['norm'][2])
+                else:
+                    apy.shell.exit("Normalization type '%s' is not defined (plot.py)"%d['normType'])
+                extent = d['extent'][fid] if np.ndim(d['extent'])>1 else d['extent']
+                im = drawax.imshow( data.T, origin='lower', norm=norm, extent=extent, **d['kwargs'] )        
+                images.append(im)
+
+    ####################################
+    # Colorbars
+    ####################################
+
+    if canvas['colorbar'] is not None:
+        #ax = mappable.axes
+        colorbar = canvas['colorbar']
+        orientation = 'horizontal' if colorbar['location']=='top' else 'vertical'
+        divider = axesgrid.make_axes_locatable(ax)
+        cax = divider.append_axes(colorbar['location'], size="5%", pad=0.05)
+        if len(images)==0:
+            apy.shell.exit('Colorbar cannot find any image')
+        cbar = fig.colorbar(images[0], cax=cax, orientation=orientation)
+        if colorbar['label'] is not None:
+            cbar.set_label(colorbar['label'],fontsize=fontsize)
+        if colorbar['location']=='top':
+            cbar.ax.xaxis.set_label_position('top') 
+            cbar.ax.xaxis.set_ticks_position('top') 
+        cbar.ax.tick_params(labelsize=fontsize)
+
+    if canvas['colorbarNA'] is not None:
+        colorbar = canvas['colorbarNA']
+        orientation = 'horizontal' if colorbar['location']=='top' else 'vertical'
+        cbar_ax = fig.add_axes(colorbar['pos'])
+        if len(images)==0:
+            apy.shell.exit('Colorbar cannot find any image')
+        cbar = fig.colorbar(images[0], cax=cbar_ax, orientation=orientation)
+        if colorbar['label'] is not None:
+            cbar.set_label(colorbar['label'],fontsize=fontsize)
+        if colorbar['location']=='top':
+            cbar.ax.xaxis.set_label_position('top') 
+            cbar.ax.xaxis.set_ticks_position('top') 
+        cbar.ax.tick_params(labelsize=fontsize)
+
+
+    ####################################
+    # Legends
+    ####################################
+
     # Draw a standard legend
     if canvas['legend'] is not None:
         legend = canvas['legend']
@@ -174,50 +236,9 @@ def plotSubplot(ax,opt,canvas,fid=0):
         leg = mpl.legend.Legend(ax, elements, legend['labels'], **legend['nopt'])
         ax.add_artist(leg);
 
-    if canvas['image'] is not None:
-        image = canvas['image']
-        data = image['data'][fid] if len(np.array(image['data']).shape)>2 else image['data']
-        if data!=[]:
-            if image['normType']=='log':
-                if image['norm'][1]<=0:
-                    return hideAxis("\nWarning: Skipping image plots with zero/negative logarithmic norm!")
-                norm = mpl.colors.LogNorm(vmin=image['norm'][1],vmax=image['norm'][2])
-            elif image['normType'] in ['lin',None]:
-                norm = mpl.colors.Normalize(vmin=image['norm'][0],vmax=image['norm'][2])
-            else:
-                apy.shell.exit("Normalization type '%s' is not defined (plot.py)"%image['normType'])
-            extent = image['extent'][fid] if np.ndim(image['extent'])>1 else image['extent']
-            im = ax.imshow( data.T, origin='lower', norm=norm, extent=extent, **image['kwargs'] )
-
-    if canvas['colorbar'] is not None:
-        #ax = mappable.axes
-        colorbar = canvas['colorbar']
-        orientation = 'horizontal' if colorbar['location']=='top' else 'vertical'
-        divider = axesgrid.make_axes_locatable(ax)
-        cax = divider.append_axes(colorbar['location'], size="5%", pad=0.05)
-        if not im:
-            apy.shell.exit('Colorbar cannot find any image')
-        cbar = fig.colorbar(im, cax=cax, orientation=orientation)
-        if colorbar['label'] is not None:
-            cbar.set_label(colorbar['label'],fontsize=fontsize)
-        if colorbar['location']=='top':
-            cbar.ax.xaxis.set_label_position('top') 
-            cbar.ax.xaxis.set_ticks_position('top') 
-        cbar.ax.tick_params(labelsize=fontsize)
-
-    if canvas['colorbarNA'] is not None:
-        colorbar = canvas['colorbarNA']
-        orientation = 'horizontal' if colorbar['location']=='top' else 'vertical'
-        cbar_ax = fig.add_axes(colorbar['pos'])
-        if not im:
-            apy.shell.exit('Colorbar cannot find any image')
-        cbar = fig.colorbar(im, cax=cbar_ax, orientation=orientation)
-        if colorbar['label'] is not None:
-            cbar.set_label(colorbar['label'],fontsize=fontsize)
-        if colorbar['location']=='top':
-            cbar.ax.xaxis.set_label_position('top') 
-            cbar.ax.xaxis.set_ticks_position('top') 
-        cbar.ax.tick_params(labelsize=fontsize)
+    ####################################
+    # Axes
+    ####################################
 
     if axProp['xpos']=='top': 
         ax.xaxis.tick_top()
@@ -287,6 +308,10 @@ def plotSubplot(ax,opt,canvas,fid=0):
     #ax.yaxis.set_tick_params(labelsize=fontsize)
     ax.tick_params(which='both', labelsize=fontsize)
     if 'tickparam' in axProp: ax.tick_params(**axProp['tickparam'])
+
+####################################
+# Compose a figure
+####################################
 
 def plotFigure(f,opt,canvas):
 

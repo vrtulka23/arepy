@@ -30,7 +30,6 @@ class subplot:
         self.canvas = {
             'subplot': [self.index,self.row,self.col,self.xyz],      # subplot properties
             'empty': True,      # is canvas empty
-            'image': None,      # main image on the figure
             'colorbar': None,   # colorbar of the image
             'colorbarNA': None, # colorbar on a new axis
             'legend': None,     # standard plot legend
@@ -115,9 +114,9 @@ class subplot:
             nopt['loc'] = nopt['loc'].replace('bottom','lower').replace('top','upper')
         self.canvas['legendM'] = {'draw':'legendM','markers':markers,'labels':labels,'color':color,'nopt':nopt}
 
-    def setImage(self, data, extent=(0,1,0,1), norm=None, normType='lin', normLim=None,
-                 xnorm=None, ynorm=None, **kwargs):
-        """Set an image
+    def addImage(self, data, extent=(0,1,0,1), norm=None, normType='lin', 
+                 normLim=None, xnorm=None, ynorm=None, **kwargs):
+        """Add an image
         
         A thin wrapper around the matplotlib imshow class, that additionally sets the image normalization.
 
@@ -134,11 +133,15 @@ class subplot:
                      xname=xnorm,yname=ynorm,zname=norm,
                      zlim=normLim)        
         self.setOption(xlim=xextent, ylim=yextent)
-        self.canvas['image'] = {'data':data,'norm':self.znorm,'normType':normType,
-                                'extent':extent,'kwargs':kwargs}
+        self.canvas['other'].append({'draw':'image','twinx':False,
+                                     'data':data,'norm':self.znorm,'normType':normType,
+                                     'extent':extent,'kwargs':kwargs})
 
     def setColorbar(self, location='right', label=None):
-        """Set a colorbar"""
+        """Set a colorbar
+
+        :param str location: top/right
+        """
         self.canvas['colorbar'] = {'location':location,'label':label}
 
     def setColorbarNA(self, pos, **nopt):
@@ -260,16 +263,6 @@ class subplot:
         if 'xflip' in canvas['axis'] and canvas['axis']['xflip']:
             canvas['axis']['xlim'] = [canvas['axis']['xlim'][:,1],canvas['axis']['xlim'][:,0]]
             
-        # prepare unique objects
-        if canvas['image'] is not None:
-            image = canvas['image']
-            norm = self.figure.norms.getLimits(image['norm'])
-            if norm is None:
-                apy.shell.printc("\nWarning: Image norm '%s' is None and will be marked as empty plot! (subplot.py)"%image['norm'],'r')
-                canvas['empty'] = True
-            canvas['image']['norm'] = norm
-            canvas['image']['extent'] = image['extent']
-            
         # prepare multiple objects
         for i,d in enumerate(canvas['other']):
             if d['draw']=='text':
@@ -278,6 +271,11 @@ class subplot:
             if d['draw']=='scatter':
                 canvas['other'][i]['x'] = d['x']
                 canvas['other'][i]['y'] = d['y']
+            if d['draw']=='image':
+                norm = self.figure.norms.getLimits(d['norm'])
+                if norm is None:
+                    apy.shell.printc("\nWarning: Image overlay norm '%s' is None and will be ignored! (subplot.py)"%d['norm'],'r')                    
+                canvas['other'][i]['norm'] = norm
                 
         return canvas
     
