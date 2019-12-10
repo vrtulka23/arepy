@@ -132,7 +132,8 @@ class subplot:
         self.setNorm(xdata=xextent,ydata=yextent,zdata=data,
                      xname=xnorm,yname=ynorm,zname=norm,
                      zlim=normLim)        
-        self.setOption(xlim=xextent, ylim=yextent)
+        if xnorm is None: self.setOption(xlim=xextent)
+        if ynorm is None: self.setOption(ylim=yextent)
         self.canvas['other'].append({'draw':'image','twinx':False,
                                      'data':data,'norm':self.znorm,'normType':normType,
                                      'extent':extent,'kwargs':kwargs})
