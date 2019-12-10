@@ -7,7 +7,9 @@ The main module is written in Python, but some parts are also written in bash.
 
 """
 
+import yaml
 from arepy.showLeap import *
+from arepy.config import config
     
 # Keeping track of the module loading times
 
@@ -36,5 +38,14 @@ dirModule = dirname(dirname(dirname(realpath(__file__))))
 dirArepy = dirModule+'/python/arepy'
 dirScripy = dirModule+'/python/scripy'
 dirResults = dirModule+'/results'
+fileConfig = dirHome+"/.arepy"
+
+def readConfigFile(filename):
+    if arepy.shell.isfile(filename):
+        with open(filename, "r") as f:
+            configFromFile = yaml.load(f)
+            config.update(configFromFile)
+
+readConfigFile(fileConfig)
 
 numCpu = mpi.cpu_count()
