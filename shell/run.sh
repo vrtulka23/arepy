@@ -20,7 +20,7 @@ if [ "$nd" -gt "0" ]; then
         if [ -f $fileConf ]; then
             source $fileConf
             PROJECT_NAME=$pname
-            DIR_PROJECT=$dirSim
+            DIR_PROJECT=$pdir
         fi
     done
 fi
