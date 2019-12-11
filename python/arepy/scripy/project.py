@@ -21,7 +21,8 @@ class project:
         self.dirResults = apy.dirResults+'/'+name
         self.dirTemplates = apy.dirArepy+'/scripy/tmpl' 
         
-        self.dirSim = None
+        self.config = apy.shell.readConfigFile(self.dirProject + "/project.conf")
+        self.dirSim = self.config["dirSim"]
         self.dirPlots = self.dirProject+'/plots'
         self.dirScripts = self.dirProject+'/scripts'
         self.dirSetups = self.dirProject+'/setups'
@@ -139,8 +140,11 @@ class project:
         self.dirProject = apy.dirScripy+'/'+name
         apy.shell.mkdir( self.dirProject )
         dirProjectInit = self.dirProject+'/__init__.py'
+        dirProjectConf = self.dirProject+'/project.conf'
         with apy.util.template( self.dirTemplates+'/project.py' ) as f:
             f.write( dirProjectInit )
+        with apy.util.template( self.dirTemplates+'/project.conf' ) as f:
+            f.write( dirProjectConf )
         apy.shell.printc('New project:\n'+self.dirProject+'\n'+dirProjectInit)
 
     def initSetup(self,name):
@@ -225,6 +229,7 @@ class project:
     # Analyze and plot simulation data
     # apy (--plot|--debug|--show) {PLOT} [{SUBPLOT}]
     def plot(self,action,name=None,*args):
+        print(name)
         if name is None:
             self._showOptions(self.dirPlots)
         else: 

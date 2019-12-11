@@ -79,3 +79,7 @@ def touch(fileName):
 def dirname(fileName):
     return os.path.dirname(fileName)
         
+def readConfigFile(fileName):
+    with open(fileName, "r") as f:
+        lines = f.readlines()
+        return dict([s.strip().replace("\n", "") for s in line.split("=")] for line in lines)

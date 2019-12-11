@@ -4,10 +4,6 @@ class project(apy.scripy.project):
 
     def init(self):
         
-        # Simulation directory of a project
-        # This variable need to stay defined !!!
-        self.dirSim = "/simulation/directory"
-
         # Setup of a new simulation
         self.sims['001'] = {
             'dir': self.dirSim+'/subdirectory',
