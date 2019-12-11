@@ -241,8 +241,8 @@ class groupsMethods:
         """
         coords = self.foreach(addParticles,append=True,args=[ptype])
         if self.size>1:
-            x = np.array(coords)[:,:,0]
-            y = np.array(coords)[:,:,1]
+            x = [c[:,0] for c in coords]
+            y = [c[:,1] for c in coords]
         else:
             x,y,z = np.array(coords).T
         nopt = {'s':20,'marker':'+','c':'black','edgecolors':None,'linewidths':1}
