@@ -12,6 +12,7 @@ This module requires by default following python modules:
 * *h5py*
 * *matplotlib*
 * *multiprocessing*
+* *pyyaml*
 
 Installation
 ^^^^^^^^^^^^
