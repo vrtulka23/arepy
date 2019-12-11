@@ -16,6 +16,6 @@ results/*
 !results/debug/grids
 
 .submitlog
-shell/run.system.sh
+shell/system.sh
 
 arepo/*

@@ -21,9 +21,6 @@ submit_init()
 }
 CLEAN_FILES="slurm*"
 
-INTER_CMD="srun -N 2 --ntasks-per-node=16 --pty bash"
-
-
 on_queue_avail()
 {
     sinfo
