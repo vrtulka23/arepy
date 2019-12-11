@@ -21,7 +21,8 @@ class project:
         self.dirResults = apy.dirResults+'/'+name
         self.dirTemplates = apy.dirArepy+'/scripy/tmpl' 
         
-        self.dirSim = None
+        self.config = apy.shell.readConfigFile(self.dirProject + "/project.conf")
+        self.dirSim = self.config["dirSim"]
         self.dirPlots = self.dirProject+'/plots'
         self.dirScripts = self.dirProject+'/scripts'
         self.dirSetups = self.dirProject+'/setups'
