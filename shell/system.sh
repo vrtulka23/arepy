@@ -1,49 +1,43 @@
 #!/bin/bash
 
+DIR_AREPO=/home/hd/hd_hd/hd_wd148/projects/arepo
+
 # cluster related settings
 RUN_CMD_TERMINAL="mpirun -np $((NUM_NODES*NUM_PROC))"
-RUN_CMD_DEBUG="mpirun -gdb -n $((NUM_NODES*NUM_PROC))"
-RUN_CMD_SUBMIT="mpirun"
+RUN_CMD_SUBMIT="srun --mpi=pmi2"
 
 JOBID_REGEXP="([0-9]+)"
-CANCEL_CMD="canceljob"
+CANCEL_CMD="scancel"
 
-SUBMIT_CMD="msub"
+SUBMIT_CMD="sbatch"
 submit_init()
 {
-    echo "#MSUB -l nodes=${1}:ppn=${2}:${3}
-#MSUB -l walltime=${4}"
-#MSUB -N ${5}"
+    echo "
+#SBATCH -n $((${1}*${2}))
+#SBATCH --ntasks-per-node=${2}
+#SBATCH -p ${3}
+#SBATCH -A bw16L013
+"
 }
-CLEAN_FILES="${JOB_NAME}.e* ${JOB_NAME}.o*"
+CLEAN_FILES="slurm*"
 
-on_inter_run()
-{
-    INTER_CMD="msub -I -V -X -l nodes=${nodes}:ppn=${ppn}:${type},walltime=${walltime}"
-}
+INTER_CMD="srun -N 2 --ntasks-per-node=16 --pty bash"
+
 
 on_queue_avail()
 {
-    echo -e "\033[0;33mStandard\033[0m";
-    printf "$(showbf -f standard)\n"
-    echo -e "\033[0;33mBest\033[0m";
-    printf "$(showbf -f best)\n"
-    echo -e "\033[0;33mFat\033[0m";
-    printf "$(showbf -f fat)\n"
-    echo -e "\033[0;33mFat-ivy\033[0m";
-    printf "$(showbf -f fat-ivy)\n"
-    echo -e "\033[0;33mMic\033[0m";
-    printf "$(showbf -f mic)\n"
-    echo -e "\033[0;33mGPU\033[0m";
-    printf "$(showbf -f gpu)\n"
+    sinfo
 }
 
 on_queue_list()
 {
-    showq
+    squeue
 }
 
-on_load_python()
+
+# Custom that calls an interactive session (apy -I)
+on_inter_run()
 {
-    conda activate py37
+    INTER_CMD="srun -N ${nodes} --ntasks-per-node=${ppn} --pty bash"
 }
+

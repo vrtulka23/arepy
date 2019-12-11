@@ -225,6 +225,7 @@ class project:
     # Analyze and plot simulation data
     # apy (--plot|--debug|--show) {PLOT} [{SUBPLOT}]
     def plot(self,action,name=None,*args):
+        print(name)
         if name is None:
             self._showOptions(self.dirPlots)
         else: 
