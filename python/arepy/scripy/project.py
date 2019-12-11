@@ -22,7 +22,7 @@ class project:
         self.dirTemplates = apy.dirArepy+'/scripy/tmpl' 
         
         self.config = apy.shell.readConfigFile(self.dirProject + "/project.conf")
-        self.dirSim = self.config["dirSim"]
+        self.dirSim = os.path.expanduser(self.config["dirSim"])
         self.dirPlots = self.dirProject+'/plots'
         self.dirScripts = self.dirProject+'/scripts'
         self.dirSetups = self.dirProject+'/setups'
