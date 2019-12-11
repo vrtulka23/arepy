@@ -140,8 +140,11 @@ class project:
         self.dirProject = apy.dirScripy+'/'+name
         apy.shell.mkdir( self.dirProject )
         dirProjectInit = self.dirProject+'/__init__.py'
+        dirProjectConf = self.dirProject+'/project.conf'
         with apy.util.template( self.dirTemplates+'/project.py' ) as f:
             f.write( dirProjectInit )
+        with apy.util.template( self.dirTemplates+'/project.conf' ) as f:
+            f.write( dirProjectConf )
         apy.shell.printc('New project:\n'+self.dirProject+'\n'+dirProjectInit)
 
     def initSetup(self,name):
