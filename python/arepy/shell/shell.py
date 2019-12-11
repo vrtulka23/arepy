@@ -82,4 +82,8 @@ def dirname(fileName):
 def readConfigFile(fileName):
     with open(fileName, "r") as f:
         lines = f.readlines()
-        return dict([s.strip().replace("\n", "") for s in line.split("=")] for line in lines)
+    config = {}
+    for line in lines:
+        key,val = line.split("=")
+        config[key.strip()] = val.strip().replace("\n", "")
+    return config
