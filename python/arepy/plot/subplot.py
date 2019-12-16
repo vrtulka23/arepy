@@ -31,7 +31,6 @@ class subplot:
             'subplot': [self.index,self.row,self.col,self.xyz],      # subplot properties
             'empty': True,      # is canvas empty
             'colorbar': None,   # colorbar of the image
-            'colorbarNA': None, # colorbar on a new axis
             'legend': None,     # standard plot legend
             'legendLS': None,   # plot linestyle legend
             'legendM': None,    # plot marker legend
@@ -119,7 +118,7 @@ class subplot:
         """Add an image
         
         A thin wrapper around the matplotlib imshow class, that additionally sets the image normalization.
-
+        
         :param [[float]*Y]*X data: Image pixel data on an x and y axis 
         :param tuple[float] extent: Extent of the x and y axis
         :param str norm: Name of the image normalization.
@@ -130,8 +129,7 @@ class subplot:
         xextent = extent[:,:2] if np.ndim(extent)>1 else extent[:2]
         yextent = extent[:,2:] if np.ndim(extent)>1 else extent[2:]
         self.setNorm(xdata=xextent,ydata=yextent,zdata=data,
-                     xname=xnorm,yname=ynorm,zname=norm,
-                     zlim=normLim)        
+                     xname=xnorm,yname=ynorm,zname=norm, zlim=normLim)        
         if xnorm is None: self.setOption(xlim=xextent)
         if ynorm is None: self.setOption(ylim=yextent)
         self.canvas['other'].append({'draw':'image','twinx':False,
@@ -145,7 +143,7 @@ class subplot:
         """
         self.canvas['colorbar'] = {'location':location,'label':label}
 
-    def setColorbarNA(self, pos, **nopt):
+    def addColorbarNA(self, pos, **nopt):
         """Plot a colorbar on arbitrary position
         
         Example::
@@ -154,7 +152,7 @@ class subplot:
         """
         opt = {'location':'right','label':None}
         opt.update(nopt)
-        self.canvas['colorbarNA'] = {'pos':pos,**opt}
+        self.canvas['other'].append({'draw':'colorbarNA','twinx':False,'pos':pos,**opt})
         
     def addPlot(self, x, y, twinx=False, xnorm=None, ynorm=None, **nopt):
         """Add a plot to the canvas"""

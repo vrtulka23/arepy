@@ -138,7 +138,8 @@ def plotSubplot(ax,opt,canvas,fid=0):
             height = d['height'] if np.isscalar(d['height']) else d['height'][fid]
             shape = mpl.patches.Rectangle(xy,width,height,**d['kwargs'])
             drawax.add_patch(shape)
-    
+
+        # Draw an image
         if d['draw']=='image':
             data = d['data'][fid] if len(np.array(d['data']).shape)>2 else d['data']
             if data!=[]:
@@ -154,6 +155,23 @@ def plotSubplot(ax,opt,canvas,fid=0):
                 im = drawax.imshow( data.T, origin='lower', norm=norm, extent=extent, **d['kwargs'] )        
                 images.append(im)
 
+        # Draw a custom colorbar
+        if d['draw']=='colorbarNA':
+            orientation = 'horizontal' if d['location']=='top' else 'vertical'
+            cbar_ax = fig.add_axes(d['pos'])
+            if len(images)==0:
+                apy.shell.exit('Colorbar cannot find any image')
+            im = images[d['im']] if 'im' in d else images[0]
+            cbar = fig.colorbar(im, cax=cbar_ax, orientation=orientation)
+            if 'xticklabels' in d: cbar.ax.set_xticklabels(d['xticklabels'])
+            if 'yticklabels' in d: cbar.ax.set_yticklabels(d['yticklabels'])
+            if d['label'] is not None:
+                cbar.set_label(d['label'],fontsize=fontsize)
+            if d['location']=='top':
+                cbar.ax.xaxis.set_label_position('top') 
+                cbar.ax.xaxis.set_ticks_position('top') 
+            cbar.ax.tick_params(labelsize=fontsize)
+
     ####################################
     # Colorbars
     ####################################
@@ -166,28 +184,14 @@ def plotSubplot(ax,opt,canvas,fid=0):
         cax = divider.append_axes(colorbar['location'], size="5%", pad=0.05)
         if len(images)==0:
             apy.shell.exit('Colorbar cannot find any image')
-        cbar = fig.colorbar(images[0], cax=cax, orientation=orientation)
+        im = images[colorbar['im']] if 'im' in colorbar else images[0]
+        cbar = fig.colorbar(im, cax=cax, orientation=orientation)
         if colorbar['label'] is not None:
             cbar.set_label(colorbar['label'],fontsize=fontsize)
         if colorbar['location']=='top':
             cbar.ax.xaxis.set_label_position('top') 
             cbar.ax.xaxis.set_ticks_position('top') 
         cbar.ax.tick_params(labelsize=fontsize)
-
-    if canvas['colorbarNA'] is not None:
-        colorbar = canvas['colorbarNA']
-        orientation = 'horizontal' if colorbar['location']=='top' else 'vertical'
-        cbar_ax = fig.add_axes(colorbar['pos'])
-        if len(images)==0:
-            apy.shell.exit('Colorbar cannot find any image')
-        cbar = fig.colorbar(images[0], cax=cbar_ax, orientation=orientation)
-        if colorbar['label'] is not None:
-            cbar.set_label(colorbar['label'],fontsize=fontsize)
-        if colorbar['location']=='top':
-            cbar.ax.xaxis.set_label_position('top') 
-            cbar.ax.xaxis.set_ticks_position('top') 
-        cbar.ax.tick_params(labelsize=fontsize)
-
 
     ####################################
     # Legends

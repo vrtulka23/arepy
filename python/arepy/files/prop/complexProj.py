@@ -69,8 +69,8 @@ class complexProj:
             elif pp['name']=='Density':
                 box = transf['crop']['region'].limits
                 area = (box[1]-box[0])*(box[3]-box[2])
-                projection = masscolumn / area * prop['bins']**2
-            else:
+                projection = masscolumn / area * prop['bins']**2  # this is a surface density in cm^-2
+            else:  # these are mean values in the column
                 ppk = pp['key'] 
                 grid.addAtPix(ppk, pix, data[ppk]*massInside)
                 unitFullPP = grid.data[ppk][pixFull]/numPix

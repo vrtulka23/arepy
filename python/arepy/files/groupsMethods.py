@@ -131,24 +131,25 @@ class groupsMethods:
 
     # Add rendering of the box projection/slice
     def _renderImage(self, sp, prop, imgType,
-                     bins=200, cache=False, nproc=None, n_jobs=None, **imgopt):
-        #             norm=None, normType=None,  cmap=None, 
-        #             xnorm=None, ynorm=None, aspect='equal'):
+                     bins=200, cache=False, nproc=None, n_jobs=None, clip=None, **imgopt):
         n_jobs = self.opt['n_jobs'] if n_jobs is None else n_jobs
         prop = apy.files.properties(prop)
         proj = self.foreach(renderImage,args=[imgType,prop,bins,n_jobs],
                             cache=cache, nproc=nproc)            
+        def clipData(data,clip):
+            return data if clip is None else np.clip(data,*clip)
         if isinstance(sp,list):
             for i in range(len(sp)):
-                data = proj[prop[i]['name']]
                 newimgopt = imgopt.copy()
                 newimgopt['norm']     = imgopt['norm'][i]     if isinstance(imgopt['norm'],list)     else imgopt['norm']
                 newimgopt['normType'] = imgopt['normType'][i] if isinstance(imgopt['normType'],list) else imgopt['normType']
                 if 'cmap' in imgopt:
-                    newimgopt['cmap']     = imgopt['cmap'][i]     if isinstance(imgopt['cmap'],list)     else imgopt['cmap']
-                sp[i].addImage(data=data, extent=proj['extent'], **newimgopt)
+                    newimgopt['cmap'] = imgopt['cmap'][i]     if isinstance(imgopt['cmap'],list)     else imgopt['cmap']
+                sp[i].addImage(data=clipData(proj[prop[i]['name']], clip[i] if isinstance(clip[i],(tuple,list)) else clip), 
+                               extent=proj['extent'], **newimgopt)
         else:
-            sp.addImage(data=proj['data'], extent=proj['extent'], **imgopt)
+            sp.addImage(data=clipData(proj['data'],clip), 
+                        extent=proj['extent'], **imgopt)
 
     def setProjection(self, sp, prop, **opt):
         """Create a projection image of a snapshot property
@@ -419,6 +420,9 @@ def renderImage(item,imgType,prop,bins,n_jobs):
     if 'Coordinates' in data:
         data['Coordinates'] = np.array(data['Coordinates']) * item.sim.units.conv['length']
     if 'Density' in data:
-        data['Density'] = data['Density'][:] * item.sim.units.conv['density']
+        if imgType=='BoxProjCube':   # surface density in cm^-2
+            data['Density'] = data['Density'][:] * item.sim.units.conv['coldens']
+        else:                        # mean column density in cm^-3
+            data['Density'] = data['Density'][:] * item.sim.units.conv['density']
     data['extent'] = item.transf['crop']['region'].limits[:4] * item.sim.units.conv['length']
     return data
