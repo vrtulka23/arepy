@@ -1,15 +1,6 @@
 import arepy as apy
 import numpy as np
 import inspect
-'''
-Arguments:
-fn       - function that will be called
-args     - arguments for the function
-nproc    - number of processors
-label    - label for cache and progress bar
-append   - force list appending instead of numpy preformated arrays
-dirCache - if set, cache will be produced in this directory
-'''
 
 def _foreach(fn,args,nproc,label,append,dataPrev=None):
     numDataAll = len(args)     # number of all data
@@ -77,6 +68,18 @@ def _foreach(fn,args,nproc,label,append,dataPrev=None):
     return dataNew
 
 def foreach(fn,args,nproc=1,label='',append=False,dirCache=None,update=False):
+    """For each argument from args perform a kernel function fn and return results
+
+    :param function fn:  function that will be called
+    :param list args:    list of arguments for the function
+    :param int nproc:    number of processors
+    :param str label:    label for cache and progress bar
+    :param bool append:  force list appending instead of numpy preformated arrays
+    :param str dirCache: if set, cache will be produced in this directory
+    :param bool update:  update cached data if there are new arguments in args
+    :return:             returns stacked data
+    """
+
     # cache data if dirCache is set
     if dirCache:
         apy.shell.mkdir(dirCache,opt='u')

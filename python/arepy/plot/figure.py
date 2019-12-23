@@ -68,6 +68,9 @@ class figure:
         for k,v in kwargs.items():
             self.norms.norms[normID][k] = v
 
+    def getNorm(self,normID):
+        return self.norms.norms[normID]
+
     # select subplot by row and col
     def setSubplot(self, row=0, col=0, xyz=False, **opt):
         """Set subplot options

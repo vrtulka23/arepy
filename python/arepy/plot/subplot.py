@@ -148,7 +148,7 @@ class subplot:
         
         Example::
             
-            grp.setColorbarNA(pos=(1.0,0.2,0.01,0.6),label='Mass (g)')
+            grp.addColorbarNA(pos=(1.0,0.2,0.01,0.6),label='Mass (g)')
         """
         opt = {'location':'right','label':None}
         opt.update(nopt)

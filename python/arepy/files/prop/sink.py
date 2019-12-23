@@ -33,6 +33,22 @@ class sink:
         """
         return self.getSinkData('ID',ids)
 
+    def prop_SinkPos(self,ids,ptype,**prop):
+        """Returns sink particle coordinates from the sink snapshot
+
+        :return: Sink particle coordinates
+        :rtype: list[[int]*3]
+        """
+        return self.getSinkData('Pos',ids)
+
+    def prop_SinkAge(self,ids,ptype,**prop):
+        """Returns ages of the sink particles
+
+        :return: Ages of sink particles
+        :rtype: list[float]
+        """
+        return self.snapTime - self.prop_SinkFormationTime(ids,ptype,**prop)
+
     def prop_SinkMass(self,ids,ptype,**prop):
         """Returns value of the sink masses
 
@@ -41,6 +57,14 @@ class sink:
         """
         return self.getSinkData('Mass',ids)
 
+    def prop_SinkMassOld(self,ids,ptype,**prop):
+        """Returns value of the sink masses at the last SPRAI run
+
+        :return: Masses of sink particles
+        :rtype: list[float]
+        """
+        return self.getSinkData('MassOld',ids)
+
     def prop_SinkAccretionRate(self,ids,ptype,**prop):
         """Returns value of the sink accretion rate
 
@@ -48,5 +72,3 @@ class sink:
         :rtype: list[float]
         """
         return self.getSinkData('AccretionRate',ids)
-
-

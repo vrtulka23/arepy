@@ -1,6 +1,7 @@
 # Basic physical constants in CGS
 # erg = g*cm^2/s^2
 G = 6.6738e-8        # gravitational constant [cm^3/g/s^2]
+R_sol = 6.957e10     # solar radius [cm]
 M_sol = 1.989e33     # solar mass [g]
 L_sol = 3.826e33     # solar luminosity [erg/s]
 N_A = 6.02214e23     # Avogadro's constant

@@ -17,6 +17,8 @@ class main:
 
         self.fileSnap = hp.File(self.opt['snapFile'],self.opt['snapMode'])
         self.fileSink = None
+
+        self.snapTime = self.fileSnap['Header'].attrs['Time']
         
         self.units = {
             'mass':     self.fileSnap['Header'].attrs['UnitMass_in_g'],
@@ -26,6 +28,7 @@ class main:
             'density':  self.fileSnap['Header'].attrs['UnitMass_in_g']/self.fileSnap['Header'].attrs['UnitLength_in_cm']**3,
             'energy':   self.fileSnap['Header'].attrs['UnitVelocity_in_cm_per_s']**2 * self.fileSnap['Header'].attrs['UnitMass_in_g'],
         }
+
         if 'Parameters' in self.fileSnap:
             if 'UnitPhotons_per_s' in self.fileSnap['Parameters'].attrs:
                 self.units['flux'] = self.fileSnap['Parameters'].attrs['UnitPhotons_per_s']
