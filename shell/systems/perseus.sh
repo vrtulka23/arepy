@@ -2,6 +2,7 @@
 
 # cluster related settings
 RUN_CMD_TERMINAL="mpirun -np $((NUM_NODES*NUM_PROC))"
+RUN_CMD_DEBUG="mpirun -gdb -n $((NUM_NODES*NUM_PROC))"
 RUN_CMD_SUBMIT="mpirun"
 
 JOBID_REGEXP="([0-9]+)"
@@ -16,5 +17,36 @@ submit_init()
 }
 CLEAN_FILES="${JOB_NAME}.e* ${JOB_NAME}.o*"
 
-AREPO_DIR=$arepodir
-WORK_DIR=$workdir
+
+
+on_inter_run()
+{
+    INTER_CMD="msub -I -V -X -l nodes=${nodes}:ppn=${ppn}:${type},walltime=${walltime}"
+}
+
+on_queue_avail()
+{
+    echo -e "\033[0;33mStandard\033[0m";
+    printf "$(showbf -f standard)\n"
+    echo -e "\033[0;33mBest\033[0m";
+    printf "$(showbf -f best)\n"
+    echo -e "\033[0;33mFat\033[0m";
+    printf "$(showbf -f fat)\n"
+    echo -e "\033[0;33mFat-ivy\033[0m";
+    printf "$(showbf -f fat-ivy)\n"
+    echo -e "\033[0;33mMic\033[0m";
+    printf "$(showbf -f mic)\n"
+    echo -e "\033[0;33mGPU\033[0m";
+    printf "$(showbf -f gpu)\n"
+}
+
+on_results_sync()
+{
+    script="rsync -vr --update --exclude='*.npy' -e ssh hd_wd148@bwforcluster.bwservices.uni-heidelberg.de:./projects/arepy/results/* $DIR_RESULTS"
+    echo -e "${YEL}$script${NC}"; eval "$script"   
+}
+
+on_queue_list()
+{
+    showq
+}
