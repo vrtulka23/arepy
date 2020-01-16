@@ -19,8 +19,10 @@ if [ "$nd" -gt "0" ]; then
         fileConf=$pdir/project.conf
         if [ -f $fileConf ]; then
             source $fileConf
-            PROJECT_NAME=$pname
-            DIR_PROJECT=$pdir
+	    if [[ $DIR_PWD == $dirSim* ]]; then
+		PROJECT_NAME=$pname
+		DIR_PROJECT=$pdir
+	    fi
         fi
     done
 fi
@@ -474,7 +476,7 @@ analyze()
 analyze_snaps()
 {
     for d in $(find -name output -type d | sort) ; do
-	find $d -name snap_* -type f | sort -V | tail -1
+	find $d -name "snap_*" -type f | sort -V | tail -1
     done
 }
 archive_outputs()

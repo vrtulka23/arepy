@@ -84,6 +84,7 @@ def readConfigFile(fileName):
         lines = f.readlines()
     config = {}
     for line in lines:
+        if line.strip()=="": continue
         key,val = line.split("=")
         config[key.strip()] = val.strip().replace("\n", "")
     return config

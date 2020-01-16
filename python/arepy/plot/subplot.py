@@ -180,8 +180,9 @@ class subplot:
         """Add quivers to the canvas"""
         self.canvas['other'].append({'draw':'quiver','twinx':False,'coord':coord,'kwargs':nopt})
 
-    def addBar(self, x, y, twinx=False, **nopt):
+    def addBar(self, x, y, xnorm=None, ynorm=None, twinx=False, **nopt):
         """Add a barplot to the canvas"""
+        self.setNorm(xdata=x,ydata=y,xname=xnorm,yname=ynorm)
         self.canvas['other'].append({'draw':'bar','twinx':twinx,'x':x,'y':y,'kwargs':nopt})
 
     def addLine(self, axis, pos, twinx=False, **nopt):
