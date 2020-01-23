@@ -15,7 +15,7 @@ def plotSubplot(ax,opt,canvas,fid=0):
     def hideAxis(msg=''):
         if msg: apy.shell.printc(msg)
         ax.axis('off')
-        return False
+        return False        
     
     # hide axis if it is not used
     if canvas['empty']:
@@ -24,8 +24,10 @@ def plotSubplot(ax,opt,canvas,fid=0):
     spIndex, spRow, spCol, spXYZ = canvas['subplot']
     
     axProp = canvas['axis']
-    if 'xlim' in axProp: xlim = axProp['xlim'][fid] if np.ndim(axProp['xlim'])>1 else axProp['xlim']
-    if 'ylim' in axProp: ylim = axProp['ylim'][fid] if np.ndim(axProp['ylim'])>1 else axProp['ylim']
+    if 'lim' in axProp['xaxis']:
+        xlim = axProp['xaxis']['lim'][fid] if np.ndim(axProp['xaxis']['lim'])>1 else axProp['xaxis']['lim']
+    if 'lim' in axProp['yaxis']:
+        ylim = axProp['yaxis']['lim'][fid] if np.ndim(axProp['yaxis']['lim'])>1 else axProp['yaxis']['lim']
     if spXYZ:
         if 'zlim' in axProp: zlim = axProp['zlim'][fid] if np.ndim(axProp['zlim'])>1 else axProp['zlim']
 
@@ -34,13 +36,38 @@ def plotSubplot(ax,opt,canvas,fid=0):
     ####################################
 
     fontsize = 8   # default font size
-    twinx = None   # twin axis flag
+    twiny = None   # twin axis flag (two y-axes)
+    twinx = None   # twin axis flag (two x-axes)
     handles = []   # collector of plot handles
     images = []    # collector of image handles
+
+    def draw_rectangle(ax,d):
+        """ Draw a rectangle
+        """
+        xy     = d['xy']     if np.isscalar(d['xy'][0])  else d['xy'][fid]
+        width  = d['width']  if np.isscalar(d['width'])  else d['width'][fid]
+        height = d['height'] if np.isscalar(d['height']) else d['height'][fid]
+        shape = mpl.patches.Rectangle(xy,width,height,**d['kwargs'])
+        ax.add_patch(shape)
+    
+    def draw_plot(ax,d):
+        """ Draw x/y line continuous function 
+        """
+        xvals = d['x'] if np.isscalar(d['x'][0]) else d['x'][fid]
+        yvals = d['y'] if np.isscalar(d['y'][0]) else d['y'][fid]
+        li = ax.plot(xvals,yvals,**d['kwargs'])
+        if 'label' in d['kwargs']:
+            handles.append(li[0]) # for some reason this is a list of objects
+
     for d in canvas['other']:
-        if d['twinx'] and twinx==None:
-            twinx = ax.twinx()
-        drawax = twinx if d['twinx'] else ax
+        if d['twiny'] and twiny==None:
+            twiny = ax.twinx()
+            drawax = twiny
+        elif d['twinx'] and twinx==None:
+            twinx = ax.twiny()
+            drawax = twinx
+        else:
+            drawax = ax
 
         # Draw a straight line
         if d['draw']=='line':
@@ -52,14 +79,9 @@ def plotSubplot(ax,opt,canvas,fid=0):
             if 'label' in d['kwargs']:
                 handles.append(li)
             
-        # Draw x/y line continuous function
         if d['draw']=='plot':
-            xvals = d['x'] if np.isscalar(d['x'][0]) else d['x'][fid]
-            yvals = d['y'] if np.isscalar(d['y'][0]) else d['y'][fid]
-            li = drawax.plot(xvals,yvals,**d['kwargs'])
-            if 'label' in d['kwargs']:
-                handles.append(li[0]) # for some reason this is a list of objects
-
+            draw_plot(drawax,d)
+            
         # Draw x/y line step function
         if d['draw']=='step':
             xvals = d['x'] if np.isscalar(d['x'][0]) else d['x'][fid]
@@ -115,7 +137,7 @@ def plotSubplot(ax,opt,canvas,fid=0):
             """
             if not isinstance(d['loc'],str):
                 x,y,ha,va = d['loc']
-            elif ('xlim' in axProp) and ('ylim' in axProp):
+            elif ('lim' in axProp['xaxis']) and ('lim' in axProp['yaxis']):
                 x,y,ha,va = apy.util.calculateLoc(d['loc'],xlim,ylim,d['padding'])
             else:
                 apy.shell.exit('Text location or plot axis limts were not set (plot.py)')
@@ -131,13 +153,8 @@ def plotSubplot(ax,opt,canvas,fid=0):
             shape = plt.Circle( center, rad, **d['kwargs'])
             drawax.add_artist(shape)
 
-        # Draw a rectangle
         if d['draw']=='rectangle':
-            xy     = d['xy']     if np.isscalar(d['xy'][0])  else d['xy'][fid]
-            width  = d['width']  if np.isscalar(d['width'])  else d['width'][fid]
-            height = d['height'] if np.isscalar(d['height']) else d['height'][fid]
-            shape = mpl.patches.Rectangle(xy,width,height,**d['kwargs'])
-            drawax.add_patch(shape)
+            draw_rectangle(drawax,d)
 
         # Draw an image
         if d['draw']=='image':
@@ -163,8 +180,8 @@ def plotSubplot(ax,opt,canvas,fid=0):
                 apy.shell.exit('Colorbar cannot find any image')
             im = images[d['im']] if 'im' in d else images[0]
             cbar = fig.colorbar(im, cax=cbar_ax, orientation=orientation)
-            if 'xticklabels' in d: cbar.ax.set_xticklabels(d['xticklabels'])
-            if 'yticklabels' in d: cbar.ax.set_yticklabels(d['yticklabels'])
+            if 'ticklabels' in d['xaxis']: cbar.ax.set_xticklabels(d['xaxis']['ticklabels'])
+            if 'ticklabels' in d['yaxis']: cbar.ax.set_yticklabels(d['xaxis']['ticklabels'])
             if d['label'] is not None:
                 cbar.set_label(d['label'],fontsize=fontsize)
             if d['location']=='top':
@@ -243,22 +260,72 @@ def plotSubplot(ax,opt,canvas,fid=0):
     ####################################
     # Axes
     ####################################
+    
+    def setAxisX(ax,props):
+        axis = ax.xaxis
+        if 'label' in props: ax.set_xlabel( props['label'], fontsize=fontsize )
+        if 'lim'   in props: ax.set_xlim( props['lim'] )
+        if 'scale' in props and  props['scale'] in ['log','symlog']:
+            ax.set_xscale( props['scale'] )
+        if 'visible' in props:
+            axis.set_visible( props['visible'] )
+        if 'pos' in props and props['pos']=='top': 
+            axis.tick_top()
+            axis.set_label_position("top")
+        if 'ticks' in props: ax.set_xticks( props['ticks'] )
+        if 'ticklabels' in props:
+            ax.set_xticklabels( [] if props['ticklabels']==False else props['ticklabels'] )
+        if 'tickformat' in props:
+            axis.set_major_formatter(mpl.ticker.FormatStrFormatter(props['tickformat']))
+        if 'tickparams' in props:
+            if 'labelrotation' in props['tickparams']:
+                plt.setp(ax.get_xticklabels(), rotation=props['tickparams']['labelrotation'])
+            ax.tick_params(**props['tickparams'])
+        plt.setp(ax.get_xticklabels(), fontsize=fontsize)
 
-    if axProp['xpos']=='top': 
-        ax.xaxis.tick_top()
-        ax.xaxis.set_label_position("top")
+    def setAxisY(ax,props):
+        axis = ax.yaxis
+        if 'label' in props: ax.set_ylabel( props['label'], fontsize=fontsize )
+        if 'lim'   in props: ax.set_ylim( props['lim'] )
+        if 'scale' in props and  props['scale'] in ['log','symlog']:
+            ax.set_yscale( props['scale'] )
+        if 'visible' in props:
+            axis.set_visible( props['visible'] )
+        if 'pos' in props and props['pos']=='right': 
+            axis.tick_right()
+            axis.set_label_position("right")
+        if 'ticks' in props: ax.set_yticks( props['ticks'] )
+        if 'ticklabels' in props:
+            ax.set_yticklabels( [] if props['ticklabels']==False else props['ticklabels'] )
+        if 'tickformat' in props:
+            axis.set_major_formatter(mpl.ticker.FormatStrFormatter(props['tickformat']))
+        if 'tickparams' in props:
+            ax.tick_params(**props['tickparams'])
+        plt.setp(ax.get_yticklabels(), fontsize=fontsize)
 
-    if axProp['ypos']=='right':
-        ax.yaxis.tick_right()
-        ax.yaxis.set_label_position("right")
+    # set same x and y ticks
+    if 'xysame' in axProp:
+        xticks = ax.axes.get_xticks()
+        xlim = ax.get_xlim()
+        xlabels = map(str,xticks)
+        xticks = xticks[(xticks>xlim[0])&(xticks<xlim[1])] # some ticks may be outside of the limits
+        axProp['xaxis']['lim'] = xlim
+        axProp['yaxis']['lim'] = xlim
+        axProp['xaxis']['ticks'] = xticks
+        axProp['yaxis']['ticks'] = xticks
 
+    # set twin x/y-axis properties
+    setAxisX(ax,axProp['xaxis'])
+    if twinx is not None:
+        setAxisX(twinx,axProp['twinx'])
+
+    setAxisY(ax,axProp['yaxis'])
+    if twiny is not None:
+        setAxisY(twiny,axProp['twiny'])
+        
     # set labels
     if 'title' in axProp:
         ax.set_title( axProp['title'],   fontsize=fontsize )
-    if 'xlabel' in axProp:
-        ax.set_xlabel( axProp['xlabel'], fontsize=fontsize )
-    if 'ylabel' in axProp:
-        ax.set_ylabel( axProp['ylabel'], fontsize=fontsize )
     if 'zlabel' in axProp:
         ax.set_zlabel( axProp['zlabel'], fontsize=fontsize )
 
@@ -267,52 +334,18 @@ def plotSubplot(ax,opt,canvas,fid=0):
         if 'title' in axProp['group'] and spRow>0:
             ax.set_title('')
         if 'xlabel' in axProp['group']:
-            if (axProp['xpos']=='bottom' and spRow<opt['nrows']-1) or (axProp['xpos']=='top' and spRow>0):
+            if (axProp['xaxis']['pos']=='bottom' and spRow<opt['nrows']-1) or (axProp['xaxis']['pos']=='top' and spRow>0):
                 ax.set_xlabel('')
                 #ax.set_xticklabels([])  # this does not work with gridspec
                 plt.setp( ax.get_xticklabels(), visible=False)  # this works also with gridspec
         if 'ylabel' in axProp['group']:
-            if (axProp['ypos']=='left' and spCol>0) or (axProp['ypos']=='right' and spCol<opt['ncols']-1):
+            if (axProp['yaxis']['pos']=='left' and spCol>0) or (axProp['yaxis']['pos']=='right' and spCol<opt['ncols']-1):
                 ax.set_ylabel('')
                 #ax.set_yticklabels([])  # this does not work with gridspec
                 plt.setp( ax.get_yticklabels(), visible=False)  # this works also with gridspec
                 
-    if 'xlim' in axProp:   ax.set_xlim( xlim )  
-    if 'ylim' in axProp:   ax.set_ylim( ylim )
     if spXYZ and 'zlim' in axProp:   ax.set_zlim( zlim )
-    if 'xscale' in axProp and axProp['xscale'] in ['log','symlog']: ax.set_xscale( axProp['xscale'] )
-    if 'yscale' in axProp and axProp['yscale'] in ['log','symlog']: ax.set_yscale( axProp['yscale'] )
-
-    if 'xticklabels' in axProp and axProp['xticklabels'] is False: ax.set_xticklabels([])
-    if 'yticklabels' in axProp and axProp['yticklabels'] is False: ax.set_yticklabels([])
-
-    if 'xtickformat' in axProp:
-        ax.xaxis.set_major_formatter(mpl.ticker.FormatStrFormatter(axProp['xtickformat']))
-        ax.xaxis.set_minor_formatter(mpl.ticker.FormatStrFormatter(axProp['xtickformat']))
-
-    # set twin axis properties
-    if twinx is not None:
-        if 'tlabel' in axProp: twinx.set_ylabel( axProp['tlabel'], fontsize=fontsize )
-        if 'tlim'   in axProp: twinx.set_ylim( axProp['tlim'] )
-        if 'tscale' in axProp and axProp['tscale'] in ['log','symlog']: twinx.set_yscale( axProp['tscale'] )
-
-    # set same x and y ticks
-    if 'xysame' in axProp:
-        xticks = ax.axes.get_xticks()
-        xlim = ax.get_xlim()
-        xlabels = map(str,xticks)
-        xticks = xticks[(xticks>xlim[0])&(xticks<xlim[1])] # some ticks may be outside of the limits
-        ax.set_xlim( xlim ) 
-        ax.set_ylim( xlim ) 
-        ax.set_xticks( xticks )
-        ax.set_yticks( xticks )
-
-    # set additional tick parameters
-    #ax.xaxis.set_tick_params(labelsize=fontsize)
-    #ax.yaxis.set_tick_params(labelsize=fontsize)
-    ax.tick_params(which='both', labelsize=fontsize)
-    if 'tickparam' in axProp: ax.tick_params(**axProp['tickparam'])
-
+        
 ####################################
 # Compose a figure
 ####################################

@@ -12,8 +12,7 @@ def displayImage( fileName='figOverview_*.png' ):
         else:
             subprocess.call([apy.config["imageViewer"], fileName ])
     elif platform == "darwin":
-        print(fileName)
-        subprocess.call(["open", fileName ])
+        subprocess.call(["display", fileName ])
     elif platform == "win32":
         subprocess.call(["display", fileName ])
     

@@ -20,9 +20,12 @@ class project:
         self.dirProject = apy.dirScripy+'/'+name
         self.dirResults = apy.dirResults+'/'+name
         self.dirTemplates = apy.dirArepy+'/scripy/tmpl' 
-        
-        self.config = apy.shell.readConfigFile(self.dirProject + "/project.conf")
-        self.dirSim = os.path.expanduser(self.config["dirSim"])
+
+        if name=='none':
+            self.config = ''
+        else:
+            self.config = apy.shell.readConfigFile(self.dirProject + "/project.conf")
+            self.dirSim = os.path.expanduser(self.config["dirSim"])
         self.dirPlots = self.dirProject+'/plots'
         self.dirScripts = self.dirProject+'/scripts'
         self.dirSetups = self.dirProject+'/setups'
@@ -145,7 +148,7 @@ class project:
             f.write( dirProjectInit )
         with apy.util.template( self.dirTemplates+'/project.conf' ) as f:
             f.write( dirProjectConf )
-        apy.shell.printc('New project:\n'+self.dirProject+'\n'+dirProjectInit)
+        apy.shell.printc('New project:\n'+self.dirProject+'\n'+dirProjectInit+'\n'+dirProjectConf)
 
     def initSetup(self,name):
         """Initialization of a new scripy setup
@@ -182,12 +185,18 @@ class project:
         if not apy.shell.isdir( self.dirPlots ):
             apy.shell.mkdir( self.dirPlots )
             apy.shell.touch( self.dirPlots+'/__init__.py' )
+        dirPlot = self.dirPlots+'/%s'%name
+        dirPlotInit = dirPlot+'/__init__.py'
+        dirPlotScript = dirPlot+'/%s.py'%name
+        apy.shell.mkdir( dirPlot )
         with apy.util.template( self.dirTemplates+'/plot.py' ) as f:
-            dirPlot = self.dirPlots+'/%s'%name
-            apy.shell.mkdir( dirPlot )
+            f.replace('namePlot',name)
+            f.write( dirPlotInit )
+        with apy.util.template( self.dirTemplates+'/plotScript.py' ) as f:
             f.replace('nameProject',self.name)
             f.replace('namePlot',name)
-            f.write( dirPlot+'/__init__.py' )
+            f.write( dirPlotScript )
+        apy.shell.printc('New plot:\n'+dirPlotInit+'\n'+dirPlotScript)
 
     def initScript(self,name):
         """Initialization of a new scripy script

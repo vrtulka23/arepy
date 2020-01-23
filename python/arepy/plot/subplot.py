@@ -36,21 +36,32 @@ class subplot:
             'legendM': None,    # plot marker legend
             'other': [],        # other canvas objects
             'axis': {           # axis properties
-                'xpos':   'bottom',     # x axis position
-                'ypos':   'left',       # y axis position
-                'xscale': 'lin',        # x axis scale
-                'yscale': 'lin',        # y axis scale
-                'tscale': 'lin',        # twin y axis scale
+                'xaxis': {
+                    'pos':   'bottom', # x axis position
+                    'scale': 'lin',    # x axis scale
+                },
+                'yaxis': {
+                    'pos':   'left',   # x axis position
+                    'scale': 'lin',    # x axis scale
+                },
+                'twinx': {
+                    'scale': 'lin',    # twin x scale scale
+                },
+                'twiny': {
+                    'scale': 'lin',    # twin y axis scale
+                }
             },
         }
         rc = '%d%d'%(self.row,self.col)
         self.xnorm = 'xnorm_'+rc  # x-axis norm
         self.ynorm = 'ynorm_'+rc  # y-axis norm
         self.znorm = 'znorm_'+rc  # z-axis or image norm
-        self.tnorm = 'tnorm_'+rc  # twin y-axis norm
         
+        self.twiny = False
         self.twinx = False
-
+        self.twinynorm = 'twinynorm_'+rc  # twin y-axis norm
+        self.twinxnorm = 'twinxnorm_'+rc  # twin x-axis norm
+        
     # Setting options
     def setOption(self,**args):
         """Set an option"""
@@ -59,13 +70,18 @@ class subplot:
 
     # Standard way how to set a norm for the subplot
     def setNorm(self,xdata=None,ydata=None,zdata=None,
-                xname=None,yname=None,zname=None,twinx=False,zlim=None):
+                xname=None,yname=None,zname=None,
+                twiny=False,twinx=False,zlim=None):
         if xdata is not None:
-            self.xnorm = self.figure.norms.setNorm(xdata,self.xnorm if xname is None else xname)
-        if ydata is not None:
             if twinx:
                 self.twinx = True
-                self.tnorm = self.figure.norms.setNorm(ydata,self.tnorm if yname is None else yname)
+                self.twinxnorm = self.figure.norms.setNorm(xdata,self.twinxnorm if xname is None else xname)
+            else:
+                self.xnorm = self.figure.norms.setNorm(xdata,self.xnorm if xname is None else xname)
+        if ydata is not None:
+            if twiny:
+                self.twiny = True
+                self.twinynorm = self.figure.norms.setNorm(ydata,self.twinynorm if yname is None else yname)
             else:
                 self.ynorm = self.figure.norms.setNorm(ydata,self.ynorm if yname is None else yname)        
         if zdata is not None:
@@ -132,7 +148,7 @@ class subplot:
                      xname=xnorm,yname=ynorm,zname=norm, zlim=normLim)        
         if xnorm is None: self.setOption(xlim=xextent)
         if ynorm is None: self.setOption(ylim=yextent)
-        self.canvas['other'].append({'draw':'image','twinx':False,
+        self.canvas['other'].append({'draw':'image','twiny':False,'twinx':False,
                                      'data':data,'norm':self.znorm,'normType':normType,
                                      'extent':extent,'kwargs':kwargs})
 
@@ -152,21 +168,21 @@ class subplot:
         """
         opt = {'location':'right','label':None}
         opt.update(nopt)
-        self.canvas['other'].append({'draw':'colorbarNA','twinx':False,'pos':pos,**opt})
+        self.canvas['other'].append({'draw':'colorbarNA','twiny':False,'twinx':False,'pos':pos,**opt})
         
-    def addPlot(self, x, y, twinx=False, xnorm=None, ynorm=None, **nopt):
+    def addPlot(self, x, y, twiny=False, twinx=False, xnorm=None, ynorm=None, **nopt):
         """Add a plot to the canvas"""
-        self.setNorm(xdata=x,ydata=y,xname=xnorm,yname=ynorm,twinx=twinx)
+        self.setNorm(xdata=x,ydata=y,xname=xnorm,yname=ynorm,twiny=twiny,twinx=twinx)
         opt = {'lw': 1}
         opt.update(nopt)
-        self.canvas['other'].append({'draw':'plot','twinx':twinx,'x':x,'y':y,'kwargs':opt})
+        self.canvas['other'].append({'draw':'plot','twiny':twiny,'twinx':twinx,'x':x,'y':y,'kwargs':opt})
 
-    def addStep(self, x, y, twinx=False, xnorm=None, ynorm=None, **nopt):
+    def addStep(self, x, y, twiny=False, twinx=False, xnorm=None, ynorm=None, **nopt):
         """Add a step plot to the canvas"""
-        self.setNorm(xdata=x,ydata=y,xname=xnorm,yname=ynorm,twinx=twinx)
+        self.setNorm(xdata=x,ydata=y,xname=xnorm,yname=ynorm,twiny=twiny,twinx=twinx)
         opt = {'lw': 1}
         opt.update(nopt)
-        self.canvas['other'].append({'draw':'step','twinx':twinx,'x':x,'y':y,'kwargs':opt})
+        self.canvas['other'].append({'draw':'step','twiny':twiny,'twinx':twinx,'x':x,'y':y,'kwargs':opt})
 
     def addScatter(self, *coord, xnorm=None, ynorm=None,**nopt):
         """Add a scatter to the canvas"""
@@ -174,38 +190,38 @@ class subplot:
         opt.update(nopt)
         self.setNorm(xdata=coord[0],ydata=coord[1],xname=xnorm,yname=ynorm)
         x,y,z = coord if self.canvas['subplot'][3] else (coord[0],coord[1],None)
-        self.canvas['other'].append({'draw':'scatter','twinx':False,'x':x,'y':y,'z':z,'opt':opt})
+        self.canvas['other'].append({'draw':'scatter','twiny':False,'twinx':False,'x':x,'y':y,'z':z,'opt':opt})
         
     def addQuiver(self, *coord, **nopt):
         """Add quivers to the canvas"""
-        self.canvas['other'].append({'draw':'quiver','twinx':False,'coord':coord,'kwargs':nopt})
+        self.canvas['other'].append({'draw':'quiver','twiny':False,'twinx':False,'coord':coord,'kwargs':nopt})
 
-    def addBar(self, x, y, xnorm=None, ynorm=None, twinx=False, **nopt):
+    def addBar(self, x, y, xnorm=None, ynorm=None, twiny=False, twinx=False, **nopt):
         """Add a barplot to the canvas"""
         self.setNorm(xdata=x,ydata=y,xname=xnorm,yname=ynorm)
-        self.canvas['other'].append({'draw':'bar','twinx':twinx,'x':x,'y':y,'kwargs':nopt})
+        self.canvas['other'].append({'draw':'bar','twiny':twiny, 'twinx':twinx,'x':x,'y':y,'kwargs':nopt})
 
-    def addLine(self, axis, pos, twinx=False, **nopt):
+    def addLine(self, axis, pos, twiny=False, twinx=False, **nopt):
         """Add a line to the plot"""
         opt = {'color':'grey', 'ls':'-', 'label':'', 'lw': 1}
         opt.update(nopt)
-        self.canvas['other'].append({'draw':'line','twinx':twinx,'pos':pos,'axis':axis,'kwargs':opt})
+        self.canvas['other'].append({'draw':'line','twiny':twiny, 'twinx':twinx,'pos':pos,'axis':axis,'kwargs':opt})
         
-    def addCircle(self, center, radius, twinx=False, **nopt):        
+    def addCircle(self, center, radius, twiny=False, twinx=False, **nopt):        
         """Add a circle to the plot"""
         opt = {'color':'black'}
         opt.update(nopt)
-        self.canvas['other'].append({'draw':'circle','twinx':twinx,'center':center,
+        self.canvas['other'].append({'draw':'circle','twiny':twiny,'twinx':twinx,'center':center,
                                      'radius':radius,'kwargs':opt})
         
     def addRectangle(self, xy, width, height, **nopt):
         """Add a rectangle to the plot"""
         opt = {'color':'grey'}
         opt.update(nopt)
-        self.canvas['other'].append({'draw':'rectangle','twinx':False,'xy':xy,
+        self.canvas['other'].append({'draw':'rectangle','twiny':False,'twinx':False,'xy':xy,
                                      'width':width,'height':height,'kwargs':opt})
 
-    def addText(self, text, loc, bgcolor=None, twinx=False, padding=None, **nopt):
+    def addText(self, text, loc, bgcolor=None, twiny=False, twinx=False, padding=None, **nopt):
         """Add text to the figure
         
         :param src text: Text string
@@ -214,7 +230,7 @@ class subplot:
         """
         opt = {'color':'black', 'fontsize': 8}
         opt.update(nopt)
-        self.canvas['other'].append({'draw':'text','twinx':twinx,'loc':loc,'text':text,
+        self.canvas['other'].append({'draw':'text','twiny':twiny,'twinx':twinx,'loc':loc,'text':text,
                                      'bgcolor':bgcolor,'padding':padding,'kwargs':opt})
 
 
@@ -231,37 +247,47 @@ class subplot:
         figs = range(self.figure.nfigs)
 
         # add all axis options
-        axOpt = ['title','xlabel','ylabel','zlabel','xlim','ylim','zlim','xscale','yscale',
-                 'tlabel','tlim','tscale','group','xflip','xpos','ypos','projection',
-                 'xticklabels','yticklabels','xtickparam','ytickparam','tickparam','xysame',
-                 'xtickformat']
+        axOpt = ['title','zlabel','zlim',
+                  'twiny','twinx','xaxis','yaxis',
+                 #'ylim','ylabel','yscale','ypos','yticklabels','ytickparam','yvisible',
+                 #'xlim','xlabel','xscale','xflip','xpos','xtickformat','xvisible','xticklabels','xtickparam',
+                 'group','projection',
+                 'tickparam','xysame']
         for opt in axOpt:
             if opt in self.opt:
                 if self.opt[opt] is None: # remove if set to None
                     del self.opt[opt]
                     continue
-                canvas['axis'][opt] = self.opt[opt]
-
+                if isinstance(self.opt[opt],dict):
+                    canvas['axis'][opt].update(self.opt[opt])
+                else:
+                    canvas['axis'][opt] = self.opt[opt]
+                    
         # transform x and y limits
         xnorm = self.figure.norms.getLimits(self.xnorm)
         ynorm = self.figure.norms.getLimits(self.ynorm)
-        if 'xlim' not in canvas['axis'] and xnorm is not None:    
-            xnormmin = xnorm[1] if canvas['axis']['xscale']=='log' else xnorm[0]
-            canvas['axis']['xlim'] = [xnormmin,xnorm[2]]
-        if 'ylim' not in canvas['axis'] and ynorm is not None:
-            ynormmin = ynorm[1] if canvas['axis']['yscale']=='log' else ynorm[0]
-            canvas['axis']['ylim'] = [ynormmin,ynorm[2]]
-
-        # transform t limits
+        if 'lim' not in canvas['axis']['xaxis'] and xnorm is not None:    
+            xnormmin = xnorm[1] if canvas['axis']['xaxis']['scale']=='log' else xnorm[0]
+            canvas['axis']['xaxis']['lim'] = [xnormmin,xnorm[2]]
+        if 'lim' not in canvas['axis']['yaxis'] and ynorm is not None:
+            ynormmin = ynorm[1] if canvas['axis']['yaxis']['scale']=='log' else ynorm[0]
+            canvas['axis']['yaxis']['lim'] = [ynormmin,ynorm[2]]
+            
+        # transform of twin x/y-axes limits
+        if self.twiny:
+            twiny = self.figure.norms.getLimits(self.twinynorm)
+            if 'lim' not in canvas['axis']['twiny'] and twiny is not None:
+                twinymin = twiny[1] if canvas['axis']['twiny']['scale']=='log' else twiny[0]
+                canvas['axis']['twiny']['lim'] = [twinymin,twiny[2]]
         if self.twinx:
-            tnorm = self.figure.norms.getLimits(self.tnorm)
-            if 'tlim' not in canvas['axis'] and tnorm is not None:
-                tnormmin = tnorm[1] if canvas['axis']['tscale']=='log' else tnorm[0]
-                canvas['axis']['tlim'] = [tnormmin,tnorm[2]]
-
+            twinx = self.figure.norms.getLimits(self.twinxnorm)
+            if 'lim' not in canvas['axis']['twinx'] and twinx is not None:
+                twinxmin = twinx[1] if canvas['axis']['twinx']['scale']=='log' else twinx[0]
+                canvas['axis']['twinx']['lim'] = [twinxmin,twinx[2]]
+                
         # flip x axis
-        if 'xflip' in canvas['axis'] and canvas['axis']['xflip']:
-            canvas['axis']['xlim'] = [canvas['axis']['xlim'][:,1],canvas['axis']['xlim'][:,0]]
+        if 'xflip' in canvas['axis'] and canvas['axis']['xaxis']['flip']:
+            canvas['axis']['xaxis']['lim'] = [canvas['axis']['xaxis']['lim'][:,1],canvas['axis']['xaxis']['lim'][:,0]]
             
         # prepare multiple objects
         for i,d in enumerate(canvas['other']):
