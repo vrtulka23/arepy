@@ -74,6 +74,8 @@ def plotSubplot(ax,opt,canvas,fid=0):
             else: xvals = d['x'] if np.isscalar(d['x'][0]) else d['x'][fid]
             if np.isscalar(d['y']): yvals=d['y']
             else: yvals = d['y'] if np.isscalar(d['y'][0]) else d['y'][fid]
+            if 'c' in d['opt'] and not isinstance(d['opt']['c'],str):
+                d['opt']['c'] = d['opt']['c'][fid]
             if spXYZ:
                 if np.isscalar(d['z']): zvals=d['z']
                 else: zvals = d['z'] if np.isscalar(d['z'][0]) else d['z'][fid]
@@ -144,7 +146,10 @@ def plotSubplot(ax,opt,canvas,fid=0):
             data = d['data'][fid] if len(np.array(d['data']).shape)>2 else d['data']
             if data!=[]:
                 if d['normType']=='log':
-                    if d['norm'][1]<=0:
+                    if d['norm'] is None:
+                        apy.shell.printc("Warning: Skipping image with None norm!",'red')
+                        return
+                    elif d['norm'][1]<=0:
                         return hideAxis("\nWarning: Skipping image plots with zero/negative logarithmic norm!")
                     norm = mpl.colors.LogNorm(vmin=d['norm'][1],vmax=d['norm'][2])
                 elif d['normType'] in ['lin',None]:

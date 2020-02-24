@@ -110,7 +110,8 @@ class groupsMethods:
     ######################################
 
     # Plot Arepo image
-    def addImage(self, sp, prop, imgType, norm=None, normType=None, cmap=None, multiply=None, clip=None):
+    def addImage(self, sp, prop, imgType, norm=None, normType=None, 
+                 cmap=None, multiply=None, clip=None, **kwargs):
         """Add an Arepo image
         """
         for item in self.items:
@@ -127,7 +128,7 @@ class groupsMethods:
             data['im'] = data['im'] * multiply
         if clip is not None:
             data['im'] = np.clip(data['im'],clip[0],clip[1])
-        sp.addImage(data=data['im'],extent=data['extent'],norm=norm,normType=normType,cmap=cmap)
+        sp.addImage(data=data['im'],extent=data['extent'],norm=norm,normType=normType,cmap=cmap,**kwargs)
 
     # Add rendering of the box projection/slice
     def _renderImage(self, sp, prop, imgType,
@@ -237,17 +238,26 @@ class groupsMethods:
         nopt.update(opt)
         sp.addText(values,**nopt)    
 
-    def addParticles(self, sp, ptype, **opt):
+    def addParticles(self, sp, ptype, zalpha=False, **opt):
         """Show particle location on the image
         """
-        coords = self.foreach(addParticles,append=True,args=[ptype])
+        data = self.foreach(addParticles,append=True,args=[ptype])
         if self.size>1:
-            x = [c[:,0] for c in coords]
-            y = [c[:,1] for c in coords]
+            x = [[] if c is None else c[:,0] for c in data['coord']]
+            y = [[] if c is None else c[:,1] for c in data['coord']]
         else:
-            x,y,z = np.array(coords).T
+            x,y,z = np.array(data['coord']).T
         nopt = {'s':20,'marker':'+','c':'black','edgecolors':None,'linewidths':1}
         nopt.update(opt)
+        if zalpha:
+            nopt['c'] = []
+            for alpha in data['alpha']:
+                if alpha is None:
+                    nopt['c'].append('black')
+                else:
+                    color = np.zeros((len(alpha),4))
+                    color[:,3] = alpha #1-np.abs(alpha)
+                    nopt['c'].append(color)
         if isinstance(sp,list):
             for i in range(len(sp)):
                 sp[i].addScatter(x,y,**nopt)
@@ -381,16 +391,18 @@ def addTimes(item):
 
 # Add particles
 def addParticles(item,ptype):
+    pdata = {'coord':None,'alpha':None}
     with item.getSnapshot() as sn:
         center = item.transf['select']['region'].center
         radius = item.transf['select']['region'].radius
+        zlim = item.transf['crop']['region'].limits[4:]
         ids = sn.getProperty({'name':'RegionSphere','ptype':ptype,"center":center,'radius':radius})
         if len(ids)>0:
             coord = sn.getProperty({'name':'Coordinates','ptype':ptype},ids=ids)
             coord = item.transf.convert(['translate','align','flip','rotate','crop'],coord)
-            return coord * item.sim.units.conv['length']
-        else:
-            return None
+            pdata['alpha'] = (coord[:,2]-zlim[0])/(zlim[1]-zlim[0])
+            pdata['coord'] = coord * item.sim.units.conv['length']
+    return pdata
 
 # Create snapshot stamps
 def setSnapStamp(item):

@@ -122,7 +122,7 @@ class figure:
             'ncols':      self.ncols,
             'nfigs':      self.nfigs,
             'figSize':    (self.ncols*self.opt['scol'], self.nrows*self.opt['srow']),
-            'fileName':   self.fileFigure+'%03d.'+self.opt['fileFormat'],
+            'fileName':   self.fileFigure+'%04d.'+self.opt['fileFormat'],
             'dirResults': self.dirResults,
             'gridspec':   self.opt['gridspec'],
             'axesgrid':   self.opt['axesgrid'],

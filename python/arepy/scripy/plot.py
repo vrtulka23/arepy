@@ -163,13 +163,14 @@ class plot:
                 opt['initSnap'] = {'nproc': self.nproc['snap']}
         return self.proj.getSimulation(sim,**opt)
 
-    def setProcessors(self,fig=1,kdt=1,snap=1):
+    def setProcessors(self,fig=1,kdt=1,snap=1,plot=1):
         """Distribute number of processors
         
-        :param int fig: Number of processors used for figure plotting
-        :param int kdt: Number of processors used by a KDTree algorithm
+        :param int fig:  Number of processors used to create figures
+        :param int kdt:  Number of processors used by a KDTree algorithm
         :param int snap: Number of processors used to read a multi-file snapshot
-        
+        :param int plot: Number of processors used to plot the figure
+
         Example::
             
             self.setProcessors( fig=apy.numCpu )
@@ -178,6 +179,7 @@ class plot:
             'fig':  int(fig),
             'kdt':  int(kdt),
             'snap': int(snap),
+            'plot': int(plot),
         }
 
     def setGroups(self,names,options,**opt):
