@@ -11,3 +11,4 @@ from arepy.util.imgDim import *
 from arepy.util.timeStamp import *
 from arepy.util.strDec import *
 from arepy.util.shortPath import *
+from arepy.util.cosmoTime import * # slows the code

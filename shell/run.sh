@@ -467,7 +467,16 @@ analyze()
 	elif [ "$1" == "debug" ] && [ "$2" == "" ]; then  # print the available plot classes
 	    show_plots
 	elif [ $PROJECT_NAME == "none" ]; then
-	    echo -e "${RED}Cannot analyze a non-scripy directory!${NC}"	     
+	    echo -e "${RED}Scripy plots can be called only from:${NC}"
+	    for pdir in $(ls -d $DIR_PYTHON_SCRIPY/*)
+	    do
+		pname=$(basename $pdir)
+		fileConf=$pdir/project.conf
+		if [ -f $fileConf ]; then
+		    source $fileConf
+		    echo $dirSim
+		fi
+	    done
 	else
 	    python3 -W ignore $DIR_PYTHON_AREPY/scripy/main.py $PROJECT_NAME "$@"
 	fi
