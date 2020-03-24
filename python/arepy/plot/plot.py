@@ -74,15 +74,16 @@ def plotSubplot(ax,opt,canvas,fid=0):
             else: xvals = d['x'] if np.isscalar(d['x'][0]) else d['x'][fid]
             if np.isscalar(d['y']): yvals=d['y']
             else: yvals = d['y'] if np.isscalar(d['y'][0]) else d['y'][fid]
-            if 'c' in d['opt'] and not isinstance(d['opt']['c'],str):
-                d['opt']['c'] = d['opt']['c'][fid]
+            dopt = d['opt'].copy() # this is necessary if we do not use parallel plotting
+            if 'c' in dopt and not isinstance(dopt['c'],str):
+                dopt['c'] = dopt['c'][fid]
             if spXYZ:
                 if np.isscalar(d['z']): zvals=d['z']
                 else: zvals = d['z'] if np.isscalar(d['z'][0]) else d['z'][fid]
-                li = drawax.scatter(xvals,yvals,zvals,**d['opt'])
+                li = drawax.scatter(xvals,yvals,zvals,**dopt)
             else:
-                li = drawax.scatter(xvals,yvals,**d['opt'])
-            if 'label' in d['opt']:
+                li = drawax.scatter(xvals,yvals,**dopt)
+            if 'label' in dopt:
                 handles.append(li)
 
         # Draw a quiver

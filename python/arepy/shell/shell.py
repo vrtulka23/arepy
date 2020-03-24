@@ -76,6 +76,9 @@ def link(srcName,linkName):
 def touch(fileName):
     call(['touch',fileName])
 
+def write(fileName,text):
+    call(['echo','"%s"'%text,'>',fileName])
+
 def dirname(fileName):
     return os.path.dirname(fileName)
         

@@ -30,9 +30,10 @@ class plot:
         self.dirPlot = self.dirName+'/'+self.fileName              # path to the file directory
 
         self.nproc = {
-            'fig': apy.numCpu,                # number of processors to use for figures
-            'kdt': 1,                         # number of processors to use for KDTree
+            'fig':  apy.numCpu,               # number of processors for preparing figures
+            'kdt':  1,                        # number of processors to use for KDTree
             'snap': 1,                        # number of processors to use for snapshot
+            'plot': 1,                        # number of processors for plotting a figure
         }
 
         self.fig = None
@@ -237,7 +238,7 @@ class plot:
             'dirName':    self.dirPlot,
             'dirResults': self.proj.dirResults,
             'timeStamp':  self.timeStamp,
-            'nproc':      self.nproc['fig'],
+            'nproc':      self.nproc['plot'],
         }
         nopt.update(opt)
         self.optPlot = {
