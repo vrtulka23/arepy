@@ -24,7 +24,7 @@ class colormap:
             # colorblind palettes
             self.cmap = [(r/255,g/255,b/255) for (r,g,b) in self.cblind[name]]
             self.vmin = 0
-            self.vmax = len(self.cblind[name])
+            self.vmax = len(self.cblind[name])-1
             self.logscale = logscale
         else:
             # standard Matplotlib palettes
@@ -36,6 +36,12 @@ class colormap:
             else: 
                 self.vmin = vmin
                 self.vmax = vmax
+
+    def getList(self,num=None):
+        if self.name in list(self.cblind.keys()): 
+            return self.cmap
+        else:
+            return 'Need to implement'
 
     def getColor(self,value,clip=True):
         if self.logscale:

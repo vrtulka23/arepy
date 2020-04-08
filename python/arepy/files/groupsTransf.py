@@ -122,16 +122,21 @@ class groupsTransf:
         """
         snap = self.item.getSnapshot()
         size = snap.getHeader('BoxSize')
+        limits = [0,BoxSize,0,BoxSize,0,BoxSize]
         return {
-            'center': [size/2]*3,
-            'size':   size,
-            'box':    [0,BoxSize,0,BoxSize,0,BoxSize],
+            'center': limits[1::2]-limits[0::2],
+            'region': apy.coord.regionBox(limits)
         }
 
-    def transf_ArepoImage(self):
+    def transf_ArepoImage(self,zlim=None):
         """Get transformation from the Arepo image settings in parameter file
         """
-        param = self.item.getParam()
+        param = self.item.getParameters()
+        limits = param.getValue(['PicXmin','PicXmax','PicYmin','PicYmax','PicZmin','PicZmax'])
+        limits = np.array(limits)
+        if zlim is not None:
+            limits[4:] = zlim
         return {
-            'box': param.getProperty(['PicXmin','PicXmax','PicYmin','PicYmax','PicZmin','PicZmax'])
+            'center': (limits[1::2]+limits[0::2])*0.5,
+            'region': apy.coord.regionBox(limits)
         }

@@ -381,10 +381,10 @@ class param():
         :return: Parameter value
         """
         allNames = [names] if isinstance(names,str) else names
-        data = []
+        data = {}
         for name in allNames:
-            data.append( self.params[name]['value'] if 'value' in self.params[name] else None )
-        return data[0] if isinstance(names,str) else data        
+            data[name] = self.params[name]['value'] if 'value' in self.params[name] else None
+        return data[allNames[0]] if isinstance(names,str) else data        
 
     def formatValue(self,param,value=None):
         """Return a parameter value in its standard format

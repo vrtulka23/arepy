@@ -132,13 +132,15 @@ class groupsMethods:
 
     # Add rendering of the box projection/slice
     def _renderImage(self, sp, prop, imgType,
-                     bins=200, cache=False, nproc=None, n_jobs=None, clip=None, **imgopt):
+                     bins=200, cache=False, nproc=None, n_jobs=None, clip=None, multiply=None, **imgopt):
         n_jobs = self.opt['n_jobs'] if n_jobs is None else n_jobs
         prop = apy.files.properties(prop)
         proj = self.foreach(renderImage,args=[imgType,prop,bins,n_jobs],
                             cache=cache, nproc=nproc)            
-        def clipData(data,clip):
-            return data if clip is None else np.clip(data,*clip)
+        def modifyData(data,clip,multiply):
+            if clip is not None: data = np.clip(data,*clip)
+            if multiply is not None: data *= multiply
+            return data
         if isinstance(sp,list):
             for i in range(len(sp)):
                 newimgopt = imgopt.copy()
@@ -146,11 +148,11 @@ class groupsMethods:
                 newimgopt['normType'] = imgopt['normType'][i] if isinstance(imgopt['normType'],list) else imgopt['normType']
                 if 'cmap' in imgopt:
                     newimgopt['cmap'] = imgopt['cmap'][i]     if isinstance(imgopt['cmap'],list)     else imgopt['cmap']
-                sp[i].addImage(data=clipData(proj[prop[i]['name']], clip[i] if isinstance(clip[i],(tuple,list)) else clip), 
-                               extent=proj['extent'], **newimgopt)
+                data = modifyData(proj[prop[i]['name']], clip[i] if isinstance(clip[i],(tuple,list)) else clip, multiply)
+                sp[i].addImage(data=data, extent=proj['extent'], **newimgopt)
         else:
-            sp.addImage(data=clipData(proj['data'],clip), 
-                        extent=proj['extent'], **imgopt)
+            data = modifyData(proj['data'],clip,multiply)
+            sp.addImage(data=data, extent=proj['extent'], **imgopt)
 
     def setProjection(self, sp, prop, **opt):
         """Create a projection image of a snapshot property
@@ -411,8 +413,12 @@ def setSnapStamp(item):
 # Get arepo image
 def addImage(item,prop,imgType):
     im,px,py = item.sim.getImage(item.snap,prop,imgType)
+    print(imgType)
     if prop=='density':
-        im *= item.sim.units.conv['coldens'] # Arepo density images are in units g/cm^2
+        if imgType=='slice':
+            im *= item.sim.units.conv['density'] # Arepo density slices are in units g/cm^3
+        else:
+            im *= item.sim.units.conv['coldens'] # Arepo density projections are in units g/cm^2
     box = item.transf['crop']['region'].limits
     return {
         'im':     im,

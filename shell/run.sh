@@ -514,6 +514,8 @@ compile_arepo()
     fi
     cd $DIR_AREPO
     make -j build
+    version=$(date && git rev-parse HEAD && git branch)
+    echo "$version" > $DIR_PWD/Arepo.log
     cp Arepo $DIR_PWD
     cd $DIR_PWD
 }

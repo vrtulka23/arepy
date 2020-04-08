@@ -135,26 +135,36 @@ class units():
 
     def guess(self,name,value=1.,utype='old',umin=None,umax=None,nformat='%.1f'):
         nformat = nformat+' %s'
-        if name=='length':
-            unitNames = ['cm','km','au','pc','kpc','Mpc','Gpc','inf']
-            unitValues = [1, 100, apy.const.au, apy.const.pc, apy.const.kpc, 
-                      apy.const.Mpc, apy.const.Gpc, float("inf")]
-        elif name=='time':
-            unitNames = ['s','m','h','d','yr','kyr','Myr','Gyr','inf']
-            unitValues = [1, 60, 3600, 86400, apy.const.yr, apy.const.kyr, 
-                          apy.const.Myr, apy.const.Gyr, float("inf")]
-        elif name=='mass': 
-            unitNames = ['g','kg','mM_sol','M_sol','inf']
-            unitValues = [1, 1e3, apy.const.M_sol*1e-3, apy.const.M_sol, float("inf")]
-        if name in ['length','time','mass']:
+        units = {
+            'length': {
+                'names':  ['cm','km','au','pc','kpc','Mpc','Gpc','inf'],
+                'values': [1, 100, apy.const.au, apy.const.pc, apy.const.kpc, 
+                           apy.const.Mpc, apy.const.Gpc, float("inf")],
+            },
+            'time': {
+                'names':  ['s','m','h','d','yr','kyr','Myr','Gyr','inf'],
+                'values': [1, 60, 3600, 86400, apy.const.yr, apy.const.kyr, 
+                           apy.const.Myr, apy.const.Gyr, float("inf")],
+            },
+            'mass': { 
+                'names':  ['g','kg','mM_sol','M_sol','inf'],
+                'values': [1, 1e3, apy.const.M_sol*1e-3, apy.const.M_sol, float("inf")],
+            },
+            'volume': {
+                'names':  ['cm^3','km^3','au^3','pc^3','kpc^3','Mpc^3','Gpc^3','inf'],
+                'values': np.array([1, 100, apy.const.au, apy.const.pc, apy.const.kpc, 
+                                    apy.const.Mpc, apy.const.Gpc, float("inf")])**3,
+            }
+        }            
+        if name in ['length','time','mass','volume']:
             if utype=='old': value *= self.old[name]
             elif utype=='new': value *= self.new[name]
-            umin = 0 if umin is None else unitNames.index(umin)
-            umax = len(unitNames)-1 if umax is None else unitNames.index(umax)
+            umin = 0 if umin is None else units[name]['names'].index(umin)
+            umax = len(units[name]['names'])-1 if umax is None else units[name]['names'].index(umax)
             for i in range(umin,umax):
-                if unitValues[i+1]>=value*2: # "value*2" is to avoid small rounding differences
-                    return nformat%(value/unitValues[i], unitNames[i])
-            return nformat%(value/unitValues[umax], unitNames[umax])
+                if units[name]['values'][i+1]>=value*2: # "value*2" is to avoid small rounding differences
+                    return nformat%(value/units[name]['values'][i], units[name]['names'][i])
+            return nformat%(value/units[name]['values'][umax], units[name]['names'][umax])
         else:
             return ''
         

@@ -286,6 +286,8 @@ def plotSubplot(ax,opt,canvas,fid=0):
         if 'tickparams' in props:
             if 'labelrotation' in props['tickparams']:
                 plt.setp(ax.get_xticklabels(), rotation=props['tickparams']['labelrotation'])
+            if 'axis' not in props['tickparams']:
+                props['tickparams']['axis'] = 'x'
             ax.tick_params(**props['tickparams'])
         plt.setp(ax.get_xticklabels(), fontsize=fontsize)
 
@@ -306,6 +308,8 @@ def plotSubplot(ax,opt,canvas,fid=0):
         if 'tickformat' in props:
             axis.set_major_formatter(mpl.ticker.FormatStrFormatter(props['tickformat']))
         if 'tickparams' in props:
+            if 'axis' not in props['tickparams']:
+                props['tickparams']['axis'] = 'y'
             ax.tick_params(**props['tickparams'])
         plt.setp(ax.get_yticklabels(), fontsize=fontsize)
 

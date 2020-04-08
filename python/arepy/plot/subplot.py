@@ -36,6 +36,7 @@ class subplot:
             'legendM': None,    # plot marker legend
             'other': [],        # other canvas objects
             'axis': {           # axis properties
+                'tickparams': {},
                 'xaxis': {
                     'pos':   'bottom', # x axis position
                     'scale': 'lin',    # x axis scale
@@ -66,7 +67,13 @@ class subplot:
     def setOption(self,**args):
         """Set an option"""
         for key,value in args.items():
-            self.opt[key] = value
+            if isinstance(value,dict):
+                if key in self.opt:
+                    self.opt[key].update(value)
+                else:
+                    self.opt[key] = value.copy()
+            else:
+                self.opt[key] = value
 
     # Standard way how to set a norm for the subplot
     def setNorm(self,xdata=None,ydata=None,zdata=None,
@@ -166,7 +173,7 @@ class subplot:
             
             grp.addColorbarNA(pos=(1.0,0.2,0.01,0.6),label='Mass (g)')
         """
-        opt = {'location':'right','label':None}
+        opt = {'location':'right','label':None,'xaxis':{},'yaxis':{}}
         opt.update(nopt)
         self.canvas['other'].append({'draw':'colorbarNA','twiny':False,'twinx':False,'pos':pos,**opt})
         
@@ -252,10 +259,10 @@ class subplot:
                  #'ylim','ylabel','yscale','ypos','yticklabels','ytickparam','yvisible',
                  #'xlim','xlabel','xscale','xflip','xpos','xtickformat','xvisible','xticklabels','xtickparam',
                  'group','projection',
-                 'tickparam','xysame']
+                 'tickparams','xysame']
         for opt in axOpt:
             if opt in self.opt:
-                if self.opt[opt] is None: # remove if set to None
+                if self.opt[opt] is False: # remove if set to None
                     del self.opt[opt]
                     continue
                 if isinstance(self.opt[opt],dict):

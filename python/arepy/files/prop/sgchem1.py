@@ -199,16 +199,20 @@ class sgchem1:
 
     # Mean molecular weight
     def prop_Mu(self,ids,ptype,**prop):
+        xHP = self.prop_x_HP(ids,ptype,**prop)
+        xDP = self.prop_x_DP(ids,ptype,**prop)
+        xHEP = self.prop_x_HEP(ids,ptype,**prop)
+        xHEPP = self.prop_x_HEPP(ids,ptype,**prop)
         mu = ( self.opt['chem']['x0_H'] + 2.*self.opt['chem']['x0_D'] + 4.*self.opt['chem']['x0_He'] ) / \
              ( self.opt['chem']['x0_H'] + self.opt['chem']['x0_D'] + self.opt['chem']['x0_He'] + \
-               self.prop_x_HP(ids,ptype,**prop) + self.prop_x_DP(ids,ptype,**prop) + \
-               self.prop_x_HEP(ids,ptype,**prop) + 2*self.prop_x_HEPP(ids,ptype,**prop) )
+               xHP + xDP + xHEP + 2*xHEPP )
         return mu
     
     # Number density of the gas (cm^{-3})
     def prop_NumberDensity(self,ids,ptype,**prop):
         density = self.prop_Density(ids,ptype,**prop) * self.units['density']  # density (g/cm^3)
-        return density / ( apy.const.m_p * self.prop_Mu(ids,ptype,**prop) )        
+        mu = self.prop_Mu(ids,ptype,**prop)
+        return density / ( apy.const.m_p * mu )        
 
     # Pressure (code units)
     def prop_Pressure(self,ids,ptype,**prop):
