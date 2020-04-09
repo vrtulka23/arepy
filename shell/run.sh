@@ -3,7 +3,6 @@
  
 DIR_PWD=$(pwd)                          # directory where we run the script
 DIR_AREPY=$(dirname $(dirname $0))      # directory of the arepy module
-DIR_RESULTS=$DIR_AREPY/results          # directory with scripy results
 DIR_PYTHON=$DIR_AREPY/python            # directory with the python scripts
 DIR_PYTHON_AREPY=$DIR_PYTHON/arepy      # arepy python scripts
 DIR_PYTHON_SCRIPY=$DIR_PYTHON/scripy    # scripy python scripts
@@ -43,8 +42,9 @@ done
 source $DIR_AREPY/shell/system.sh
 
 # Load default settings if necessary
-DIR_HOME=${DIR_HOME:-$HOME}                    # home directory
-DIR_AREPO=${DIR_AREPO:-"$DIR_AREPY/arepo"}     # directory with the arepo source code
+DIR_HOME=${DIR_HOME:-$HOME}                        # home directory
+DIR_AREPO=${DIR_AREPO:-"$DIR_AREPY/arepo"}         # directory with the arepo source code
+DIR_RESULTS=${DIR_RESULTS:-"$DIR_AREPY/results"}   # directory with scripy results
 
 NUM_NODES=${NUM_NODES:-1}                      # number of nodes
 NUM_PROC=${NUM_PROC:-16}                       # number of processors per node
