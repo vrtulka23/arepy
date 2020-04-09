@@ -101,12 +101,16 @@ class complex:
     #######################
 
     def prop_HistSphere(self,ids,ptype,**prop):
-        """Mass weighted radial histogram of a property within a spherical region
+        """Weighted radial histogram of a property within a spherical region
 
         :param [float]*3 center: Center of the sphere
         :param list[float] bins: Radial bins
         :param properties p: List of properties 
-        :return: Mass weighted radial distribution of a property
+        :param weight: Weight (False,str)
+        :return: Weighted radial distribution of a property
+
+        If weight is not set values of 'Masses' will be used.
+        If False, it will do an ordinary histogram.
 
         Example::
             
@@ -118,18 +122,31 @@ class complex:
             {'X_HP': [0.234, 0.64, 0.3,...],
              'Temperature': [1234.3, 3435.23, 9454.23,...]}
         """
-        region = self.getProperty({
-            'name':'RegionSphere','center':prop['center'],'radius':prop['bins'][-1],'ptype':ptype,
-            'p':['Indexes',{'name':'Masses','ptype':ptype},{'name':'Radius2','center':prop['center']}]
-        },ids=ids,ptype=ptype)
-        wHist, edges = np.histogram(region['Radius2'],bins=prop['bins']**2,weights=region['Masses'],density=False)
+        weight='Masses' if 'weight' not in prop else prop['weight']
+
+        if weight is False:
+            region = self.getProperty({
+                'name':'RegionSphere','center':prop['center'],'radius':prop['bins'][-1],'ptype':ptype,
+                'p':['Indexes',{'name':'Radius2','center':prop['center']}]
+            },ids=ids,ptype=ptype)
+        else:
+            region = self.getProperty({
+                'name':'RegionSphere','center':prop['center'],'radius':prop['bins'][-1],'ptype':ptype,
+                'p':['Indexes',{'name':weight,'ptype':ptype},{'name':'Radius2','center':prop['center']}]
+            },ids=ids,ptype=ptype)
+            wHist, edges = np.histogram(region['Radius2'],bins=prop['bins']**2,weights=region[weight],density=False)
 
         properties = apy.files.properties(prop['p'])
         data = self.getProperty(properties,ids=region['Indexes'],ptype=ptype,dictionary=True)
         for pp in properties:
-            pHist, edges = np.histogram(region['Radius2'],bins=prop['bins']**2,
-                                        weights=region['Masses']*data[pp['key']],density=False)
-            properties.setData(pp['key'], pHist/wHist)
+            if weight is False:
+                pHist, edges = np.histogram(region['Radius2'],bins=prop['bins']**2,
+                                            weights=data[pp['key']],density=False)
+                properties.setData(pp['key'], pHist)
+            else:
+                pHist, edges = np.histogram(region['Radius2'],bins=prop['bins']**2,
+                                            weights=region[weight]*data[pp['key']],density=False)
+                properties.setData(pp['key'], pHist/wHist)
         return properties.getData()
         
     # Example: {'name':'HistBox','center':[0.5,0.5,0.5],'size':1,'w':'Masses','bins':200}

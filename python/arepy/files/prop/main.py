@@ -29,6 +29,8 @@ class main:
             'energy':   self.fileSnap['Header'].attrs['UnitVelocity_in_cm_per_s']**2 * self.fileSnap['Header'].attrs['UnitMass_in_g'],
         }
 
+        self.npart = self.fileSnap['Header'].attrs['NumPart_ThisFile']
+
         if 'Parameters' in self.fileSnap:
             if 'UnitPhotons_per_s' in self.fileSnap['Parameters'].attrs:
                 self.units['flux'] = self.fileSnap['Parameters'].attrs['UnitPhotons_per_s']
@@ -48,7 +50,7 @@ class main:
     def getProperty(self,prop,ids=None,ptype=0,dictionary=False):
         properties = apy.files.properties(prop,ptype=ptype)
         for pp in properties:
-            npart = self.fileSnap['Header'].attrs['NumPart_ThisFile'][pp['ptype']]
+            npart = self.npart[pp['ptype']]
             propMethod = 'prop_'+pp['name']
             if not hasattr(self,propMethod):
                 properties.setData( pp['key'], [] )
@@ -85,7 +87,10 @@ class main:
         if self.fileSink is None:
             # open the sink file and cross-match ids
             self.fileSink = apy.files.sink(**self.opt['sinkOpt'])
+        if self.npart[5]>0:
             snapIds = self.getSnapData('ParticleIDs',5,ids)
             sinkIds = self.fileSink.getValues('ID')
-            self.idsSink = np.nonzero(snapIds[:, None] == sinkIds)[1]
-        return self.fileSink.getValues(name)[self.idsSink]
+            idsSink = np.nonzero(snapIds[:, None] == sinkIds)[1]
+        else:
+            idsSink = []
+        return self.fileSink.getValues(name)[idsSink]

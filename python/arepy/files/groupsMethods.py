@@ -110,7 +110,8 @@ class groupsMethods:
     ######################################
 
     # Plot Arepo image
-    def addImage(self, sp, prop, imgType, norm=None, normType=None, cmap=None, multiply=None, clip=None):
+    def addImage(self, sp, prop, imgType, norm=None, normType=None, 
+                 cmap=None, multiply=None, clip=None, **kwargs):
         """Add an Arepo image
         """
         for item in self.items:
@@ -127,17 +128,19 @@ class groupsMethods:
             data['im'] = data['im'] * multiply
         if clip is not None:
             data['im'] = np.clip(data['im'],clip[0],clip[1])
-        sp.addImage(data=data['im'],extent=data['extent'],norm=norm,normType=normType,cmap=cmap)
+        sp.addImage(data=data['im'],extent=data['extent'],norm=norm,normType=normType,cmap=cmap,**kwargs)
 
     # Add rendering of the box projection/slice
     def _renderImage(self, sp, prop, imgType,
-                     bins=200, cache=False, nproc=None, n_jobs=None, clip=None, **imgopt):
+                     bins=200, cache=False, nproc=None, n_jobs=None, clip=None, multiply=None, **imgopt):
         n_jobs = self.opt['n_jobs'] if n_jobs is None else n_jobs
         prop = apy.files.properties(prop)
         proj = self.foreach(renderImage,args=[imgType,prop,bins,n_jobs],
                             cache=cache, nproc=nproc)            
-        def clipData(data,clip):
-            return data if clip is None else np.clip(data,*clip)
+        def modifyData(data,clip,multiply):
+            if clip is not None: data = np.clip(data,*clip)
+            if multiply is not None: data *= multiply
+            return data
         if isinstance(sp,list):
             for i in range(len(sp)):
                 newimgopt = imgopt.copy()
@@ -145,11 +148,11 @@ class groupsMethods:
                 newimgopt['normType'] = imgopt['normType'][i] if isinstance(imgopt['normType'],list) else imgopt['normType']
                 if 'cmap' in imgopt:
                     newimgopt['cmap'] = imgopt['cmap'][i]     if isinstance(imgopt['cmap'],list)     else imgopt['cmap']
-                sp[i].addImage(data=clipData(proj[prop[i]['name']], clip[i] if isinstance(clip[i],(tuple,list)) else clip), 
-                               extent=proj['extent'], **newimgopt)
+                data = modifyData(proj[prop[i]['name']], clip[i] if isinstance(clip[i],(tuple,list)) else clip, multiply)
+                sp[i].addImage(data=data, extent=proj['extent'], **newimgopt)
         else:
-            sp.addImage(data=clipData(proj['data'],clip), 
-                        extent=proj['extent'], **imgopt)
+            data = modifyData(proj['data'],clip,multiply)
+            sp.addImage(data=data, extent=proj['extent'], **imgopt)
 
     def setProjection(self, sp, prop, **opt):
         """Create a projection image of a snapshot property
@@ -237,17 +240,26 @@ class groupsMethods:
         nopt.update(opt)
         sp.addText(values,**nopt)    
 
-    def addParticles(self, sp, ptype, **opt):
+    def addParticles(self, sp, ptype, zalpha=False, **opt):
         """Show particle location on the image
         """
-        coords = self.foreach(addParticles,append=True,args=[ptype])
+        data = self.foreach(addParticles,append=True,args=[ptype])
         if self.size>1:
-            x = [c[:,0] for c in coords]
-            y = [c[:,1] for c in coords]
+            x = [[] if c is None else c[:,0] for c in data['coord']]
+            y = [[] if c is None else c[:,1] for c in data['coord']]
         else:
-            x,y,z = np.array(coords).T
+            x,y,z = np.array(data['coord']).T
         nopt = {'s':20,'marker':'+','c':'black','edgecolors':None,'linewidths':1}
         nopt.update(opt)
+        if zalpha:
+            nopt['c'] = []
+            for alpha in data['alpha']:
+                if alpha is None:
+                    nopt['c'].append('black')
+                else:
+                    color = np.zeros((len(alpha),4))
+                    color[:,3] = alpha #1-np.abs(alpha)
+                    nopt['c'].append(color)
         if isinstance(sp,list):
             for i in range(len(sp)):
                 sp[i].addScatter(x,y,**nopt)
@@ -381,16 +393,18 @@ def addTimes(item):
 
 # Add particles
 def addParticles(item,ptype):
+    pdata = {'coord':None,'alpha':None}
     with item.getSnapshot() as sn:
         center = item.transf['select']['region'].center
         radius = item.transf['select']['region'].radius
+        zlim = item.transf['crop']['region'].limits[4:]
         ids = sn.getProperty({'name':'RegionSphere','ptype':ptype,"center":center,'radius':radius})
         if len(ids)>0:
             coord = sn.getProperty({'name':'Coordinates','ptype':ptype},ids=ids)
             coord = item.transf.convert(['translate','align','flip','rotate','crop'],coord)
-            return coord * item.sim.units.conv['length']
-        else:
-            return None
+            pdata['alpha'] = (coord[:,2]-zlim[0])/(zlim[1]-zlim[0])
+            pdata['coord'] = coord * item.sim.units.conv['length']
+    return pdata
 
 # Create snapshot stamps
 def setSnapStamp(item):
@@ -399,8 +413,12 @@ def setSnapStamp(item):
 # Get arepo image
 def addImage(item,prop,imgType):
     im,px,py = item.sim.getImage(item.snap,prop,imgType)
+    print(imgType)
     if prop=='density':
-        im *= item.sim.units.conv['coldens'] # Arepo density images are in units g/cm^2
+        if imgType=='slice':
+            im *= item.sim.units.conv['density'] # Arepo density slices are in units g/cm^3
+        else:
+            im *= item.sim.units.conv['coldens'] # Arepo density projections are in units g/cm^2
     box = item.transf['crop']['region'].limits
     return {
         'im':     im,

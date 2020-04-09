@@ -42,7 +42,7 @@ class setup(apy.scripy.setup):
         }
         with apy.files.ics(self.units,**opt) as f:
             if self.opt['meshrelax']:            
-                f.setGrid(self.opt['icsRes'],self.opt['icsDens'])
+                f.useGrid(self.opt['icsRes'],self.opt['icsDens'])
             else:
                 sim = self.proj.getSimulation(100)
                 snap = sim.getSnapshot(0)

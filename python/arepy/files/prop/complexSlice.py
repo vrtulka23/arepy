@@ -31,7 +31,7 @@ class complexSlice:
                 n_jobs = prop['n_jobs'] if 'n_jobs' in prop else 1
             )
             # select property
-            load = properties.getWithout('name',['Coordinates','Bins'])
+            load = properties.getWithout('name',['Coordinates','HealpixAngles','Bins'])
             pps = self.getProperty(load,ids=region['Indexes'],ptype=ptype,dictionary=True)
             for pp in properties:
                 if pp['name']=='Coordinates':

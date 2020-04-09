@@ -10,6 +10,7 @@ fns = ['setup','plot','debug','show','movie','script','init-setup','init-plot','
 if fn in fns:
     if proj=='tmp':
         apy.shell.exit('Script "run.sh" was not found in this directory (main.py)')
+    print(proj)
     exec("from %s import *"%(proj))
     p = project(proj)
     if fn=='setup':

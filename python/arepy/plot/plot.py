@@ -96,13 +96,16 @@ def plotSubplot(ax,opt,canvas,fid=0):
             else: xvals = d['x'] if np.isscalar(d['x'][0]) else d['x'][fid]
             if np.isscalar(d['y']): yvals=d['y']
             else: yvals = d['y'] if np.isscalar(d['y'][0]) else d['y'][fid]
+            dopt = d['opt'].copy() # this is necessary if we do not use parallel plotting
+            if 'c' in dopt and not isinstance(dopt['c'],str):
+                dopt['c'] = dopt['c'][fid]
             if spXYZ:
                 if np.isscalar(d['z']): zvals=d['z']
                 else: zvals = d['z'] if np.isscalar(d['z'][0]) else d['z'][fid]
-                li = drawax.scatter(xvals,yvals,zvals,**d['opt'])
+                li = drawax.scatter(xvals,yvals,zvals,**dopt)
             else:
-                li = drawax.scatter(xvals,yvals,**d['opt'])
-            if 'label' in d['opt']:
+                li = drawax.scatter(xvals,yvals,**dopt)
+            if 'label' in dopt:
                 handles.append(li)
 
         # Draw a quiver
@@ -161,7 +164,10 @@ def plotSubplot(ax,opt,canvas,fid=0):
             data = d['data'][fid] if len(np.array(d['data']).shape)>2 else d['data']
             if data!=[]:
                 if d['normType']=='log':
-                    if d['norm'][1]<=0:
+                    if d['norm'] is None:
+                        apy.shell.printc("Warning: Skipping image with None norm!",'red')
+                        return
+                    elif d['norm'][1]<=0:
                         return hideAxis("\nWarning: Skipping image plots with zero/negative logarithmic norm!")
                     norm = mpl.colors.LogNorm(vmin=d['norm'][1],vmax=d['norm'][2])
                 elif d['normType'] in ['lin',None]:
@@ -280,6 +286,8 @@ def plotSubplot(ax,opt,canvas,fid=0):
         if 'tickparams' in props:
             if 'labelrotation' in props['tickparams']:
                 plt.setp(ax.get_xticklabels(), rotation=props['tickparams']['labelrotation'])
+            if 'axis' not in props['tickparams']:
+                props['tickparams']['axis'] = 'x'
             ax.tick_params(**props['tickparams'])
         plt.setp(ax.get_xticklabels(), fontsize=fontsize)
 
@@ -300,6 +308,8 @@ def plotSubplot(ax,opt,canvas,fid=0):
         if 'tickformat' in props:
             axis.set_major_formatter(mpl.ticker.FormatStrFormatter(props['tickformat']))
         if 'tickparams' in props:
+            if 'axis' not in props['tickparams']:
+                props['tickparams']['axis'] = 'y'
             ax.tick_params(**props['tickparams'])
         plt.setp(ax.get_yticklabels(), fontsize=fontsize)
 

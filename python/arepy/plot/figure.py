@@ -75,8 +75,9 @@ class figure:
     def setSubplot(self, row=0, col=0, xyz=False, **opt):
         """Set subplot options
         
-        :param int row: Row of the subplot
-        :param int col: Column of the subplot
+        :param int row:  Row of the subplot
+        :param int col:  Column of the subplot
+        :param bool xyz: Set 3D subplot
         """
         i = self.getIndex(row,col)
         self.subplot[i].setOption(**opt)        
@@ -84,6 +85,15 @@ class figure:
             self.subplot[i].xyz = True
             self.subplot[i].canvas['subplot'][3] = True
 
+    def setSubplots(self, xyz=False, **opt):
+        """Set same options to all subplots
+   
+        :param bool xyz: Set 3D subplot
+        """
+        for r in range(self.nrows):
+            for c in range(self.ncols):
+                self.setSubplot(r,c,xyz=xyz,**opt)
+        
     def getSubplot(self, row=0, col=0, xyz=False, **opt):
         """Get subplot
         

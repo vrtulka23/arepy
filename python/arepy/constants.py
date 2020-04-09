@@ -27,9 +27,11 @@ gamma = 5./3.        # polytropic index for the atomic gas
 eV = 1.60217733e-12  # electron-volt [erg]
 keV = 1.60217733e-15 # kilo electron-volt [erg]
 MeV = 1.60217733e-18 # mega electron-volt [erg]
+Ryd = 2.1798741e-11  # 1 Ryd == hcR_inf == 13.6eV [erg] (https://www.unitconverters.net/energy/rydberg-constant-to-erg.htm)
 
 # Simple conversions
 eV2Hz = eV/h         # wave energy to wave frequency: electron-volt to Hertz  
+erg2Hz = 1/h         # wave energy to wave frequency: erg to Hertz
 
 # Common settings for all file types 
 dsets = {'Coordinates':3,'Velocities':3}
