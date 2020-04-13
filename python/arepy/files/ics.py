@@ -1,7 +1,9 @@
 import arepy as apy
 import numpy as np
 
-class ics:
+from arepy.files.icsCoord import *
+
+class ics(icsCoord,icsVelocity):
 
     def __enter__(self):
         return self
@@ -69,27 +71,6 @@ class ics:
         # set additional headers
         self.header.update(header)
 
-    # Use cell properties from a carthesian grid
-    def useGrid(self,res):
-        apy.shell.printc('regular grid: %d**3'%res)
-        grid = apy.coord.gridCube([res]*3,points='centers',scatter=0.3/res)
-        coords = np.array(grid.coords,dtype=np.float64)*self.header['BoxSize']
-        volumes = np.full(len(coords),(self.header['BoxSize']/res)**3,dtype=np.float64)
-        if self.density is None:
-            apy.shell.exit('Density has to be set while using Grid! (ics.py)')
-        self.setCells(coords,volumes)
-
-    # Use cell properties from a snapshot
-    def useSnapshot(self,snap):
-        apy.shell.printc('snapshot grid: '+snap.fileName)
-        data = snap.getProperty(['Coordinates','Masses','Density'])
-        convBoxSize = self.header['BoxSize'] / snap.getHeader('BoxSize')
-        volumes = data['Masses'] / data['Density'] * convBoxSize**3
-        data['Coordinates'] *= convBoxSize
-        if self.density is None:
-            self.density = data['Density']
-        self.setCells(data['Coordinates'],volumes)
-
     # Set cell properties directly
     def setCells(self,coords,volumes):
         self.nGas =       len(coords)
@@ -100,6 +81,19 @@ class ics:
         self.masses =     self.density * volumes     # code units
         self.velocities = np.zeros((self.nGas,3))    # code units
         self.ids =        np.arange(1,1+self.nGas,dtype=np.uint32)
+
+
+    # Write ICs into the file
+    def write(self,fileName,**opt):
+        apy.shell.printc('Writing to: '+fileName)
+        with apy.files.snap(fileName,fmode='w',**opt) as sf:                
+            sf.setProperty('Coordinates',  self.coords)
+            sf.setProperty('Masses',       self.masses)
+            sf.setProperty('Velocities',   self.velocities)
+            sf.setProperty('ParticleIDs',  self.ids)            
+            self.header['NumPart_ThisFile'] = [self.nGas,0,0,0,0,0]
+            self.header['NumPart_Total'] =    [self.nGas,0,0,0,0,0]
+            sf.setHeader(self.header)
 
         print('Units  length  ', self.units['length'],   'cm =',   self.units.guess('length',1) )
         print('       mass    ', self.units['mass'],     'g =',    self.units.guess('mass',1) )
@@ -128,15 +122,3 @@ class ics:
         print('       density  %.03e = %.03e g/cm^3'%(boxDens, boxDens*self.units['density']))
         print('       size     %.03e = %.03e cm     = '%(boxSize, boxSize*self.units['length']),
                self.units.guess('length',boxSize))
-
-    # Write ICs into the file
-    def write(self,fileName,**opt):
-        apy.shell.printc('Writing to: '+fileName)
-        with apy.files.snap(fileName,fmode='w',**opt) as sf:                
-            sf.setProperty('Coordinates',  self.coords)
-            sf.setProperty('Masses',       self.masses)
-            sf.setProperty('Velocities',   self.velocities)
-            sf.setProperty('ParticleIDs',  self.ids)            
-            self.header['NumPart_ThisFile'] = [self.nGas,0,0,0,0,0]
-            self.header['NumPart_Total'] =    [self.nGas,0,0,0,0,0]
-            sf.setHeader(self.header)
