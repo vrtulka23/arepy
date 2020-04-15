@@ -43,6 +43,16 @@ class IonizationFrontTest:
     #   r [cm]         radius
     def t_sp(self,r):
         return ( ( r/self.r_st )**( 7./4. ) - 1. ) * ( 4.*self.r_st ) / ( 7.*self.c_s )
+
+    def show(self,units):
+        print("I-front test:")
+        print("n=%.03e cm^-3"%(self.n))
+        print("Q=%.03e s^-1s"%(self.Q))
+        print("mu=%.03e"%(self.mu))
+        print("r_st =  %.03e cm =   "%(self.r_st) + units.guess('length',self.r_st,utype='cgs'))
+        print("t_rec = %.03e s =    "%(self.t_rec) + units.guess('time',self.t_rec,utype='cgs'))
+        print("c_s =   %.03e cm/s = "%(self.c_s) + units.guess('velocity',self.c_s,utype='cgs'))
+
     
 
 # Test of Direct Pressure from Ionising Radiation

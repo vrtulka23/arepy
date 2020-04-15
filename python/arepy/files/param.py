@@ -329,8 +329,8 @@ class param():
         :param list[str] cmParams: List of parameters that should be commented
         :param bool meshrelax: Set MESHRELAX parameters
         """
-        if meshrelax:
-            rmGroups.extend([28])  # remove image settings
+        #if meshrelax:
+        #    rmGroups.extend([28])  # remove image settings
         output = self.parse(rmGroups=rmGroups,rmParams=rmParams,cmGroups=cmGroups,cmParams=cmParams)
         for param in self.needToSet:
             print( self._parse(param) )

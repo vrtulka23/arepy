@@ -413,7 +413,6 @@ def setSnapStamp(item):
 # Get arepo image
 def addImage(item,prop,imgType):
     im,px,py = item.sim.getImage(item.snap,prop,imgType)
-    print(imgType)
     if prop=='density':
         if imgType=='slice':
             im *= item.sim.units.conv['density'] # Arepo density slices are in units g/cm^3

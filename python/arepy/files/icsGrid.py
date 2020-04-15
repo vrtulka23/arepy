@@ -1,7 +1,7 @@
 import arepy as apy
 import numpy as np
 
-class icsCoord:
+class icsGrid:
 
     # Use cell properties from a carthesian grid
     def useGrid(self,res):
@@ -24,3 +24,13 @@ class icsCoord:
             self.density = data['Density']
         self.setCells(data['Coordinates'],volumes)
     
+    # Set cell properties directly
+    def setCells(self,coords,volumes):
+        self.npart =       [len(coords),0,0,0,0,0]
+        self.coords =      coords                       # code units
+        self.volumes =     volumes                      # code units
+        if callable(self.density):
+            self.density = self.density(self.coords)    # code units
+        self.masses =      self.density * volumes       # code units
+        self.velocities =  np.zeros((self.npart[0],3))  # code units
+        self.ids =         np.arange(1,1+self.npart[0],dtype=np.uint32)

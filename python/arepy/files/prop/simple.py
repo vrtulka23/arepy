@@ -81,6 +81,15 @@ class simple:
         """
         return self.getSnapData('Velocities',ptype,ids)
 
+    def prop_VelTot(self,ids,ptype,**prop):
+        """Get cell velocities
+
+        :return: Array of particle velocities
+        :rtype: list[[float]*3]
+        """
+        vel = self.getSnapData('Velocities',ptype,ids)
+        return np.linalg.norm(vel, axis=1)
+
     def prop_VelX(self,ids,ptype,**prop):
         """Get cell x velocities
 

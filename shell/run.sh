@@ -17,10 +17,17 @@ if [ "$nd" -gt "0" ]; then
         pname=$(basename $pdir)
         fileConf=$pdir/project.conf
         if [ -f $fileConf ]; then
+	    dirStorage='' # empty if not set
             source $fileConf
-	    if [[ $DIR_PWD == $dirSim* ]]; then
+	    if [[ $DIR_PWD == $dirSim* ]]; then  # main simulation directory
 		PROJECT_NAME=$pname
 		DIR_PROJECT=$pdir
+	    elif [ -n "$dirStorage" ]; then # storage directory
+		if [[ $DIR_PWD == $dirStorage* ]]; then
+		    PROJECT_NAME=$pname
+		    DIR_PROJECT=$pdir
+		    echo $pname $pdir 
+		fi
 	    fi
         fi
     done
@@ -473,8 +480,12 @@ analyze()
 		pname=$(basename $pdir)
 		fileConf=$pdir/project.conf
 		if [ -f $fileConf ]; then
+		    dirStorage=''
 		    source $fileConf
-		    echo $dirSim
+		    echo $dirSim  # main simulation directory
+		    if [ -n "$dirStorage" ]; then
+			echo $dirStorage # storage directory
+		    fi
 		fi
 	    done
 	else

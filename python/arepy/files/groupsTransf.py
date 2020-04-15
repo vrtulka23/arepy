@@ -24,7 +24,11 @@ class groupsTransf:
         return
 
     def getTransf(self,args):
-        name = args.pop('name')
+        if isinstance(args,str):
+            name = args
+            args = {}
+        else:
+            name = args.pop('name')
         return getattr(self,'transf_'+name)(**args)
 
     def _diskTransf(self,center,lrad,size=None,radius=None):
@@ -121,8 +125,8 @@ class groupsTransf:
         """Get transformation from the BoxSize value
         """
         snap = self.item.getSnapshot()
-        size = snap.getHeader('BoxSize')
-        limits = [0,BoxSize,0,BoxSize,0,BoxSize]
+        BoxSize = snap.getHeader('BoxSize')
+        limits = np.array([0,BoxSize,0,BoxSize,0,BoxSize])
         return {
             'center': limits[1::2]-limits[0::2],
             'region': apy.coord.regionBox(limits)
@@ -133,7 +137,11 @@ class groupsTransf:
         """
         param = self.item.getParameters()
         limits = param.getValue(['PicXmin','PicXmax','PicYmin','PicYmax','PicZmin','PicZmax'])
-        limits = np.array(limits)
+        limits = np.array([
+            limits['PicXmin'],limits['PicXmax'],
+            limits['PicYmin'],limits['PicYmax'],
+            limits['PicZmin'],limits['PicZmax'],
+        ])
         if zlim is not None:
             limits[4:] = zlim
         return {

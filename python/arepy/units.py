@@ -137,8 +137,8 @@ class units():
         nformat = nformat+' %s'
         units = {
             'length': {
-                'names':  ['cm','km','au','pc','kpc','Mpc','Gpc','inf'],
-                'values': [1, 100, apy.const.au, apy.const.pc, apy.const.kpc, 
+                'names':  ['cm','km','au','mpc','pc','kpc','Mpc','Gpc','inf'],
+                'values': [1, 100, apy.const.au, apy.const.mpc, apy.const.pc, apy.const.kpc, 
                            apy.const.Mpc, apy.const.Gpc, float("inf")],
             },
             'time': {
@@ -154,11 +154,16 @@ class units():
                 'names':  ['cm^3','km^3','au^3','pc^3','kpc^3','Mpc^3','Gpc^3','inf'],
                 'values': np.array([1, 100, apy.const.au, apy.const.pc, apy.const.kpc, 
                                     apy.const.Mpc, apy.const.Gpc, float("inf")])**3,
+            },
+            'velocity': {
+                'names':  ['cm/s','km/s','au/s','pc/s','kpc/s','inf'],
+                'values': [1,apy.const.km,apy.const.au,apy.const.pc,apy.const.kpc,float("inf")],
             }
         }            
-        if name in ['length','time','mass','volume']:
+        if name in ['length','time','mass','volume','velocity']:
             if utype=='old': value *= self.old[name]
             elif utype=='new': value *= self.new[name]
+            elif utype=='cgs': value *= 1
             umin = 0 if umin is None else units[name]['names'].index(umin)
             umax = len(units[name]['names'])-1 if umax is None else units[name]['names'].index(umax)
             for i in range(umin,umax):

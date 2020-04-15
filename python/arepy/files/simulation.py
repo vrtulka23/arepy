@@ -107,28 +107,32 @@ class simulation:
     # Initialize additional file/dir names dependant on the parameter file
     def _initParamNames(self):
         with apy.files.param(self.fileParam) as f:
-            params = ['InitCondFile','OutputDir','SnapshotFileBase','TestSrcFile','OutputListOn','OutputListFilename']
-            fIcs, dOutput, fSnapBase, fSources, isOlist, fOlist = f.getValue(params)
+            #params = ['InitCondFile','OutputDir','SnapshotFileBase','TestSrcFile','OutputListOn','OutputListFilename']
+            #fIcs, dOutput, fSnapBase, fSources, isOlist, fOlist = f.getValue(params)
+            params = f.getValue(['InitCondFile','OutputDir','SnapshotFileBase','TestSrcFile','OutputListOn','OutputListFilename'])
             if 'dirOutput' in self.opt:
                 self.dirOutput = self.opt['dirOutput']
                 self.dirOutputIni = self.opt['dirOutput']+'_ini'
                 self.linkOutput = self.dirSim +'/output'
-            elif dOutput[0]=='/':
-                self.dirOutput = dOutput
+            elif params['OutputDir'][0]=='/':
+                self.dirOutput = params['OutputDir']
                 self.linkOutput = self.dirSim +'/output'
             else:
-                self.dirOutput = self.dirSim +'/'+ dOutput
+                self.dirOutput = self.dirSim +'/'+ params['OutputDir']
                 self.linkOutput = None
-            self.dirOutputIni = self.dirSim +'/'+ dOutput + '_ini'
-            self.dirNameSnap = fSnapBase + 'dir_%s'
-            self.fileNameSnap = fSnapBase + '_%s.hdf5'
-            self.fileNameSink = 'sink_'+fSnapBase+'_%s'
+            self.dirOutputIni = self.dirSim +'/'+ params['OutputDir'] + '_ini'
+            self.dirNameSnap = params['SnapshotFileBase'] + 'dir_%s'
+            self.fileNameSnap = params['SnapshotFileBase'] + '_%s.hdf5'
+            self.fileNameSink = 'sink_' + params['SnapshotFileBase'] + '_%s'
             self.fileImage = self.dirOutput + '/%s_%s_%03d'
-            self.fileIcs = self.dirSim +'/'+ fIcs +'.hdf5'
-            if fSources is not None:
-                self.fileSources = fSources if fSources[0]=='/' else self.dirSim +'/'+ fSources
-            if isOlist==1:
-                self.fileOlist = fOlist if fOlist[0]=='/' else self.dirSim +'/'+ fOlist
+            self.fileIcs = self.dirSim +'/'+ params['InitCondFile'] +'.hdf5'
+            if params['TestSrcFile'] is not None:
+                self.fileSources = params['TestSrcFile'] if params['TestSrcFile'][0]=='/' else self.dirSim +'/'+ params['TestSrcFile']
+            if params['OutputListOn']==1:
+                if params['OutputListFilename'][0]=='/': 
+                    self.fileOlist = params['OutputListFilename'] 
+                else: 
+                    self.dirSim +'/'+ params['OutputListFilename']
 
     # Initialize constants
     def _initChem(self,cf,pf,opt):
@@ -153,9 +157,13 @@ class simulation:
     # Initialize units
     def _initUnits(self,cf,pf,opt):
         def loadOld():
-            names = ['UnitMass_in_g','UnitLength_in_cm','UnitVelocity_in_cm_per_s','UnitPhotons_per_s']
-            values = pf.getValue(names)
-            return {'mass':values[0],'length':values[1],'velocity':values[2],'flux':values[3]}
+            values = pf.getValue(['UnitMass_in_g','UnitLength_in_cm','UnitVelocity_in_cm_per_s','UnitPhotons_per_s'])
+            return {
+                'mass':     values['UnitMass_in_g'],
+                'length':   values['UnitLength_in_cm'],
+                'velocity': values['UnitVelocity_in_cm_per_s'],
+                'flux':     values['UnitPhotons_per_s']
+            }
         if opt is True:
             self.units = apy.units(old=loadOld())
         elif isinstance(opt,dict):
@@ -168,13 +176,12 @@ class simulation:
     # Initialize snapshot file settings
     def _initSnap(self,cf,pf,opt):
         if opt is not False:
-            names = ['NumFilesPerSnapshot','ComovingIntegrationOn']
-            values = pf.getValue(names)
+            values = pf.getValue(['NumFilesPerSnapshot','ComovingIntegrationOn'])
             self.optSnap = {
-                'nsub':values[0],
-                'nproc':values[0],
+                'nsub':values['NumFilesPerSnapshot'],
+                'nproc':values['NumFilesPerSnapshot'],
                 'initChem':self.optChem,
-                'comoving':True if values[1] else False,
+                'comoving':True if values['ComovingIntegrationOn'] else False,
             }
             if isinstance(opt,dict):
                 self.optSnap.update(opt)
@@ -187,16 +194,26 @@ class simulation:
         if opt is True:
             values = cf.getValue(['SINK_SIMPLEX','SINK_PARTICLES_VARIABLE_ACC_RADIUS',
                                   'SGCHEM_ACCRETION_LUMINOSITY','SINK_PARTICLES_FEEDBACK'])
-            self.optSinks = {'simplex':values[0],'varAccRad':values[1],'accLum':values[2],'sinkFeed':values[3]}
+            self.optSinks = {
+                'simplex':values['SINK_SIMPLEX'],
+                'varAccRad':values['SINK_PARTICLES_VARIABLE_ACC_RADIUS'],
+                'accLum':values['SGCHEM_ACCRETION_LUMINOSITY'],
+                'sinkFeed':values['SINK_PARTICLES_FEEDBACK']
+            }
         else:
             self.optSinks = opt if isinstance(opt,dict) else {}
 
     # Initialize image file settings
     def _initImages(self,cf,pf,opt):
         if opt is True:
+            param = pf.getValue(['PicXmin','PicXmax','PicYmin','PicYmax','PicZmin','PicZmax','PicXpixels','PicYpixels'])
             self.optImages = {
-                'boxSize':np.array( pf.getValue(['PicXmin','PicXmax','PicYmin','PicYmax','PicZmin','PicZmax']) ),
-                'pixels':np.array( pf.getValue(['PicXpixels','PicYpixels']) )
+                'boxSize':np.array([ 
+                    param['PicXmin'], param['PicXmax'], 
+                    param['PicYmin'], param['PicYmax'], 
+                    param['PicZmin'], param['PicZmax'],
+                ]),
+                'pixels':np.array([ param['PicXpixels'], param['PicYpixels'] ])
             }
         else:
             self.optImages = opt if isinstance(opt,dict) else {}

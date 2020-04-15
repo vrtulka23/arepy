@@ -1078,8 +1078,8 @@ class config():
         """
         if meshrelax:
             self.setValue('MESHRELAX',True)    # set meshrelax
-            rmGroups.extend([10])              # remove normal images
-            rmParams.extend(['CHEM_IMAGE','SX_OUTPUT_IMAGE','SX_OUTPUT_IMAGE_ALL']) # remove chem images
+            #rmGroups.extend([10])              # remove normal images
+            #rmParams.extend(['CHEM_IMAGE','SX_OUTPUT_IMAGE','SX_OUTPUT_IMAGE_ALL']) # remove chem images
         output = """#!/bin/bash            # this line only there to enable syntax highlighting in this file 
 
 ##################################################
@@ -1140,7 +1140,7 @@ class config():
         if isinstance(param,(str,int,float)):
             return self._getValue(param)
         else:
-            return [ self._getValue(value) for value in param ]
+            return { value:self._getValue(value) for value in param }
 
     def formatValue(self,param,value=None):
         """Return a parameter value in its standard format
