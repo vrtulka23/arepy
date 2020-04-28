@@ -281,7 +281,10 @@ queue_running()
 	queueID="${ADDR[1]//[[:blank:]]/}"
 	if [ -n "$queueID" ]; then
 	    if [[ $queue == *$queueID* ]]; then
-		echo $(echo "$queue" | grep "$queueID") " | ${ADDR[2]}"
+		dirPath=$(echo "${ADDR[2]}" | xargs)
+		cd $HOME$dirPath
+		as=$(analyze_snaps)
+		echo $(echo "$queue" | grep "$queueID") "| $dirPath | $as"
 	    fi
 	fi
     done <$SIM_LOG

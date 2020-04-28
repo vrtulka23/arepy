@@ -48,14 +48,15 @@ class units():
             self.old['coldens']    = self.old['mass'] / self.old['length']**2
         if 'volume' not in self.old:
             self.old['volume']     = self.old['length']**3
-        if 'energy' not in self.old:
-            self.old["energy"]     = self.old["velocity"]**2     # internal energy E/m=v^2=(m/s)^2
+        if 'energy' not in self.old:      # internal energy E/m=v^2=(m/s)^2
+            self.old["energy"]     = self.old["velocity"]**2     
+        if 'pressure' not in self.old:    # P=(gamma-1)*rho*u (Barye)
+            self.old['pressure']   = self.old['mass']/(self.old['length']*self.old['time']**2) 
+
         if 'flux' not in self.old or self.old['flux'] is None:
             self.old['flux'] = 1.
         if 'numdens' not in self.old:     # Number density (1/cm^3)
             self.old['numdens']    = 1./self.old['length']**3
-        if 'pressure' not in self.old:
-            self.old['pressure']   = 10*self.old['mass']/(self.old['length']*self.old['time']**2) # P=(gamma-1)*rho*u (Ba)
 
         # Setup cosmological units
         if 'h' not in self.old:
@@ -73,6 +74,9 @@ class units():
             for key in units.keys():
                 self.new[key] = units[key]
             
+        # cgs conversion to SI:
+        # https://en.wikipedia.org/wiki/Centimetre%E2%80%93gram%E2%80%93second_system_of_units
+
         if 'length' not in self.new:
             self.new['length']     = self.old['length']
         if 'mass' not in self.new:
@@ -90,13 +94,13 @@ class units():
             self.new["energy"]     = self.new["velocity"]**2     
         if 'time' not in self.new:
             self.new['time']       = self.new['length'] / self.new['velocity']
+        if 'pressure' not in self.new:     # default in cgs is Ba (10 Ba = 1 Pascal)
+            self.new['pressure']   = self.new['mass']/(self.new['length']*self.new['time']**2) 
         
         if 'numdens' not in self.new:      # Volume number density (1/cm^3)
             self.new['numdens']    = 1.    # we want this to stay in cm^-3
         if 'flux' not in self.new:
             self.new['flux']       = 1.    # we want to have always units of ph/s
-        if 'pressure' not in self.new:
-            self.new['pressure']   = 1e-1  # conversion of Ba -> Pa
 
         if 'h' not in self.new:
             self.new['h']     = self.old['h']
@@ -112,9 +116,9 @@ class units():
             'volume':   ((self.old['a']/self.old['h']) / (self.new['a']/self.new['h']))**3,
             'energy':   1.0,
             'time':     1.0,
+            'pressure': (1.0/self.old['a']) / (1.0/self.new['a']),
             'numdens':  (self.new['a']/self.new['h'])**3 / (self.old['a']/self.old['h'])**3, # Volume number density (a^3/h^3)
             'flux':     1.0,
-            'pressure': (1.0/self.old['a']) / (1.0/self.new['a']),
             }
 
         self.conv = {}

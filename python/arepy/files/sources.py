@@ -27,18 +27,19 @@ class sources:
 
     def __init__(self,fileName=None):
         self.nSources = 0
-        self.nFreq = 0
-        self.nSigma = 0
-        self.nEnergy = 0
-        self.coord = []
-        self.sed = []
-        self.sigma = None
-        self.energy = None
+        self.nFreq =    0
+        self.nSigma =   0
+        self.nEnergy =  0
+        self.coord =    []
+        self.sed =      []
+        self.time =     []
+        self.sigma =    None
+        self.energy =   None
         
         if fileName!=None:
             self.read(fileName)
     
-    def addSource(self,coord,sed):
+    def addSource(self,coord,sed,time=None):
         """Add sources to the list
 
         :param list[[float]*3] coord: A list of source coordinates
@@ -46,13 +47,18 @@ class sources:
         """
         if np.ndim(coord)==1:
             coord,sed = [coord],[sed]
+        time = np.zeros(len(coord)) if time is None else time
+        if np.isscalar(time):
+            time = [time]
         if self.nSources==0:
             self.coord = np.array(coord)
-            self.sed = np.array(sed)
+            self.sed =   np.array(sed)
+            self.time =  np.array(time)
             self.nFreq = self.sed.shape[1]
         else:
             self.coord = np.append(self.coord,coord,axis=0)
-            self.sed = np.append(self.sed,sed,axis=0)
+            self.sed =   np.append(self.sed,sed,axis=0)
+            self.time =  np.append(self.time,time)
         self.nSources = self.sed.shape[0]
 
     def addCrossSections(self,sigma):
@@ -86,6 +92,7 @@ class sources:
             self.energy = np.fromfile(f,dtype='f8',count=nEnergy) if nEnergy>0 else None 
             self.coord = np.fromfile(f,dtype='f8',count=nSources*3).reshape((nSources,3))
             self.sed = np.fromfile(f,dtype='f8',count=nSources*nFreq).reshape((nSources,nFreq))
+            self.time = np.fromfile(f,dtype='f8',count=nSources)
 
     def write(self,fileName):
         """Save a new source file
@@ -100,6 +107,7 @@ class sources:
                 self.energy.astype('f8').tofile(f)
             np.ravel(self.coord).astype('f8').tofile(f)
             np.ravel(self.sed).astype('f8').tofile(f)
+            self.time.astype('f8').tofile(f)
 
     def show(self,limit=None):
         """Print out source file values to the terminal
@@ -115,6 +123,7 @@ class sources:
         tab.column('x',self.coord[ids,0])
         tab.column('y',self.coord[ids,1])
         tab.column('z',self.coord[ids,2])
+        tab.column('t',self.time)
         for f in range(self.nFreq):
             tab.column('sed %d'%f,self.sed[ids,f])
         tab.show()

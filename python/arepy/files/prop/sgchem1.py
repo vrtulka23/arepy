@@ -214,9 +214,12 @@ class sgchem1:
         mu = self.prop_Mu(ids,ptype,**prop)
         return density / ( apy.const.m_p * mu )        
 
-    # Pressure (code units)
+    # Pressure (code units of g/cm^3*cm^2/s^2 = g/cm/s^2 = dyne/cm^2 = barye)
     def prop_Pressure(self,ids,ptype,**prop):
-        return (self.prop_Gamma(ids,ptype,**prop)-1.) * self.prop_Density(ids,ptype,**prop) * self.prop_InternalEnergy(ids,ptype,**prop)
+        dens = self.prop_Density(ids,ptype,**prop)
+        gamma = self.prop_Gamma(ids,ptype,**prop)
+        u = self.prop_InternalEnergy(ids,ptype,**prop)
+        return (gamma-1.) * dens * u
 
     # Recombination factor of Hydrogen and Helium type B from sx_chem_sgchem.c and SGChem/coolinmo.F (rec*cm^3/s)
     def prop_AlphaB(self,ids,ptype,**prop):
