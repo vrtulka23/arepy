@@ -43,10 +43,15 @@ class group(apy.data.groups.group, groupsMethods):
         
         :param sim: simulation or list of simulations
         :type sim: :class:`arepy.files.simulation`
-        :param int snaps: snapshot number or list of numbers
+        :param int/str snaps: snapshot number, list of numbers, or 'all'
         :param dict opt: item options
         """
-        snaps = [int(snaps)] if np.isscalar(snaps) else [int(s) for s in snaps]
+        if isinstance(snaps,str) and snaps=='all':
+            snaps = sim.getSnapNums()
+        elif np.isscalar(snaps):
+            snaps = [int(snaps)]
+        else:
+            snaps = [int(s) for s in snaps]
         if opt is None or isinstance(opt,dict):
             opt = [opt]*len(snaps) 
         for i,s in enumerate(snaps):

@@ -31,7 +31,7 @@ class williams:
 
         for key in opts:
             setattr(self, key, opts[key])
-
+                        
         # Stromgren radius (0.314 pc)
         self.Rst = ( (3*self.Q0*apy.const.m_p**2) /\
                      (4*np.pi*self.alpha_B*self.rho0**2) )**(1/3) 
@@ -62,7 +62,8 @@ class williams:
 
     def calculate(self,**opts):
 
-        self.t = np.linspace(0,200,200) * apy.const.Myr  # time (s)
+        #self.t = np.linspace(0,200,200) * apy.const.Myr  # time (s)
+        self.t = np.linspace(0,4*self.Rstag/self.c0,200)  # time (s)
         self.r0 = [self.c0*0.01, 0.01*self.Rstag]  # initial conditions from the Figure 4
         
         # set parameters

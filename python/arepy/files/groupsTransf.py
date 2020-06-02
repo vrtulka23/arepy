@@ -128,7 +128,7 @@ class groupsTransf:
         BoxSize = snap.getHeader('BoxSize')
         limits = np.array([0,BoxSize,0,BoxSize,0,BoxSize])
         return {
-            'center': limits[1::2]-limits[0::2],
+            'origin': (limits[1::2]+limits[0::2])*0.5,
             'region': apy.coord.regionBox(limits)
         }
 
@@ -145,6 +145,6 @@ class groupsTransf:
         if zlim is not None:
             limits[4:] = zlim
         return {
-            'center': (limits[1::2]+limits[0::2])*0.5,
+            'origin': (limits[1::2]+limits[0::2])*0.5,
             'region': apy.coord.regionBox(limits)
         }

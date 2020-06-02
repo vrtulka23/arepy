@@ -25,9 +25,10 @@ class plot:
         else:
             self.debug = False
 
-        self.dirName = dirName                                     # name of the plot directory
-        self.fileName = dirName if fileName is None else fileName  # name of the plot file
-        self.dirPlot = self.dirName+'/'+self.fileName              # path to the file directory
+        self.dirName = dirName                                         # name of the plot directory
+        self.fileName = dirName if fileName is None else fileName      # name of the plot file
+        self.dirPlot = self.dirName+'/'+self.fileName                  # path to the file directory
+        self.dirCache = self.proj.dirResults+'/'+self.dirPlot+'/cache' # path to the cash directory
 
         self.nproc = {
             'fig':  apy.numCpu,               # number of processors for preparing figures
@@ -204,7 +205,7 @@ class plot:
             ])
         """
         nopt = {
-            'dirCache': self.proj.dirResults+'/'+self.dirPlot+'/cache',
+            'dirCache': self.dirCache,
             'nproc':    self.nproc['fig'],
             'n_jobs':   self.nproc['kdt']
         }

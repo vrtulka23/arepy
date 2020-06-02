@@ -18,7 +18,7 @@ class complexSlice:
         # Coordinate transformations
         # We do not crop our selection here, because sometimes the closest cells to the grid 
         # can be actually outside of the crop region
-        coord = transf.convert(['translate','align','flip','rotate'],region['Coordinates'])
+        coord = transf.convert(['translate','align','flip','rotate'], region['Coordinates'])
         points = grid.coords
             
         # find s nearest neighbors to each grid point
@@ -99,10 +99,23 @@ class complexSlice:
         return self._propBoxSlice(prop,grid,ids,ptype)
 
     def prop_BoxRays(self,ids,ptype,**prop):
-        """Find property values for a Healpix ray gird"""
+        """Find property values for a Healpix ray gird
+        
+        :param int bins: Number of radial bins
+        :param int nside: nside argument for the Healpix
+        :param [float,float] extent: Minimal and maximal extent of the ray
+        :param bool average: Calculates average ray values (radial profile)
+        """
         grid = apy.coord.gridRays(
             prop['bins'],
             nside=prop['nside'],
             extent=prop['extent'],
         )
-        return self._propBoxSlice(prop,grid,ids,ptype)
+        if 'average' in prop and prop['average'] is True:
+            rays = self._propBoxSlice(prop,grid,ids,ptype)
+            if isinstance(rays,dict):
+                return {key:np.average(rays[key],axis=0) for key in rays}
+            else:
+                return np.average(rays,axis=0)
+        else:
+            return self._propBoxSlice(prop,grid,ids,ptype)

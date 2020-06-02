@@ -78,6 +78,9 @@ class ics(icsGrid,icsVelocity):
             self.header['UnitVelocity_in_cm_per_s'] = self.units['velocity']
             self.other = {}
 
+        # set additional headers before prints
+        self.header.update(header)
+
         print('Units  length  ', self.units['length'],   'cm =',   self.units.guess('length',1) )
         print('       mass    ', self.units['mass'],     'g =',    self.units.guess('mass',1) )
         print('       velocity', self.units['velocity'], 'cm/s ~', self.units.guess('time',1) )
@@ -92,10 +95,6 @@ class ics(icsGrid,icsVelocity):
             print('Other:')
             print('ReferenceGasPartMass  %.03e = %.03e g = '%(rmass,rmass*self.units['mass']),
                   self.units.guess('mass',rmass) )
-
-
-        # set additional headers
-        self.header.update(header)
 
     # Write ICs into the file
     def write(self,fileName,**opt):

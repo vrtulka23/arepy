@@ -188,7 +188,7 @@ printf \"Time-End: %s\n\" \"\$(date '+%s')\" >> $submitLog
 ${SUBMIT_END}
 " > "submit${1}.job"
     submitMsg=$(eval "${SUBMIT_CMD} submit${1}.job")
-    echo $submitMsg
+    echo "Job: $submitMsg \nNodes: ${NUM_NODES} \nProc: ${NUM_PROC} \nType: ${JOB_TYPE} \nWalltime: ${JOB_WALL_TIME}"
     jobID=$(echo $submitMsg | grep -Eo $JOBID_REGEXP) 
     submit_log_add "Job-ID: ${jobID}" "$submitLog"
     submit_log_add "Time-Submit: ${CURRENT_TIME}" "$submitLog"
