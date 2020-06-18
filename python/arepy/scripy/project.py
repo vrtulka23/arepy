@@ -29,7 +29,8 @@ class project:
         self.dirPlots = self.dirProject+'/plots'
         self.dirScripts = self.dirProject+'/scripts'
         self.dirSetups = self.dirProject+'/setups'
-        self.sims = {}
+        self.sims = {}     # List of full simulation setings, accessed by simulation ID
+        self.simlist = {}  # Tabulated simulation settings list, accesed by project ID (optional)
         self.sets = {}
         self.opt = {}
         self.init()
@@ -65,7 +66,20 @@ class project:
             }
         """
         self.dirSim = None
-        self.sims['001'] ={'name':'default','setup':'default'}
+        #self.sims['001'] ={'name':'default','setup':'default'}
+        self.addSim(1,{'name':'default','setup':'default'})
+
+    def addSim(self,sid,settings):
+        """Add simulation to the simulation list
+
+        :param int sid: Simulation ID
+        :param dict settings: Simulation settings
+        """
+        ssid = '%03d'%sid
+        if ssid in self.sims:
+            apy.shell.exit("Simulation with ID '%s' is already added! Choose a different ID."%ssid)
+        else:
+            self.sims[ssid] = settings
 
     # Additional functions
     def getUnits(self, simID):
@@ -124,6 +138,15 @@ class project:
         if simSet is not None:
             settings['optSet'] = self.sets['%03d'%simSet]['opt']
         return settings[name]
+
+    def getSims(self,name):
+        """ Include list of simulations from external file
+        
+        :param str name: Name of the external file in the form 'init_NAME.py'
+        """
+        initName = 'init_%s'%name
+        exec("from scripy.%s.%s import *"%(self.name,initName),globals())
+        globals()[initName](self)
 
     #################################
     # BASH functions

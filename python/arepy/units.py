@@ -141,8 +141,8 @@ class units():
         nformat = nformat+' %s'
         units = {
             'length': {
-                'names':  ['cm','km','au','mpc','pc','kpc','Mpc','Gpc','inf'],
-                'values': [1, 100, apy.const.au, apy.const.mpc, apy.const.pc, apy.const.kpc, 
+                'names':  ['cm','km','mAU','AU',r"mpc",'pc','kpc','Mpc','Gpc','inf'],
+                'values': [1, 100, apy.const.au*1e-3, apy.const.au, apy.const.mpc, apy.const.pc, apy.const.kpc, 
                            apy.const.Mpc, apy.const.Gpc, float("inf")],
             },
             'time': {
@@ -155,12 +155,12 @@ class units():
                 'values': [1, 1e3, apy.const.M_sol*1e-3, apy.const.M_sol, float("inf")],
             },
             'volume': {
-                'names':  ['cm^3','km^3','au^3','pc^3','kpc^3','Mpc^3','Gpc^3','inf'],
+                'names':  ['cm^3','km^3','AU^3','pc^3','kpc^3','Mpc^3','Gpc^3','inf'],
                 'values': np.array([1, 100, apy.const.au, apy.const.pc, apy.const.kpc, 
                                     apy.const.Mpc, apy.const.Gpc, float("inf")])**3,
             },
             'velocity': {
-                'names':  ['cm/s','km/s','au/s','pc/s','kpc/s','inf'],
+                'names':  ['cm/s','km/s','AU/s','pc/s','kpc/s','inf'],
                 'values': [1,apy.const.km,apy.const.au,apy.const.pc,apy.const.kpc,float("inf")],
             }
         }            

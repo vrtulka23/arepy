@@ -59,6 +59,25 @@ def plotSubplot(ax,opt,canvas,fid=0):
         if 'label' in d['kwargs']:
             handles.append(li[0]) # for some reason this is a list of objects
 
+    def draw_text(ax,d):
+        """Add text to the subplot
+        
+        :param str loc: Position of the text on the axes
+        :param (float)*2 padding: Padding of the text from the border
+        :param str bgcolor: Background color of the 'bbox' around the thext
+        """
+        if not isinstance(d['loc'],str):
+            x,y,ha,va = d['loc']
+        elif ('lim' in axProp['xaxis']) and ('lim' in axProp['yaxis']):
+            x,y,ha,va = apy.util.calculateLoc(d['loc'],xlim,ylim,d['padding'],
+                                              axProp['xaxis']['scale'],axProp['yaxis']['scale'])
+        else:
+            apy.shell.exit('Text location or plot axis limts were not set (plot.py)')
+        text = d['text'] if isinstance(d['text'],str) else d['text'][fid]
+        if d['bgcolor'] is not None:
+            d['kwargs']['bbox'] = dict(boxstyle='square,pad=.1', fc=d['bgcolor'], ec='none')
+        drawax.text(x, y, text, ha=ha, va=va, **d['kwargs'])
+
     for d in canvas['other']:
         if d['twiny'] and twiny==None:
             twiny = ax.twinx()
@@ -132,22 +151,7 @@ def plotSubplot(ax,opt,canvas,fid=0):
 
         # Draw a text field
         if d['draw']=='text':
-            """Add text to the subplot
-            
-            :param str loc: Position of the text on the axes
-            :param (float)*2 padding: Padding of the text from the border
-            :param str bgcolor: Background color of the 'bbox' around the thext
-            """
-            if not isinstance(d['loc'],str):
-                x,y,ha,va = d['loc']
-            elif ('lim' in axProp['xaxis']) and ('lim' in axProp['yaxis']):
-                x,y,ha,va = apy.util.calculateLoc(d['loc'],xlim,ylim,d['padding'])
-            else:
-                apy.shell.exit('Text location or plot axis limts were not set (plot.py)')
-            text = d['text'] if isinstance(d['text'],str) else d['text'][fid]
-            if d['bgcolor'] is not None:
-                d['kwargs']['bbox'] = dict(boxstyle='square,pad=.1', fc=d['bgcolor'], ec='none')
-            drawax.text(x, y, text, ha=ha, va=va, **d['kwargs'])
+            draw_text(ax,d)
 
         # Draw a circle
         if d['draw']=='circle':

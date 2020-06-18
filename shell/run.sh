@@ -187,8 +187,8 @@ ${2}
 printf \"Time-End: %s\n\" \"\$(date '+%s')\" >> $submitLog
 ${SUBMIT_END}
 " > "submit${1}.job"
-    submitMsg=$(eval "${SUBMIT_CMD} submit${1}.job")
-    echo "Job: $submitMsg \nNodes: ${NUM_NODES} \nProc: ${NUM_PROC} \nType: ${JOB_TYPE} \nWalltime: ${JOB_WALL_TIME}"
+    submitMsg=$(eval "${SUBMIT_CMD} submit${1}.job" | tr -d '\n')
+    printf "Job: $submitMsg \nNodes: ${NUM_NODES} \nProc: ${NUM_PROC} \nType: ${JOB_TYPE} \nWalltime: ${JOB_WALL_TIME}\n"
     jobID=$(echo $submitMsg | grep -Eo $JOBID_REGEXP) 
     submit_log_add "Job-ID: ${jobID}" "$submitLog"
     submit_log_add "Time-Submit: ${CURRENT_TIME}" "$submitLog"
@@ -218,7 +218,7 @@ submit_run()          # submit job to the cluster queue
 
 	submit 0 "${RUN_CMD_SUBMIT} ./Arepo ${PARAM_FILE} ${FLAGS_RUN} > output/output0.log"
     else
-	echo_red "You are not in an arepo simulation directory!"
+	echo_red "You are not in an arepo simulation directory or Arepo file is missing!"
     fi
 }
 submit_restart()
@@ -550,6 +550,12 @@ initialize()
 	on_initialize
     fi
 }
+calculate()
+{
+    expr="say $1"
+    echo_green "perl -E \"$expr\""
+    perl -E "$expr"
+}
 
 # Additional information
 show_params()
@@ -589,6 +595,7 @@ while [ "$1" != "" ]; do
 	--sync )                   results_sync ;;
 	--refact )                 shift; refact "$@"; break;;
 	--python )                 shift; load_python "$@"; break;;
+	--calc )                   shift; calculate "$@"; break;;
 
 	-i | --initialize )        initialize ;;
 	-d | --clean-dir )         clean_directory ;;

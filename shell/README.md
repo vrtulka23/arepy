@@ -20,6 +20,7 @@ Following options can be used system-wide
 | --init-project NAME          | initialize scripy project in NAME directory  |  
 | --refract OLD NEW [FTYPE]    | replace OLD with NEW code string in scripy and arepy</br> python files or with extension FTYPE |
 | --sync                       | synchronize scripy results                   |
+| --calc                       | simple perl calculator                       |
 |-qa                           | show available resources on the cluster      |
 |-ql                           | show queue information on the cluster        |
 |-qr                           | show running simulation                      |

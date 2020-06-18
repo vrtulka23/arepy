@@ -28,6 +28,8 @@ eV = 1.60217733e-12  # electron-volt [erg]
 keV = 1.60217733e-15 # kilo electron-volt [erg]
 MeV = 1.60217733e-18 # mega electron-volt [erg]
 Ryd = 2.1798741e-11  # 1 Ryd == hcR_inf == 13.6eV [erg] (https://www.unitconverters.net/energy/rydberg-constant-to-erg.htm)
+Ba = 1               # pressure [g/cm/s^2]
+Pa = 10              # pressure [kg/m/s^2]
 
 # Simple conversions
 eV2Hz = eV/h         # wave energy to wave frequency: electron-volt to Hertz  
