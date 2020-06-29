@@ -26,7 +26,7 @@ class plot:
             self.debug = False
 
         self.dirName = dirName                                         # name of the plot directory
-        self.fileName = dirName if fileName is None else fileName      # name of the plot file
+        self.fileName = dirName if fileName is None else fileName   # name of the plot file
         self.dirPlot = self.dirName+'/'+self.fileName                  # path to the file directory
         self.dirCache = self.proj.dirResults+'/'+self.dirPlot+'/cache' # path to the cash directory
 
@@ -112,7 +112,7 @@ class plot:
         return
     def _plot(self):
         if self.optPlot is None:
-            apy.shell.exit("Plot '%s' was not set (plot.py)"%(self.dirPlot))
+            apy.shell.exit("Plot '%s' was not set (scripy/plot.py)"%(self.dirPlot))
         if self.optPlot['type']=='figure':
             self.fig = apy.plot.figure(self.optPlot['ncol'],self.optPlot['nrow'],self.optPlot['nfig'],**self.optPlot['opt'])
             self.plot()

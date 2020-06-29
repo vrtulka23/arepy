@@ -170,15 +170,24 @@ class simple:
         return np.multiply(self.prop_Velocities(ids,ptype,**prop),nhat).sum(1)  # element-wise dot product (v.n_hat)
 
     def prop_VelocitySphere(self,ids,ptype,**prop):
-        """Cell velocitie vectors in spherical coordinates with respect to a center
+        """Cell velocity vectors in spherical coordinates with respect to a center
 
         :param [float]*3 center: Point from which the velocity components are calculated
         :return [float]*2: Radial and tangential velocity components
 
         Calculation of the components is take from Wikipedia_.        
         """
-
+        apy.shell.exit('VelocitySphere property is not implemented')
         return 
+        
+    def prop_VelocityNorm(self,ids,ptype,**prop):
+        """Norm of the velocity vector in the cell
+
+        :return float: Norm of the velocity vector
+        """
+        vel = self.prop_Velocities(ids,ptype,**prop)
+        return np.linalg.norm(vel,axis=1)
+
 
     def prop_CellVolume(self,ids,ptype,**prop): 
         """Particle cell Volume

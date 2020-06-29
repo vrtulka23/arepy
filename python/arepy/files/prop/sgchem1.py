@@ -179,7 +179,8 @@ class sgchem1:
         if self.hasSnapData('Gamma',ptype):
             return self.getSnapData('Gamma',ptype,ids)
         else:
-            return apy.const.gamma    
+            # DEBUG: this should have the shape of the particle list!!!
+            return apy.const.gamma
     
     # Temperature of the gas (K)
     def prop_Temperature(self,ids,ptype,**prop):

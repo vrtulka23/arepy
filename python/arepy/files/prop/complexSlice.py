@@ -42,6 +42,8 @@ class complexSlice:
                     properties.setData(pp['key'], grid.xi )
                 else:
                     ppSelected = pps[pp['key']]
+                    print(pp['key'],pix)
+                    print(ppSelected)
                     reshaped = grid.reshapeData(ppSelected[pix])
                     if pp['name'] in ['Velocities']:  # flip field components if necessary
                         reshaped = transf.convert(['align','flip','rotate'],reshaped)

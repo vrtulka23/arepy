@@ -261,7 +261,6 @@ class project:
     # Analyze and plot simulation data
     # apy (--plot|--debug|--show) {PLOT} [{SUBPLOT}]
     def plot(self,action,name=None,*args):
-        print(name)
         if name is None:
             self._showOptions(self.dirPlots)
         else: 
@@ -278,7 +277,7 @@ class project:
                 else:
                     apy.shell.exit("Class '%s' was not found in '%s'! (project.py)"%(fn,nameClass))
             else:
-                exec("from scripy.%s.plots.%s import *"%(self.name,name),globals())
+                exec("from scripy.%s.plots.%s.%s import *"%(self.name,name,name),globals())
                 globals()[name](action,self,name,name,*args)
             self.timer.end()
 
