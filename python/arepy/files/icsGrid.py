@@ -18,11 +18,14 @@ class icsGrid:
         apy.shell.printc('snapshot grid: '+snap.fileName)
         data = snap.getProperty(['Coordinates','Masses','Density'])
         convBoxSize = self.header['BoxSize'] / snap.getHeader('BoxSize')
+        # convert between box sizes
         volumes = data['Masses'] / data['Density'] * convBoxSize**3
         data['Coordinates'] *= convBoxSize
+        # if density is not set use the one from the snapshot
         if self.density is None:
             self.density = data['Density']
         self.setCells(data['Coordinates'],volumes)
+        # TODO: convert units
     
     # Set cell properties directly
     def setCells(self,coords,volumes):

@@ -22,6 +22,10 @@ class ics(icsGrid,icsVelocity):
         
         apy.shell.printc('Creating initial conditions')
 
+        # set density
+        self.density = density  # code units
+        
+        # default header settings
         self.header = {
             'NumPart_ThisFile':          [0]*6,
             'NumPart_Total':             [0]*6,
@@ -47,9 +51,6 @@ class ics(icsGrid,icsVelocity):
             'Time':                      0,
         }
 
-        # set density
-        self.density = density  # code units
-        
         # set units and box size
         if isinstance(units,str):
             print('Parameters set from: '+units)
@@ -114,6 +115,7 @@ class ics(icsGrid,icsVelocity):
         print('      ', apy.data.stats('volumes cm^3',  self.volumes*self.units['volume'], stats) )
         print('      ', apy.data.stats('masses',        self.masses, stats) )
         print('      ', apy.data.stats('masses g',      self.masses*self.units['mass'], stats) )
+        print('      ', apy.data.stats('masses M_sol',  self.masses*self.units['mass']/apy.const.M_sol, stats) )
         stats=['min','mean','max']
         print('      ', apy.data.stats('density',       self.density, stats) )
         print('      ', apy.data.stats('density g/cm^3',self.density*self.units['density'], stats) )
