@@ -132,14 +132,16 @@ class groupsMethods:
 
     # Add rendering of the box projection/slice
     def _renderImage(self, sp, prop, imgType,
-                     bins=200, cache=False, nproc=None, n_jobs=None, clip=None, multiply=None, **imgopt):
+                     bins=200, cache=False, nproc=None, n_jobs=None, clip=None, 
+                     multiply=None, log10=False, **imgopt):
         n_jobs = self.opt['n_jobs'] if n_jobs is None else n_jobs
         prop = apy.files.properties(prop)
         proj = self.foreach(renderImage,args=[imgType,prop,bins,n_jobs],
                             cache=cache, nproc=nproc)            
-        def modifyData(data,clip,multiply):
+        def modifyData(data,clip,multiply,log10):
             if clip is not None: data = np.clip(data,*clip)
             if multiply is not None: data *= multiply
+            if log10: data = np.log10(data)
             return data
         if isinstance(sp,list):
             for i in range(len(sp)):
@@ -148,10 +150,10 @@ class groupsMethods:
                 newimgopt['normType'] = imgopt['normType'][i] if isinstance(imgopt['normType'],list) else imgopt['normType']
                 if 'cmap' in imgopt:
                     newimgopt['cmap'] = imgopt['cmap'][i]     if isinstance(imgopt['cmap'],list)     else imgopt['cmap']
-                data = modifyData(proj[prop[i]['name']], clip[i] if isinstance(clip[i],(tuple,list)) else clip, multiply)
+                data = modifyData(proj[prop[i]['name']], clip[i] if isinstance(clip[i],(tuple,list)) else clip, multiply, log10)
                 sp[i].addImage(data=data, extent=proj['extent'], **newimgopt)
         else:
-            data = modifyData(proj['data'],clip,multiply)
+            data = modifyData(proj['data'],clip,multiply,log10)
             sp.addImage(data=data, extent=proj['extent'], **imgopt)
 
     def setProjection(self, sp, prop, **opt):

@@ -30,9 +30,11 @@ class sources:
         self.nFreq =    0
         self.nSigma =   0
         self.nEnergy =  0
+        self.moveSource = 0
         self.coord =    []
         self.sed =      []
         self.time =     []
+        self.velocity = []
         self.sigma =    None
         self.energy =   None
         
@@ -77,22 +79,36 @@ class sources:
         self.nEnergy = len(energy)
         self.energy = np.array(energy)
 
+    def addVelocity(self,velocity):
+        """Add velocities to the sources
+        
+        :param list[[float]*3] velocity: A list of source velocities (vx, vy, vz)
+        """
+        self.moveSource=1;
+        if self.nSources==0:
+            self.velocity = np.array(velocity)
+        else:
+            self.velocity = np.append(self.velocity,velocity,axis=0)
+
     def read(self,fileName):
         """Read a source file
 
         :param str fileName: Path to a source file
         """
         with open(fileName, 'r') as f:
-            nSigma, nEnergy, nSources, nFreq  = np.fromfile(f,dtype='u4',count=4)
+            nSigma, nEnergy, nSources, nFreq, moveSource  = np.fromfile(f,dtype='u4',count=5)
             self.nSources = nSources
             self.nFreq = nFreq
             self.nSigma = nSigma
             self.nEnergy = nEnergy
+            self.moveSource = moveSource
             self.sigma = np.fromfile(f,dtype='f8',count=nSigma) if nSigma>0 else None
             self.energy = np.fromfile(f,dtype='f8',count=nEnergy) if nEnergy>0 else None 
             self.coord = np.fromfile(f,dtype='f8',count=nSources*3).reshape((nSources,3))
             self.sed = np.fromfile(f,dtype='f8',count=nSources*nFreq).reshape((nSources,nFreq))
             self.time = np.fromfile(f,dtype='f8',count=nSources)
+            if moveSource==1:
+                self.velocity = np.fromfile(f,dtype='f8',count=nSources*3).reshape((nSources,3))
 
     def write(self,fileName):
         """Save a new source file
@@ -100,7 +116,7 @@ class sources:
         :param str fileName: Path to a new source file
         """
         with open(fileName, 'wb') as f:
-            np.array([self.nSigma,self.nEnergy,self.nSources,self.nFreq]).astype('u4').tofile(f)
+            np.array([self.nSigma,self.nEnergy,self.nSources,self.nFreq,self.moveSource]).astype('u4').tofile(f)
             if self.sigma is not None:
                 self.sigma.astype('f8').tofile(f)
             if self.energy is not None:
@@ -108,6 +124,9 @@ class sources:
             np.ravel(self.coord).astype('f8').tofile(f)
             np.ravel(self.sed).astype('f8').tofile(f)
             self.time.astype('f8').tofile(f)
+            if self.moveSource==1:
+                np.ravel(self.velocity).astype('f8').tofile(f)
+                
 
     def show(self,limit=None):
         """Print out source file values to the terminal
@@ -126,4 +145,8 @@ class sources:
         tab.column('t',self.time)
         for f in range(self.nFreq):
             tab.column('sed %d'%f,self.sed[ids,f])
+        if self.moveSource==1:
+            tab.column('vx',self.velocity[ids,0])
+            tab.column('vy',self.velocity[ids,1])
+            tab.column('vz',self.velocity[ids,2])
         tab.show()

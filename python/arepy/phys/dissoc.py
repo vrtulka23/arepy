@@ -12,10 +12,11 @@ class dissoc:
         return
     def __init__(self,**opts):
         self.opt = {
-            'Q': 1e50,  # ionization power of the source (phot/s)
-            'n': 1e10/2,  # number density of the hydrogen (cm^-3)
-            'f': 1/(1+6.94),  # LW pumping factor
+            'Q':  1e50,        # ionization power of the source (phot/s)
+            'nH': 1e10,        # number density of the hydrogen (cm^-3)
+            'f':  1/(1+6.94),  # LW pumping factor
         }
+        self.opt['nH2'] = self.opt['nH']/2 # number density of the molecular hydrogen (cm^-3)
         self.opt.update(opts)
         
     def getRadius(self,time):
@@ -37,5 +38,5 @@ class dissoc:
         nPhotdis = nPhotH2 / (1.0 + uvPumpFact);
         '''
 
-        return ((nPhot*3)/(self.opt['n']*4*np.pi))**(1/3) # cm
+        return ((nPhot)/(self.opt['nH2']*4/3*np.pi))**(1/3) # cm
         

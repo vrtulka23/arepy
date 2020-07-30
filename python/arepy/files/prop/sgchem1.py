@@ -103,24 +103,27 @@ class sgchem1:
     # Total number of species
     ###############################
 
+    def formula_N(self, abund, ids, ptype, **prop):
+        N_prot = self.units['mass'] * self.prop_Masses(ids,ptype,**prop) / apy.const.m_p
+        return self.opt['chem']['X_H'] * abund * N_prot
     def prop_N_H2(self,ids,ptype,**prop):
-        return self.opt['chem']['X_H'] * self.prop_x_H2(ids,ptype,**prop) *   self.prop_Masses(ids,ptype,**prop) / apy.const.m_p
+        return self.formula_N( self.prop_x_H2(ids,ptype,**prop), ids, ptype, **prop)
     def prop_N_HP(self,ids,ptype,**prop):
-        return self.opt['chem']['X_H'] * self.prop_x_HP(ids,ptype,**prop) *   self.prop_Masses(ids,ptype,**prop) / apy.const.m_p
+        return self.formula_N( self.prop_x_HP(ids,ptype,**prop), ids, ptype, **prop)
     def prop_N_DP(self,ids,ptype,**prop):
-        return self.opt['chem']['X_H'] * self.prop_x_DP(ids,ptype,**prop) *   self.prop_Masses(ids,ptype,**prop) / apy.const.m_p
+        return self.formula_N( self.prop_x_DP(ids,ptype,**prop), ids, ptype, **prop)
     def prop_N_HD(self,ids,ptype,**prop):
-        return self.opt['chem']['X_H'] * self.prop_x_HD(ids,ptype,**prop) *   self.prop_Masses(ids,ptype,**prop) / apy.const.m_p
+        return self.formula_N( self.prop_x_HD(ids,ptype,**prop), ids, ptype, **prop)
     def prop_N_HEP(self,ids,ptype,**prop):
-        return self.opt['chem']['X_H'] * self.prop_x_HEP(ids,ptype,**prop) *  self.prop_Masses(ids,ptype,**prop) / apy.const.m_p
+        return self.formula_N( self.prop_x_HEP(ids,ptype,**prop), ids, ptype, **prop)
     def prop_N_HEPP(self,ids,ptype,**prop):
-        return self.opt['chem']['X_H'] * self.prop_x_HEPP(ids,ptype,**prop) * self.prop_Masses(ids,ptype,**prop) / apy.const.m_p
+        return self.formula_N( self.prop_x_HEPP(ids,ptype,**prop), ids, ptype, **prop)
     def prop_N_H(self,ids,ptype,**prop):
-        return self.opt['chem']['X_H'] * self.prop_x_H(ids,ptype,**prop) *    self.prop_Masses(ids,ptype,**prop) / apy.const.m_p
+        return self.formula_N( self.prop_x_H(ids,ptype,**prop), ids, ptype, **prop)
     def prop_N_HE(self,ids,ptype,**prop):
-        return self.opt['chem']['X_H'] * self.prop_x_HE(ids,ptype,**prop) *   self.prop_Masses(ids,ptype,**prop) / apy.const.m_p
+        return self.formula_N( self.prop_x_HE(ids,ptype,**prop), ids, ptype, **prop)
     def prop_N_D(self,ids,ptype,**prop):
-        return self.opt['chem']['X_H'] * self.prop_x_D(ids,ptype,**prop) *    self.prop_Masses(ids,ptype,**prop) / apy.const.m_p
+        return self.formula_N( self.prop_x_D(ids,ptype,**prop), ids, ptype, **prop)
 
     ###############################
     # Photon ionization/heating rates 
