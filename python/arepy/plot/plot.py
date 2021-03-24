@@ -344,16 +344,25 @@ def plotSubplot(ax,opt,canvas,fid=0):
         ax.set_zlabel( axProp['zlabel'], fontsize=fontsize )
 
     # group axis labels
-    if 'group' in axProp:
-        if 'title' in axProp['group'] and spRow>0:
+    if 'group' in axProp or 'groupdiag' in axProp:
+        if ('group' in axProp):
+            minRow, maxRow = 0, opt['nrows']-1
+            minCol, maxCol = 0, opt['ncols']-1
+            groupProp = axProp['group']
+        if ('groupdiag' in axProp):
+            minRow, maxRow = 0, opt['nrows']-spCol
+            minCol, maxCol = 0, opt['ncols']-spRow
+            groupProp = axProp['groupdiag']
+
+        if 'title' in groupProp and spRow>0:
             ax.set_title('')
-        if 'xlabel' in axProp['group']:
-            if (axProp['xaxis']['pos']=='bottom' and spRow<opt['nrows']-1) or (axProp['xaxis']['pos']=='top' and spRow>0):
+        if 'xlabel' in groupProp:
+            if (axProp['xaxis']['pos']=='top' and spRow>minRow) or (axProp['xaxis']['pos']=='bottom' and spRow<maxRow):
                 ax.set_xlabel('')
                 #ax.set_xticklabels([])  # this does not work with gridspec
                 plt.setp( ax.get_xticklabels(), visible=False)  # this works also with gridspec
-        if 'ylabel' in axProp['group']:
-            if (axProp['yaxis']['pos']=='left' and spCol>0) or (axProp['yaxis']['pos']=='right' and spCol<opt['ncols']-1):
+        if 'ylabel' in groupProp:
+            if (axProp['yaxis']['pos']=='left' and spCol>minCol) or (axProp['yaxis']['pos']=='right' and spCol<maxRow):
                 ax.set_ylabel('')
                 #ax.set_yticklabels([])  # this does not work with gridspec
                 plt.setp( ax.get_yticklabels(), visible=False)  # this works also with gridspec

@@ -258,7 +258,7 @@ class subplot:
                   'twiny','twinx','xaxis','yaxis',
                  #'ylim','ylabel','yscale','ypos','yticklabels','ytickparam','yvisible',
                  #'xlim','xlabel','xscale','xflip','xpos','xtickformat','xvisible','xticklabels','xtickparam',
-                 'group','projection',
+                 'group','groupdiag','projection',
                  'tickparams','xysame']
         for opt in axOpt:
             if opt in self.opt:
@@ -273,10 +273,10 @@ class subplot:
         # transform x and y limits
         xnorm = self.figure.norms.getLimits(self.xnorm)
         ynorm = self.figure.norms.getLimits(self.ynorm)
-        if 'lim' not in canvas['axis']['xaxis'] and xnorm is not None:    
+        if ('lim' not in canvas['axis']['xaxis'] or canvas['axis']['xaxis']['lim'] is None) and xnorm is not None:    
             xnormmin = xnorm[1] if canvas['axis']['xaxis']['scale']=='log' else xnorm[0]
             canvas['axis']['xaxis']['lim'] = [xnormmin,xnorm[2]]
-        if 'lim' not in canvas['axis']['yaxis'] and ynorm is not None:
+        if ('lim' not in canvas['axis']['yaxis'] or canvas['axis']['yaxis']['lim'] is None) and ynorm is not None:
             ynormmin = ynorm[1] if canvas['axis']['yaxis']['scale']=='log' else ynorm[0]
             canvas['axis']['yaxis']['lim'] = [ynormmin,ynorm[2]]
             

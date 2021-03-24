@@ -24,7 +24,8 @@ ValueError: could not broadcast input array from shape (2,2) into shape (2)
 
 def _cacheLoad(cacheFile):
     v = sys.version_info
-    if v.major>=3 and v.minor>=7 and v.micro>=3:
+    #if v.major>=3 and v.minor>=7 and v.micro>=3
+    if v.major>=3 and v.minor>=6 and v.micro>=8:
         data = np.load(cacheFile, allow_pickle=True)
     else:
         data = np.load(cacheFile)

@@ -11,7 +11,9 @@ from arepy.files.glueClass import *     # Parent class for property glues
 from arepy.files.glueSimple import *    # Simple property glues
 
 # Import property classes
-import arepy.files.prop as pc
+import importlib
+pc = importlib.import_module('arepy.files.prop')
+#import arepy.files.prop as pc
 
 # Snapshot class
 class snap(pc.complex,
