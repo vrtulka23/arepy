@@ -61,7 +61,7 @@ JOB_NAME=${JOB_NAME:-"test"}                   # job name
 
 RUN_CMD_TERMINAL=${RUN_CMD_TERMINAL:-"mpirun -np $((NUM_NODES*NUM_PROC))"} # running command in terminal
 RUN_CMD_SUBMIT=${RUN_CMD_SUBMIT:-"mpirun"}     # running command in submit script
-SUBMIT_CMD=${SUBMIT_CMD:-"msub"}               # submit command
+SUBMIT_CMD=${SUBMIT_CMD:-"srun"}               # submit command
 SUBMIT_INIT=${SUBMIT_INIT:-""}                 # initial submit settings
 SUBMIT_END=${SUBMIT_END:-""}                   # end submit settings
 SUBMIT_LOG=${SUBMIT_LOG:-"submit"}             # submit log file name prefix
@@ -428,10 +428,8 @@ load_python()
 # Run an interactive session
 inter_run()
 {
-    echo -e "\033[0;33mNumber of nodes:\033[0m"; read nodes
-    echo -e "\033[0;33mCores per node:\033[0m"; read ppn
-    echo -e "\033[0;33mQueue type:\033[0m"; read type
-    echo -e "\033[0;33mWalltime:\033[0m"; read walltime
+    echo -e "\033[0;33mNumber of cores:\033[0m"; read ntasks
+    echo -e "\033[0;33mWalltime:\033[0m"; read time
     on_inter_run
     eval="${INTER_CMD}"
     echo -e "${YEL}$eval${NC}"

@@ -6,3 +6,4 @@ from arepy.phys.gravPot import *
 from arepy.phys.radPres import *
 from arepy.phys.williams import *
 from arepy.phys.dissoc import *
+from arepy.phys.sedLionel import *

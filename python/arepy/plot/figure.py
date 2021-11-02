@@ -35,6 +35,7 @@ class figure:
             'imagegrid':  None,                  # use ImageGrid
             'fileFormat': 'png',                 # file format of the final figure (png,pdf,jpeg,...)
             'projection': None,                  # default value of projection for each subplot
+            'merge':      None
         }
         self.opt.update(opt)
 
@@ -52,7 +53,16 @@ class figure:
 
         # setup child objects
         self.norms = apy.plot.norms()
-        self.subplot = [apy.plot.subplot(self,row,col) for row in range(nrows) for col in range(ncols)]
+        self.subplot = []
+        for row in range(nrows):
+            for col in range(ncols):
+                i = self.getIndex(row,col)
+                if self.opt['merge'] and i==self.opt['merge'][0]:
+                        self.subplot.append(apy.plot.subplot(self,row,col))
+                elif self.opt['merge'] and i==self.opt['merge'][1]:
+                    continue
+                else:
+                    self.subplot.append(apy.plot.subplot(self,row,col))
         self.nSubplot = len(self.subplot)
 
         apy.shell.printc('Reading data for %d subplots and %d figures'%(self.nSubplot,self.nfigs))
@@ -80,6 +90,7 @@ class figure:
         :param bool xyz: Set 3D subplot
         """
         i = self.getIndex(row,col)
+        if i+1>self.nSubplot: return
         self.subplot[i].setOption(**opt)        
         if xyz:
             self.subplot[i].xyz = True
@@ -103,11 +114,14 @@ class figure:
         :rkey: :class:`arepy.plot.subplot`
         """
         i = self.getIndex(row,col)
+        if i+1>self.nSubplot: return None
         if opt or xyz: self.setSubplot(row,col,xyz,**opt)
         self.subplot[i].canvas['empty'] = False
         return self.subplot[i]
 
     def getIndex(self, row=0, col=0):
+        if isinstance(col,range):
+            col = col[0]
         if row>=self.nrows:
             apy.shell.exit('Cannot plot row %d out of %d (figure.py)'%(row+1,self.nrows))
         if col>=self.ncols:
@@ -137,6 +151,7 @@ class figure:
             'gridspec':   self.opt['gridspec'],
             'axesgrid':   self.opt['axesgrid'],
             'imagegrid':  self.opt['imagegrid'],
+            'merge':      self.opt['merge']
         }
         arguments = [[f,optFig,canvas] for f in range(self.nfigs)]
         if self.opt['nproc']>1:

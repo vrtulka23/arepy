@@ -411,10 +411,16 @@ def plotFigure(f,opt,canvas):
         for r in range(opt['nrows']):
             for c in range(opt['ncols']):
                 index = r*opt['ncols']+c
-                axs.append( plt.subplot(gs[index]) )
-                axis = canvas[index]['axis']
-                if 'projection' in axis and axis['projection'] is not None:
-                    apy.shell.exit('Projection needs to be implemented for the gridspec (plot.py)')
+                if opt['merge'] and opt['merge'][0]==index:
+                    ax = fig.add_subplot(gs[r,:])
+                    axs.append( ax )
+                elif opt['merge'] and opt['merge'][1]==index:
+                    continue
+                else:
+                    axs.append( plt.subplot(gs[index]) )
+                    axis = canvas[index]['axis']
+                    if 'projection' in axis and axis['projection'] is not None:
+                        apy.shell.exit('Projection needs to be implemented for the gridspec (plot.py)')
 
     else:
         # Create a figure and plot all subplots
